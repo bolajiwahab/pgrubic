@@ -1,0 +1,66 @@
+default_language_version:
+  python: python3.12
+
+repos:
+  - repo: local
+    hooks:
+      - id: trailing-whitespace
+        name: Trim Trailing Whitespace
+        entry: trailing-whitespace-fixer
+        language: python
+        types: [text]
+      - id: end-of-file-fixer
+        name: Add a blank line at end of a file
+        entry: end-of-file-fixer
+        language: python
+        types: [text]
+      - id: mixed-line-ending
+        name: Ensure line feed character (LF)
+        entry: mixed-line-ending
+        language: python
+        types: [text]
+        args: [--fix=lf]
+      - id: add-trailing-comma
+        name: Add trailing commas
+        entry: add-trailing-comma
+        language: python
+        types: [python]
+      - id: check-ast
+        name: Check that files parse as valid python
+        entry: check-ast
+        language: python
+        types: [python]
+      - id: check-yaml
+        name: Check yaml
+        entry: check-yaml
+        language: python
+        types: [yaml]
+      # Formatters should be run late so that they can re-format any prior changes.
+      - id: black
+        name: Formatting with black
+        entry: black
+        language: python
+        types: [python]
+      - id: isort
+        name: Ensure imports are grouped and sorted
+        entry: isort
+        language: python
+        types: [python]
+        args: [--check, --diff, --profile=black]
+      - id: ruff
+        name: Lint with ruff
+        entry: ruff
+        language: python
+        args: [check, --fix]
+        types: [python]
+      - id: mypy
+        name: Type checking with mypy
+        entry: mypy
+        language: python
+        types: [python]
+        args: [--strict]
+      - id: djlint-jinja
+        name: Lint Jinja templates
+        entry: djlint --profile=jinja
+        types_or: [jinja]
+        language: python

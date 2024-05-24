@@ -1,0 +1,94 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+# [tool.setuptools]
+# packages = ["datashift"]
+
+# [tool.setuptools.find]
+# where = "src"
+
+# [tool.setuptools.packages.find]
+# where = ["."]
+# exclude = ["src"]
+# include = ["datashift"]
+# namespaces = true
+
+[project]
+name = "datashift"
+version = "2.0"
+description = "Data migrations for PostgreSQL databases"
+readme = {file = "README.md", content-type = "text/markdown"}
+requires-python = ">=3.12"
+authors = [
+  {name = "DBA Team", email = "dataengineering-dba@n26.com"},
+]
+maintainers = [
+  {name = "DBA Team", email = "dataengineering-dba@n26.com"},
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers :: Data Engineers :: DBAs",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: SQL",
+    "Topic :: Utilities :: Data Migrations",
+]
+keywords = [
+    "datashift",
+    "sql",
+    "postgres",
+    "postgresql",
+    "mysql",
+    "oracle",
+    "tsql",
+    "tds",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "ruff",
+]
+
+[project.urls]
+Homepage = "https://github.com/n26/datashift"
+Documentation = "https://github.com/n26/datashift/blob/master/README.md"
+Repository = "https://github.com/n26/datashift"
+"Issue Tracker" = "https://github.com/n26/datashift/issues"
+Changelog = "https://github.com/n26/datashift/blob/master/CHANGELOG.md"
+
+[project.scripts]
+datashift = "datashift.cli.commands:cli"
+
+[tool.mypy]
+python_version = "3.12"
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+strict = true
+strict_equality = true
+extra_checks = true
+show_error_codes = true
+no_implicit_reexport = true
+
+[tool.ruff]
+select = ["ALL"]
+ignore = ["ANN101", "ANN102", "N802"]
+line-length = 88
+
+[tool.ruff.lint.flake8-annotations]
+allow-star-arg-any = true
+
+[tool.ruff.lint.isort]
+length-sort = true
+known-first-party = ["datashift"]
+
+[tool.isort]
+profile = "black"
+length_sort = true
+known_first_party = "datashift"
+
+[tool.djlint]
+profile="jinja"
+use_gitignore=true
