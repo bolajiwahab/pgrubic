@@ -106,5 +106,5 @@ EnsureNoNotNullNonConstantDefaultOnNewColumn()(raw)
 # vacuum full
 # RefreshMatViewStmt
 # ReindexStmt
-
+# primary key
 # ColumnDef

@@ -2,25 +2,32 @@
 
 import typing
 
-from pglast import ast, enums, visitors  # type: ignore[import-untyped]
+from pglast import ast, enums  # type: ignore[import-untyped]
 
-from pgshield import errors
+from pgshield import errors, linter
 
 
-class EnsureConcurrentIndex(visitors.Visitor):  # type: ignore[misc]
+class EnsureConcurrentIndex(linter.Checker):  # type: ignore[misc]
     """Index should be built concurrently."""
 
     def visit_IndexStmt(
         self,
-        ancestors: typing.Any,  # noqa: ARG002, ANN401
+        ancestors: typing.Any,  # noqa: ANN401
         node: ast.Node,
     ) -> None:
         """Visit Index Statement."""
         if not node.concurrent:
-            raise errors.IndexNotConcurrentError
+
+            self.violations.append(
+                linter.Violation(
+                    lineno=ancestors[0].stmt_location,
+                    node=node,
+                    description="Index should be created with concurrently",
+                ),
+            )
 
 
-class EnsureForeignKeyConstraintNotValidatingExistingRows(visitors.Visitor):  # type: ignore[misc]
+class EnsureForeignKeyConstraintNotValidatingExistingRows(linter.Checker):  # type: ignore[misc]
     """Foreign key constraint should not validate existing rows in the same transaction."""  # noqa: E501
 
     def visit_Constraint(
@@ -34,10 +41,17 @@ class EnsureForeignKeyConstraintNotValidatingExistingRows(visitors.Visitor):  # 
             and node.contype == enums.ConstrType.CONSTR_FOREIGN
             and not node.skip_validation
         ):
-            raise errors.ForeignKeyConstraintShouldNotValidateExistingRowsError
+
+            self.violations.append(
+                linter.Violation(
+                    lineno=ancestors[3].stmt_location,
+                    node=node,
+                    description="Foreign key should be created as not valid",
+                ),
+            )
 
 
-class EnsureCheckConstraintNotValidatingExistingRows(visitors.Visitor):  # type: ignore[misc]
+class EnsureCheckConstraintNotValidatingExistingRows(linter.Checker):  # type: ignore[misc]
     """Check constraint should not validate existing rows in the same transaction."""
 
     def visit_Constraint(
@@ -54,7 +68,7 @@ class EnsureCheckConstraintNotValidatingExistingRows(visitors.Visitor):  # type:
             raise errors.CheckConstraintShouldNotValidateExistingRowsError
 
 
-class EnsureUniqueConstraintNotCreatingUniqueIndex(visitors.Visitor):  # type: ignore[misc]
+class EnsureUniqueConstraintNotCreatingUniqueIndex(linter.Checker):  # type: ignore[misc]
     """Unique constraint should not create unique index in the same transaction."""
 
     def visit_Constraint(
@@ -71,7 +85,7 @@ class EnsureUniqueConstraintNotCreatingUniqueIndex(visitors.Visitor):  # type: i
             raise errors.UniqueConstraintShouldNotCreateUniqueIndexError
 
 
-class EnsureNoNotNullOnExistingColumn(visitors.Visitor):  # type: ignore[misc]
+class EnsureNoNotNullOnExistingColumn(linter.Checker):  # type: ignore[misc]
     """Not Null constraint should not be set directly on an existing column."""
 
     def visit_AlterTableCmd(
@@ -87,7 +101,7 @@ class EnsureNoNotNullOnExistingColumn(visitors.Visitor):  # type: ignore[misc]
             raise errors.UniqueConstraintShouldNotCreateUniqueIndexError
 
 
-class EnsureNoNotNullNonConstantDefaultOnNewColumn(visitors.Visitor):  # type: ignore[misc]
+class EnsureNoNotNullNonConstantDefaultOnNewColumn(linter.Checker):  # type: ignore[misc]
     """Not null with constant defaults are safe for new columns."""
 
     def visit_ColumnDef(
@@ -113,7 +127,7 @@ class EnsureNoNotNullNonConstantDefaultOnNewColumn(visitors.Visitor):  # type: i
                 raise errors.UniqueConstraintShouldNotCreateUniqueIndexError
 
 
-class EnsureConstantDefaultForNewColumn(visitors.Visitor):  # type: ignore[misc]
+class EnsureConstantDefaultForNewColumn(linter.Checker):  # type: ignore[misc]
     """Constants are safe for default for new columns."""
 
     def visit_Constraint(
