@@ -1,0 +1,9 @@
+-- no upper case identifiers
+-- improper data types -- timestamp without time zone
+-- timetz, char(n), varchar(n), money, jsob, serial
+-- improper usage of feature -- SQL_ASCII, rules, inherits 
+
+# we need no qa with rule name to skip.
+# config to include/exclude rules
+# config to specify convention
+# blacklist config e.g types

@@ -31,3 +31,11 @@ class UniqueConstraintShouldNotCreateUniqueIndexError(SQLBaseError):
 
 class NotNullConstraintOnExistingColumnError(SQLBaseError):
     """Raised when not null constraint is added to an existing column."""
+
+
+class DuplicateRuleDetectedError(SQLBaseError):
+    """Raised when duplicate rule is detected."""
+
+
+class DuplicateRuleCodeDetectedError(SQLBaseError):
+    """Raised when duplicate rule code is detected."""

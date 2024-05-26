@@ -1,6 +1,5 @@
 """Linter."""
 
-import sys
 import typing
 import pathlib
 import dataclasses
@@ -15,28 +14,17 @@ class Violation:
     """Representation of rule violation."""
 
     lineno: int
-    statement: ast.Node
+    node: ast.Node
     description: str
 
 
 class Checker(visitors.Visitor):  # type: ignore[misc]
     """Define a lint rule, and store all the nodes that violate that lint rule."""
 
-    name: str
-    code: str
-
-    issue_code: str
-    description: str
-
-    def __init__(self) -> None:
+    def __init__(self, issue_code: str) -> None:
         """Init."""
+        self.issue_code = issue_code
         self.violations: list[Violation] = []
-
-        for required in ("name", "code"):
-            if not hasattr(self, required):
-                msg = f"{self.__class__.__name__} must define a '{required}' attribute."
-                raise NotImplementedError(msg)
-
 
     def visit(self, ancestors: typing.Any, node: ast.Node) -> None:  # noqa: ANN401
         """Visit the node."""
@@ -54,11 +42,11 @@ class Linter:
         """Print all violations collected by a checker."""
         for violation in checker.violations:
             logging.logger.error(
-                f"{file_name}:{violation.lineno}: {checker.code}: "
-                f"{violation.description}: {stream.RawStream()(violation.statement)}",
+                f"{file_name}:{violation.lineno}: {checker.issue_code}: "
+                f"{violation.description}: {stream.RawStream()(violation.node)}",
             )
 
-    def run(self, source_path: str) -> None:
+    def run(self, source_path: str) -> bool:
         """Run all lints on a source file."""
         file_name = pathlib.Path(source_path).name
 
@@ -66,18 +54,11 @@ class Linter:
             source_code = source_file.read()
 
         tree = parser.parse_sql(source_code)
-
-        violations: bool = False
-
         for checker in self.checkers:
-
             checker(tree)
+            self.print_violations(checker=checker, file_name=file_name)
 
-            if checker.violations:
+        if checker.violations:
+            return True
 
-                violations = True
-
-                self.print_violations(checker=checker, file_name=file_name)
-
-        if violations:
-            sys.exit(1)
+        return False
