@@ -14,11 +14,12 @@ def _extract_comments(statement):
     lines = []
     lofs = 0
     print(statement.splitlines(True))
-    for line in statement.splitlines(True):
+    for line in statement.split(";"):
         print(len(line))
         llen = len(line)
         lines.append((lofs, lofs+llen, line))
-        lofs += llen
+        lofs += llen + 1
+    print(lines)
     comments = []
     continue_previous = False
     for token in scan(statement):
@@ -62,10 +63,10 @@ class DropColumn(Visitor):  # type: ignore[misc]
             raise ValueError("nay")
 
 # sql = """ALTER TABLE transaction ADD COLUMN "transactionDate" timestamp without time zone GENERATED ALWAYS AS ("dateTime"::date) STORED;"""
-sql = """ALTER TABLE public.ecdict
-ADD COLUMN id serial --noqa: UNS01
+sql = """ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS01
 ;
-ALTER TABLE public.ecdict ADD COLUMN id serial;"""
+ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS01
+;"""
 
 # sql = "alter index tble set tablespace col"
 # sql = "alter table tble add column b text default 'a'"
@@ -77,7 +78,7 @@ ALTER TABLE public.ecdict ADD COLUMN id serial;"""
 # print(raw1)
 # contype=<ConstrType.CONSTR_DEFAULT: 2> deferrable=False initdeferred=False is_no_inherit=False raw_expr=<ColumnRef fields=(<String sval='a'>,)>
 raw = parse_sql(sql)
-print(raw[0].stmt_location)
+print(raw[1].stmt_location)
 raw2 = scan(sql)
 # print(raw)
 print(raw2)
