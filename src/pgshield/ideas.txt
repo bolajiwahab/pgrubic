@@ -7,3 +7,6 @@
 # config to include/exclude rules
 # config to specify convention
 # blacklist config e.g types
+
+
+# prevent missing rule numbers

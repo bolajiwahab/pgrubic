@@ -5,11 +5,17 @@
 -- alter table tbl alter column a set not null;
 -- alter table tbl add column a text not null;
 
-ALTER TABLE public.ecdict ADD COLUMN id serial;
+-- CREATE TABLE people (
+--     height_cm numeric,
+--     height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
+-- );
 
-ALTER TABLE public.ecdict ADD COLUMN id bigint GENERATED ALWAYS AS IDENTITY;
+-- ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS01
+-- ;
 
-ALTER TABLE transaction ADD COLUMN "transactionDate" timestamp without time zone GENERATED ALWAYS AS ("dateTime"::date) STORED;
+-- ALTER TABLE public.ecdict ADD COLUMN id bigint GENERATED ALWAYS AS IDENTITY;
+
+-- ALTER TABLE transaction ADD COLUMN "transactionDate" timestamp without time zone GENERATED ALWAYS AS ("dateTime"::date) STORED;
 
 -- alter table tbl drop column a;
 
@@ -19,7 +25,11 @@ ALTER TABLE transaction ADD COLUMN "transactionDate" timestamp without time zone
 
 -- alter table abc add constraint uniq primary key using index tbl;
 
+-- alter index all in tablespace tble set tablespace col;
+
 -- alter table all in tablespace tble set tablespace col;
+
+-- alter index tble set tablespace col;
 
 -- alter table tble set tablespace col;
 

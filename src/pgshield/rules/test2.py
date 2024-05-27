@@ -1,51 +1,63 @@
-from pglast import stream, parse_sql, enums, visitors, ast
+from pglast import parse_sql, SqlNode
 
-from pglast.visitors import Delete, Visitor
+class ConstraintVisitor:
+    def __init__(self, rules_to_skip=None):
+        self.rules_to_skip = rules_to_skip or []
 
-import itertools
+    def visit_Constraint(self, node):
+        if 'L001' not in self.rules_to_skip:
+            # Example linting rule for Constraint
+            print(f"Avoid using constraints on line {node.location.line}")
 
-class DropColumn(visitors.Visitor):
-    def visit_AlterTableCmd(
-            self,
-            ancestors: ast.Node,
-            node: ast.Node,
-    ) -> None:
-        # print(len(ancestors))
-        # print(ancestors)
-        # cnt = 0
-        mem: list[str] = []
-        mem = list(itertools.takewhile(lambda n: n is not None, ancestors))
-        for n in ancestors:
-            print(n)
-            if n is None:
-                break
-            mem.append(n)
-        print(len(mem))
-        print(ancestors[len(mem) - 1])
-            # if isinstance(n, ast.RawStmt):
-            #     print("we are here.")
-        #     print(n)
-        # if node.subtype == enums.AlterTableType.AT_DropColumn:
-        #     # pass
-        #     # print(node)
-        #     print(stream.RawStream()(ancestors[3]))
+class SelectVisitor:
+    def __init__(self, rules_to_skip=None):
+        self.rules_to_skip = rules_to_skip or []
 
+    def visit_Select(self, node):
+        if 'L002' not in self.rules_to_skip:
+            # Example linting rule for Select
+            print(f"Avoid using SELECT * on line {node.location.line}")
 
-# class DropNullConstraint(Visitor):
-#     def visit_Constraint(self, ancestors, node):
-#         if node.contype == enums.ConstrType.CONSTR_NULL:
-#             return Delete
+def extract_skip_rules_per_line(sql):
+    parsed = parse_sql(sql)
+    skip_rules_per_line = {}
 
-# raw = parse_sql("""create table foo (
-#                 a integer null,
-#                 b integer not null
-#             )""")
+    for node in parsed:
+        if isinstance(node, SqlNode) and node.tag == 'T_Comment':
+            comment_text = node.str.upper().strip()
+            if comment_text.startswith('-- NOQA:'):
+                rules = comment_text[len('-- NOQA:'):].strip().split(',')
+                lineno = node.location.line
+                skip_rules_per_line[lineno] = [rule.strip() for rule in rules]
 
-sql = "alter table tbl drop column a;"
-raw = parse_sql(sql)
-# (parse_sql('SELECT foo FROM bar'))
-# stream.RawStream()(raw)
+    return skip_rules_per_line
 
-raw2 = DropColumn()(raw)
+def lint_sql(sql):
+    skip_rules_per_line = extract_skip_rules_per_line(sql)
+    parsed = parse_sql(sql)
 
-# print(stream.RawStream()(raw2))
+    for node in parsed:
+        lineno = node.location.line
+        rules_to_skip = skip_rules_per_line.get(lineno, [])
+        
+        constraint_visitor = ConstraintVisitor(rules_to_skip)
+        select_visitor = SelectVisitor(rules_to_skip)
+
+        if isinstance(node, SqlNode) and node.tag == 'T_Constraint':
+            constraint_visitor.visit_Constraint(node)
+        elif isinstance(node, SqlNode) and node.tag == 'T_SelectStmt':
+            select_visitor.visit_Select(node)
+
+# Example usage
+sql_example = """
+-- NoQA: L001
+CREATE TABLE example_table (
+    id SERIAL PRIMARY KEY
+);
+
+SELECT * FROM table1;
+
+SELECT column1, column2 FROM table2; -- NoQA: L002
+"""
+
+lint_sql(sql_example)

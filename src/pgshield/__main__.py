@@ -15,13 +15,13 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
     loaded_rules: list[_linter.Checker] = utils.load_rules(rules_directories)
 
+    utils.check_duplicate_rules(loaded_rules)
+
     rule_codes: list[str] = []
 
     for rule in loaded_rules:
         linter.checkers.add(rule())
         rule_codes.append(rule.code)
-
-    utils.check_duplicate_rules(loaded_rules)
 
     for source_path in source_paths:
         linter.run(source_path)

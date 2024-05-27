@@ -9,7 +9,7 @@ class NonConcurrentIndexCreation(linter.Checker):  # type: ignore[misc]
     """Non concurrent index creation."""
 
     name = "unsafe.non_concurrent_index_creation"
-    code = "US001"
+    code = "UNS001"
 
     def visit_IndexStmt(
         self,
@@ -23,7 +23,7 @@ class NonConcurrentIndexCreation(linter.Checker):  # type: ignore[misc]
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Non concurrent index creation",
                 ),
@@ -34,7 +34,7 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):  # type: igno
     """Validated foreign key constraint on existing rows."""
 
     name = "unsafe.validated_foreign_key_constraint_on_existing_rows"
-    code = "US002"
+    code = "UNS002"
 
     def visit_Constraint(
         self,
@@ -52,7 +52,7 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):  # type: igno
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Validated foreign key constraint on existing rows",
                 ),
@@ -63,7 +63,7 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):  # type: ignore[mi
     """Validated check constraint on existing rows."""
 
     name = "unsafe.validated_check_constraint_on_existing_rows"
-    code = "US003"
+    code = "UNS003"
 
     def visit_Constraint(
         self,
@@ -81,7 +81,7 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):  # type: ignore[mi
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Validated check constraint on existing rows",
                 ),
@@ -92,7 +92,7 @@ class UniqueConstraintCreatingNewIndex(linter.Checker):  # type: ignore[misc]
     """Unique constraint creating new index."""
 
     name = "unsafe.unique_constraint_creating_new_index"
-    code = "US004"
+    code = "UNS004"
 
     def visit_Constraint(
         self,
@@ -110,7 +110,7 @@ class UniqueConstraintCreatingNewIndex(linter.Checker):  # type: ignore[misc]
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Unique constraint creating new index",
                 ),
@@ -121,7 +121,7 @@ class PrimaryKeyConstraintCreatingNewIndex(linter.Checker):  # type: ignore[misc
     """Primary key constraint creating new index."""
 
     name = "unsafe.primary_key_constraint_creating_new_index"
-    code = "US005"
+    code = "UNS005"
 
     def visit_Constraint(
         self,
@@ -139,7 +139,7 @@ class PrimaryKeyConstraintCreatingNewIndex(linter.Checker):  # type: ignore[misc
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Primary key constraint creating new index",
                 ),
@@ -150,7 +150,7 @@ class NotNullOnExistingColumn(linter.Checker):  # type: ignore[misc]
     """Not null on existing column."""
 
     name = "unsafe.not_null_on_existing_column"
-    code = "US006"
+    code = "UNS006"
 
     def visit_AlterTableCmd(
         self,
@@ -164,7 +164,7 @@ class NotNullOnExistingColumn(linter.Checker):  # type: ignore[misc]
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Not null on existing column",
                 ),
@@ -175,7 +175,7 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):  # type: ignore[mis
     """Not null on new column with no static default."""
 
     name = "unsafe.not_null_on_new_column_with_no_static_default"
-    code = "US007"
+    code = "UNS007"
 
     def visit_ColumnDef(
         self,
@@ -205,8 +205,8 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):  # type: ignore[mis
 
                 self.violations.append(
                     linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    statement=ancestors[statement_index],
+                        location=ancestors[statement_index].stmt_location,
+                        statement=ancestors[statement_index],
                         description="Not null on new column with no static default",
                     ),
                 )
@@ -216,7 +216,7 @@ class VolatileDefaultOnNewColumn(linter.Checker):  # type: ignore[misc]
     """Volatile default on new column."""
 
     name = "unsafe.volatile_default_on_new_column"
-    code = "US008"
+    code = "UNS008"
 
     def visit_Constraint(
         self,
@@ -234,28 +234,31 @@ class VolatileDefaultOnNewColumn(linter.Checker):  # type: ignore[misc]
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Volatile default on new column",
                 ),
             )
 
 
-class TableMoveToTablespace(linter.Checker):
+class TableMovementToTablespace(linter.Checker):
     """Table movement to tablespace."""
 
-    name = "unsafe.table_move_to_tablespace"
-    code = "US009"
+    name = "unsafe.table_movement_to_tablespace"
+    code = "UNS009"
 
     def visit_AlterTableCmd(self, ancestors: ast.Node, node: ast.Node) -> None:
         """Visit AlterTableCmd."""
-        if node.subtype == enums.AlterTableType.AT_SetTableSpace:
+        statement_index: int = utils.get_statement_index(ancestors)
 
-            statement_index: int = utils.get_statement_index(ancestors)
+        if (
+            node.subtype == enums.AlterTableType.AT_SetTableSpace
+            and ancestors[statement_index].stmt.objtype == enums.ObjectType.OBJECT_TABLE
+        ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Table movement to tablespace",
                 ),
@@ -266,34 +269,42 @@ class TablesMovementToTablespace(linter.Checker):
     """Tables movement to tablespace."""
 
     name = "unsafe.tables_movement_to_tablespace"
-    code = "US010"
+    code = "UNS010"
 
-    def visit_AlterTableMoveAllStmt(self, ancestors: ast.Node, node: ast.Node) -> None:  # noqa: ARG002
+    def visit_AlterTableMoveAllStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.Node,
+    ) -> None:
         """Visit AlterTableMoveAllStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        if node.objtype == enums.ObjectType.OBJECT_TABLE:
 
-        self.violations.append(
-            linter.Violation(
-                lineno=ancestors[statement_index].stmt_location,
-                statement=ancestors[statement_index],
-                description="Tables movement to tablespace",
-            ),
-        )
+            statement_index: int = utils.get_statement_index(ancestors)
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Tables movement to tablespace",
+                ),
+            )
 
 
 class Cluster(linter.Checker):
     """Cluster."""
 
     name = "unsafe.cluster"
-    code = "US0011"
+    code = "UNS011"
 
-    def visit_ClusterStmt(self, ancestors: ast.Node, node: ast.Node) -> None:  # noqa: ARG002
-        """Visit ClusterStmt."""
+    def visit_ClUNSterStmt(
+        self, ancestors: ast.Node, node: ast.Node,  # noqa: ARG002
+    ) -> None:
+        """Visit ClUNSterStmt."""
         statement_index: int = utils.get_statement_index(ancestors)
 
         self.violations.append(
             linter.Violation(
-                lineno=ancestors[statement_index].stmt_location,
+                location=ancestors[statement_index].stmt_location,
                 statement=ancestors[statement_index],
                 description="Cluster",
             ),
@@ -304,7 +315,7 @@ class VacuumFull(linter.Checker):
     """Vacuum full."""
 
     name = "unsafe.vacuum_full"
-    code = "US0012"
+    code = "UNS012"
 
     def visit_VacuumStmt(self, ancestors: ast.Node, node: ast.Node) -> None:
         """Visit VacuumStmt."""
@@ -320,7 +331,7 @@ class VacuumFull(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Vacuum full",
                 ),
@@ -331,7 +342,7 @@ class NonConcurrentRefreshMaterializedView(linter.Checker):  # type: ignore[misc
     """Non concurrent refresh materialized view."""
 
     name = "unsafe.non_concurrent_refresh_materialized_view"
-    code = "US013"
+    code = "UNS013"
 
     def visit_RefreshMatViewStmt(
         self,
@@ -345,7 +356,7 @@ class NonConcurrentRefreshMaterializedView(linter.Checker):  # type: ignore[misc
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Non concurrent refresh materialized view",
                 ),
@@ -356,7 +367,7 @@ class NonConcurrentReindex(linter.Checker):
     """Non concurrent reindex."""
 
     name = "unsafe.non_concurrent_reindex"
-    code = "US014"
+    code = "UNS014"
 
     def visit_ReindexStmt(self, ancestors: ast.Node, node: ast.Node) -> None:
         """Visit ReindexStmt."""
@@ -372,7 +383,7 @@ class NonConcurrentReindex(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Non concurrent reindex",
                 ),
@@ -383,7 +394,7 @@ class DropColumn(linter.Checker):  # type: ignore[misc]
     """Drop column."""
 
     name = "unsafe.drop_column"
-    code = "US015"
+    code = "UNS015"
 
     def visit_AlterTableCmd(
         self,
@@ -397,7 +408,7 @@ class DropColumn(linter.Checker):  # type: ignore[misc]
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Drop column",
                 ),
@@ -408,7 +419,7 @@ class ChangeColumnType(linter.Checker):
     """Change column type."""
 
     name = "unsafe.change_column_type"
-    code = "US016"
+    code = "UNS016"
 
     def visit_AlterTableCmd(
         self,
@@ -422,7 +433,7 @@ class ChangeColumnType(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Change column type",
                 ),
@@ -433,7 +444,7 @@ class RenameColumn(linter.Checker):
     """Rename column."""
 
     name = "unsafe.rename_column"
-    code = "US017"
+    code = "UNS017"
 
     def visit_RenameStmt(
         self,
@@ -447,7 +458,7 @@ class RenameColumn(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Rename column",
                 ),
@@ -458,7 +469,7 @@ class RenameTable(linter.Checker):
     """Rename table."""
 
     name = "unsafe.rename_table"
-    code = "US018"
+    code = "UNS018"
 
     def visit_RenameStmt(
         self,
@@ -472,7 +483,7 @@ class RenameTable(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Rename table",
                 ),
@@ -483,7 +494,7 @@ class AutoIncrementColumn(linter.Checker):
     """Auto increment column."""
 
     name = "unsafe.auto_increment_column"
-    code = "US0013"
+    code = "UNS019"
 
     def visit_ColumnDef(self, ancestors: ast.Node, node: ast.Node) -> None:
         """Visit ColumnDef."""
@@ -500,17 +511,18 @@ class AutoIncrementColumn(linter.Checker):
 
                 self.violations.append(
                     linter.Violation(
-                        lineno=ancestors[statement_index].stmt_location,
+                        location=ancestors[statement_index].stmt_location,
                         statement=ancestors[statement_index],
                         description="Auto increment column",
                     ),
                 )
 
+
 class AutoIncrementIdentityColumn(linter.Checker):  # type: ignore[misc]
     """Auto increment identity column."""
 
     name = "unsafe.auto_increment_identity_column"
-    code = "US0014"
+    code = "UNS020"
 
     def visit_Constraint(
         self,
@@ -527,7 +539,7 @@ class AutoIncrementIdentityColumn(linter.Checker):  # type: ignore[misc]
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Auto increment identity column",
                 ),
@@ -538,7 +550,7 @@ class StoredGeneratedColumn(linter.Checker):  # type: ignore[misc]
     """Stored generated column."""
 
     name = "unsafe.stored_generated_column"
-    code = "US0015"
+    code = "UNS021"
 
     def visit_Constraint(
         self,
@@ -555,8 +567,55 @@ class StoredGeneratedColumn(linter.Checker):  # type: ignore[misc]
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Stored generated column",
+                ),
+            )
+
+
+class IndexMovementToTablespace(linter.Checker):
+    """Index movement to tablespace."""
+
+    name = "unsafe.index_movement_to_tablespace"
+    code = "UNS022"
+
+    def visit_AlterTableCmd(self, ancestors: ast.Node, node: ast.Node) -> None:
+        """Visit AlterTableCmd."""
+        statement_index: int = utils.get_statement_index(ancestors)
+
+        if (
+            node.subtype == enums.AlterTableType.AT_SetTableSpace
+            and ancestors[statement_index].stmt.objtype == enums.ObjectType.OBJECT_INDEX
+        ):
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Index movement to tablespace",
+                ),
+            )
+
+
+class IndexesMovementToTablespace(linter.Checker):
+    """Indexes movement to tablespace."""
+
+    name = "unsafe.indexes_movement_to_tablespace"
+    code = "UNS023"
+
+    def visit_AlterTableMoveAllStmt(
+        self, ancestors: ast.Node, node: ast.Node,
+    ) -> None:
+        """Visit AlterTableMoveAllStmt."""
+        if node.objtype == enums.ObjectType.OBJECT_INDEX:
+
+            statement_index: int = utils.get_statement_index(ancestors)
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Indexes movement to tablespace",
                 ),
             )

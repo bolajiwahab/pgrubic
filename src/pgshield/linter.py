@@ -14,7 +14,7 @@ from pgshield import logging
 class Violation:
     """Representation of rule violation."""
 
-    lineno: int
+    location: int
     statement: ast.Node
     description: str
 
@@ -54,12 +54,12 @@ class Linter:
         """Print all violations collected by a checker."""
         for violation in checker.violations:
             logging.logger.error(
-                f"{file_name}:{violation.lineno}: {checker.code}: "
+                f"{file_name}:{violation.location}: {checker.code}: "
                 f"{violation.description}: {stream.RawStream()(violation.statement)}",
             )
 
     def run(self, source_path: str) -> None:
-        """Run all lints on a source file."""
+        """Run all rules on a source file."""
         file_name = pathlib.Path(source_path).name
 
         with pathlib.Path(source_path).open("r") as source_file:

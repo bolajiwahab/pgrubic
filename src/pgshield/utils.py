@@ -44,11 +44,10 @@ def check_duplicate_rules(rules: list[linter.Checker]) -> None:
 
 
 def get_statement_index(ancestors: ast.Node) -> int:
-    """Hack to get statement location and the raw statement from ancestors.
+    """Get statement index.
 
-    This is due to the way ancestors are represented in the AST tree,
-    which is not a list by default hence we can't use list functions
-    such as len directly.
+    pglast's AST is not a python list hence we cannot use list functions such as `len`
+    directly on it. We need to build a list from the AST.
     """
     nodes: list[str] = []
 
@@ -59,5 +58,5 @@ def get_statement_index(ancestors: ast.Node) -> int:
 
         nodes.append(node)
 
-    # We need to go two steps back to locate our current node's statement.
+    # The current visitor's Node is located two indexes from the end of the list.
     return len(nodes) - 2
