@@ -4,7 +4,6 @@ import re
 import typing
 import inspect
 import importlib
-import dataclasses
 
 from pglast import ast, parser  # type: ignore[import-untyped]
 
@@ -64,20 +63,12 @@ def get_statement_index(ancestors: ast.Node) -> int:
     return len(nodes) - 2
 
 
-# @dataclasses.dataclass(kw_only=True)
-# class Comment:
-#     """Representation of an SQL comment."""
-
-#     statement_location: int
-#     text: str
-
-
 def extract_noqa(statement: str) -> list[tuple[int, str]]:
     """Extract noqa from inline SQL comment."""
     lines: list[tuple[int, int, str]] = []
     line_offset = 0
 
-    statement = re.sub(r"^\s*--.*\n?", "", statement, flags=re.MULTILINE)
+    statement = re.sub(r"^\s*--.*\n?", " ", statement, flags=re.MULTILINE)
 
     for line in statement.split(";"):
 
@@ -113,6 +104,6 @@ def extract_noqa(statement: str) -> list[tuple[int, str]]:
                         )
                     comment_remainder = comment_remainder[1:].strip()
 
-            comments.append((beginning_of_line_offset, comment_remainder))
+                comments.append((beginning_of_line_offset, comment_remainder))
 
     return comments

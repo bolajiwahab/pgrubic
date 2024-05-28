@@ -1,5 +1,6 @@
 """Linter."""
 
+import re
 import sys
 import typing
 import pathlib
@@ -7,7 +8,7 @@ import dataclasses
 
 from pglast import ast, parser, stream, visitors  # type: ignore[import-untyped]
 
-from pgshield import logging, utils
+from pgshield import utils, logging
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
@@ -64,6 +65,8 @@ class Linter:
 
         with pathlib.Path(source_path).open("r") as source_file:
             source_code = source_file.read()
+
+        source_code = re.sub(r"^\s*--.*\n?", " ", source_code, flags=re.MULTILINE)
 
         tree = parser.parse_sql(source_code)
 

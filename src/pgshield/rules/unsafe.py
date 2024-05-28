@@ -502,8 +502,6 @@ class AutoIncrementColumn(linter.Checker):
         """Visit ColumnDef."""
         statement_index: int = utils.get_statement_index(ancestors)
 
-        print(self.ignore_rules)
-
         if (
             ast.AlterTableStmt in ancestors
             and (ancestors[statement_index].stmt_location, self.code)
@@ -539,12 +537,14 @@ class AutoIncrementIdentityColumn(linter.Checker):  # type: ignore[misc]
         node: ast.Node,
     ) -> None:
         """Visit Constraint."""
+        statement_index: int = utils.get_statement_index(ancestors)
+
         if (
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_IDENTITY
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
         ):
-
-            statement_index: int = utils.get_statement_index(ancestors)
 
             self.violations.append(
                 linter.Violation(

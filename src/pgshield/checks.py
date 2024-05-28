@@ -32,7 +32,7 @@ def _extract_comments(statement: str) -> Comment:
 
     # by = r"(\".*?\"|\'.*?\')|(/\*.*?\*/|//[^\r\n]*$)"
     # r"^\s*--.*\n?|/\*.*?\*/"
-    statement = re.sub(r"^\s*--.*\n?", "", statement, flags=re.MULTILINE)
+    statement = re.sub(r"^\s*--.*\n?", " ", statement, flags=re.MULTILINE)
 
     print(statement)
 
