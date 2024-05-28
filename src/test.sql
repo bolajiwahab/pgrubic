@@ -10,10 +10,11 @@
 --     height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
 -- );
 
--- ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS01
--- ;
+ALTER TABLE public.ecdict ADD COLUMN id serial -- noqa: UNS019
+;
 
--- ALTER TABLE public.ecdict ADD COLUMN id bigint GENERATED ALWAYS AS IDENTITY;
+ALTER TABLE public.ecdict ADD COLUMN id bigint GENERATED ALWAYS AS IDENTITY -- noqa: UNS020
+;
 
 -- ALTER TABLE transaction ADD COLUMN "transactionDate" timestamp without time zone GENERATED ALWAYS AS ("dateTime"::date) STORED;
 

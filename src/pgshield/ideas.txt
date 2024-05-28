@@ -10,3 +10,7 @@
 
 
 # prevent missing rule numbers
+
+# config to exclude certain files from the check e.g init.sql - should happen at the source file registration to skip
+# config exclusion for rules happen at rules registration
+# in line comment happen at the visitor

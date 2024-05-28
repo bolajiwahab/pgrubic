@@ -297,7 +297,9 @@ class Cluster(linter.Checker):
     code = "UNS011"
 
     def visit_ClUNSterStmt(
-        self, ancestors: ast.Node, node: ast.Node,  # noqa: ARG002
+        self,
+        ancestors: ast.Node,
+        node: ast.Node,  # noqa: ARG002
     ) -> None:
         """Visit ClUNSterStmt."""
         statement_index: int = utils.get_statement_index(ancestors)
@@ -498,7 +500,16 @@ class AutoIncrementColumn(linter.Checker):
 
     def visit_ColumnDef(self, ancestors: ast.Node, node: ast.Node) -> None:
         """Visit ColumnDef."""
-        if ast.AlterTableStmt in ancestors:
+        statement_index: int = utils.get_statement_index(ancestors)
+
+        print(self.ignore_rules)
+
+        if (
+            ast.AlterTableStmt in ancestors
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
+
             data_types = (
                 [stream.RawStream()(data_type) for data_type in node.typeName.names]
                 if node.typeName.names is not None
@@ -506,8 +517,6 @@ class AutoIncrementColumn(linter.Checker):
             )
 
             if any(dt in ["'bigserial'", "'serial'"] for dt in data_types):
-
-                statement_index: int = utils.get_statement_index(ancestors)
 
                 self.violations.append(
                     linter.Violation(
@@ -605,7 +614,9 @@ class IndexesMovementToTablespace(linter.Checker):
     code = "UNS023"
 
     def visit_AlterTableMoveAllStmt(
-        self, ancestors: ast.Node, node: ast.Node,
+        self,
+        ancestors: ast.Node,
+        node: ast.Node,
     ) -> None:
         """Visit AlterTableMoveAllStmt."""
         if node.objtype == enums.ObjectType.OBJECT_INDEX:

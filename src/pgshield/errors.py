@@ -12,30 +12,5 @@ class SQLParseError(SQLBaseError):
 class SQLLintError(SQLBaseError):
     """Lint error."""
 
-
-class IndexNotConcurrentError(SQLBaseError):
-    """Raised when index is not being built in a concurrent manner."""
-
-
-class ForeignKeyConstraintShouldNotValidateExistingRowsError(SQLBaseError):
-    """Raised when foreign key constraint is validating existing rows."""
-
-
-class CheckConstraintShouldNotValidateExistingRowsError(SQLBaseError):
-    """Raised when check constraint is validating existing rows."""
-
-
-class UniqueConstraintShouldNotCreateUniqueIndexError(SQLBaseError):
-    """Raised when unique constraint is creating a unique index."""
-
-
-class NotNullConstraintOnExistingColumnError(SQLBaseError):
-    """Raised when not null constraint is added to an existing column."""
-
-
 class DuplicateRuleDetectedError(SQLBaseError):
     """Raised when duplicate rule is detected."""
-
-
-class DuplicateRuleCodeDetectedError(SQLBaseError):
-    """Raised when duplicate rule code is detected."""

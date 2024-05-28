@@ -7,7 +7,7 @@ import dataclasses
 
 from pglast import ast, parser, stream, visitors  # type: ignore[import-untyped]
 
-from pgshield import logging
+from pgshield import logging, utils
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
@@ -25,11 +25,11 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
     name: str
     code: str
 
-    issue_code: str
     description: str
 
     def __init__(self) -> None:
         """Init."""
+        self.ignore_rules: list[utils.Comment] = []
         self.violations: list[Violation] = []
 
         for required in ("name", "code"):
@@ -70,6 +70,8 @@ class Linter:
         violations: bool = False
 
         for checker in self.checkers:
+
+            checker.ignore_rules = utils.extract_noqa(source_code)
 
             checker(tree)
 

@@ -1,4 +1,5 @@
 """Linter."""
+
 from pglast import ast, enums, prettify, stream, printers  # type: ignore
 from pglast.stream import RawStream, IndentedStream
 from pglast.visitors import Delete, Visitor, Ancestor
@@ -6,39 +7,78 @@ from pglast.parser import parse_sql_json, parse_sql, scan
 from typing import NamedTuple
 from collections import namedtuple
 
+# from pgshield import errors
 
-Comment = namedtuple('Comment', ('location', 'text', 'at_start_of_line', 'continue_previous'))
+import dataclasses
+
+
+@dataclasses.dataclass(kw_only=True)
+class Comment:
+    """Representation of an SQL comment."""
+
+    statement_location: int
+    text: str
+
+
+# Comment = namedtuple('Comment', ('location', 'text'))
 "A structure to carry information about a single SQL comment."
 
-def _extract_comments(statement):
-    lines = []
-    lofs = 0
-    print(statement.splitlines(True))
-    for line in statement.split(";"):
-        print(len(line))
-        llen = len(line)
-        lines.append((lofs, lofs+llen, line))
-        lofs += llen + 1
-    print(lines)
-    comments = []
-    continue_previous = False
-    for token in scan(statement):
-        if token.name in ('C_COMMENT', 'SQL_COMMENT'):
-            for bol_ofs, eol_ofs, line in lines:
-                if bol_ofs <= token.start < eol_ofs:
-                    break
-            else:  # pragma: no cover
-                raise RuntimeError('Uhm, logic error!')
+import re
 
-            print(bol_ofs)
-            print(line[:token.start - bol_ofs].strip())
-            at_start_of_line = not line[:token.start - bol_ofs].strip()
-            text = statement[token.start:token.end+1]
-            comments.append(Comment(token.start, text, at_start_of_line, continue_previous))
-            continue_previous = True
-        else:
-            continue_previous = False
+def _extract_comments(statement: str) -> Comment:
+
+    lines: list[tuple[int, int, str]] = []
+    line_offset = 0
+
+    # by = r"(\".*?\"|\'.*?\')|(/\*.*?\*/|//[^\r\n]*$)"
+    # r"^\s*--.*\n?|/\*.*?\*/"
+    statement = re.sub(r"^\s*--.*\n?", "", statement, flags=re.MULTILINE)
+
+    print(statement)
+
+    for line in statement.split(";"):
+
+        line_length = len(line)
+        lines.append((line_offset, line_offset + line_length, line))
+        line_offset += line_length + 1
+
+    comments: list[Comment] = []
+    # continue_previous = False  # noqa: ERA001
+    for token in scan(statement):
+
+        if token.name == "SQL_COMMENT":
+
+            for beginning_of_line_offset, end_of_line_offset, _ in lines:
+                if beginning_of_line_offset <= token.start < end_of_line_offset:
+                    break
+
+            comment = statement[token.start : (token.end + 1)]
+            # Normal comment lines can also have noqa e.g.
+            # --new table -- noqa: UNS05
+            # Therefore extract last possible inline ignore.
+            comment = [c.strip() for c in comment.split("--")][-1]
+            if comment.startswith("noqa"):
+                # This is an ignore identifier
+                comment_remainder = comment[4:]
+                if comment_remainder:
+                    # if not comment_remainder.startswith(":"):
+                    #     msg = f"Malformed 'noqa' section in line {token.start}. Expected 'noqa: <rule>[,...]"
+                    #     raise errors.SQLParseError(
+                    #         msg,
+                    #     )
+                    comment_remainder = comment_remainder[1:].strip()
+                    print(comment_remainder)
+                    print(beginning_of_line_offset)
+
+            # if comment.startswith("")
+            comments.append(
+                Comment(statement_location=beginning_of_line_offset, text=comment),
+            )
+
+    # for c in comments:
+    #     print(c.statement_location)
     return comments
+
 
 class DropColumn(Visitor):  # type: ignore[misc]
     """Drop column."""
@@ -55,18 +95,22 @@ class DropColumn(Visitor):  # type: ignore[misc]
         print(node)
         print(node.typeName.names)
         for option in node.typeName.names:
-            print( stream.RawStream()(option))
+            print(stream.RawStream()(option))
         # if node.subtype == enums.AlterTableType.AT_AddColumn:
         if "bigserial" in node.def_.typeName.names:
             print("okay")
             # print(node.def_.typeName.names)
             raise ValueError("nay")
 
+
 # sql = """ALTER TABLE transaction ADD COLUMN "transactionDate" timestamp without time zone GENERATED ALWAYS AS ("dateTime"::date) STORED;"""
-sql = """ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS01
+sql = """
+-- ALTER TABLE public.ecdict ADD COLUMN id serial;
+ALTER TABLE public.ecdict /* hello */ ADD COLUMN id serial --noqa: UNS01
 ;
-ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS01
-;"""
+ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS02
+;
+"""
 
 # sql = "alter index tble set tablespace col"
 # sql = "alter table tble add column b text default 'a'"
@@ -78,16 +122,17 @@ ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS01
 # print(raw1)
 # contype=<ConstrType.CONSTR_DEFAULT: 2> deferrable=False initdeferred=False is_no_inherit=False raw_expr=<ColumnRef fields=(<String sval='a'>,)>
 raw = parse_sql(sql)
+print(raw)
 print(raw[1].stmt_location)
-raw2 = scan(sql)
+# raw2 = scan(sql)
 # print(raw)
-print(raw2)
+# print(raw2)
 print(_extract_comments(sql))
-for a in raw2:
-    if a.name == "SQL_COMMENT":
-        print(a)
-DropColumn()(raw)
-print(stream.RawStream()(raw))
+# for a in raw2:
+#     if a.name == "SQL_COMMENT":
+#         print(a)
+# DropColumn()(raw)
+# print(stream.RawStream()(raw))
 # print(raw)
 # print(raw)
 # EnsureNoNotNullOnExistingColumn()(raw)

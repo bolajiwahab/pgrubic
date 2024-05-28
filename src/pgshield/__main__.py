@@ -17,11 +17,8 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
     utils.check_duplicate_rules(loaded_rules)
 
-    rule_codes: list[str] = []
-
     for rule in loaded_rules:
         linter.checkers.add(rule())
-        rule_codes.append(rule.code)
 
     for source_path in source_paths:
         linter.run(source_path)
