@@ -105,10 +105,7 @@ class DropColumn(Visitor):  # type: ignore[misc]
 
 # sql = """ALTER TABLE transaction ADD COLUMN "transactionDate" timestamp without time zone GENERATED ALWAYS AS ("dateTime"::date) STORED;"""
 sql = """
-select '-- world';
-select 'a', '/* -- hello */';
-/* hello */
--- ALTER TABLE public.ecdict ADD COLUMN id serial;
+DROP database tbl;
 ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS01 /* hello */
 ; /* hello */
 /* hello */ ALTER TABLE /*one*/ public.ecdict ADD COLUMN id serial --noqa: UNS02
@@ -125,7 +122,7 @@ ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS01 /* hello */
 #             )""")
 # print(raw1)
 # contype=<ConstrType.CONSTR_DEFAULT: 2> deferrable=False initdeferred=False is_no_inherit=False raw_expr=<ColumnRef fields=(<String sval='a'>,)>
-sql_no_comment = re.sub(r"^\s*--.*\n", "", sql, flags=re.MULTILINE)
+sql_no_comment = re.sub(r"^\s*--.*\n|^\s*\/[*][\S\s]*?[*]\/", "", sql, flags=re.MULTILINE)
 # print(sql_no_comment)
 print(_extract_comments(sql))
 raw = parse_sql(sql_no_comment)

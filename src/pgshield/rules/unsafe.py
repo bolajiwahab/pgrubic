@@ -630,3 +630,99 @@ class IndexesMovementToTablespace(linter.Checker):
                     description="Indexes movement to tablespace",
                 ),
             )
+
+
+class DropTable(linter.Checker):
+    """Drop table."""
+
+    name = "unsafe.drop_table"
+    code = "UNS024"
+
+    def visit_DropStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.Node,
+    ) -> None:
+        """Visit DropStmt."""
+        if node.removeType == enums.ObjectType.OBJECT_TABLE:
+
+            statement_index: int = utils.get_statement_index(ancestors)
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Drop table",
+                ),
+            )
+
+
+class NonConcurrentIndexDrop(linter.Checker):
+    """Non concurrent index drop."""
+
+    name = "unsafe.non_concurrent_index_drop"
+    code = "UNS025"
+
+    def visit_DropStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.Node,
+    ) -> None:
+        """Visit DropStmt."""
+        if node.removeType == enums.ObjectType.OBJECT_INDEX and not node.concurrent:
+
+            statement_index: int = utils.get_statement_index(ancestors)
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Non concurrent index drop",
+                ),
+            )
+
+
+class DropTablespace(linter.Checker):
+    """Drop tablespace."""
+
+    name = "unsafe.drop_tablespace"
+    code = "UNS026"
+
+    def visit_DropTableSpaceStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.Node,
+    ) -> None:
+        """Visit DropTableSpaceStmt."""
+        statement_index: int = utils.get_statement_index(ancestors)
+
+        self.violations.append(
+            linter.Violation(
+                location=ancestors[statement_index].stmt_location,
+                statement=ancestors[statement_index],
+                description="Drop tablespace",
+            ),
+        )
+
+
+class DropDatabase(linter.Checker):
+    """Drop database."""
+
+    name = "unsafe.drop_database"
+    code = "UNS026"
+
+    def visit_DropdbStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.Node,
+    ) -> None:
+        """Visit DropdbStmt."""
+        statement_index: int = utils.get_statement_index(ancestors)
+
+        self.violations.append(
+            linter.Violation(
+                location=ancestors[statement_index].stmt_location,
+                statement=ancestors[statement_index],
+                description="Drop database",
+            ),
+        )
