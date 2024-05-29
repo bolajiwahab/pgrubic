@@ -32,7 +32,7 @@ def _extract_comments(statement: str) -> Comment:
 
     # by = r"(\".*?\"|\'.*?\')|(/\*.*?\*/|//[^\r\n]*$)"
     # r"^\s*--.*\n?|/\*.*?\*/"
-    statement = re.sub(r"^\s*--.*\n?", " ", statement, flags=re.MULTILINE)
+    statement = re.sub(r"^\s*--.*\n", "", statement, flags=re.MULTILINE)
 
     print(statement)
 
@@ -105,11 +105,15 @@ class DropColumn(Visitor):  # type: ignore[misc]
 
 # sql = """ALTER TABLE transaction ADD COLUMN "transactionDate" timestamp without time zone GENERATED ALWAYS AS ("dateTime"::date) STORED;"""
 sql = """
+select '-- world';
+select 'a', '/* -- hello */';
+/* hello */
 -- ALTER TABLE public.ecdict ADD COLUMN id serial;
-ALTER TABLE public.ecdict /* hello */ ADD COLUMN id serial --noqa: UNS01
+ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS01 /* hello */
+; /* hello */
+/* hello */ ALTER TABLE /*one*/ public.ecdict ADD COLUMN id serial --noqa: UNS02
 ;
-ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS02
-;
+-- ALTER TABLE public.ecdict ADD COLUMN id serial;
 """
 
 # sql = "alter index tble set tablespace col"
@@ -121,9 +125,13 @@ ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS02
 #             )""")
 # print(raw1)
 # contype=<ConstrType.CONSTR_DEFAULT: 2> deferrable=False initdeferred=False is_no_inherit=False raw_expr=<ColumnRef fields=(<String sval='a'>,)>
-raw = parse_sql(sql)
+sql_no_comment = re.sub(r"^\s*--.*\n", "", sql, flags=re.MULTILINE)
+# print(sql_no_comment)
+print(_extract_comments(sql))
+raw = parse_sql(sql_no_comment)
+
 print(raw)
-print(raw[1].stmt_location)
+print(raw[2].stmt_location)
 # raw2 = scan(sql)
 # print(raw)
 # print(raw2)
@@ -132,7 +140,7 @@ print(_extract_comments(sql))
 #     if a.name == "SQL_COMMENT":
 #         print(a)
 # DropColumn()(raw)
-# print(stream.RawStream()(raw))
+print(stream.RawStream()(raw))
 # print(raw)
 # print(raw)
 # EnsureNoNotNullOnExistingColumn()(raw)

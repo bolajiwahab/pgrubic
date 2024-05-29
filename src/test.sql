@@ -10,9 +10,17 @@
 --     height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
 -- );
 
-ALTER TABLE public.ecdict ADD COLUMN id serial -- noqa: UNS019
+/* 
+hello 
+*/
+ALTER TABLE public.ecdict ADD COLUMN id serial /* hello */ -- noqa: UNS019, UNS021
 ;
-
+/* 
+hello 
+*/
+ALTER TABLE public.ecdict ADD COLUMN id serial /* hello */ -- noqa: UNS021
+;
+/* hello */
 ALTER TABLE public.ecdict ADD COLUMN id bigint GENERATED ALWAYS AS IDENTITY -- noqa: UNS020
 ;
 

@@ -20,9 +20,7 @@ def load_rules(directories: list[str]) -> list[linter.Checker]:
 
         for _, obj in inspect.getmembers(module, inspect.isclass):
 
-            if (
-                issubclass(obj, linter.Checker)
-            ):
+            if issubclass(obj, linter.Checker):
 
                 rules.append(typing.cast(linter.Checker, obj))
 
@@ -68,13 +66,15 @@ def extract_noqa(statement: str) -> list[tuple[int, str]]:
     lines: list[tuple[int, int, str]] = []
     line_offset = 0
 
-    statement = re.sub(r"^\s*--.*\n?", " ", statement, flags=re.MULTILINE)
+    statement = re.sub(
+        r"^\s*--.*\n?|^\s*\/[*][\S\s]*?[*]\/", " ", statement, flags=re.MULTILINE,
+    )
 
     for line in statement.split(";"):
 
         line_length = len(line)
         lines.append((line_offset, line_offset + line_length, line))
-        line_offset += (line_length + 1)
+        line_offset += line_length + 1
 
     comments: list[tuple[int, str]] = []
 
@@ -88,7 +88,7 @@ def extract_noqa(statement: str) -> list[tuple[int, str]]:
                 if beginning_of_line_offset <= token.start < end_of_line_offset:
                     break
 
-            comment = statement[token.start:(token.end + 1)]
+            comment = statement[token.start : (token.end + 1)]
             # Normal comment lines can also have noqa e.g. --new table -- noqa: UNS05
             # Therefore extract last possible inline ignore.
             comment = [c.strip() for c in comment.split("--")][-1]
@@ -102,8 +102,12 @@ def extract_noqa(statement: str) -> list[tuple[int, str]]:
                         raise errors.SQLParseError(
                             msg,
                         )
+
                     comment_remainder = comment_remainder[1:].strip()
 
-                comments.append((beginning_of_line_offset, comment_remainder))
+                [
+                    comments.append((beginning_of_line_offset, rule.strip()))  # type: ignore[func-returns-value]
+                    for rule in comment_remainder.split(",")
+                ]
 
     return comments

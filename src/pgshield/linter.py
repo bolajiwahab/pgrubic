@@ -38,7 +38,6 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
                 msg = f"{self.__class__.__name__} must define a '{required}' attribute."
                 raise NotImplementedError(msg)
 
-
     def visit(self, ancestors: typing.Any, node: ast.Node) -> None:  # noqa: ANN401
         """Visit the node."""
 
@@ -66,7 +65,9 @@ class Linter:
         with pathlib.Path(source_path).open("r") as source_file:
             source_code = source_file.read()
 
-        source_code = re.sub(r"^\s*--.*\n?", " ", source_code, flags=re.MULTILINE)
+        source_code = re.sub(
+            r"^\s*--.*\n?|^\s*\/[*][\S\s]*?[*]\/", " ", source_code, flags=re.MULTILINE,
+        )
 
         tree = parser.parse_sql(source_code)
 
