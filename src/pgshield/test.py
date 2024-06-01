@@ -15,3 +15,4 @@ def read_config_file(file_name: os.PathLike[str]) -> dict[str, str]:
     config.read(file_name)
 
     return dict(config.items("pgshield"))
+

@@ -17,9 +17,13 @@ class NonConcurrentIndexCreation(linter.Checker):  # type: ignore[misc]
         node: ast.Node,
     ) -> None:
         """Visit IndexStmt."""
-        if not node.concurrent:
+        statement_index: int = utils.get_statement_index(ancestors)
 
-            statement_index: int = utils.get_statement_index(ancestors)
+        if (
+            not node.concurrent
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -42,13 +46,15 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):  # type: igno
         node: ast.Node,
     ) -> None:
         """Visit Constraint."""
+        statement_index: int = utils.get_statement_index(ancestors)
+
         if (
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_FOREIGN
             and not node.skip_validation
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
         ):
-
-            statement_index: int = utils.get_statement_index(ancestors)
 
             self.violations.append(
                 linter.Violation(
@@ -71,13 +77,15 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):  # type: ignore[mi
         node: ast.Node,
     ) -> None:
         """Visit Constraint."""
+        statement_index: int = utils.get_statement_index(ancestors)
+
         if (
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_CHECK
             and not node.skip_validation
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
         ):
-
-            statement_index: int = utils.get_statement_index(ancestors)
 
             self.violations.append(
                 linter.Violation(
@@ -100,13 +108,15 @@ class UniqueConstraintCreatingNewIndex(linter.Checker):  # type: ignore[misc]
         node: ast.Node,
     ) -> None:
         """Visit Constraint."""
+        statement_index: int = utils.get_statement_index(ancestors)
+
         if (
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_UNIQUE
             and not node.indexname
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
         ):
-
-            statement_index: int = utils.get_statement_index(ancestors)
 
             self.violations.append(
                 linter.Violation(
@@ -129,13 +139,15 @@ class PrimaryKeyConstraintCreatingNewIndex(linter.Checker):  # type: ignore[misc
         node: ast.Node,
     ) -> None:
         """Visit Constraint."""
+        statement_index: int = utils.get_statement_index(ancestors)
+
         if (
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_PRIMARY
             and not node.indexname
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
         ):
-
-            statement_index: int = utils.get_statement_index(ancestors)
 
             self.violations.append(
                 linter.Violation(
@@ -158,9 +170,13 @@ class NotNullOnExistingColumn(linter.Checker):  # type: ignore[misc]
         node: ast.Node,
     ) -> None:
         """Visit AlterTableCmd."""
-        if node.subtype == enums.AlterTableType.AT_SetNotNull:
+        statement_index: int = utils.get_statement_index(ancestors)
 
-            statement_index: int = utils.get_statement_index(ancestors)
+        if (
+            node.subtype == enums.AlterTableType.AT_SetNotNull
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -183,6 +199,8 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):  # type: ignore[mis
         node: ast.Node,
     ) -> None:
         """Visit ColumnDef."""
+        statement_index: int = utils.get_statement_index(ancestors)
+
         if ast.AlterTableStmt in ancestors and node.constraints:
 
             is_not_null = False
@@ -199,9 +217,12 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):  # type: ignore[mis
                 ):
                     has_default = True
 
-            if is_not_null and not has_default:
-
-                statement_index: int = utils.get_statement_index(ancestors)
+            if (
+                is_not_null
+                and not has_default
+                and (ancestors[statement_index].stmt_location, self.code)
+                not in self.ignore_rules
+            ):
 
                 self.violations.append(
                     linter.Violation(
@@ -224,13 +245,15 @@ class VolatileDefaultOnNewColumn(linter.Checker):  # type: ignore[misc]
         node: ast.Node,
     ) -> None:
         """Visit Constraint."""
+        statement_index: int = utils.get_statement_index(ancestors)
+
         if (
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_DEFAULT
             and not isinstance(node.raw_expr, ast.A_Const)
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
         ):
-
-            statement_index: int = utils.get_statement_index(ancestors)
 
             self.violations.append(
                 linter.Violation(
@@ -254,6 +277,8 @@ class TableMovementToTablespace(linter.Checker):
         if (
             node.subtype == enums.AlterTableType.AT_SetTableSpace
             and ancestors[statement_index].stmt.objtype == enums.ObjectType.OBJECT_TABLE
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -277,9 +302,13 @@ class TablesMovementToTablespace(linter.Checker):
         node: ast.Node,
     ) -> None:
         """Visit AlterTableMoveAllStmt."""
-        if node.objtype == enums.ObjectType.OBJECT_TABLE:
+        statement_index: int = utils.get_statement_index(ancestors)
 
-            statement_index: int = utils.get_statement_index(ancestors)
+        if (
+            node.objtype == enums.ObjectType.OBJECT_TABLE
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -296,21 +325,26 @@ class Cluster(linter.Checker):
     name = "unsafe.cluster"
     code = "UNS011"
 
-    def visit_ClUNSterStmt(
+    def visit_ClusterStmt(
         self,
         ancestors: ast.Node,
         node: ast.Node,  # noqa: ARG002
     ) -> None:
-        """Visit ClUNSterStmt."""
+        """Visit ClusterStmt."""
         statement_index: int = utils.get_statement_index(ancestors)
 
-        self.violations.append(
-            linter.Violation(
-                location=ancestors[statement_index].stmt_location,
-                statement=ancestors[statement_index],
-                description="Cluster",
-            ),
-        )
+        if (
+            ancestors[statement_index].stmt_location,
+            self.code,
+        ) not in self.ignore_rules:
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Cluster",
+                ),
+            )
 
 
 class VacuumFull(linter.Checker):
@@ -321,15 +355,19 @@ class VacuumFull(linter.Checker):
 
     def visit_VacuumStmt(self, ancestors: ast.Node, node: ast.Node) -> None:
         """Visit VacuumStmt."""
+        statement_index: int = utils.get_statement_index(ancestors)
+
         options = (
-            [stream.RawStream()(option) for option in node.options]
+            [stream.RawStream()(option).lower() for option in node.options]
             if node.options is not None
             else []
         )
 
-        if "full" in options:
-
-            statement_index: int = utils.get_statement_index(ancestors)
+        if (
+            "full" in options
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -352,9 +390,13 @@ class NonConcurrentRefreshMaterializedView(linter.Checker):  # type: ignore[misc
         node: ast.Node,
     ) -> None:
         """Visit RefreshMatViewStmt."""
-        if not node.concurrent:
+        statement_index: int = utils.get_statement_index(ancestors)
 
-            statement_index: int = utils.get_statement_index(ancestors)
+        if (
+            not node.concurrent
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -373,15 +415,22 @@ class NonConcurrentReindex(linter.Checker):
 
     def visit_ReindexStmt(self, ancestors: ast.Node, node: ast.Node) -> None:
         """Visit ReindexStmt."""
+        statement_index: int = utils.get_statement_index(ancestors)
+
         params = (
             [stream.RawStream()(param) for param in node.params]
             if node.params is not None
             else []
         )
 
-        if "concurrently" not in params:
-
-            statement_index: int = utils.get_statement_index(ancestors)
+        if (
+            "concurrently" not in params
+            and (
+                ancestors[statement_index].stmt_location,
+                self.code,
+            )
+            not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -404,9 +453,13 @@ class DropColumn(linter.Checker):  # type: ignore[misc]
         node: ast.Node,
     ) -> None:
         """Visit AlterTableCmd."""
-        if node.subtype == enums.AlterTableType.AT_DropColumn:
+        statement_index: int = utils.get_statement_index(ancestors)
 
-            statement_index: int = utils.get_statement_index(ancestors)
+        if (
+            node.subtype == enums.AlterTableType.AT_DropColumn
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -429,9 +482,13 @@ class ChangeColumnType(linter.Checker):
         node: ast.Node,
     ) -> None:
         """Visit AlterTableCmd."""
-        if node.subtype == enums.AlterTableType.AT_AlterColumnType:
+        statement_index: int = utils.get_statement_index(ancestors)
 
-            statement_index: int = utils.get_statement_index(ancestors)
+        if (
+            node.subtype == enums.AlterTableType.AT_AlterColumnType
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -454,9 +511,13 @@ class RenameColumn(linter.Checker):
         node: ast.Node,
     ) -> None:
         """Visit RenameStmt."""
-        if node.renameType == enums.ObjectType.OBJECT_COLUMN:
+        statement_index: int = utils.get_statement_index(ancestors)
 
-            statement_index: int = utils.get_statement_index(ancestors)
+        if (
+            node.renameType == enums.ObjectType.OBJECT_COLUMN
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -479,9 +540,13 @@ class RenameTable(linter.Checker):
         node: ast.Node,
     ) -> None:
         """Visit RenameStmt."""
-        if node.renameType == enums.ObjectType.OBJECT_TABLE:
+        statement_index: int = utils.get_statement_index(ancestors)
 
-            statement_index: int = utils.get_statement_index(ancestors)
+        if (
+            node.renameType == enums.ObjectType.OBJECT_TABLE
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -502,19 +567,23 @@ class AutoIncrementColumn(linter.Checker):
         """Visit ColumnDef."""
         statement_index: int = utils.get_statement_index(ancestors)
 
-        if (
-            ast.AlterTableStmt in ancestors
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if ast.AlterTableStmt in ancestors:
 
+            # Get data types e.g ["pg_catalog", "bigserial"]
             data_types = (
-                [stream.RawStream()(data_type) for data_type in node.typeName.names]
+                [
+                    stream.RawStream()(data_type).strip("'")
+                    for data_type in node.typeName.names
+                ]
                 if node.typeName.names is not None
                 else []
             )
 
-            if any(dt in ["'bigserial'", "'serial'"] for dt in data_types):
+            if (
+                any(dt in ["bigserial", "serial"] for dt in data_types)
+                and (ancestors[statement_index].stmt_location, self.code)
+                not in self.ignore_rules
+            ):
 
                 self.violations.append(
                     linter.Violation(
@@ -567,12 +636,14 @@ class StoredGeneratedColumn(linter.Checker):  # type: ignore[misc]
         node: ast.Node,
     ) -> None:
         """Visit Constraint."""
+        statement_index: int = utils.get_statement_index(ancestors)
+
         if (
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_GENERATED
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
         ):
-
-            statement_index: int = utils.get_statement_index(ancestors)
 
             self.violations.append(
                 linter.Violation(
@@ -596,6 +667,8 @@ class IndexMovementToTablespace(linter.Checker):
         if (
             node.subtype == enums.AlterTableType.AT_SetTableSpace
             and ancestors[statement_index].stmt.objtype == enums.ObjectType.OBJECT_INDEX
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -619,9 +692,13 @@ class IndexesMovementToTablespace(linter.Checker):
         node: ast.Node,
     ) -> None:
         """Visit AlterTableMoveAllStmt."""
-        if node.objtype == enums.ObjectType.OBJECT_INDEX:
+        statement_index: int = utils.get_statement_index(ancestors)
 
-            statement_index: int = utils.get_statement_index(ancestors)
+        if (
+            node.objtype == enums.ObjectType.OBJECT_INDEX
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -644,9 +721,13 @@ class DropTable(linter.Checker):
         node: ast.Node,
     ) -> None:
         """Visit DropStmt."""
-        if node.removeType == enums.ObjectType.OBJECT_TABLE:
+        statement_index: int = utils.get_statement_index(ancestors)
 
-            statement_index: int = utils.get_statement_index(ancestors)
+        if (
+            node.removeType == enums.ObjectType.OBJECT_TABLE
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -669,9 +750,14 @@ class NonConcurrentIndexDrop(linter.Checker):
         node: ast.Node,
     ) -> None:
         """Visit DropStmt."""
-        if node.removeType == enums.ObjectType.OBJECT_INDEX and not node.concurrent:
+        statement_index: int = utils.get_statement_index(ancestors)
 
-            statement_index: int = utils.get_statement_index(ancestors)
+        if (
+            node.removeType == enums.ObjectType.OBJECT_INDEX
+            and not node.concurrent
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -691,38 +777,76 @@ class DropTablespace(linter.Checker):
     def visit_DropTableSpaceStmt(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.Node,  # noqa: ARG002
     ) -> None:
         """Visit DropTableSpaceStmt."""
         statement_index: int = utils.get_statement_index(ancestors)
 
-        self.violations.append(
-            linter.Violation(
-                location=ancestors[statement_index].stmt_location,
-                statement=ancestors[statement_index],
-                description="Drop tablespace",
-            ),
-        )
+        if (
+            ancestors[statement_index].stmt_location,
+            self.code,
+        ) not in self.ignore_rules:
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Drop tablespace",
+                ),
+            )
 
 
 class DropDatabase(linter.Checker):
     """Drop database."""
 
     name = "unsafe.drop_database"
-    code = "UNS026"
+    code = "UNS027"
 
     def visit_DropdbStmt(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.Node,  # noqa: ARG002
     ) -> None:
         """Visit DropdbStmt."""
         statement_index: int = utils.get_statement_index(ancestors)
 
-        self.violations.append(
-            linter.Violation(
-                location=ancestors[statement_index].stmt_location,
-                statement=ancestors[statement_index],
-                description="Drop database",
-            ),
-        )
+        if (
+            ancestors[statement_index].stmt_location,
+            self.code,
+        ) not in self.ignore_rules:
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Drop database",
+                ),
+            )
+
+
+class NonConcurrentDetachPartition(linter.Checker):
+    """Detach partition."""
+
+    name = "unsafe.detach_partition"
+    code = "UNS028"
+
+    def visit_PartitionCmd(
+        self,
+        ancestors: ast.Node,
+        node: ast.Node,
+    ) -> None:
+        """Visit PartitionCmd."""
+        statement_index: int = utils.get_statement_index(ancestors)
+
+        if (
+            not node.concurrent
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Non concurrent detach partition",
+                ),
+            )

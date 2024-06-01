@@ -1,12 +1,11 @@
 """Entry point."""
 
 import sys
+import pathlib
 from collections import abc
 
-from pgshield import utils, rules_directories, config
+from pgshield import utils, config, rules_directories
 from pgshield import linter as _linter
-
-import pathlib
 
 
 def cli(argv: abc.Sequence[str] = sys.argv) -> None:
@@ -23,11 +22,12 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
     loaded_config = config.load_config(
         pathlib.Path(
-            "/Users/bolajiwahab/repos/bolajiwahab/pgshield/src/pgshield/.pgshield"
+            "/Users/bolajiwahab/repos/bolajiwahab/pgshield/src/pgshield/.pgshield",
         ),
     )
 
     for rule in loaded_rules:
+
         if rule.code in loaded_config.get(
             "lint.select", loaded_codes,
         ) and rule.code not in loaded_config.get("lint.ignore", []):

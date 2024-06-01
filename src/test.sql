@@ -1,6 +1,17 @@
+-- CREATE DATABASE music2
+--     LOCALE 'sv_SE.iso885915'
+--     ENCODING SQL_ASCII
+--     TEMPLATE template0
+-- ;
+
+-- CREATE RULE notify_me AS ON UPDATE TO mytable DO ALSO NOTIFY mytable -- noqa: COV003
+-- ;
+
 -- create index 
 -- ab on ba(a);
--- create index abc on bac(ac);
+
+-- create index abc on bac(ac) -- noqa: UNS001
+-- ;
 
 -- alter table tbl alter column a set not null;
 -- alter table tbl add column a text not null;
@@ -10,19 +21,34 @@
 --     height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
 -- );
 
+CREATE TABLE distributors (
+    did     bigserial PRIMARY KEY,
+    -- cid     time with time zone,
+    -- diid    timestamptz,
+    -- biid    timestamp(0),
+    bid money
+    -- Name  varchar(40) not null
+);
+
+-- CREATE TABLE "Measurement_y2006m02" () INHERITS (measurement);
+
 /* 
 hello 
 */
-ALTER TABLE public.ecdict ADD COLUMN id serial /* hello */ -- noqa: UNS019, UNS021
-;
+-- ALTER TABLE public.ecdict ADD COLUMN id serial /* hello */ -- noqa: UNS019, UNS021
+-- ;
 /* 
 hello 
 */
-ALTER TABLE public.ecdict ADD COLUMN id serial /* hello */ -- noqa: UNS021
-;
-/* hello */
-ALTER TABLE public.ecdict ADD COLUMN id bigint GENERATED ALWAYS AS IDENTITY -- noqa: UNS020
-;
+
+-- create index abc on bac(ac)
+-- ;
+
+-- ALTER TABLE public.ecdict ADD COLUMN id serial /* hello */ -- noqa: UNS021, UNS019
+-- ;
+-- /* hello */
+-- ALTER TABLE public.ecdict ADD COLUMN id bigint GENERATED ALWAYS AS IDENTITY -- noqa: UNS020
+-- ;
 
 -- ALTER TABLE transaction ADD COLUMN "transactionDate" timestamp without time zone GENERATED ALWAYS AS ("dateTime"::date) STORED;
 
@@ -52,11 +78,15 @@ ALTER TABLE public.ecdict ADD COLUMN id bigint GENERATED ALWAYS AS IDENTITY -- n
 
 -- VACUUM full analyze tbl;
 
--- cluster;
+-- cluster tbl;
+
+-- ALTER TABLE measurement DETACH PARTITION measurement_y2006m02
+-- ;
 
 -- REFRESH MATERIALIZED VIEW tbl;
 
--- REINDEX TABLE my_broken_table;
+-- REINDEX TABLE CONCURRENTLY my_broken_table
+-- ;
 
 -- REINDEX INDEX my_broken_index;
 

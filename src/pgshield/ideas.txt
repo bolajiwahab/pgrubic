@@ -18,3 +18,37 @@
 
 # DropdbStmt
 # DropTableSpaceStmt
+
+
+-- include-convention as an arg (if your service is compliant then enable this to prevent future uncompliance hence no need)
+enable once service is rfc compliant
+-- support exclude files (files to exclude)
+-- mode -- strict/changed -- strict scans all source files, changed uses git to get changed files
+
+-- update : enable convention by default with default config, since we are following postgres normal conventions
+-- best practices, people can disable convention by default
+
+-- don't use reserved keyword as identifiers
+
+-- Don't use CURRENT_TIME
+
+[
+    "test": {
+        "key": {
+            "name": "created",
+            "type": "timestamp"
+        },
+        "resolution: "day"|"month,
+        -> day -> 1 year, month -> 2 years
+    },
+]
+
+
+/unsafe/table
+       /column
+       /constraint
+       /index
+       /
+       /
+       /
+       /

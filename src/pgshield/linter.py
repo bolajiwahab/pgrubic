@@ -31,6 +31,7 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
     def __init__(self) -> None:
         """Init."""
         self.ignore_rules: list[utils.Comment] = []
+
         self.violations: list[Violation] = []
 
         for required in ("name", "code"):
@@ -65,17 +66,25 @@ class Linter:
         with pathlib.Path(source_path).open("r") as source_file:
             source_code = source_file.read()
 
+        # Remove comments
         source_code = re.sub(
             r"^\s*--.*\n?|^\s*\/[*][\S\s]*?[*]\/", " ", source_code, flags=re.MULTILINE,
         )
 
-        tree = parser.parse_sql(source_code)
+        try:
+            tree = parser.parse_sql(source_code)
+        except parser.ParseError as error:
+            logging.logger.error(f"{file_name}: {error!s}")
+            sys.exit(1)
+        # tree = parser.parse_sql(source_code)
 
         violations: bool = False
 
+        ignore_rules_through_qa: list[tuple[int, str]] = utils.extract_noqa(source_code)
+
         for checker in self.checkers:
 
-            checker.ignore_rules = utils.extract_noqa(source_code)
+            checker.ignore_rules = ignore_rules_through_qa
 
             checker(tree)
 
