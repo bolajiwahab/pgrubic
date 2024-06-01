@@ -30,7 +30,7 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
 
     def __init__(self) -> None:
         """Init."""
-        self.ignore_rules: list[utils.Comment] = []
+        self.ignore_rules: list[tuple[int, str]] = []
 
         self.violations: list[Violation] = []
 
@@ -76,7 +76,6 @@ class Linter:
         except parser.ParseError as error:
             logging.logger.error(f"{file_name}: {error!s}")
             sys.exit(1)
-        # tree = parser.parse_sql(source_code)
 
         violations: bool = False
 
