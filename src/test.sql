@@ -1,4 +1,4 @@
--- CREATE DATABASE music2
+-- CREATE DATABASE "Music2"
 --     LOCALE 'sv_SE.iso885915'
 --     ENCODING SQL_ASCII
 --     TEMPLATE template0
@@ -7,8 +7,20 @@
 -- CREATE RULE notify_me AS ON UPDATE TO mytable DO ALSO NOTIFY mytable -- noqa: COV003
 -- ;
 
--- create index 
--- ab on ba(a);
+-- CREATE MATERIALIZED VIEW "Vista" AS SELECT 'Hello World';
+
+CREATE TABLE public."Films_recent"()
+
+-- CREATE TABLE public."Films_recent" AS
+--   SELECT * FROM films WHERE date_prod >= '2002-01-01';
+
+-- create index "Ab" on ba(a);
+
+-- CREATE FUNCTION public."Add"(integer, integer) RETURNS integer
+--     AS 'select $1 + $2;'
+--     LANGUAGE SQL
+--     IMMUTABLE
+--     RETURNS NULL ON NULL INPUT;
 
 -- create index abc on bac(ac) -- noqa: UNS001
 -- ;
@@ -21,14 +33,19 @@
 --     height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
 -- );
 
-CREATE TABLE distributors (
-    did     bigserial PRIMARY KEY,
-    -- cid     time with time zone,
-    -- diid    timestamptz,
-    -- biid    timestamp(0),
-    bid money
-    -- Name  varchar(40) not null
-);
+-- ALTER TABLE employee
+-- ADD CONSTRAINT "Employee_unq" primary key(email)
+-- ;
+
+-- CREATE TABLE distributors (
+--     did     bigserial PRIMARY KEY,
+--     -- cid     time with time zone,
+--     -- diid    timestamptz,
+--     biid    timestamp,
+--     -- bid money
+--     Name  char(40) not null,
+--     Name  varchar(40) not null
+-- );
 
 -- CREATE TABLE "Measurement_y2006m02" () INHERITS (measurement);
 
@@ -70,7 +87,7 @@ hello
 
 -- alter table tbl rename column b to c;
 
--- ALTER TABLE public.ecdict ADD COLUMN id bigserial PRIMARY KEY;
+-- ALTER TABLE public.ecdict ADD COLUMN id bigserial PRIMARY KEY not null;
 
 -- alter table tbl1 rename to tbl3;
 

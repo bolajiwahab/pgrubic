@@ -68,7 +68,7 @@ class Linter:
 
         # Remove comments
         source_code = re.sub(
-            r"^\s*--.*\n?|^\s*\/[*][\S\s]*?[*]\/", " ", source_code, flags=re.MULTILINE,
+            r"^\s*--.*\n?|^\s*\/[*][\S\s]*?[*]\/", "", source_code, flags=re.MULTILINE,
         )
 
         try:

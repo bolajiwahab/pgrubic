@@ -28,9 +28,15 @@ enable once service is rfc compliant
 -- update : enable convention by default with default config, since we are following postgres normal conventions
 -- best practices, people can disable convention by default
 
--- don't use reserved keyword as identifiers
+-- don't use reserved keyword as identifiers, print(keywords.RESERVED_KEYWORDS)
 
 -- Don't use CURRENT_TIME
+
+-- schema-qualified custom type
+-- black list schemas
+-- whitelist schemas
+-- schema qualified creation
+
 
 [
     "test": {

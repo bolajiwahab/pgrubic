@@ -33,7 +33,6 @@ def check_duplicate_rules(rules: list[linter.Checker]) -> None:
 
     for rule in rules:
 
-        # if any(var in seen for var in seen):
         if rule.name in seen or rule.code in seen:
 
             raise errors.DuplicateRuleDetectedError((rule.name, rule.code))
@@ -67,7 +66,7 @@ def extract_noqa(statement: str) -> list[tuple[int, str]]:
     line_offset = 0
 
     statement = re.sub(
-        r"^\s*--.*\n?|^\s*\/[*][\S\s]*?[*]\/", " ", statement, flags=re.MULTILINE,
+        r"^\s*--.*\n?|^\s*\/[*][\S\s]*?[*]\/", "", statement, flags=re.MULTILINE,
     )
 
     for line in statement.split(";"):
@@ -111,3 +110,40 @@ def extract_noqa(statement: str) -> list[tuple[int, str]]:
                 ]
 
     return comments
+
+
+# def remove_comments(statement: str) -> str:
+#     """Remove comments from the statement."""
+#     return re.sub(
+#         r"^\s*--.*\n?|^\s*\/[*][\S\s]*?[*]\/", "", statement, flags=re.MULTILINE,
+#     )
+
+
+# def split_statement(statement: str) -> list[str]:
+#     """Split the statement into lines."""
+#     return statement.split(";")
+
+
+# def extract_noqa_statements(line: str, line_offset: int) -> list[tuple[int, str]]:
+#     """Extract noqa statements from a line."""
+#     noqa_statements = []
+
+#     if "-- noqa" in line:
+#         noqa_statements.append((line_offset, line.split("-- noqa")[1].strip()))
+
+#     return noqa_statements
+
+
+# def extract_noqa(statement: str) -> list[tuple[int, str]]:
+#     """Extract noqa from inline SQL comment."""
+#     lines: list[tuple[int, int, str]] = []
+#     line_offset = 0
+
+#     statement = remove_comments(statement)
+
+#     for line in split_statement(statement):
+#         noqa_statements = extract_noqa_statements(line, line_offset)
+#         lines.extend(noqa_statements)
+#         line_offset += 1
+
+#     return lines
