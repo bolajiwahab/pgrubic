@@ -5,7 +5,7 @@ from typing import ClassVar
 from pglast import ast, enums, stream, keywords  # type: ignore[import-untyped]
 
 from pgshield import utils, linter
-
+from pgshield.rules.convention import test_
 
 class NoUpperCaseNameForIdentifiers(linter.Checker):  # type: ignore[misc]
     """No upper case name for identifiers."""
@@ -13,29 +13,33 @@ class NoUpperCaseNameForIdentifiers(linter.Checker):  # type: ignore[misc]
     name = "convention.no_upper_case_name_for_identifiers"
     code = "CVN011"
 
-    identifiers: ClassVar[list[tuple[int, str]]] = []
+    # identifiers: ClassVar[list[tuple[int, str]]] = []
 
-    def visit_CreateStmt(
-        self,
-        ancestors: ast.Node,
-        node: ast.Node,
-    ) -> None:
-        """Visit CreateStmt."""
-        print("okay")
-        statement_index: int = utils.get_statement_index(ancestors)
+    attributes = test_.Identifiers()
 
-        self.identifiers.append((statement_index, node.relation.relname))
-        print(self.identifiers)
+    print(attributes.identifiers)
 
-    print(identifiers)
+    # def visit_CreateStmt(
+    #     self,
+    #     ancestors: ast.Node,
+    #     node: ast.Node,
+    # ) -> None:
+    #     """Visit CreateStmt."""
+    #     print("okay")
+    #     statement_index: int = utils.get_statement_index(ancestors)
 
-    if (
-        any(ele.isupper() for _, ele in identifiers)
-        # and (ancestors[statement_index].stmt_location, self.code)
-        # not in self.ignore_rules
-    ):
+    #     self.identifiers.append((statement_index, node.relation.relname))
+    #     print(self.identifiers)
+
+    # print(identifiers)
+
+    # if (
+    #     any(ele.isupper() for _, ele in identifiers)
+    #     # and (ancestors[statement_index].stmt_location, self.code)
+    #     # not in self.ignore_rules
+    # ):
         
-        raise ValueError("hmmm")
+    #     raise ValueError("hmmm")
 
         # self.violations.append(
         #     linter.Violation(
@@ -46,34 +50,43 @@ class NoUpperCaseNameForIdentifiers(linter.Checker):  # type: ignore[misc]
         # )
 
 
-class NoUpperCaseNameForTable(linter.Checker):  # type: ignore[misc]
-    """No upper case name for table."""
+# class NoUpperCaseNameForTable(linter.Checker):  # type: ignore[misc]
+#     """No upper case name for table."""
 
-    name = "convention.no_upper_case_name_for_table"
-    code = "CVN001"
+#     name = "convention.no_upper_case_name_for_table"
+#     code = "CVN001"
 
-    def visit_CreateStmt(
-        self,
-        ancestors: ast.Node,
-        node: ast.Node,
-    ) -> None:
-        """Visit CreateStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+#     def visit_CreateStmt(
+#         self,
+#         ancestors: ast.Node,
+#         node: ast.CreateStmt,
+#     ) -> None:
+#         """Visit CreateStmt."""
+#         statement_index: int = utils.get_statement_index(ancestors)
 
-        if (
-            any(ele.isupper() for ele in node.relation.relname)
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+#         if (
+#             any(ele.isupper() for ele in node.relation.relname)
+#             and (ancestors[statement_index].stmt_location, self.code)
+#             not in self.ignore_rules
+#         ):
 
-            self.violations.append(
-                linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
-                    statement=ancestors[statement_index],
-                    description="Upper case name for table",
-                ),
-            )
+#             self.violations.append(
+#                 linter.Violation(
+#                     location=ancestors[statement_index].stmt_location,
+#                     statement=ancestors[statement_index],
+#                     description="Upper case name for table",
+#                 ),
+#             )
 
+
+    # def visit_RawStmt(
+    #     self,
+    #     ancestors: ast.Node,
+    #     node: ast.CreateStmt,
+    # ) -> None:
+    #     """Visit CreateStmt."""
+    #     print("RawStmt")
+    #     # print(node)
 
 # class NoUpperCaseNameForColumn(linter.Checker):  # type: ignore[misc]
 #     """No upper case name for column."""

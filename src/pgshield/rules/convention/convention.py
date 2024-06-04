@@ -123,7 +123,7 @@ class TimestampWithoutTimezone(linter.Checker):  # type: ignore[misc]
     def visit_ColumnDef(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
         statement_index: int = utils.get_statement_index(ancestors)
@@ -282,7 +282,7 @@ class Char(linter.Checker):  # type: ignore[misc]
             ]
 
             if (
-                data_type[-1] == "bpchar"
+                data_type[-1] in ["bpchar", "char"]
                 and (ancestors[statement_index].stmt_location, self.code)
                 not in self.ignore_rules
             ):

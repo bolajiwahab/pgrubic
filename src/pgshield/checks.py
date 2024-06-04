@@ -34,7 +34,7 @@ def _extract_comments(statement: str) -> Comment:
     # r"^\s*--.*\n?|/\*.*?\*/"
     statement = re.sub(r"^\s*--.*\n", "", statement, flags=re.MULTILINE)
 
-    print(statement)
+    # print(statement)
 
     for line in statement.split(";"):
 
@@ -47,12 +47,20 @@ def _extract_comments(statement: str) -> Comment:
     for token in scan(statement):
 
         if token.name == "SQL_COMMENT":
+            for beginning_of_line_offset, end_of_line_offset, _ in lines:
+                if beginning_of_line_offset <= token.start < end_of_line_offset:
+                    break
+
+            print(statement[token.start:(token.end + 1)])
+
+        if token.name == "SQL_COMMENT":
 
             for beginning_of_line_offset, end_of_line_offset, _ in lines:
                 if beginning_of_line_offset <= token.start < end_of_line_offset:
                     break
 
             comment = statement[token.start : (token.end + 1)]
+            # print(comment)
             # Normal comment lines can also have noqa e.g.
             # --new table -- noqa: UNS05
             # Therefore extract last possible inline ignore.
@@ -67,8 +75,8 @@ def _extract_comments(statement: str) -> Comment:
                     #         msg,
                     #     )
                     comment_remainder = comment_remainder[1:].strip()
-                    print(comment_remainder)
-                    print(beginning_of_line_offset)
+                    # print(comment_remainder)
+                    # print(beginning_of_line_offset)
 
             # if comment.startswith("")
             comments.append(
@@ -86,31 +94,40 @@ class DropColumn(Visitor):  # type: ignore[misc]
     name = "unsafe.drop_column"
     code = "US015"
 
-    def visit_IndexStmt(
+    def visit_RangeVar(
         self,
         ancestors: ast.Node,
         node: ast.Node,
     ) -> None:
         """Visit AlterTableCmd."""
         print(node)
-        print(node.typeName.names)
-        for option in node.typeName.names:
-            print(stream.RawStream()(option))
+        # print(node.typeName.names)
+        # for option in node.typeName.names:
+        #     print(stream.RawStream()(option))
         # if node.subtype == enums.AlterTableType.AT_AddColumn:
-        if "bigserial" in node.def_.typeName.names:
-            print("okay")
-            # print(node.def_.typeName.names)
-            raise ValueError("nay")
+        # if "bigserial" in node.def_.typeName.names:
+        #     print("okay")
+        #     # print(node.def_.typeName.names)
+        #     raise ValueError("nay")
 
 
 # sql = """ALTER TABLE transaction ADD COLUMN "transactionDate" timestamp without time zone GENERATED ALWAYS AS ("dateTime"::date) STORED;"""
 sql = """
-DROP database tbl;
-ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS01 /* hello */
+-- DROP database tbl;
+-- ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS01 /* hello */
 ; /* hello */
+
+-- select * from ec.baba;
+create index record_id_idx on pop (record_id);
 /* hello */ ALTER TABLE /*one*/ public.ecdict ADD COLUMN id serial --noqa: UNS02
 ;
 -- ALTER TABLE public.ecdict ADD COLUMN id serial;
+CREATE FUNCTION public."Add"(integer, integer) RETURNS integer
+     AS 'select $1 + $2;'
+     LANGUAGE SQL
+     IMMUTABLE
+     security definer
+     RETURNS NULL ON NULL INPUT;
 """
 
 # sql = "alter index tble set tablespace col"
@@ -124,20 +141,23 @@ ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS01 /* hello */
 # contype=<ConstrType.CONSTR_DEFAULT: 2> deferrable=False initdeferred=False is_no_inherit=False raw_expr=<ColumnRef fields=(<String sval='a'>,)>
 sql_no_comment = re.sub(r"^\s*--.*\n|^\s*\/[*][\S\s]*?[*]\/", "", sql, flags=re.MULTILINE)
 # print(sql_no_comment)
-print(_extract_comments(sql))
+# print(_extract_comments(sql))
+_extract_comments(sql)
 raw = parse_sql(sql_no_comment)
+raw2 = scan(sql)
+# print(raw2)
 
 print(raw)
-print(raw[2].stmt_location)
+# print(raw[2].stmt_location)
 # raw2 = scan(sql)
 # print(raw)
 # print(raw2)
-print(_extract_comments(sql))
+# print(_extract_comments(sql))
 # for a in raw2:
 #     if a.name == "SQL_COMMENT":
 #         print(a)
-# DropColumn()(raw)
-print(stream.RawStream()(raw))
+DropColumn()(raw)
+# print(stream.RawStream()(raw))
 # print(raw)
 # print(raw)
 # EnsureNoNotNullOnExistingColumn()(raw)

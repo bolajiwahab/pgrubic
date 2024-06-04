@@ -7,9 +7,9 @@
 -- CREATE RULE notify_me AS ON UPDATE TO mytable DO ALSO NOTIFY mytable -- noqa: COV003
 -- ;
 
--- CREATE MATERIALIZED VIEW "Vista" AS SELECT 'Hello World';
+CREATE MATERIALIZED VIEW "Vista" AS SELECT 'Hello World';
 
-CREATE TABLE public."Films_recent"()
+CREATE TABLE public."Films_recent"();
 
 -- CREATE TABLE public."Films_recent" AS
 --   SELECT * FROM films WHERE date_prod >= '2002-01-01';
@@ -43,7 +43,7 @@ CREATE TABLE public."Films_recent"()
 --     -- diid    timestamptz,
 --     biid    timestamp,
 --     -- bid money
---     Name  char(40) not null,
+--     Name  "char" not null,
 --     Name  varchar(40) not null
 -- );
 

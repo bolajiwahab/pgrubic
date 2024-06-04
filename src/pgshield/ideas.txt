@@ -36,7 +36,10 @@ enable once service is rfc compliant
 -- black list schemas
 -- whitelist schemas
 -- schema qualified creation
+-- blacklist CreateExtensionStmt extensions
 
+-- add truncatestmt to unsafe
+-- rangevar to check for schema qualified tables
 
 [
     "test": {
