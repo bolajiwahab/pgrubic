@@ -7,6 +7,7 @@ rules_directories: list[str] = [
     "pgshield.rules.unsafe.constraint",
     "pgshield.rules.unsafe.storage",
     "pgshield.rules.convention.naming",
-    "pgshield.rules.convention.identifiers",
+    "pgshield.rules.convention.schema",
+    "pgshield.rules.convention.identifier",
     "pgshield.rules.convention.convention",
 ]

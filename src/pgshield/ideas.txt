@@ -41,6 +41,10 @@ enable once service is rfc compliant
 -- add truncatestmt to unsafe
 -- rangevar to check for schema qualified tables
 
+--*** turn everything into keywords args
+
+--*** update all node typing
+
 [
     "test": {
         "key": {

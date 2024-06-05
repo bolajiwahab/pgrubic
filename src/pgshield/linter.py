@@ -8,7 +8,7 @@ import dataclasses
 
 from pglast import ast, parser, stream, visitors  # type: ignore[import-untyped]
 
-from pgshield import utils, logging
+from pgshield import utils
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
@@ -54,16 +54,18 @@ class Linter:
     def print_violations(*, checker: Checker, file_name: str) -> None:
         """Print all violations collected by a checker."""
         for violation in checker.violations:
-            logging.logger.error(
+
+            sys.stdout.write(
                 f"{file_name}:{violation.location}: {checker.code}: "
-                f"{violation.description}: {stream.RawStream()(violation.statement)}",
+                f"{violation.description}: {stream.RawStream()(violation.statement)}\n",
             )
 
-    def run(self, source_path: str) -> None:
+    def run(self, source_path: str) -> bool:
         """Run all rules on a source file."""
         file_name = pathlib.Path(source_path).name
 
-        with pathlib.Path(source_path).open("r") as source_file:
+        with pathlib.Path(source_path).open("r", encoding ="utf-8") as source_file:
+
             source_code = source_file.read()
 
         # Remove comments
@@ -72,12 +74,15 @@ class Linter:
         )
 
         try:
-            tree = parser.parse_sql(source_code)
+
+            tree: ast.Node  = parser.parse_sql(source_code)
+
         except parser.ParseError as error:
-            logging.logger.error(f"{file_name}: {error!s}")
+
+            sys.stdout.write(f"{file_name}: {error!s}")
             sys.exit(1)
 
-        violations: bool = False
+        violations_found: bool = False
 
         ignore_rules_through_qa: list[tuple[int, str]] = utils.extract_noqa(source_code)
 
@@ -89,9 +94,9 @@ class Linter:
 
             if checker.violations:
 
-                violations = True
+                violations_found = True
 
                 self.print_violations(checker=checker, file_name=file_name)
 
-        if violations:
-            sys.exit(1)
+        return violations_found
+

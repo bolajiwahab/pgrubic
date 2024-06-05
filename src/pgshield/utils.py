@@ -56,7 +56,7 @@ def get_statement_index(ancestors: ast.Node) -> int:
 
         nodes.append(node)
 
-    # The current visitor's Node is located two indexes from the end of the list.
+    # The current node's parent is located two indexes from the end of the list.
     return len(nodes) - 2
 
 

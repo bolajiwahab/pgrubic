@@ -6,6 +6,7 @@ from collections import abc
 
 from pgshield import utils, config, rules_directories
 from pgshield import linter as _linter
+from pgshield import formatter as _formatter
 
 
 def cli(argv: abc.Sequence[str] = sys.argv) -> None:
@@ -13,6 +14,8 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
     source_paths: abc.Sequence[str] = argv[1:]
 
     linter: _linter.Linter = _linter.Linter()
+
+    formatter: _formatter.Formatter = _formatter.Formatter()
 
     loaded_rules: list[_linter.Checker] = utils.load_rules(rules_directories)
 
@@ -34,8 +37,19 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
             linter.checkers.add(rule())
 
+    violations_found: list[bool] = []
+
     for source_path in source_paths:
-        linter.run(source_path)
+
+        # formatter.diff(source_path=source_path)
+
+        result: bool = linter.run(source_path)
+
+        violations_found.append(result)
+
+    if any(violations_found):
+
+        sys.exit(1)
 
 
 if __name__ == "__main__":

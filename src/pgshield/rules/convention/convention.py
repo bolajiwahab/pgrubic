@@ -73,6 +73,7 @@ class NoTableInheritance(linter.Checker):  # type: ignore[misc]
 
         if (
             node.inhRelations
+            and not node.partbound
             and (ancestors[statement_index].stmt_location, self.code)
             not in self.ignore_rules
         ):
@@ -305,7 +306,7 @@ class VarChar(linter.Checker):  # type: ignore[misc]
     def visit_ColumnDef(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
         statement_index: int = utils.get_statement_index(ancestors)
