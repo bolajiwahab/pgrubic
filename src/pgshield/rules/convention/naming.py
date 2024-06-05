@@ -17,7 +17,7 @@ class NoUpperCaseNameForIdentifiers(linter.Checker):  # type: ignore[misc]
 
     attributes = test_.Identifiers()
 
-    print(attributes.identifiers)
+    # print(attributes.identifiers)
 
     # def visit_CreateStmt(
     #     self,

@@ -1,5 +1,7 @@
 """Convention around identifiers."""
 
+# split these into 3 different rules.
+
 import typing
 
 import inflection
@@ -17,33 +19,12 @@ class Identifier(linter.Checker):  # type: ignore[misc]
     def _check_identifier(self, *args: typing.Any, **kwargs: typing.Any) -> None:
         """Check identifier."""
         functions: list[typing.Callable] = [
-            self._check_identifier_for_upper_case,
             self._check_identifier_for_reserved_keywords,
-            self._check_identifier_for_special_characters,
             self._check_identifier_is_in_snake_case,
         ]
 
         for method in functions:
             method(*args, **kwargs)
-
-    def _check_identifier_for_upper_case(
-        self,
-        identifier: str,
-        location: int,
-        statement: str,
-    ) -> None:
-        """Check for uppercase in identifier."""
-        self.name = "convention.uppercase_in_identifier"
-
-        if any(ele.isupper() for ele in identifier):
-
-            self.violations.append(
-                linter.Violation(
-                    location=location,
-                    statement=statement,
-                    description=f"Uppercase found in '{identifier}' identifier",
-                ),
-            )
 
     def _check_identifier_is_in_snake_case(
         self,
@@ -52,9 +33,11 @@ class Identifier(linter.Checker):  # type: ignore[misc]
         statement: str,
     ) -> None:
         """Check identifier is snake case."""
-        self.name = "convention.check_identifier_is_snake_case"
+        self.name = "convention.check_identifier_is_in_snake_case"
 
-        if identifier != inflection.underscore(identifier):
+        if not (
+            identifier == inflection.underscore(identifier) and identifier.isalnum()
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -92,25 +75,6 @@ class Identifier(linter.Checker):  # type: ignore[misc]
                 ),
             )
 
-    def _check_identifier_for_special_characters(
-        self,
-        identifier: str,
-        location: int,
-        statement: str,
-    ) -> None:
-        """Check for special characters in identifier."""
-        self.name = "convention.special_characters_in_identifier"
-
-        if not identifier.replace("_", "").isalnum():
-
-            self.violations.append(
-                linter.Violation(
-                    location=location,
-                    statement=statement,
-                    description=f"Special characters found in '{identifier}' identifier",  # noqa: E501
-                ),
-            )
-
     def visit_CreateStmt(
         self,
         ancestors: ast.Node,
@@ -135,7 +99,7 @@ class Identifier(linter.Checker):  # type: ignore[misc]
 
             statement_index: int = utils.get_statement_index(ancestors)
 
-            self._check_identifier_for_upper_case(
+            self._check_identifier(
                 node.colname,
                 ancestors[statement_index].stmt_location,
                 ancestors[statement_index],
@@ -149,7 +113,7 @@ class Identifier(linter.Checker):  # type: ignore[misc]
         """Visit ViewStmt."""
         statement_index: int = utils.get_statement_index(ancestors)
 
-        self._check_identifier_for_upper_case(
+        self._check_identifier(
             node.view.relname,
             ancestors[statement_index].stmt_location,
             ancestors[statement_index],
@@ -163,7 +127,7 @@ class Identifier(linter.Checker):  # type: ignore[misc]
         """Visit CreateTableAsStmt."""
         statement_index: int = utils.get_statement_index(ancestors)
 
-        self._check_identifier_for_upper_case(
+        self._check_identifier(
             node.into.rel.relname,
             ancestors[statement_index].stmt_location,
             ancestors[statement_index],
@@ -177,7 +141,7 @@ class Identifier(linter.Checker):  # type: ignore[misc]
         """Visit IndexStmt."""
         statement_index: int = utils.get_statement_index(ancestors)
 
-        self._check_identifier_for_upper_case(
+        self._check_identifier(
             node.idxname,
             ancestors[statement_index].stmt_location,
             ancestors[statement_index],
@@ -191,7 +155,7 @@ class Identifier(linter.Checker):  # type: ignore[misc]
         """Visit CreateSeqStmt."""
         statement_index: int = utils.get_statement_index(ancestors)
 
-        self._check_identifier_for_upper_case(
+        self._check_identifier(
             node.sequence.relname,
             ancestors[statement_index].stmt_location,
             ancestors[statement_index],
@@ -205,7 +169,7 @@ class Identifier(linter.Checker):  # type: ignore[misc]
         """Visit CreateSchemaStmt."""
         statement_index: int = utils.get_statement_index(ancestors)
 
-        self._check_identifier_for_upper_case(
+        self._check_identifier(
             node.schemaname,
             ancestors[statement_index].stmt_location,
             ancestors[statement_index],
@@ -223,7 +187,7 @@ class Identifier(linter.Checker):  # type: ignore[misc]
             stream.RawStream()(data_type).strip("'") for data_type in node.funcname
         ]
 
-        self._check_identifier_for_upper_case(
+        self._check_identifier(
             func_name[-1],
             ancestors[statement_index].stmt_location,
             ancestors[statement_index],
@@ -238,7 +202,7 @@ class Identifier(linter.Checker):  # type: ignore[misc]
         statement_index: int = utils.get_statement_index(ancestors)
 
         if node.conname is not None:
-            self._check_identifier_for_upper_case(
+            self._check_identifier(
                 node.conname,
                 ancestors[statement_index].stmt_location,
                 ancestors[statement_index],
@@ -252,7 +216,7 @@ class Identifier(linter.Checker):  # type: ignore[misc]
         """Visit CreatedbStmt."""
         statement_index: int = utils.get_statement_index(ancestors)
 
-        self._check_identifier_for_upper_case(
+        self._check_identifier(
             node.dbname,
             ancestors[statement_index].stmt_location,
             ancestors[statement_index],
@@ -266,7 +230,7 @@ class Identifier(linter.Checker):  # type: ignore[misc]
         """Visit CreateRoleStmt."""
         statement_index: int = utils.get_statement_index(ancestors)
 
-        self._check_identifier_for_upper_case(
+        self._check_identifier(
             node.role,
             ancestors[statement_index].stmt_location,
             ancestors[statement_index],
@@ -280,7 +244,7 @@ class Identifier(linter.Checker):  # type: ignore[misc]
         """Visit CreateTableSpaceStmt."""
         statement_index: int = utils.get_statement_index(ancestors)
 
-        self._check_identifier_for_upper_case(
+        self._check_identifier(
             node.tablespacename,
             ancestors[statement_index].stmt_location,
             ancestors[statement_index],
@@ -294,7 +258,7 @@ class Identifier(linter.Checker):  # type: ignore[misc]
         """Visit CreateTrigStmt."""
         statement_index: int = utils.get_statement_index(ancestors)
 
-        self._check_identifier_for_upper_case(
+        self._check_identifier(
             node.trigname,
             ancestors[statement_index].stmt_location,
             ancestors[statement_index],
@@ -312,7 +276,7 @@ class Identifier(linter.Checker):  # type: ignore[misc]
             stream.RawStream()(data_type).strip("'") for data_type in node.typeName
         ]
 
-        self._check_identifier_for_upper_case(
+        self._check_identifier(
             type_name[-1],
             ancestors[statement_index].stmt_location,
             ancestors[statement_index],

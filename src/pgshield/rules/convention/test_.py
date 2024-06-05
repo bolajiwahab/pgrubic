@@ -21,4 +21,3 @@ class Identifiers(linter.Checker):  # type: ignore[misc]
         statement_index: int = utils.get_statement_index(ancestors)
 
         self.identifiers.append((statement_index, node.relation.relname))
-        print(self.identifiers)
