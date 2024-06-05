@@ -36,7 +36,8 @@ class Identifier(linter.Checker):  # type: ignore[misc]
         self.name = "convention.check_identifier_is_in_snake_case"
 
         if not (
-            identifier == inflection.underscore(identifier) and identifier.isalnum()
+            identifier == inflection.underscore(identifier)
+            and identifier.replace("_", "").isalnum()
         ):
 
             self.violations.append(

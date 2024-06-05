@@ -26,7 +26,7 @@
 -- CREATE MATERIALIZED VIEW "Vista"
 --   AS SELECT 'Hello World';
 
-CREATE TABLE public."#protectedaccounts" (HA timestamptz);
+CREATE TABLE public."protectedaccounts" (host timestamptz);
 
 -- CREATE FUNCTION "add"(integer, integer) RETURNS integer
 --     AS 'select $1 + $2;'
