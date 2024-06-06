@@ -1,7 +1,6 @@
 """Convention around identifiers."""
 
-# split these into 3 different rules.
-
+import abc
 import typing
 
 import inflection
@@ -10,71 +9,17 @@ from pglast import ast, stream, keywords  # type: ignore[import-untyped]
 from pgshield import utils, linter
 
 
-class Identifier(linter.Checker):  # type: ignore[misc]
-    """Various checks around identifier."""
+class _Identifier(abc.ABC, linter.Checker):  # type: ignore[misc]
+    """Get identifiers."""
 
+    # To be overridden by subclasses
     name = ""
-    code = "COV021"
+    code = ""
 
+    @abc.abstractmethod
     def _check_identifier(self, *args: typing.Any, **kwargs: typing.Any) -> None:
         """Check identifier."""
-        functions: list[typing.Callable] = [
-            self._check_identifier_for_reserved_keywords,
-            self._check_identifier_is_in_snake_case,
-        ]
-
-        for method in functions:
-            method(*args, **kwargs)
-
-    def _check_identifier_is_in_snake_case(
-        self,
-        identifier: str,
-        location: int,
-        statement: str,
-    ) -> None:
-        """Check identifier is snake case."""
-        self.name = "convention.check_identifier_is_in_snake_case"
-
-        if not (
-            identifier == inflection.underscore(identifier)
-            and identifier.replace("_", "").isalnum()
-        ):
-
-            self.violations.append(
-                linter.Violation(
-                    location=location,
-                    statement=statement,
-                    description=f"Identifier '{identifier}' is not in snake case",
-                ),
-            )
-
-    def _check_identifier_for_reserved_keywords(
-        self,
-        identifier: str,
-        location: int,
-        statement: str,
-    ) -> None:
-        """Check for reserved keywords in identifiers."""
-        self.name = "convention.reserved_keywords_in_identifier"
-
-        full_keywords = (
-            set(keywords.RESERVED_KEYWORDS)
-            .union(
-                set(keywords.UNRESERVED_KEYWORDS),
-            )
-            .union(keywords.COL_NAME_KEYWORDS)
-            .union(keywords.TYPE_FUNC_NAME_KEYWORDS)
-        )
-
-        if identifier in (full_keywords):
-
-            self.violations.append(
-                linter.Violation(
-                    location=location,
-                    statement=statement,
-                    description=f"Reserved keyword '{identifier}' found in identifier",
-                ),
-            )
+        ...
 
     def visit_CreateStmt(
         self,
@@ -282,3 +227,84 @@ class Identifier(linter.Checker):  # type: ignore[misc]
             ancestors[statement_index].stmt_location,
             ancestors[statement_index],
         )
+
+
+class SnakeCase(_Identifier):  # type: ignore[misc]
+    """Identifier should be in snake case."""
+
+    name = "convention.snake_case_identifier"
+    code = "CVI001"
+
+    def _check_identifier(
+        self,
+        identifier: str,
+        location: int,
+        statement: str,
+    ) -> None:
+        """Check that identifier is in snake case."""
+        if identifier != inflection.underscore(identifier):
+
+            self.violations.append(
+                linter.Violation(
+                    location=location,
+                    statement=statement,
+                    description=f"Identifier '{identifier}' is not in snake case",
+                ),
+            )
+
+
+class Keywords(_Identifier):  # type: ignore[misc]
+    """Identifier should not contain reserved keywords."""
+
+    name = "convention.reserved_keywords_in_identifier"
+    code = "CVI002"
+
+    def _check_identifier(
+        self,
+        identifier: str,
+        location: int,
+        statement: str,
+    ) -> None:
+        """Check for reserved keywords in identifier."""
+        full_keywords = (
+            set(keywords.RESERVED_KEYWORDS)
+            .union(
+                set(keywords.UNRESERVED_KEYWORDS),
+            )
+            .union(keywords.COL_NAME_KEYWORDS)
+            .union(keywords.TYPE_FUNC_NAME_KEYWORDS)
+        )
+
+        if identifier in (full_keywords):
+
+            self.violations.append(
+                linter.Violation(
+                    location=location,
+                    statement=statement,
+                    description=f"Reserved keyword '{identifier}' found in identifier",
+                ),
+            )
+
+
+class SpecialCharacters(_Identifier):  # type: ignore[misc]
+    """Identifier should not contain special characters."""
+
+    name = "convention.special_characters_in_identifier"
+    code = "CVI003"
+
+    def _check_identifier(
+        self,
+        identifier: str,
+        location: int,
+        statement: str,
+    ) -> None:
+        """Check that identifier is in snake case."""
+        if not identifier.replace("_", "").isalnum():
+
+            self.violations.append(
+                linter.Violation(
+                    location=location,
+                    statement=statement,
+                    description=f"Special characters found in identifier '{identifier}'",  # noqa: E501
+                ),
+            )

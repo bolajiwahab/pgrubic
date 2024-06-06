@@ -26,18 +26,25 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
     name: str
     code: str
 
-    description: str
-
     def __init__(self) -> None:
         """Init."""
         self.ignore_rules: list[tuple[int, str]] = []
 
         self.violations: list[Violation] = []
 
-        for required in ("name", "code"):
-            if not hasattr(self, required):
-                msg = f"{self.__class__.__name__} must define a '{required}' attribute."
-                raise NotImplementedError(msg)
+        self.config: dict[str, typing.Any] = {}
+
+    required_attributes = ("name", "code")
+
+    def __init_subclass__(cls, **kwargs: typing.Any) -> None:
+        """Check required attributes."""
+        for required in cls.required_attributes:
+
+            msg = f"Can't instantiate class {cls.__name__} without '{required}' attribute defined"  # noqa: E501
+
+            if not hasattr(cls, required):
+
+                raise TypeError(msg)
 
     def visit(self, ancestors: typing.Any, node: ast.Node) -> None:  # noqa: ANN401
         """Visit the node."""
@@ -46,9 +53,10 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
 class Linter:
     """Holds all list rules, and runs them against a source file."""
 
-    def __init__(self) -> None:
+    def __init__(self, config: dict[str, typing.Any]) -> None:
         """Init."""
         self.checkers: set[Checker] = set()
+        self.config = config
 
     @staticmethod
     def print_violations(*, checker: Checker, file_name: str) -> None:
@@ -89,6 +97,8 @@ class Linter:
         for checker in self.checkers:
 
             checker.ignore_rules = ignore_rules_through_qa
+
+            checker.config = self.config
 
             checker(tree)
 

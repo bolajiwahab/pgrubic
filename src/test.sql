@@ -26,13 +26,13 @@
 -- CREATE MATERIALIZED VIEW "Vista"
 --   AS SELECT 'Hello World';
 
-CREATE TABLE public."protectedaccounts" (host timestamptz);
+CREATE TABLE "_protectedaccounts" (MATERIALIZED timestamptz);
 
--- CREATE FUNCTION "add"(integer, integer) RETURNS integer
---     AS 'select $1 + $2;'
---     LANGUAGE SQL
---     IMMUTABLE
---     RETURNS NULL ON NULL INPUT;
+CREATE FUNCTION "add"(integer, integer) RETURNS integer
+    AS 'select $1 + $2;'
+    LANGUAGE SQL
+    IMMUTABLE
+    RETURNS NULL ON NULL INPUT;
 
 -- CREATE FUNCTION public."Add"(
 --                              -- CREATE TABLE public."Films_recent" AS

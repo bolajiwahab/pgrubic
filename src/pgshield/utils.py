@@ -20,7 +20,7 @@ def load_rules(directories: list[str]) -> list[linter.Checker]:
 
         for _, obj in inspect.getmembers(module, inspect.isclass):
 
-            if issubclass(obj, linter.Checker):
+            if issubclass(obj, linter.Checker) and not obj.__name__.startswith("_"):
 
                 rules.append(typing.cast(linter.Checker, obj))
 

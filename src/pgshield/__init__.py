@@ -11,3 +11,5 @@ rules_directories: list[str] = [
     "pgshield.rules.convention.identifier",
     "pgshield.rules.convention.convention",
 ]
+
+required_attributes = ("name", "code")

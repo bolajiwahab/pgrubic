@@ -13,7 +13,13 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
     """CLI."""
     source_paths: abc.Sequence[str] = argv[1:]
 
-    linter: _linter.Linter = _linter.Linter()
+    loaded_config = config.load_config(
+        pathlib.Path(
+            "/Users/bolajiwahab/repos/bolajiwahab/pgshield/src/pgshield/.pgshield",
+        ),
+    )
+
+    linter: _linter.Linter = _linter.Linter(config=loaded_config)
 
     formatter: _formatter.Formatter = _formatter.Formatter()
 
@@ -22,12 +28,6 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
     loaded_codes: list[str] = [rule.code for rule in loaded_rules]
 
     utils.check_duplicate_rules(loaded_rules)
-
-    loaded_config = config.load_config(
-        pathlib.Path(
-            "/Users/bolajiwahab/repos/bolajiwahab/pgshield/src/pgshield/.pgshield",
-        ),
-    )
 
     for rule in loaded_rules:
 

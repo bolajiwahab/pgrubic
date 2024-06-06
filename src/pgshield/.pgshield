@@ -2,6 +2,7 @@
 # lint.select = [UNS019, UNS020]
 # lint.select = [UNS099, UNS020]
 lint.ignore = ["UNS021"]
+lint.convention.schemas = [{"partition": "partitions"}]
 lint.convention.preferred_case = snake_case
 lint.convention.naming_format_table = snake_case
 lint.convention.naming_format_index = snake_case
