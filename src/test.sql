@@ -4,11 +4,11 @@
 --     TEMPLATE template0
 -- ;
 
--- CREATE TABLE "measurement_y2006m02" PARTITION OF public.measurement
---     FOR VALUES FROM ('2006-02-01') TO ('2006-03-01');
+CREATE TABLE partitions."measurement_y2006m02" PARTITION OF public.measurement
+    FOR VALUES FROM ('2006-02-01') TO ('2006-03-01');
 
 
--- CREATE TYPE "mood" AS ENUM ('sad', 'ok', 'happy');
+-- CREATE TYPE uyt."mood" AS ENUM ('sad', 'ok', 'happy');
 
 -- CREATE TRIGGER "Check_update"
 --     BEFORE UPDATE ON accounts
@@ -23,16 +23,16 @@
 
 -- CREATE RULE notify_me AS ON UPDATE TO mytable DO ALSO NOTIFY mytable -- noqa: COV003
 -- ;
--- CREATE MATERIALIZED VIEW "Vista"
---   AS SELECT 'Hello World';
+CREATE MATERIALIZED VIEW publ."vista"
+  AS SELECT 'Hello World';
 
-CREATE TABLE "_protectedaccounts" (MATERIALIZED timestamptz);
+-- CREATE TABLE "_protectedaccounts" (MATERIALIZED timestamptz);
 
-CREATE FUNCTION "add"(integer, integer) RETURNS integer
-    AS 'select $1 + $2;'
-    LANGUAGE SQL
-    IMMUTABLE
-    RETURNS NULL ON NULL INPUT;
+-- CREATE FUNCTION "add"(integer, integer) RETURNS integer
+--     AS 'select $1 + $2;'
+--     LANGUAGE SQL
+--     IMMUTABLE
+--     RETURNS NULL ON NULL INPUT;
 
 -- CREATE FUNCTION public."Add"(
 --                              -- CREATE TABLE public."Films_recent" AS

@@ -45,6 +45,10 @@ enable once service is rfc compliant
 
 --*** update all node typing
 
+-- schemas.whitelist []
+-- schemas.partitions []
+-- schemas.tables[] -- not supported
+
 [
     "test": {
         "key": {

@@ -242,7 +242,10 @@ class SnakeCase(_Identifier):  # type: ignore[misc]
         statement: str,
     ) -> None:
         """Check that identifier is in snake case."""
-        if identifier != inflection.underscore(identifier):
+        if (
+            identifier != inflection.underscore(identifier)
+            and (location, self.code) not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -275,7 +278,10 @@ class Keywords(_Identifier):  # type: ignore[misc]
             .union(keywords.TYPE_FUNC_NAME_KEYWORDS)
         )
 
-        if identifier in (full_keywords):
+        if (
+            identifier in (full_keywords)
+            and (location, self.code) not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(
@@ -299,7 +305,10 @@ class SpecialCharacters(_Identifier):  # type: ignore[misc]
         statement: str,
     ) -> None:
         """Check that identifier is in snake case."""
-        if not identifier.replace("_", "").isalnum():
+        if (
+            not identifier.replace("_", "").isalnum()
+            and (location, self.code) not in self.ignore_rules
+        ):
 
             self.violations.append(
                 linter.Violation(

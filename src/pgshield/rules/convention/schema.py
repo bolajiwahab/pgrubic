@@ -1,4 +1,4 @@
-"""Convention around schema qualified."""
+"""Convention around schema."""
 
 import abc
 import typing
@@ -64,7 +64,6 @@ class _Schema(abc.ABC, linter.Checker):  # type: ignore[misc]
                 ancestors[statement_index],
             )
 
-
     def visit_CreateFunctionStmt(
         self,
         ancestors: ast.Node,
@@ -109,7 +108,7 @@ class SchemaQualified(_Schema):
         statement: str,
     ) -> None:
         """Check that schema is in snake case."""
-        if not schema:
+        if not schema and (location, self.code) not in self.ignore_rules:
 
             self.violations.append(
                 linter.Violation(
@@ -120,25 +119,37 @@ class SchemaQualified(_Schema):
             )
 
 
-# class SchemaWhitelisted(_Schema):
-#     """Only whitelisted schemas are allowed."""
+class SchemaWhitelisted(_Schema):
+    """Only whitelisted schemas are allowed."""
 
-#     name = "convention.whitelisted_schemas"
-#     code = "CVS002"
+    name = "convention.whitelisted_schemas"
+    code = "CVS002"
 
-#     def _check_schema(
-#         self,
-#         schema: str | None,
-#         location: int,
-#         statement: str,
-#     ) -> None:
-#         """Check schema is whitelisted."""
-#         if schema and self.config.get("whitelisted_schemas") is not None and schema not in self.config.get("whitelisted_schemas"):
+    def _check_schema(
+        self,
+        schema: str | None,
+        location: int,
+        statement: str,
+    ) -> None:
+        """Check schema is whitelisted."""
+        print(schema)
+        # print(self.config.get("lint.whitelist.schemas", []))
+        # print(schema in self.config.get("lint.whitelist.schemas", []))
+        schemas: str = self.config.get("lint.whitelist.schemas", [])
+        print("pub" in schemas)
+        print(type(schemas))
+        print(schemas)
+        if (
+            schema
+            and self.config.get("lint.whitelist.schemas")
+            and schema not in self.config.get("lint.whitelist.schemas", [])
+            and (location, self.code) not in self.ignore_rules
+        ):
 
-#             self.violations.append(
-#                 linter.Violation(
-#                     location=location,
-#                     statement=statement,
-#                     description="Object should be schema qualified",
-#                 ),
-#             )
+            self.violations.append(
+                linter.Violation(
+                    location=location,
+                    statement=statement,
+                    description=f"Schema {schema} is not whitelisted",
+                ),
+            )
