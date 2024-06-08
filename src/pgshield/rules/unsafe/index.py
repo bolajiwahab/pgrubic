@@ -2,7 +2,7 @@
 
 from pglast import ast, enums, stream  # type: ignore[import-untyped]
 
-from pgshield import utils, linter
+from pgshield.core import linter
 
 
 class NonConcurrentIndexCreation(linter.Checker):  # type: ignore[misc]
@@ -14,10 +14,10 @@ class NonConcurrentIndexCreation(linter.Checker):  # type: ignore[misc]
     def visit_IndexStmt(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.IndexStmt,
     ) -> None:
         """Visit IndexStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             not node.concurrent
@@ -40,9 +40,9 @@ class IndexMovementToTablespace(linter.Checker):
     name = "unsafe.index_movement_to_tablespace"
     code = "UNI002"
 
-    def visit_AlterTableCmd(self, ancestors: ast.Node, node: ast.Node) -> None:
+    def visit_AlterTableCmd(self, ancestors: ast.Node, node: ast.AlterTableCmd) -> None:
         """Visit AlterTableCmd."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             node.subtype == enums.AlterTableType.AT_SetTableSpace
@@ -69,10 +69,10 @@ class IndexesMovementToTablespace(linter.Checker):
     def visit_AlterTableMoveAllStmt(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.AlterTableMoveAllStmt,
     ) -> None:
         """Visit AlterTableMoveAllStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             node.objtype == enums.ObjectType.OBJECT_INDEX
@@ -98,10 +98,10 @@ class NonConcurrentIndexDrop(linter.Checker):
     def visit_DropStmt(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.DropStmt,
     ) -> None:
         """Visit DropStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             node.removeType == enums.ObjectType.OBJECT_INDEX
@@ -125,9 +125,9 @@ class NonConcurrentReindex(linter.Checker):
     name = "unsafe.non_concurrent_reindex"
     code = "UNI005"
 
-    def visit_ReindexStmt(self, ancestors: ast.Node, node: ast.Node) -> None:
+    def visit_ReindexStmt(self, ancestors: ast.Node, node: ast.ReindexStmt) -> None:
         """Visit ReindexStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         params = (
             [stream.RawStream()(param) for param in node.params]

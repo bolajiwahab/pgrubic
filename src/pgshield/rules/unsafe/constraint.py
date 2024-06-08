@@ -2,7 +2,7 @@
 
 from pglast import ast, enums  # type: ignore[import-untyped]
 
-from pgshield import utils, linter
+from pgshield.core import linter
 
 
 class NotNullOnExistingColumn(linter.Checker):  # type: ignore[misc]
@@ -14,10 +14,10 @@ class NotNullOnExistingColumn(linter.Checker):  # type: ignore[misc]
     def visit_AlterTableCmd(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.AlterTableCmd,
     ) -> None:
         """Visit AlterTableCmd."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             node.subtype == enums.AlterTableType.AT_SetNotNull
@@ -43,10 +43,10 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):  # type: ignore[mis
     def visit_ColumnDef(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if ast.AlterTableStmt in ancestors and node.constraints:
 
@@ -89,10 +89,10 @@ class VolatileDefaultOnNewColumn(linter.Checker):  # type: ignore[misc]
     def visit_Constraint(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             ast.AlterTableStmt in ancestors
@@ -120,10 +120,10 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):  # type: igno
     def visit_Constraint(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             ast.AlterTableStmt in ancestors
@@ -151,10 +151,10 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):  # type: ignore[mi
     def visit_Constraint(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             ast.AlterTableStmt in ancestors
@@ -182,10 +182,10 @@ class UniqueConstraintCreatingNewIndex(linter.Checker):  # type: ignore[misc]
     def visit_Constraint(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             ast.AlterTableStmt in ancestors
@@ -213,10 +213,10 @@ class PrimaryKeyConstraintCreatingNewIndex(linter.Checker):  # type: ignore[misc
     def visit_Constraint(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             ast.AlterTableStmt in ancestors

@@ -1,24 +1,10 @@
--- no upper case identifiers
--- improper data types -- timestamp without time zone
--- timetz, char(n), varchar(n), money, jsob, serial
--- improper usage of feature -- SQL_ASCII, rules, inherits 
+# blacklist config e.g types e.g bool etc
 
-# we need no qa with rule name to skip.
-# config to include/exclude rules
-# config to specify convention
-# blacklist config e.g types
-
+# add format for exclusion constraint
 
 # prevent missing rule numbers
 
 # config to exclude certain files from the check e.g init.sql - should happen at the source file registration to skip
-# config exclusion for rules happen at rules registration
-# in line comment happen at the visitor
-
-
-# DropdbStmt
-# DropTableSpaceStmt
-
 
 -- include-convention as an arg (if your service is compliant then enable this to prevent future uncompliance hence no need)
 enable once service is rfc compliant
@@ -28,26 +14,16 @@ enable once service is rfc compliant
 -- update : enable convention by default with default config, since we are following postgres normal conventions
 -- best practices, people can disable convention by default
 
--- don't use reserved keyword as identifiers, print(keywords.RESERVED_KEYWORDS)
-
 -- Don't use CURRENT_TIME
 
 -- schema-qualified custom type
--- black list schemas
--- whitelist schemas
--- schema qualified creation
--- blacklist CreateExtensionStmt extensions
-
--- add truncatestmt to unsafe
--- rangevar to check for schema qualified tables
 
 --*** turn everything into keywords args
 
---*** update all node typing
-
--- schemas.whitelist []
 -- schemas.partitions []
 -- schemas.tables[] -- not supported
+
+-- if identifier starts with pg_
 
 [
     "test": {

@@ -1,39 +1,30 @@
 """Entry point."""
 
 import sys
-import pathlib
 from collections import abc
 
-from pgshield import utils, config, rules_directories
-from pgshield import linter as _linter
-from pgshield import formatter as _formatter
+from pgshield.core import config, loader
+from pgshield.core import linter as _linter
+from pgshield.core import formatter as _formatter
 
 
 def cli(argv: abc.Sequence[str] = sys.argv) -> None:
     """CLI."""
     source_paths: abc.Sequence[str] = argv[1:]
 
-    loaded_config = config.load_config(
-        pathlib.Path(
-            "/Users/bolajiwahab/repos/bolajiwahab/pgshield/src/pgshield/.pgshield",
-        ),
-    )
+    loaded_config = config.parse_config()
 
     linter: _linter.Linter = _linter.Linter(config=loaded_config)
 
     formatter: _formatter.Formatter = _formatter.Formatter()
 
-    loaded_rules: list[_linter.Checker] = utils.load_rules(rules_directories)
-
-    loaded_codes: list[str] = [rule.code for rule in loaded_rules]
-
-    utils.check_duplicate_rules(loaded_rules)
+    loaded_rules: list[_linter.Checker] = loader.load_rules()
 
     for rule in loaded_rules:
 
-        if rule.code in loaded_config.get(
-            "lint.select", loaded_codes,
-        ) and rule.code not in loaded_config.get("lint.ignore", []):
+        if (
+            not loaded_config.select or rule.code in loaded_config.select
+        ) and rule.code not in loaded_config.ignore:
 
             linter.checkers.add(rule())
 

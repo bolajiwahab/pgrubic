@@ -1,11 +1,12 @@
 """Convention around schema."""
 
+import re
 import abc
 import typing
 
 from pglast import ast, stream  # type: ignore[import-untyped]
 
-from pgshield import utils, linter
+from pgshield.core import linter
 
 
 class _Schema(abc.ABC, linter.Checker):  # type: ignore[misc]
@@ -23,76 +24,93 @@ class _Schema(abc.ABC, linter.Checker):  # type: ignore[misc]
     def visit_RangeVar(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.RangeVar,
     ) -> None:
         """Visit RangeVar. Checks relations during creation (do we want usage as well)."""  # noqa: E501
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
-        self._check_schema(
-            node.schemaname,
-            ancestors[statement_index].stmt_location,
-            ancestors[statement_index],
-        )
+        create = [
+            ast.CreateStmt,
+            ast.CreateTableAsStmt,
+            ast.CreateSeqStmt,
+            ast.ViewStmt,
+        ]
+
+        for stmt in create:
+
+            if stmt in ancestors:
+
+                self._check_schema(
+                    node.schemaname,
+                    ancestors[statement_index].stmt_location,
+                    ancestors[statement_index],
+                )
 
     def visit_CreateEnumStmt(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.CreateEnumStmt,
     ) -> None:
         """Visit CreateEnumStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
-        enum_name = [
-            stream.RawStream()(data_type).strip("'") for data_type in node.typeName
-        ]
+        schema_name = node.typeName[0].sval if len(node.typeName) != 1 else None
 
-        schema_qualified = 2
+        self._check_schema(
+            schema_name,
+            ancestors[statement_index].stmt_location,
+            ancestors[statement_index],
+        )
 
-        if len(enum_name) == schema_qualified:
-
-            self._check_schema(
-                enum_name[0],
-                ancestors[statement_index].stmt_location,
-                ancestors[statement_index],
-            )
-
-        else:
-
-            self._check_schema(
-                None,
-                ancestors[statement_index].stmt_location,
-                ancestors[statement_index],
-            )
 
     def visit_CreateFunctionStmt(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
-        func_name = [
-            stream.RawStream()(data_type).strip("'") for data_type in node.funcname
-        ]
+        schema_name = node.funcname[0].sval if len(node.funcname) != 1 else None
 
-        schema_qualified = 2
+        self._check_schema(
+            schema_name,
+            ancestors[statement_index].stmt_location,
+            ancestors[statement_index],
+        )
 
-        if len(func_name) == schema_qualified:
+    def visit_CreateExtensionStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.CreateExtensionStmt,
+    ) -> None:
+        """Visit CreateExtensionStmt."""
+        statement_index: int = linter.get_statement_index(ancestors)
 
-            self._check_schema(
-                func_name[0],
-                ancestors[statement_index].stmt_location,
-                ancestors[statement_index],
-            )
+        options: dict[str, str] = (
+            {
+                re.sub(r"\s*", "", stream.RawStream()(option), flags=re.UNICODE)
+                .split("=")[0]
+                .lower(): re.sub(
+                    r"\s*",
+                    "",
+                    stream.RawStream()(option),
+                    flags=re.UNICODE,
+                )
+                .split("=")[1]
+                .strip("'")
+                .lower()
+                for option in node.options
+            }
+            if node.options is not None
+            else {}
+        )
 
-        else:
-
-            self._check_schema(
-                None,
-                ancestors[statement_index].stmt_location,
-                ancestors[statement_index],
-            )
+        self._check_schema(
+            options.get("schema"),
+            ancestors[statement_index].stmt_location,
+            ancestors[statement_index],
+        )
 
 
 class SchemaQualified(_Schema):
@@ -107,7 +125,7 @@ class SchemaQualified(_Schema):
         location: int,
         statement: str,
     ) -> None:
-        """Check that schema is in snake case."""
+        """Check that object is schema qualified."""
         if not schema and (location, self.code) not in self.ignore_rules:
 
             self.violations.append(
@@ -132,17 +150,9 @@ class SchemaWhitelisted(_Schema):
         statement: str,
     ) -> None:
         """Check schema is whitelisted."""
-        print(schema)
-        # print(self.config.get("lint.whitelist.schemas", []))
-        # print(schema in self.config.get("lint.whitelist.schemas", []))
-        schemas: str = self.config.get("lint.whitelist.schemas", [])
-        print("pub" in schemas)
-        print(type(schemas))
-        print(schemas)
         if (
             schema
-            and self.config.get("lint.whitelist.schemas")
-            and schema not in self.config.get("lint.whitelist.schemas", [])
+            and self.config.schemas and schema not in self.config.schemas
             and (location, self.code) not in self.ignore_rules
         ):
 
@@ -150,6 +160,6 @@ class SchemaWhitelisted(_Schema):
                 linter.Violation(
                     location=location,
                     statement=statement,
-                    description=f"Schema {schema} is not whitelisted",
+                    description=f"Schema '{schema}' is not whitelisted",
                 ),
             )

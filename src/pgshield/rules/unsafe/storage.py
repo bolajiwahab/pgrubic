@@ -1,8 +1,8 @@
 """Unsafe storage operations."""
 
-from pglast import ast  # type: ignore[import-untyped]
+from pglast import ast, enums  # type: ignore[import-untyped]
 
-from pgshield import utils, linter
+from pgshield.core import linter
 
 
 class DropTablespace(linter.Checker):
@@ -14,10 +14,10 @@ class DropTablespace(linter.Checker):
     def visit_DropTableSpaceStmt(
         self,
         ancestors: ast.Node,
-        node: ast.Node,  # noqa: ARG002
+        node: ast.DropTableSpaceStmt,  # noqa: ARG002
     ) -> None:
         """Visit DropTableSpaceStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             ancestors[statement_index].stmt_location,
@@ -42,10 +42,10 @@ class DropDatabase(linter.Checker):
     def visit_DropdbStmt(
         self,
         ancestors: ast.Node,
-        node: ast.Node,  # noqa: ARG002
+        node: ast.DropdbStmt,  # noqa: ARG002
     ) -> None:
         """Visit DropdbStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             ancestors[statement_index].stmt_location,
@@ -56,5 +56,34 @@ class DropDatabase(linter.Checker):
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Drop database",
+                ),
+            )
+
+
+class DropSchema(linter.Checker):
+    """Drop schema."""
+
+    name = "unsafe.drop_schema"
+    code = "UNS003"
+
+    def visit_DropStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.DropStmt,
+    ) -> None:
+        """Visit DropStmt."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        if (
+            node.removeType == enums.ObjectType.OBJECT_SCHEMA
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Drop schema is not safe.",
                 ),
             )

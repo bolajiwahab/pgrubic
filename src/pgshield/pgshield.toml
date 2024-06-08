@@ -1,0 +1,11 @@
+[lint]
+select = []
+ignore = []
+schemas = []
+regex_partition = "[a-zA-Z0-9]+__[a-zA-Z0-9]+__[0-9]{4}_[0-9]{2}(?:_[0-9]{2})?$"
+regex_index = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_idx$"
+regex_unique_index = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
+regex_constraint_primary_key = "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
+regex_constraint_unique_key = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
+regex_constraint_foreign_key = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_fkey"
+regex_constraint_check = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"

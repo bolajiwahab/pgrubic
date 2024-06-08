@@ -2,7 +2,7 @@
 
 from pglast import ast, enums, stream  # type: ignore[import-untyped]
 
-from pgshield import utils, linter
+from pgshield.core import linter
 
 
 class DropTable(linter.Checker):
@@ -14,10 +14,10 @@ class DropTable(linter.Checker):
     def visit_DropStmt(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.DropStmt,
     ) -> None:
         """Visit DropStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             node.removeType == enums.ObjectType.OBJECT_TABLE
@@ -43,10 +43,10 @@ class RenameTable(linter.Checker):
     def visit_RenameStmt(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.RenameStmt,
     ) -> None:
         """Visit RenameStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             node.renameType == enums.ObjectType.OBJECT_TABLE
@@ -69,9 +69,9 @@ class TableMovementToTablespace(linter.Checker):
     name = "unsafe.table_movement_to_tablespace"
     code = "UST003"
 
-    def visit_AlterTableCmd(self, ancestors: ast.Node, node: ast.Node) -> None:
+    def visit_AlterTableCmd(self, ancestors: ast.Node, node: ast.AlterTableCmd) -> None:
         """Visit AlterTableCmd."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             node.subtype == enums.AlterTableType.AT_SetTableSpace
@@ -98,10 +98,10 @@ class TablesMovementToTablespace(linter.Checker):
     def visit_AlterTableMoveAllStmt(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.AlterTableMoveAllStmt,
     ) -> None:
         """Visit AlterTableMoveAllStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             node.objtype == enums.ObjectType.OBJECT_TABLE
@@ -127,10 +127,10 @@ class Cluster(linter.Checker):
     def visit_ClusterStmt(
         self,
         ancestors: ast.Node,
-        node: ast.Node,  # noqa: ARG002
+        node: ast.ClusterStmt,  # noqa: ARG002
     ) -> None:
         """Visit ClusterStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             ancestors[statement_index].stmt_location,
@@ -152,9 +152,9 @@ class VacuumFull(linter.Checker):
     name = "unsafe.vacuum_full"
     code = "UST006"
 
-    def visit_VacuumStmt(self, ancestors: ast.Node, node: ast.Node) -> None:
+    def visit_VacuumStmt(self, ancestors: ast.Node, node: ast.VacuumStmt) -> None:
         """Visit VacuumStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         options = (
             [stream.RawStream()(option).lower() for option in node.options]
@@ -186,10 +186,10 @@ class NonConcurrentDetachPartition(linter.Checker):
     def visit_PartitionCmd(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.PartitionCmd,
     ) -> None:
         """Visit PartitionCmd."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             not node.concurrent
@@ -215,10 +215,10 @@ class NonConcurrentRefreshMaterializedView(linter.Checker):  # type: ignore[misc
     def visit_RefreshMatViewStmt(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.RefreshMatViewStmt,
     ) -> None:
         """Visit RefreshMatViewStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             not node.concurrent
@@ -231,5 +231,32 @@ class NonConcurrentRefreshMaterializedView(linter.Checker):  # type: ignore[misc
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Non concurrent refresh materialized view",
+                ),
+            )
+
+
+class TruncateTable(linter.Checker):
+    """Truncate table."""
+
+    name = "unsafe.truncate_table"
+    code = "UNT009"
+
+    def visit_TruncateStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.TruncateStmt,  # noqa: ARG002
+    ) -> None:
+        """Visit TruncateStmt."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        if (
+            ancestors[statement_index].stmt_location,
+            self.code,
+        ) not in self.ignore_rules:
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Truncate table is not safe",
                 ),
             )

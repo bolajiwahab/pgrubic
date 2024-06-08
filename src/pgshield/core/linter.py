@@ -1,30 +1,51 @@
 """Linter."""
 
+import re
+import sys
 import typing
 import pathlib
 import dataclasses
 
 from pglast import ast, parser, stream, visitors  # type: ignore[import-untyped]
 
-from pgshield import logging
+from pgshield.core import noqa, config
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
 class Violation:
     """Representation of rule violation."""
 
-    lineno: int
-    node: ast.Node
+    location: int
+    statement: ast.Node
     description: str
 
 
 class Checker(visitors.Visitor):  # type: ignore[misc]
     """Define a lint rule, and store all the nodes that violate that lint rule."""
 
-    def __init__(self, issue_code: str) -> None:
+    name: str
+    code: str
+
+    def __init__(self) -> None:
         """Init."""
-        self.issue_code = issue_code
+        self.ignore_rules: list[tuple[int, str]] = []
+
         self.violations: list[Violation] = []
+
+        self.config: config.Config = dataclasses.field(default_factory=lambda: config.Config(),  # noqa: E501
+    )
+
+    required_attributes: tuple[str, ...] = ("name", "code")
+
+    def __init_subclass__(cls, **kwargs: typing.Any) -> None:
+        """Check required attributes."""
+        for required in cls.required_attributes:
+
+            msg = f"Can't instantiate class {cls.__name__} without '{required}' attribute defined"  # noqa: E501
+
+            if not hasattr(cls, required):
+
+                raise TypeError(msg)
 
     def visit(self, ancestors: typing.Any, node: ast.Node) -> None:  # noqa: ANN401
         """Visit the node."""
@@ -33,32 +54,78 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
 class Linter:
     """Holds all list rules, and runs them against a source file."""
 
-    def __init__(self) -> None:
+    def __init__(self, config: config.Config) -> None:
         """Init."""
         self.checkers: set[Checker] = set()
+        self.config = config
 
     @staticmethod
     def print_violations(*, checker: Checker, file_name: str) -> None:
         """Print all violations collected by a checker."""
         for violation in checker.violations:
-            logging.logger.error(
-                f"{file_name}:{violation.lineno}: {checker.issue_code}: "
-                f"{violation.description}: {stream.RawStream()(violation.node)}",
+
+            sys.stdout.write(
+                f"{file_name}:{violation.location}: {checker.code}: "
+                f"{violation.description}: {stream.RawStream()(violation.statement)}\n",
             )
 
     def run(self, source_path: str) -> bool:
-        """Run all lints on a source file."""
+        """Run all rules on a source file."""
         file_name = pathlib.Path(source_path).name
 
-        with pathlib.Path(source_path).open("r") as source_file:
+        with pathlib.Path(source_path).open("r", encoding ="utf-8") as source_file:
+
             source_code = source_file.read()
 
-        tree = parser.parse_sql(source_code)
+        # Remove comments
+        source_code = re.sub(
+            r"^\s*--.*\n?|^\s*\/[*][\S\s]*?[*]\/", "", source_code, flags=re.MULTILINE,
+        )
+
+        try:
+
+            tree: ast.Node  = parser.parse_sql(source_code)
+
+        except parser.ParseError as error:
+
+            sys.stdout.write(f"{file_name}: {error!s}")
+            sys.exit(1)
+
+        violations_found: bool = False
+
+        ignore_rules_through_qa: list[tuple[int, str]] = noqa.extract(source_code)
+
         for checker in self.checkers:
+
+            checker.ignore_rules = ignore_rules_through_qa
+
+            checker.config = self.config
+
             checker(tree)
-            self.print_violations(checker=checker, file_name=file_name)
 
-        if checker.violations:
-            return True
+            if checker.violations:
 
-        return False
+                violations_found = True
+
+                self.print_violations(checker=checker, file_name=file_name)
+
+        return violations_found
+
+
+def get_statement_index(ancestors: ast.Node) -> int:
+    """Get statement index.
+
+    pglast's AST is not a python list hence we cannot use list functions such as `len`
+    directly on it. We need to build a list from the AST.
+    """
+    nodes: list[str] = []
+
+    for node in ancestors:
+
+        if node is None:
+            break
+
+        nodes.append(node)
+
+    # The current node's parent is located two indexes from the end of the list.
+    return len(nodes) - 2

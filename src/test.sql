@@ -4,11 +4,12 @@
 --     TEMPLATE template0
 -- ;
 
-CREATE TABLE partitions."measurement_y2006m02" PARTITION OF public.measurement
-    FOR VALUES FROM ('2006-02-01') TO ('2006-03-01');
+-- CREATE TABLE partitions."measurement_y2006m02" PARTITION OF public.measurement
+--     FOR VALUES FROM ('2006-02-01') TO ('2006-03-01');
 
+-- create extension postgis with schema public1;
 
--- CREATE TYPE uyt."mood" AS ENUM ('sad', 'ok', 'happy');
+-- CREATE TYPE uyt."pg_add" AS ENUM ('sad', 'ok', 'happy');
 
 -- CREATE TRIGGER "Check_update"
 --     BEFORE UPDATE ON accounts
@@ -23,12 +24,13 @@ CREATE TABLE partitions."measurement_y2006m02" PARTITION OF public.measurement
 
 -- CREATE RULE notify_me AS ON UPDATE TO mytable DO ALSO NOTIFY mytable -- noqa: COV003
 -- ;
-CREATE MATERIALIZED VIEW publ."vista"
+-- drop schema public;
+CREATE VIEW public."vista"
   AS SELECT 'Hello World';
 
 -- CREATE TABLE "_protectedaccounts" (MATERIALIZED timestamptz);
 
--- CREATE FUNCTION "add"(integer, integer) RETURNS integer
+-- CREATE FUNCTION public."add"(integer, integer) RETURNS integer
 --     AS 'select $1 + $2;'
 --     LANGUAGE SQL
 --     IMMUTABLE
@@ -37,7 +39,7 @@ CREATE MATERIALIZED VIEW publ."vista"
 -- CREATE FUNCTION public."Add"(
 --                              -- CREATE TABLE public."Films_recent" AS
 -- --   SELECT * FROM films WHERE date_prod >= '2002-01-01';
--- create index "Ab" on ba(a);
+create index "Ab" on ba(a);
 -- integer,
 --                              integer)
 -- RETURNS integer
@@ -50,10 +52,13 @@ CREATE MATERIALIZED VIEW publ."vista"
 -- alter table tbl alter column "Az" set not null;
 -- alter table tbl add column "Aa" text not null;
 
+-- truncate table test;
+
 -- CREATE TABLE people (
---     height_cm numeric,
+--     height_cm json,
 --     height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
 -- );
+
 -- ALTER TABLE employee
 -- ADD CONSTRAINT "Employee_unq" primary key(email)
 -- ;

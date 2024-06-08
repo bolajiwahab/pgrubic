@@ -1,8 +1,8 @@
 """Unsafe column operations."""
 
-from pglast import ast, enums, stream  # type: ignore[import-untyped]
+from pglast import ast, enums  # type: ignore[import-untyped]
 
-from pgshield import utils, linter
+from pgshield.core import linter
 
 
 class DropColumn(linter.Checker):  # type: ignore[misc]
@@ -14,10 +14,10 @@ class DropColumn(linter.Checker):  # type: ignore[misc]
     def visit_AlterTableCmd(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.AlterTableCmd,
     ) -> None:
         """Visit AlterTableCmd."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             node.subtype == enums.AlterTableType.AT_DropColumn
@@ -43,10 +43,10 @@ class ChangeColumnType(linter.Checker):
     def visit_AlterTableCmd(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.AlterTableCmd,
     ) -> None:
         """Visit AlterTableCmd."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             node.subtype == enums.AlterTableType.AT_AlterColumnType
@@ -72,10 +72,10 @@ class RenameColumn(linter.Checker):
     def visit_RenameStmt(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.RenameStmt,
     ) -> None:
         """Visit RenameStmt."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             node.renameType == enums.ObjectType.OBJECT_COLUMN
@@ -98,31 +98,23 @@ class AutoIncrementColumn(linter.Checker):
     name = "unsafe.auto_increment_column"
     code = "USC004"
 
-    def visit_ColumnDef(self, ancestors: ast.Node, node: ast.Node) -> None:
+    def visit_ColumnDef(self, ancestors: ast.Node, node: ast.ColumnDef) -> None:
         """Visit ColumnDef."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
-        if ast.AlterTableStmt in ancestors:
+        if ast.AlterTableStmt in ancestors and (
+            node.typeName.names[-1].sval in ["serial", "bigserial"]
+            and (ancestors[statement_index].stmt_location, self.code)
+            not in self.ignore_rules
+        ):
 
-            # Get data type e.g ["pg_catalog", "bigserial"]
-            data_type = [
-                stream.RawStream()(data_type).strip("'")
-                for data_type in node.typeName.names
-            ]
-
-            if (
-                data_type[-1] in ["serial", "bigserial"]
-                and (ancestors[statement_index].stmt_location, self.code)
-                not in self.ignore_rules
-            ):
-
-                self.violations.append(
-                    linter.Violation(
-                        location=ancestors[statement_index].stmt_location,
-                        statement=ancestors[statement_index],
-                        description="Auto increment column",
-                    ),
-                )
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Auto increment column",
+                ),
+            )
 
 
 class AutoIncrementIdentityColumn(linter.Checker):  # type: ignore[misc]
@@ -134,10 +126,10 @@ class AutoIncrementIdentityColumn(linter.Checker):  # type: ignore[misc]
     def visit_Constraint(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             ast.AlterTableStmt in ancestors
@@ -164,10 +156,10 @@ class StoredGeneratedColumn(linter.Checker):  # type: ignore[misc]
     def visit_Constraint(
         self,
         ancestors: ast.Node,
-        node: ast.Node,
+        node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        statement_index: int = utils.get_statement_index(ancestors)
+        statement_index: int = linter.get_statement_index(ancestors)
 
         if (
             ast.AlterTableStmt in ancestors
