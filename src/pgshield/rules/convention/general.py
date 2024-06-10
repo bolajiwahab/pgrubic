@@ -377,7 +377,7 @@ class BigSerial(linter.Checker):  # type: ignore[misc]
 
 
 class PreferJsonbOverJson(linter.Checker):  # type: ignore[misc]
-    """PreferJsonbOverJson."""
+    """Prefer jsonb over json."""
 
     name = "convention.prefer_jsonb_over_json"
     code = "CVG015"

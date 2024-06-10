@@ -14,24 +14,20 @@ from pgshield.core import errors
 class Config:
     """Representation of config."""
 
-    select: list[str] = dataclasses.field(default_factory=list)
-    ignore: list[str] = dataclasses.field(default_factory=list)
-    schemas: list[str] = dataclasses.field(default_factory=list)
-    extensions: list[str] = dataclasses.field(default_factory=list)
-    regex_partition: str = (
-        "[a-zA-Z0-9]+__[a-zA-Z0-9]+__[0-9]{4}_[0-9]{2}(?:_[0-9]{2})?$"
-    )
-    regex_index: str = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_idx$"
-    regex_unique_index: str = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
+    select: list[str]
+    ignore: list[str]
+    schemas: list[str]
+    extensions: list[str]
 
-    regex_constraint_primary_key: str = "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
-    regex_constraint_unique_key: str = (
-        "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
-    )
-    regex_constraint_foreign_key: str = (
-        "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_fkey"
-    )
-    regex_constraint_check: str = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"
+    regex_partition: str
+    regex_index: str
+    regex_constraint_primary_key: str
+    regex_constraint_unique_key: str
+    regex_constraint_foreign_key: str
+    regex_constraint_check: str
+    regex_constraint_exclusion: str
+
+    regex_sequence: str
 
 
 def _load_default_config() -> dict[str, typing.Any]:

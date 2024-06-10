@@ -2,9 +2,8 @@
 
 import re
 
-from pglast import ast, enums, stream  # type: ignore[import-untyped]
+from pglast import ast, enums  # type: ignore[import-untyped]
 
-from pgshield import recover_original_identifier
 from pgshield.core import linter
 
 
@@ -35,15 +34,16 @@ class IndexNaming(linter.Checker):  # type: ignore[misc]
                 linter.Violation(
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
-                    description=f"Index '{node.idxname}' does not follow naming convention '{self.config.regex_index}'",  # noqa: E501
+                    description=f"Index '{node.idxname}' does not follow naming"
+                                f" convention '{self.config.regex_index}'",
                 ),
             )
 
 
-class CheckConstraintNaming(linter.Checker):  # type: ignore[misc]
-    """Check constraint naming."""
+class ConstraintNaming(linter.Checker):  # type: ignore[misc]
+    """Constraint naming."""
 
-    name = "unsafe.check_constraint_naming"
+    name = "unsafe.constraint_naming"
     code = "CVN002"
 
     def visit_Constraint(
@@ -54,21 +54,111 @@ class CheckConstraintNaming(linter.Checker):  # type: ignore[misc]
         """Visit Constraint."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            not re.match(self.config.regex_constraint_check, node.conname)
+        constraint = {
+            enums.ConstrType.CONSTR_PRIMARY: {
+                "type": "Primary key",
+                "naming_convention": self.config.regex_constraint_primary_key,
+            },
+            enums.ConstrType.CONSTR_FOREIGN: {
+                "type": "Foreign key",
+                "naming_convention": self.config.regex_constraint_foreign_key,
+            },
+            enums.ConstrType.CONSTR_UNIQUE: {
+                "type": "Unique",
+                "naming_convention": self.config.regex_constraint_unique_key,
+            },
+            enums.ConstrType.CONSTR_CHECK: {
+                "type": "Check",
+                "naming_convention": self.config.regex_constraint_check,
+            },
+            enums.ConstrType.CONSTR_EXCLUSION: {
+                "type": "Check",
+                "naming_convention": self.config.regex_constraint_exclusion,
+            },
+        }
+
+        if constraint.get(node.contype) and (
+            not re.match(constraint[node.contype]["naming_convention"], node.conname)
             and (
                 ancestors[statement_index].stmt_location,
                 self.code,
             )
             not in self.ignore_rules
         ):
-            
-            print(enums.ConstrType.CONSTR_PRIMARY == node.contype)
 
             self.violations.append(
                 linter.Violation(
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
-                    description=f"{enums.ConstrType(node.contype).name} constraint '{node.conname}' does not follow naming convention '{self.config.regex_constraint_check}'",  # noqa: E501
+                    description=f"{constraint[node.contype]["type"]} constraint"
+                                f" '{node.conname}' does not follow naming convention"
+                                f" '{constraint[node.contype]["naming_convention"]}",
+                ),
+            )
+
+
+class PartionNaming(linter.Checker):  # type: ignore[misc]
+    """Partition naming."""
+
+    name = "unsafe.partition_naming"
+    code = "CVN003"
+
+    def visit_CreateStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.CreateStmt,
+    ) -> None:
+        """Visit PartitionCmd."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        if (
+            node.partbound is not None
+            and not re.match(self.config.regex_partition, node.relation.relname)
+            and (
+                ancestors[statement_index].stmt_location,
+                self.code,
+            )
+            not in self.ignore_rules
+        ):
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description=f"Partition '{node.relation.relname}' does not follow"
+                                f" naming convention '{self.config.regex_partition}'",
+                ),
+            )
+
+
+class SequenceNaming(linter.Checker):  # type: ignore[misc]
+    """Sequence naming."""
+
+    name = "unsafe.sequence_naming"
+    code = "CVN004"
+
+    def visit_CreateSeqStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.CreateSeqStmt,
+    ) -> None:
+        """Visit CreateSeqStmt."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        if (
+            not re.match(self.config.regex_sequence, node.sequence.relname)
+            and (
+                ancestors[statement_index].stmt_location,
+                self.code,
+            )
+            not in self.ignore_rules
+        ):
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description=f"Sequence '{node.sequence.relname}' does not follow"
+                                f" naming convention '{self.config.regex_sequence}'",
                 ),
             )

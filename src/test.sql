@@ -4,10 +4,12 @@
 --     TEMPLATE template0
 -- ;
 
--- CREATE TABLE partitions."measurement_y2006m02" PARTITION OF public.measurement
---     FOR VALUES FROM ('2006-02-01') TO ('2006-03-01');
+CREATE TABLE partitions."public__measurement__y2006m02" PARTITION OF public.measurement
+    FOR VALUES FROM ('2006-02-01') TO ('2006-03-01');
 
 -- create extension postgis with schema public1;
+
+CREATE SEQUENCE public.serial_seq START 101;
 
 -- CREATE TYPE uyt."pg_add" AS ENUM ('sad', 'ok', 'happy');
 
@@ -25,8 +27,8 @@
 -- CREATE RULE notify_me AS ON UPDATE TO mytable DO ALSO NOTIFY mytable -- noqa: COV003
 -- ;
 -- drop schema public;
-CREATE VIEW public."vista"
-  AS SELECT 'Hello World';
+-- CREATE VIEW public."vista"
+--   AS SELECT 'Hello World';
 
 -- CREATE TABLE "_protectedaccounts" (MATERIALIZED timestamptz);
 
@@ -39,8 +41,8 @@ CREATE VIEW public."vista"
 -- CREATE FUNCTION public."Add"(
 --                              -- CREATE TABLE public."Films_recent" AS
 -- --   SELECT * FROM films WHERE date_prod >= '2002-01-01';
-create index da_b_idx on da(a, b, c)
-;
+-- create index "Abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzaazyuauauaip" on da(a, b, c)
+-- ;
 
 -- integer,
 --                              integer)
@@ -56,13 +58,14 @@ create index da_b_idx on da(a, b, c)
 
 -- truncate table test;
 
--- CREATE TABLE people (
---     height_cm json,
---     height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
--- );
+CREATE TABLE people (
+    height_cm jsonb,
+    height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
+);
 
-ALTER TABLE employee
-ADD CONSTRAINT "employee_check" primary key(email)
+-- ALTER TABLE employee
+-- ADD CONSTRAINT "employee_chk" check(length(email) = 60)
+;
 -- ;
 -- CREATE TABLE distributors (
 --     did     bigserial PRIMARY KEY,
@@ -73,7 +76,7 @@ ADD CONSTRAINT "employee_check" primary key(email)
 --     Name  "char" not null,
 --     Name  varchar(40) not null
 -- );
--- CREATE TABLE "measurement_y2006m02" () INHERITS (measurement);
+CREATE TABLE "measurement_y2006m02" () INHERITS (measurement);
 /* 
                                                  hello 
                                                  */
