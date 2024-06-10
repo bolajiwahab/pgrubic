@@ -4,11 +4,11 @@ import typing
 import inspect
 import importlib
 
-from pgshield import rules_directories
+from pgshield import rule_directories
 from pgshield.core import errors, linter
 
 
-def load_rules(directories: list[str] = rules_directories) -> list[linter.Checker]:
+def load_rules(directories: list[str] = rule_directories) -> list[linter.Checker]:
     """Load rules."""
     rules: list[linter.Checker] = []
 

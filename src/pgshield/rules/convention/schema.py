@@ -26,7 +26,7 @@ class _Schema(abc.ABC, linter.Checker):  # type: ignore[misc]
         ancestors: ast.Node,
         node: ast.RangeVar,
     ) -> None:
-        """Visit RangeVar. Checks relations during creation (do we want usage as well)."""  # noqa: E501
+        """Visit RangeVar."""
         statement_index: int = linter.get_statement_index(ancestors)
 
         create = [

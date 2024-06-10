@@ -39,7 +39,9 @@ CREATE VIEW public."vista"
 -- CREATE FUNCTION public."Add"(
 --                              -- CREATE TABLE public."Films_recent" AS
 -- --   SELECT * FROM films WHERE date_prod >= '2002-01-01';
-create index "Ab" on ba(a);
+create index da_b_idx on da(a, b, c)
+;
+
 -- integer,
 --                              integer)
 -- RETURNS integer
@@ -59,8 +61,8 @@ create index "Ab" on ba(a);
 --     height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
 -- );
 
--- ALTER TABLE employee
--- ADD CONSTRAINT "Employee_unq" primary key(email)
+ALTER TABLE employee
+ADD CONSTRAINT "employee_check" primary key(email)
 -- ;
 -- CREATE TABLE distributors (
 --     did     bigserial PRIMARY KEY,

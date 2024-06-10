@@ -4,6 +4,19 @@
 
 # prevent missing rule numbers
 
+# partition schema ?
+
+# required columns
+
+# column that has date should be typed date?
+# column that has at should be typed timestamptz?
+
+# we cannot use format {table}_{columns(s)}_idx because postgres only allow 63 characters by default in identifiers
+# e.g in indexname where we are expecting table name and column name, if postgres truncates the identifier
+# then our checks will be flawed, best effort is to use regex to ensure format but no further checks on table
+# and column name
+# columns: str = ("_").join(stream.RawStream()(node.indexParams).split("; "))
+
 # config to exclude certain files from the check e.g init.sql - should happen at the source file registration to skip
 
 -- include-convention as an arg (if your service is compliant then enable this to prevent future uncompliance hence no need)
