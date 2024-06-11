@@ -5,7 +5,7 @@
 -- ;
 
 CREATE TABLE partitions."public__measurement__y2006m02" PARTITION OF public.measurement
-    FOR VALUES FROM ('2006-02-01') TO ('2006-03-01');
+    FOR VALUES FROM ('2006-02-01 00:00:00+00') TO ('2006-03-01 00:00:00+00');
 
 -- create extension postgis with schema public1;
 
