@@ -69,6 +69,7 @@ drop schema public -- noqa: UNS003
 -- truncate table test;
 
 CREATE TABLE people ( --noqa: CVS001
+    id SMALLINT,
     height_cm jsonb,
     height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
 );
@@ -86,7 +87,7 @@ CREATE TABLE people ( --noqa: CVS001
 --     Name  "char" not null,
 --     Name  varchar(40) not null
 -- );
-CREATE TABLE "measurement_y2006m02" () INHERITS (measurement) -- noqa: CVG002
+-- CREATE TABLE "measurement_y2006m02" () INHERITS (measurement) -- noqa: CVG002
 ;
 /* 
                                                  hello 

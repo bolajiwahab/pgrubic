@@ -221,10 +221,10 @@ class _Identifier(abc.ABC, linter.Checker):
         )
 
 
-class SnakeCase(_Identifier):
+class IsIdentifierInSnakeCase(_Identifier):
     """Identifier should be in snake case."""
 
-    name = "convention.snake_case_identifier"
+    name = "convention.is_identifier_in_snake_case"
     code = "CVI001"
 
     def _check_identifier(
@@ -245,10 +245,10 @@ class SnakeCase(_Identifier):
             )
 
 
-class Keywords(_Identifier):
-    """Identifier should not contain reserved keywords."""
+class IsKeywordInIdentifier(_Identifier):
+    """Is keyword in identifier."""
 
-    name = "convention.reserved_keywords_in_identifier"
+    name = "convention.is_keyword_in_identifier"
     code = "CVI002"
 
     def _check_identifier(
@@ -273,15 +273,15 @@ class Keywords(_Identifier):
                 linter.Violation(
                     location=location,
                     statement=statement,
-                    description=f"Identifier should not use keywords '{identifier}'",
+                    description=f"Identifier should not use keyword '{identifier}'",
                 ),
             )
 
 
-class SpecialCharacters(_Identifier):
-    """Identifier should not contain special characters."""
+class IsSpecialCharacterInIdentifier(_Identifier):
+    """Is special character in identifier."""
 
-    name = "convention.special_characters_in_identifier"
+    name = "convention.is_special_character_in_identifier"
     code = "CVI004"
 
     def _check_identifier(
@@ -290,22 +290,22 @@ class SpecialCharacters(_Identifier):
         location: int,
         statement: str,
     ) -> None:
-        """Check that identifier is in snake case."""
+        """Check that identifier does contain use special characters."""
         if not identifier.replace("_", "").isalnum():
 
             self.violations.append(
                 linter.Violation(
                     location=location,
                     statement=statement,
-                    description=f"Identifier should not use Special characters '{identifier}'",  # noqa: E501
+                    description=f"Identifier should not contain Special characters '{identifier}'",  # noqa: E501
                 ),
             )
 
 
-class PostgresPrefix(_Identifier):
-    """Identifier should not start with pg_ ."""
+class IsPostgresPrefixInIdentifier(_Identifier):
+    """Is pg_ in identifier."""
 
-    name = "convention.pg_prefix_in_identifier"
+    name = "convention.is_pg_prefix_in_identifier"
     code = "CVI003"
 
     def _check_identifier(

@@ -10,7 +10,7 @@ from pgshield.core import linter
 class IndexNaming(linter.Checker):
     """Index naming."""
 
-    name = "unsafe.index_naming"
+    name = "convention.index_naming"
     code = "CVN001"
 
     def visit_IndexStmt(
@@ -38,7 +38,7 @@ class IndexNaming(linter.Checker):
 class ConstraintNaming(linter.Checker):
     """Constraint naming."""
 
-    name = "unsafe.constraint_naming"
+    name = "convention.constraint_naming"
     code = "CVN002"
 
     def visit_Constraint(
@@ -90,7 +90,7 @@ class ConstraintNaming(linter.Checker):
 class PartionNaming(linter.Checker):
     """Partition naming."""
 
-    name = "unsafe.partition_naming"
+    name = "convention.partition_naming"
     code = "CVN003"
 
     def visit_CreateStmt(
@@ -119,7 +119,7 @@ class PartionNaming(linter.Checker):
 class SequenceNaming(linter.Checker):
     """Sequence naming."""
 
-    name = "unsafe.sequence_naming"
+    name = "convention.sequence_naming"
     code = "CVN004"
 
     def visit_CreateSeqStmt(

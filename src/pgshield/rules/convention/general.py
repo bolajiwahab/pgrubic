@@ -7,10 +7,10 @@ from pglast import ast, stream  # type: ignore[import-untyped]
 from pgshield.core import linter
 
 
-class NoSQLASCIIEncoding(linter.Checker):
-    """No ascii encoding."""
+class PreferNonSQLASCIIEncoding(linter.Checker):
+    """Prefer non sql_ascii encoding."""
 
-    name = "convention.no_sql_ascii_encoding"
+    name = "convention.prefer_non_sql_ascii_encoding"
     code = "CVG001"
 
     def visit_CreatedbStmt(
@@ -46,15 +46,15 @@ class NoSQLASCIIEncoding(linter.Checker):
                 linter.Violation(
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
-                    description="Usage of sql_ascii encoding",
+                    description="Prefer non sql_ascii encoding",
                 ),
             )
 
 
-class NoTableInheritance(linter.Checker):
-    """No table inheritance."""
+class PreferDeclarativePartitioningToTableInheritance(linter.Checker):
+    """Prefer declarative partitioning to table inheritance."""
 
-    name = "convention.no_table_inheritance"
+    name = "convention.prefer_declarative_partitioning_to_table_inheritance"
     code = "CVG002"
 
     def visit_CreateStmt(
@@ -71,15 +71,15 @@ class NoTableInheritance(linter.Checker):
                 linter.Violation(
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
-                    description="Usage of table inheritance, use declarative partitioning",  # noqa: E501
+                    description="Prefer declarative partitioning to table inheritance",
                 ),
             )
 
 
-class NoRule(linter.Checker):
-    """No rule."""
+class PreferTriggerOverRule(linter.Checker):
+    """Prefer trigger over rule."""
 
-    name = "convention.no_rule"
+    name = "convention.prefer_trigger_over_rule"
     code = "CVG003"
 
     def visit_RuleStmt(
@@ -94,15 +94,15 @@ class NoRule(linter.Checker):
             linter.Violation(
                 location=ancestors[statement_index].stmt_location,
                 statement=ancestors[statement_index],
-                description="Usage of rule, use trigger instead",
+                description="Prefer trigger over rule",
             ),
         )
 
 
-class TimestampWithoutTimezone(linter.Checker):
-    """Timestamp without timezone."""
+class PreferTimestampWithTimezoneOverTimestampWithoutTimezone(linter.Checker):
+    """Prefer timestamp with timezone over timestamp without timezone."""
 
-    name = "convention.timestamp_without_timezone"
+    name = "convention.prefer_timestamp_with_timezone_over_timestamp_without_timezone"
     code = "CVG006"
 
     def visit_ColumnDef(
@@ -121,15 +121,15 @@ class TimestampWithoutTimezone(linter.Checker):
                 linter.Violation(
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
-                    description="Usage of timestamp without timezone",
+                    description="Prefer timestamp with timezone over timestamp without timezone",  # noqa: E501
                 ),
             )
 
 
-class TimeWithtTimezone(linter.Checker):
-    """Time with timezone."""
+class PreferTimestampWithTimezoneOverTimeWithTimezone(linter.Checker):
+    """Prefer timestamp with timezone over time with timezone."""
 
-    name = "convention.time_with_timezone"
+    name = "convention.prefer_timestamp_with_timezone_over_time_with_timezone"
     code = "CVG007"
 
     def visit_ColumnDef(
@@ -146,15 +146,15 @@ class TimeWithtTimezone(linter.Checker):
                 linter.Violation(
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
-                    description="Usage of time with timezone",
+                    description="Prefer timestamp with timezone over time with timezone",  # noqa: E501
                 ),
             )
 
 
-class TruncatedTimestampWithoutTimezone(linter.Checker):
-    """Truncated timestamp without timezone."""
+class PreferEntireTimestampWithoutTimezone(linter.Checker):
+    """Prefer entire timestamp without timezone."""
 
-    name = "convention.truncated_timestamp_without_timezone"
+    name = "convention.prefer_entire_timestamp_without_timezone"
     code = "CVG008"
 
     def visit_ColumnDef(
@@ -173,15 +173,15 @@ class TruncatedTimestampWithoutTimezone(linter.Checker):
                 linter.Violation(
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
-                    description="Usage of truncated timestamp without timezone",
+                    description="Prefer entire timestamp without timezone",
                 ),
             )
 
 
-class TruncatedTimestampWithTimezone(linter.Checker):
-    """Truncated timestamp with timezone."""
+class PreferEntireTimestampWithTimezone(linter.Checker):
+    """Prefer entire timestamp with timezone."""
 
-    name = "convention.truncated_timestamp_with_timezone"
+    name = "convention.prefer_entire_timestamp_with_timezone"
     code = "CVG009"
 
     def visit_ColumnDef(
@@ -200,15 +200,15 @@ class TruncatedTimestampWithTimezone(linter.Checker):
                 linter.Violation(
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
-                    description="Usage of truncated timestamp with timezone",
+                    description="Prefer entire timestamp with timezone",
                 ),
             )
 
 
-class Char(linter.Checker):
-    """Char."""
+class PreferTextOverChar(linter.Checker):
+    """Prefer text over char."""
 
-    name = "convention.char"
+    name = "convention.prefer_text_over_char"
     code = "CVG010"
 
     def visit_ColumnDef(
@@ -227,15 +227,15 @@ class Char(linter.Checker):
                 linter.Violation(
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
-                    description="Usage of char",
+                    description="Prefer text over char",
                 ),
             )
 
 
-class VarChar(linter.Checker):
-    """VarChar."""
+class PreferTextOverVarChar(linter.Checker):
+    """Prefer text over varchar."""
 
-    name = "convention.varchar"
+    name = "convention.prefer_text_over_var_char"
     code = "CVG011"
 
     def visit_ColumnDef(
@@ -252,15 +252,15 @@ class VarChar(linter.Checker):
                 linter.Violation(
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
-                    description="Usage of varchar",
+                    description="Prefer text over varchar",
                 ),
             )
 
 
-class Money(linter.Checker):
-    """Money."""
+class PreferNumericOverMoney(linter.Checker):
+    """Prefer numeric over money."""
 
-    name = "convention.Money"
+    name = "convention.prefer_numeric_over_money"
     code = "CVG012"
 
     def visit_ColumnDef(
@@ -277,15 +277,15 @@ class Money(linter.Checker):
                 linter.Violation(
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
-                    description="Usage of money",
+                    description="Prefer numeric over money",
                 ),
             )
 
 
-class Serial(linter.Checker):
-    """serial."""
+class PreferIdentityColumnOverSerial(linter.Checker):
+    """Prefer identity column over serial."""
 
-    name = "convention.serial"
+    name = "convention.prefer_identity_column_over_serial"
     code = "CVG013"
 
     def visit_ColumnDef(
@@ -302,15 +302,15 @@ class Serial(linter.Checker):
                 linter.Violation(
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
-                    description="Usage of serial",
+                    description="Prefer identity column over serial",
                 ),
             )
 
 
-class BigSerial(linter.Checker):
-    """Bigserial."""
+class PreferIdentityColumnOverBigSerial(linter.Checker):
+    """Prefer identity column over bigserial."""
 
-    name = "convention.bigserial"
+    name = "convention.prefer_identity_column_over_bigserial"
     code = "CVG014"
 
     def visit_ColumnDef(
@@ -329,7 +329,7 @@ class BigSerial(linter.Checker):
                 linter.Violation(
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
-                    description="Usage of bigserial",
+                    description="Prefer identity column over bigserial",
                 ),
             )
 
@@ -355,5 +355,59 @@ class PreferJsonbOverJson(linter.Checker):
                     location=ancestors[statement_index].stmt_location,
                     statement=ancestors[statement_index],
                     description="Prefer jsonb over json",
+                ),
+            )
+
+
+class PreferBigIntOverInt(linter.Checker):
+    """Prefer bigint over int."""
+
+    name = "convention.prefer_bigint_over_int"
+    code = "CVG016"
+
+    def visit_ColumnDef(
+        self,
+        ancestors: ast.Node,
+        node: ast.ColumnDef,
+    ) -> None:
+        """Visit ColumnDef."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        if ast.CreateStmt in ancestors and (
+            node.typeName.names[-1].sval == "int4"
+        ):
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Prefer bigint over int",
+                ),
+            )
+
+
+class PreferBigIntOverSmallInt(linter.Checker):
+    """Prefer bigint over smallint."""
+
+    name = "convention.prefer_bigint_over_smallint"
+    code = "CVG017"
+
+    def visit_ColumnDef(
+        self,
+        ancestors: ast.Node,
+        node: ast.ColumnDef,
+    ) -> None:
+        """Visit ColumnDef."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        if ast.CreateStmt in ancestors and (
+            node.typeName.names[-1].sval == "int2"
+        ):
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Prefer bigint over smallint",
                 ),
             )
