@@ -86,7 +86,8 @@ CREATE TABLE people ( --noqa: CVS001
 --     Name  "char" not null,
 --     Name  varchar(40) not null
 -- );
-CREATE TABLE "measurement_y2006m02" () INHERITS (measurement);
+CREATE TABLE "measurement_y2006m02" () INHERITS (measurement) -- noqa: CVG002
+;
 /* 
                                                  hello 
                                                  */

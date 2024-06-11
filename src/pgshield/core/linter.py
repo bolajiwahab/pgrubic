@@ -78,13 +78,7 @@ class Linter:
 
             source_code = source_file.read()
 
-        # Remove comments
-        source_code = re.sub(
-            r"^\s*--.*\n?|^\s*\/[*][\S\s]*?[*]\/",
-            "",
-            source_code,
-            flags=re.MULTILINE,
-        )
+        source_code = noqa.remove_sql_comments(source_code)
 
         try:
 
