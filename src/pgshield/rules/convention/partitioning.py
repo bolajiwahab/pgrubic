@@ -51,8 +51,6 @@ class GapInRangePartitionBound(linter.Checker):  # type: ignore[misc]
             partitioning_resolution.append(difference_in_months)
             partitioning_resolution.append(difference_in_years)
 
-            print(partitioning_resolution)
-
             # check if any resolution is not 1
             if all(resolution != 1 for resolution in partitioning_resolution):
                 self.violations.append(
