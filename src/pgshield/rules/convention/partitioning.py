@@ -1,9 +1,11 @@
 """Convention for partitioning."""
 
 from datetime import datetime
-
+import enum
 from pglast import ast, enums  # type: ignore[import-untyped]
 from dateutil import relativedelta  # type: ignore[import-untyped]
+import typing
+from types import MappingProxyType
 
 from pgshield.core import linter
 
@@ -27,27 +29,44 @@ class GapInRangePartitionBound(linter.Checker):  # type: ignore[misc]
         if (
             not node.is_default
             and node.strategy == enums.PartitionStrategy.PARTITION_STRATEGY_RANGE
+            and (
+                ancestors[statement_index].stmt_location,
+                self.code,
+            )
+            not in self.ignore_rules
         ):
 
             # get the difference in hours, days, months, years
             lower_bound = datetime.fromisoformat(node.lowerdatums[-1].val.sval)
             upper_bound = datetime.fromisoformat(node.upperdatums[-1].val.sval)
 
+            # ensure we only have of days, months, years, hours, weeks in the difference
+            # e.g. (months=+1, days=+1)
+
             difference_in_hours = relativedelta.relativedelta(
-                upper_bound, lower_bound,
+                upper_bound,
+                lower_bound,
             ).hours
             difference_in_days = relativedelta.relativedelta(
-                upper_bound, lower_bound,
+                upper_bound,
+                lower_bound,
             ).days
+            difference_in_weeks = relativedelta.relativedelta(
+                upper_bound,
+                lower_bound,
+            ).weeks
             difference_in_months = relativedelta.relativedelta(
-                upper_bound, lower_bound,
+                upper_bound,
+                lower_bound,
             ).months
             difference_in_years = relativedelta.relativedelta(
-                upper_bound, lower_bound,
+                upper_bound,
+                lower_bound,
             ).years
 
             partitioning_resolution.append(difference_in_hours)
             partitioning_resolution.append(difference_in_days)
+            partitioning_resolution.append(difference_in_weeks)
             partitioning_resolution.append(difference_in_months)
             partitioning_resolution.append(difference_in_years)
 
@@ -60,3 +79,43 @@ class GapInRangePartitionBound(linter.Checker):  # type: ignore[misc]
                         description="Gap in range partition bound",
                     ),
                 )
+
+
+class PartitionStrategiesWhitelisted(linter.Checker):
+    """Only whitelisted partition strategies are allowed."""
+
+    name = "convention.whitelisted_partition_strategies"
+    code = "CVP002"
+
+    partition_strategies_mapping: typing.ClassVar[dict[str, str]] = {
+        "l": "list",
+        "r": "range",
+        "h": "hash",
+    }
+
+    def visit_PartitionSpec(
+        self,
+        ancestors: ast.Node,
+        node: ast.PartitionSpec,
+    ) -> None:
+        """Visit PartitionSpec."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        if (
+            self.config.partition_strategies
+            and self.partition_strategies_mapping[node.strategy]
+            not in self.config.partition_strategies
+            and (
+                ancestors[statement_index].stmt_location,
+                self.code,
+            )
+            not in self.ignore_rules
+        ):
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description=f"Partitioning strategy '{self.partition_strategies_mapping[node.strategy]}' is not whitelisted",  # noqa: E501
+                ),
+            )

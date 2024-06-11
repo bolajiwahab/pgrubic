@@ -18,6 +18,7 @@ class Config:
     ignore: list[str]
     schemas: list[str]
     extensions: list[str]
+    partition_strategies: list[str]
 
     regex_partition: str
     regex_index: str

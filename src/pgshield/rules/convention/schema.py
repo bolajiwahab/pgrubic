@@ -137,7 +137,7 @@ class SchemaQualified(_Schema):
             )
 
 
-class SchemaWhitelisted(_Schema):
+class SchemasWhitelisted(_Schema):
     """Only whitelisted schemas are allowed."""
 
     name = "convention.whitelisted_schemas"

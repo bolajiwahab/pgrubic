@@ -6,8 +6,6 @@
 
 # partition schema ?
 **********************
-# partition bound for range partitioning
-# allowed partitioning strategy
 # prefer bigint over int or smallint
 # prefer identity over bigserial or serial
 # required columns -- created and updated not null typed timestamptz - create table only (not partitions)

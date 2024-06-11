@@ -4,8 +4,15 @@
 --     TEMPLATE template0
 -- ;
 
+CREATE TABLE measurement (
+    city_id         int not null,
+    logdate         date not null,
+    peaktemp        int,
+    unitsales       int
+) PARTITION BY RANGE (logdate);
+
 CREATE TABLE partitions."public__measurement__y2006m02" PARTITION OF public.measurement
-    FOR VALUES FROM ('2006-02-01 00:00:00+00') TO ('2006-03-01 00:00:00+00');
+    FOR VALUES FROM ('2006-02-01 00:00:00+00') TO ('2006-02-28 00:00:00+00');
 
 -- create extension postgis with schema public1;
 

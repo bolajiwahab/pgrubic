@@ -3,6 +3,8 @@ select = []
 ignore = []
 schemas = []
 extensions = []
+partition_strategies = []
+
 regex_partition = "[a-zA-Z0-9]+__[a-zA-Z0-9]+__[a-zA-Z0-9_]+$"
 regex_index = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_idx$"
 regex_constraint_primary_key = "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_pkey$"
