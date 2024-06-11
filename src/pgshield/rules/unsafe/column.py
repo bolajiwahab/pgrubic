@@ -5,7 +5,7 @@ from pglast import ast, enums  # type: ignore[import-untyped]
 from pgshield.core import linter
 
 
-class DropColumn(linter.Checker):  # type: ignore[misc]
+class DropColumn(linter.Checker):
     """Drop column."""
 
     name = "unsafe.drop_column"
@@ -103,7 +103,7 @@ class AutoIncrementColumn(linter.Checker):
             )
 
 
-class AutoIncrementIdentityColumn(linter.Checker):  # type: ignore[misc]
+class AutoIncrementIdentityColumn(linter.Checker):
     """Auto increment identity column."""
 
     name = "unsafe.auto_increment_identity_column"
@@ -131,7 +131,7 @@ class AutoIncrementIdentityColumn(linter.Checker):  # type: ignore[misc]
             )
 
 
-class StoredGeneratedColumn(linter.Checker):  # type: ignore[misc]
+class StoredGeneratedColumn(linter.Checker):
     """Stored generated column."""
 
     name = "unsafe.stored_generated_column"

@@ -5,7 +5,7 @@ from pglast import ast, enums  # type: ignore[import-untyped]
 from pgshield.core import linter
 
 
-class NotNullOnExistingColumn(linter.Checker):  # type: ignore[misc]
+class NotNullOnExistingColumn(linter.Checker):
     """Not null on existing column."""
 
     name = "unsafe.not_null_on_existing_column"
@@ -30,7 +30,7 @@ class NotNullOnExistingColumn(linter.Checker):  # type: ignore[misc]
             )
 
 
-class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):  # type: ignore[misc]
+class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
     """Not null on new column with no static default."""
 
     name = "unsafe.not_null_on_new_column_with_no_static_default"
@@ -71,7 +71,7 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):  # type: ignore[mis
                 )
 
 
-class VolatileDefaultOnNewColumn(linter.Checker):  # type: ignore[misc]
+class VolatileDefaultOnNewColumn(linter.Checker):
     """Volatile default on new column."""
 
     name = "unsafe.volatile_default_on_new_column"
@@ -100,7 +100,7 @@ class VolatileDefaultOnNewColumn(linter.Checker):  # type: ignore[misc]
             )
 
 
-class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):  # type: ignore[misc]
+class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):
     """Validated foreign key constraint on existing rows."""
 
     name = "unsafe.validated_foreign_key_constraint_on_existing_rows"
@@ -129,7 +129,7 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):  # type: igno
             )
 
 
-class ValidatedCheckConstraintOnExistingRows(linter.Checker):  # type: ignore[misc]
+class ValidatedCheckConstraintOnExistingRows(linter.Checker):
     """Validated check constraint on existing rows."""
 
     name = "unsafe.validated_check_constraint_on_existing_rows"
@@ -158,7 +158,7 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):  # type: ignore[mi
             )
 
 
-class UniqueConstraintCreatingNewIndex(linter.Checker):  # type: ignore[misc]
+class UniqueConstraintCreatingNewIndex(linter.Checker):
     """Unique constraint creating new index."""
 
     name = "unsafe.unique_constraint_creating_new_index"
@@ -187,7 +187,7 @@ class UniqueConstraintCreatingNewIndex(linter.Checker):  # type: ignore[misc]
             )
 
 
-class PrimaryKeyConstraintCreatingNewIndex(linter.Checker):  # type: ignore[misc]
+class PrimaryKeyConstraintCreatingNewIndex(linter.Checker):
     """Primary key constraint creating new index."""
 
     name = "unsafe.primary_key_constraint_creating_new_index"

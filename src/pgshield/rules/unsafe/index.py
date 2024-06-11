@@ -5,7 +5,7 @@ from pglast import ast, enums, stream  # type: ignore[import-untyped]
 from pgshield.core import linter
 
 
-class NonConcurrentIndexCreation(linter.Checker):  # type: ignore[misc]
+class NonConcurrentIndexCreation(linter.Checker):
     """Non concurrent index creation."""
 
     name = "unsafe.non_concurrent_index_creation"

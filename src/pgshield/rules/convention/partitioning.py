@@ -6,10 +6,10 @@ from datetime import datetime
 from pglast import ast, enums  # type: ignore[import-untyped]
 from dateutil import relativedelta  # type: ignore[import-untyped]
 
-from pgshield.core import linter, loader
+from pgshield.core import linter
 
 
-class GapInRangePartitionBound(linter.Checker):  # type: ignore[misc]
+class GapInRangePartitionBound(linter.Checker):
     """Gap in range partition bound."""
 
     name = "convention.gap_in_range_partition_bound"

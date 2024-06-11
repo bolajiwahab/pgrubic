@@ -7,7 +7,7 @@ from pglast import ast, stream  # type: ignore[import-untyped]
 from pgshield.core import linter
 
 
-class NoSQLASCIIEncoding(linter.Checker):  # type: ignore[misc]
+class NoSQLASCIIEncoding(linter.Checker):
     """No ascii encoding."""
 
     name = "convention.no_sql_ascii_encoding"
@@ -51,7 +51,7 @@ class NoSQLASCIIEncoding(linter.Checker):  # type: ignore[misc]
             )
 
 
-class NoTableInheritance(linter.Checker):  # type: ignore[misc]
+class NoTableInheritance(linter.Checker):
     """No table inheritance."""
 
     name = "convention.no_table_inheritance"
@@ -76,7 +76,7 @@ class NoTableInheritance(linter.Checker):  # type: ignore[misc]
             )
 
 
-class NoRule(linter.Checker):  # type: ignore[misc]
+class NoRule(linter.Checker):
     """No rule."""
 
     name = "convention.no_rule"
@@ -99,7 +99,7 @@ class NoRule(linter.Checker):  # type: ignore[misc]
         )
 
 
-class TimestampWithoutTimezone(linter.Checker):  # type: ignore[misc]
+class TimestampWithoutTimezone(linter.Checker):
     """Timestamp without timezone."""
 
     name = "convention.timestamp_without_timezone"
@@ -126,7 +126,7 @@ class TimestampWithoutTimezone(linter.Checker):  # type: ignore[misc]
             )
 
 
-class TimeWithtTimezone(linter.Checker):  # type: ignore[misc]
+class TimeWithtTimezone(linter.Checker):
     """Time with timezone."""
 
     name = "convention.time_with_timezone"
@@ -151,7 +151,7 @@ class TimeWithtTimezone(linter.Checker):  # type: ignore[misc]
             )
 
 
-class TruncatedTimestampWithoutTimezone(linter.Checker):  # type: ignore[misc]
+class TruncatedTimestampWithoutTimezone(linter.Checker):
     """Truncated timestamp without timezone."""
 
     name = "convention.truncated_timestamp_without_timezone"
@@ -178,7 +178,7 @@ class TruncatedTimestampWithoutTimezone(linter.Checker):  # type: ignore[misc]
             )
 
 
-class TruncatedTimestampWithTimezone(linter.Checker):  # type: ignore[misc]
+class TruncatedTimestampWithTimezone(linter.Checker):
     """Truncated timestamp with timezone."""
 
     name = "convention.truncated_timestamp_with_timezone"
@@ -205,7 +205,7 @@ class TruncatedTimestampWithTimezone(linter.Checker):  # type: ignore[misc]
             )
 
 
-class Char(linter.Checker):  # type: ignore[misc]
+class Char(linter.Checker):
     """Char."""
 
     name = "convention.char"
@@ -232,7 +232,7 @@ class Char(linter.Checker):  # type: ignore[misc]
             )
 
 
-class VarChar(linter.Checker):  # type: ignore[misc]
+class VarChar(linter.Checker):
     """VarChar."""
 
     name = "convention.varchar"
@@ -257,7 +257,7 @@ class VarChar(linter.Checker):  # type: ignore[misc]
             )
 
 
-class Money(linter.Checker):  # type: ignore[misc]
+class Money(linter.Checker):
     """Money."""
 
     name = "convention.Money"
@@ -282,7 +282,7 @@ class Money(linter.Checker):  # type: ignore[misc]
             )
 
 
-class Serial(linter.Checker):  # type: ignore[misc]
+class Serial(linter.Checker):
     """serial."""
 
     name = "convention.serial"
@@ -307,7 +307,7 @@ class Serial(linter.Checker):  # type: ignore[misc]
             )
 
 
-class BigSerial(linter.Checker):  # type: ignore[misc]
+class BigSerial(linter.Checker):
     """Bigserial."""
 
     name = "convention.bigserial"
@@ -334,7 +334,7 @@ class BigSerial(linter.Checker):  # type: ignore[misc]
             )
 
 
-class PreferJsonbOverJson(linter.Checker):  # type: ignore[misc]
+class PreferJsonbOverJson(linter.Checker):
     """Prefer jsonb over json."""
 
     name = "convention.prefer_jsonb_over_json"

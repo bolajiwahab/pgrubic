@@ -9,7 +9,7 @@ from pglast import ast, stream  # type: ignore[import-untyped]
 from pgshield.core import linter
 
 
-class _Schema(abc.ABC, linter.Checker):  # type: ignore[misc]
+class _Schema(abc.ABC, linter.Checker):
     """Schema details for table, types, functions, sequences, views."""
 
     # To be overridden by subclasses

@@ -9,7 +9,7 @@ from pglast import ast, keywords  # type: ignore[import-untyped]
 from pgshield.core import linter
 
 
-class _Identifier(abc.ABC, linter.Checker):  # type: ignore[misc]
+class _Identifier(abc.ABC, linter.Checker):
     """Get identifiers."""
 
     # To be overridden by subclasses
@@ -221,7 +221,7 @@ class _Identifier(abc.ABC, linter.Checker):  # type: ignore[misc]
         )
 
 
-class SnakeCase(_Identifier):  # type: ignore[misc]
+class SnakeCase(_Identifier):
     """Identifier should be in snake case."""
 
     name = "convention.snake_case_identifier"
@@ -245,7 +245,7 @@ class SnakeCase(_Identifier):  # type: ignore[misc]
             )
 
 
-class Keywords(_Identifier):  # type: ignore[misc]
+class Keywords(_Identifier):
     """Identifier should not contain reserved keywords."""
 
     name = "convention.reserved_keywords_in_identifier"
@@ -278,7 +278,7 @@ class Keywords(_Identifier):  # type: ignore[misc]
             )
 
 
-class SpecialCharacters(_Identifier):  # type: ignore[misc]
+class SpecialCharacters(_Identifier):
     """Identifier should not contain special characters."""
 
     name = "convention.special_characters_in_identifier"
@@ -302,7 +302,7 @@ class SpecialCharacters(_Identifier):  # type: ignore[misc]
             )
 
 
-class PostgresPrefix(_Identifier):  # type: ignore[misc]
+class PostgresPrefix(_Identifier):
     """Identifier should not start with pg_ ."""
 
     name = "convention.pg_prefix_in_identifier"

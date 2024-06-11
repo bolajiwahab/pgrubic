@@ -7,7 +7,7 @@ from pglast import ast, enums  # type: ignore[import-untyped]
 from pgshield.core import linter
 
 
-class IndexNaming(linter.Checker):  # type: ignore[misc]
+class IndexNaming(linter.Checker):
     """Index naming."""
 
     name = "unsafe.index_naming"
@@ -35,7 +35,7 @@ class IndexNaming(linter.Checker):  # type: ignore[misc]
             )
 
 
-class ConstraintNaming(linter.Checker):  # type: ignore[misc]
+class ConstraintNaming(linter.Checker):
     """Constraint naming."""
 
     name = "unsafe.constraint_naming"
@@ -87,7 +87,7 @@ class ConstraintNaming(linter.Checker):  # type: ignore[misc]
             )
 
 
-class PartionNaming(linter.Checker):  # type: ignore[misc]
+class PartionNaming(linter.Checker):
     """Partition naming."""
 
     name = "unsafe.partition_naming"
@@ -116,7 +116,7 @@ class PartionNaming(linter.Checker):  # type: ignore[misc]
             )
 
 
-class SequenceNaming(linter.Checker):  # type: ignore[misc]
+class SequenceNaming(linter.Checker):
     """Sequence naming."""
 
     name = "unsafe.sequence_naming"

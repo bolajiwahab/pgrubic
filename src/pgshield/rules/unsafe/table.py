@@ -179,7 +179,7 @@ class NonConcurrentDetachPartition(linter.Checker):
             )
 
 
-class NonConcurrentRefreshMaterializedView(linter.Checker):  # type: ignore[misc]
+class NonConcurrentRefreshMaterializedView(linter.Checker):
     """Non concurrent refresh materialized view."""
 
     name = "unsafe.non_concurrent_refresh_materialized_view"

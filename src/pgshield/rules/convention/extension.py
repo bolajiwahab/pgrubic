@@ -4,7 +4,7 @@ from pglast import ast  # type: ignore[import-untyped]
 from pgshield.core import linter
 
 
-class ExtensionWhitelisted(linter.Checker):  # type: ignore[misc]
+class ExtensionWhitelisted(linter.Checker):
     """Only whitelisted extensions are allowed."""
 
     name = "convention.whitelisted_extension"
