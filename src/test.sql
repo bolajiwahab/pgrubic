@@ -68,7 +68,7 @@ drop schema public -- noqa: UNS003
 
 -- truncate table test;
 
-CREATE TABLE people (
+CREATE TABLE people ( --noqa: CVS001
     height_cm jsonb,
     height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
 );

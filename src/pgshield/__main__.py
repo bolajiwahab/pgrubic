@@ -3,22 +3,20 @@
 import sys
 from collections import abc
 
-from pgshield.core import config, loader
-from pgshield.core import linter as _linter
-from pgshield.core import formatter as _formatter
+from pgshield import core
 
 
 def cli(argv: abc.Sequence[str] = sys.argv) -> None:
     """CLI."""
     source_paths: abc.Sequence[str] = argv[1:]
 
-    loaded_config = config.parse_config()
+    loaded_config = core.config.parse_config()
 
-    linter: _linter.Linter = _linter.Linter(config=loaded_config)
+    linter: core.Linter = core.Linter(config=loaded_config)
 
-    formatter: _formatter.Formatter = _formatter.Formatter()
+    formatter: core.Formatter = core.Formatter()
 
-    loaded_rules: list[_linter.Checker] = loader.load_rules()
+    loaded_rules: list[core.Checker] = core.load_rules()
 
     for rule in loaded_rules:
 
