@@ -4,15 +4,17 @@
 --     TEMPLATE template0
 -- ;
 
-CREATE TABLE measurement (
+CREATE TABLE measurement ( --noqa: CVS001
     city_id         int not null,
     logdate         date not null,
     peaktemp        int,
     unitsales       int
-) PARTITION BY RANGE (logdate);
+) PARTITION BY RANGE (logdate)
+;
 
 CREATE TABLE partitions."public__measurement__y2006m02" PARTITION OF public.measurement
-    FOR VALUES FROM ('2006-02-01 00:00:00+00') TO ('2006-02-28 00:00:00+00');
+    FOR VALUES FROM ('2006-02-01 00:00:00+00') TO ('2006-02-28 00:00:00+00') -- noqa: CVP001
+;
 
 -- create extension postgis with schema public1;
 
@@ -33,7 +35,8 @@ CREATE SEQUENCE public.serial_seq START 101;
 
 -- CREATE RULE notify_me AS ON UPDATE TO mytable DO ALSO NOTIFY mytable -- noqa: COV003
 -- ;
--- drop schema public;
+drop schema public -- noqa: UNS003
+;
 -- CREATE VIEW public."vista"
 --   AS SELECT 'Hello World';
 

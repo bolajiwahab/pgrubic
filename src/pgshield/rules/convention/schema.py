@@ -62,7 +62,6 @@ class _Schema(abc.ABC, linter.Checker):  # type: ignore[misc]
             ancestors[statement_index],
         )
 
-
     def visit_CreateFunctionStmt(
         self,
         ancestors: ast.Node,
@@ -126,7 +125,7 @@ class SchemaQualified(_Schema):
         statement: str,
     ) -> None:
         """Check that object is schema qualified."""
-        if not schema and (location, self.code) not in self.ignore_rules:
+        if not schema:
 
             self.violations.append(
                 linter.Violation(
@@ -150,11 +149,7 @@ class SchemasWhitelisted(_Schema):
         statement: str,
     ) -> None:
         """Check schema is whitelisted."""
-        if (
-            schema
-            and self.config.schemas and schema not in self.config.schemas
-            and (location, self.code) not in self.ignore_rules
-        ):
+        if schema and self.config.schemas and schema not in self.config.schemas:
 
             self.violations.append(
                 linter.Violation(

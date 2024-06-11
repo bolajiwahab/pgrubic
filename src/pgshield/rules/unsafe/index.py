@@ -19,11 +19,7 @@ class NonConcurrentIndexCreation(linter.Checker):  # type: ignore[misc]
         """Visit IndexStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            not node.concurrent
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if not node.concurrent:
 
             self.violations.append(
                 linter.Violation(
@@ -47,8 +43,6 @@ class IndexMovementToTablespace(linter.Checker):
         if (
             node.subtype == enums.AlterTableType.AT_SetTableSpace
             and ancestors[statement_index].stmt.objtype == enums.ObjectType.OBJECT_INDEX
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -74,11 +68,7 @@ class IndexesMovementToTablespace(linter.Checker):
         """Visit AlterTableMoveAllStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            node.objtype == enums.ObjectType.OBJECT_INDEX
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if node.objtype == enums.ObjectType.OBJECT_INDEX:
 
             self.violations.append(
                 linter.Violation(
@@ -103,12 +93,7 @@ class NonConcurrentIndexDrop(linter.Checker):
         """Visit DropStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            node.removeType == enums.ObjectType.OBJECT_INDEX
-            and not node.concurrent
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if node.removeType == enums.ObjectType.OBJECT_INDEX and not node.concurrent:
 
             self.violations.append(
                 linter.Violation(
@@ -135,14 +120,7 @@ class NonConcurrentReindex(linter.Checker):
             else []
         )
 
-        if (
-            "concurrently" not in params
-            and (
-                ancestors[statement_index].stmt_location,
-                self.code,
-            )
-            not in self.ignore_rules
-        ):
+        if "concurrently" not in params:
 
             self.violations.append(
                 linter.Violation(
@@ -151,4 +129,3 @@ class NonConcurrentReindex(linter.Checker):
                     description="Non concurrent reindex",
                 ),
             )
-

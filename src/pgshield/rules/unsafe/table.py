@@ -19,11 +19,7 @@ class DropTable(linter.Checker):
         """Visit DropStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            node.removeType == enums.ObjectType.OBJECT_TABLE
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if node.removeType == enums.ObjectType.OBJECT_TABLE:
 
             self.violations.append(
                 linter.Violation(
@@ -48,11 +44,7 @@ class RenameTable(linter.Checker):
         """Visit RenameStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            node.renameType == enums.ObjectType.OBJECT_TABLE
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if node.renameType == enums.ObjectType.OBJECT_TABLE:
 
             self.violations.append(
                 linter.Violation(
@@ -76,8 +68,6 @@ class TableMovementToTablespace(linter.Checker):
         if (
             node.subtype == enums.AlterTableType.AT_SetTableSpace
             and ancestors[statement_index].stmt.objtype == enums.ObjectType.OBJECT_TABLE
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -103,11 +93,7 @@ class TablesMovementToTablespace(linter.Checker):
         """Visit AlterTableMoveAllStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            node.objtype == enums.ObjectType.OBJECT_TABLE
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if node.objtype == enums.ObjectType.OBJECT_TABLE:
 
             self.violations.append(
                 linter.Violation(
@@ -132,18 +118,13 @@ class Cluster(linter.Checker):
         """Visit ClusterStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            ancestors[statement_index].stmt_location,
-            self.code,
-        ) not in self.ignore_rules:
-
-            self.violations.append(
-                linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
-                    statement=ancestors[statement_index],
-                    description="Cluster",
-                ),
-            )
+        self.violations.append(
+            linter.Violation(
+                location=ancestors[statement_index].stmt_location,
+                statement=ancestors[statement_index],
+                description="Cluster",
+            ),
+        )
 
 
 class VacuumFull(linter.Checker):
@@ -162,11 +143,7 @@ class VacuumFull(linter.Checker):
             else []
         )
 
-        if (
-            "full" in options
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if "full" in options:
 
             self.violations.append(
                 linter.Violation(
@@ -191,11 +168,7 @@ class NonConcurrentDetachPartition(linter.Checker):
         """Visit PartitionCmd."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            not node.concurrent
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if not node.concurrent:
 
             self.violations.append(
                 linter.Violation(
@@ -220,11 +193,7 @@ class NonConcurrentRefreshMaterializedView(linter.Checker):  # type: ignore[misc
         """Visit RefreshMatViewStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            not node.concurrent
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if not node.concurrent:
 
             self.violations.append(
                 linter.Violation(
@@ -249,14 +218,10 @@ class TruncateTable(linter.Checker):
         """Visit TruncateStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            ancestors[statement_index].stmt_location,
-            self.code,
-        ) not in self.ignore_rules:
-            self.violations.append(
-                linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
-                    statement=ancestors[statement_index],
-                    description="Truncate table is not safe",
-                ),
-            )
+        self.violations.append(
+            linter.Violation(
+                location=ancestors[statement_index].stmt_location,
+                statement=ancestors[statement_index],
+                description="Truncate table is not safe",
+            ),
+        )

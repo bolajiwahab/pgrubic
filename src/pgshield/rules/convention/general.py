@@ -40,11 +40,7 @@ class NoSQLASCIIEncoding(linter.Checker):  # type: ignore[misc]
             else {}
         )
 
-        if (
-            options.get("encoding") == "sql_ascii"
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if options.get("encoding") == "sql_ascii":
 
             self.violations.append(
                 linter.Violation(
@@ -69,12 +65,7 @@ class NoTableInheritance(linter.Checker):  # type: ignore[misc]
         """Visit CreateStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            node.inhRelations
-            and not node.partbound
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if node.inhRelations and not node.partbound:
 
             self.violations.append(
                 linter.Violation(
@@ -99,18 +90,13 @@ class NoRule(linter.Checker):  # type: ignore[misc]
         """Visit RuleStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            ancestors[statement_index].stmt_location,
-            self.code,
-        ) not in self.ignore_rules:
-
-            self.violations.append(
-                linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
-                    statement=ancestors[statement_index],
-                    description="Usage of rule, use trigger instead",
-                ),
-            )
+        self.violations.append(
+            linter.Violation(
+                location=ancestors[statement_index].stmt_location,
+                statement=ancestors[statement_index],
+                description="Usage of rule, use trigger instead",
+            ),
+        )
 
 
 class TimestampWithoutTimezone(linter.Checker):  # type: ignore[misc]
@@ -129,8 +115,6 @@ class TimestampWithoutTimezone(linter.Checker):  # type: ignore[misc]
 
         if ast.CreateStmt in ancestors and (
             node.typeName.names[-1].sval == "timestamp"
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -156,11 +140,7 @@ class TimeWithtTimezone(linter.Checker):  # type: ignore[misc]
         """Visit ColumnDef."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if ast.CreateStmt in ancestors and (
-            node.typeName.names[-1].sval == "timetz"
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if ast.CreateStmt in ancestors and (node.typeName.names[-1].sval == "timetz"):
 
             self.violations.append(
                 linter.Violation(
@@ -186,10 +166,7 @@ class TruncatedTimestampWithoutTimezone(linter.Checker):  # type: ignore[misc]
         statement_index: int = linter.get_statement_index(ancestors)
 
         if ast.CreateStmt in ancestors and (
-            node.typeName.names[-1].sval == "timestamp"
-            and node.typeName.typmods
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
+            node.typeName.names[-1].sval == "timestamp" and node.typeName.typmods
         ):
 
             self.violations.append(
@@ -216,10 +193,7 @@ class TruncatedTimestampWithTimezone(linter.Checker):  # type: ignore[misc]
         statement_index: int = linter.get_statement_index(ancestors)
 
         if ast.CreateStmt in ancestors and (
-            node.typeName.names[-1].sval == "timestamptz"
-            and node.typeName.typmods
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
+            node.typeName.names[-1].sval == "timestamptz" and node.typeName.typmods
         ):
 
             self.violations.append(
@@ -247,8 +221,6 @@ class Char(linter.Checker):  # type: ignore[misc]
 
         if ast.CreateStmt in ancestors and (
             node.typeName.names[-1].sval in ["bpchar", "char"]
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -274,11 +246,7 @@ class VarChar(linter.Checker):  # type: ignore[misc]
         """Visit ColumnDef."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if ast.CreateStmt in ancestors and (
-            node.typeName.names[-1].sval == "varchar"
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if ast.CreateStmt in ancestors and (node.typeName.names[-1].sval == "varchar"):
 
             self.violations.append(
                 linter.Violation(
@@ -303,11 +271,7 @@ class Money(linter.Checker):  # type: ignore[misc]
         """Visit ColumnDef."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if ast.CreateStmt in ancestors and (
-            node.typeName.names[-1].sval == "money"
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if ast.CreateStmt in ancestors and (node.typeName.names[-1].sval == "money"):
 
             self.violations.append(
                 linter.Violation(
@@ -332,11 +296,7 @@ class Serial(linter.Checker):  # type: ignore[misc]
         """Visit ColumnDef."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if ast.CreateStmt in ancestors and (
-            node.typeName.names[-1].sval == "serial"
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if ast.CreateStmt in ancestors and (node.typeName.names[-1].sval == "serial"):
 
             self.violations.append(
                 linter.Violation(
@@ -363,8 +323,6 @@ class BigSerial(linter.Checker):  # type: ignore[misc]
 
         if ast.CreateStmt in ancestors and (
             node.typeName.names[-1].sval == "bigserial"
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -390,11 +348,7 @@ class PreferJsonbOverJson(linter.Checker):  # type: ignore[misc]
         """Visit ColumnDef."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if ast.CreateStmt in ancestors and (
-            node.typeName.names[-1].sval == "json"
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if ast.CreateStmt in ancestors and (node.typeName.names[-1].sval == "json"):
 
             self.violations.append(
                 linter.Violation(

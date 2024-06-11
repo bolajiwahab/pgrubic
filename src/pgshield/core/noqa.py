@@ -1,9 +1,12 @@
 """Handling noqa comments."""
 import re
+import typing
+import functools
+from collections import abc
 
 from pglast import parser  # type: ignore[import-untyped]
 
-from pgshield.core import errors
+from pgshield.core import errors, linter
 
 
 def extract(statement: str) -> list[tuple[int, str]]:
@@ -56,3 +59,26 @@ def extract(statement: str) -> list[tuple[int, str]]:
                 ]
 
     return comments
+
+
+def directive(func: abc.Callable[..., typing.Any]) -> abc.Callable[..., typing.Any]:
+    """Handle application of noqa on rules."""
+    @functools.wraps(func)
+    def wrapper(
+        self: typing.Any,  # noqa: ANN401
+        *args: typing.Any,
+        **kwargs: typing.Any,
+    ) -> typing.Any:  # noqa: ANN401
+
+        statement_index: int = linter.get_statement_index(args[0])
+
+        if (
+            args[0][statement_index].stmt_location,
+            self.code,
+        ) in self.noqa_ignore_rules:
+
+            return None
+
+        return func(self, *args, **kwargs)
+
+    return wrapper

@@ -1,13 +1,12 @@
 """Convention for partitioning."""
 
+import typing
 from datetime import datetime
-import enum
+
 from pglast import ast, enums  # type: ignore[import-untyped]
 from dateutil import relativedelta  # type: ignore[import-untyped]
-import typing
-from types import MappingProxyType
 
-from pgshield.core import linter
+from pgshield.core import linter, loader
 
 
 class GapInRangePartitionBound(linter.Checker):  # type: ignore[misc]
@@ -29,11 +28,6 @@ class GapInRangePartitionBound(linter.Checker):  # type: ignore[misc]
         if (
             not node.is_default
             and node.strategy == enums.PartitionStrategy.PARTITION_STRATEGY_RANGE
-            and (
-                ancestors[statement_index].stmt_location,
-                self.code,
-            )
-            not in self.ignore_rules
         ):
 
             # get the difference in hours, days, months, years
@@ -105,11 +99,6 @@ class PartitionStrategiesWhitelisted(linter.Checker):
             self.config.partition_strategies
             and self.partition_strategies_mapping[node.strategy]
             not in self.config.partition_strategies
-            and (
-                ancestors[statement_index].stmt_location,
-                self.code,
-            )
-            not in self.ignore_rules
         ):
 
             self.violations.append(

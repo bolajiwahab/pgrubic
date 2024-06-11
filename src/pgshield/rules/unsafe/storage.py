@@ -19,18 +19,13 @@ class DropTablespace(linter.Checker):
         """Visit DropTableSpaceStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            ancestors[statement_index].stmt_location,
-            self.code,
-        ) not in self.ignore_rules:
-
-            self.violations.append(
-                linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
-                    statement=ancestors[statement_index],
-                    description="Drop tablespace",
-                ),
-            )
+        self.violations.append(
+            linter.Violation(
+                location=ancestors[statement_index].stmt_location,
+                statement=ancestors[statement_index],
+                description="Drop tablespace",
+            ),
+        )
 
 
 class DropDatabase(linter.Checker):
@@ -47,17 +42,13 @@ class DropDatabase(linter.Checker):
         """Visit DropdbStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            ancestors[statement_index].stmt_location,
-            self.code,
-        ) not in self.ignore_rules:
-            self.violations.append(
-                linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
-                    statement=ancestors[statement_index],
-                    description="Drop database",
-                ),
-            )
+        self.violations.append(
+            linter.Violation(
+                location=ancestors[statement_index].stmt_location,
+                statement=ancestors[statement_index],
+                description="Drop database",
+            ),
+        )
 
 
 class DropSchema(linter.Checker):
@@ -74,11 +65,7 @@ class DropSchema(linter.Checker):
         """Visit DropStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            node.removeType == enums.ObjectType.OBJECT_SCHEMA
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if node.removeType == enums.ObjectType.OBJECT_SCHEMA:
 
             self.violations.append(
                 linter.Violation(

@@ -19,11 +19,7 @@ class NotNullOnExistingColumn(linter.Checker):  # type: ignore[misc]
         """Visit AlterTableCmd."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            node.subtype == enums.AlterTableType.AT_SetNotNull
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if node.subtype == enums.AlterTableType.AT_SetNotNull:
 
             self.violations.append(
                 linter.Violation(
@@ -64,12 +60,7 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):  # type: ignore[mis
                 ):
                     has_default = True
 
-            if (
-                is_not_null
-                and not has_default
-                and (ancestors[statement_index].stmt_location, self.code)
-                not in self.ignore_rules
-            ):
+            if is_not_null and not has_default:
 
                 self.violations.append(
                     linter.Violation(
@@ -98,8 +89,6 @@ class VolatileDefaultOnNewColumn(linter.Checker):  # type: ignore[misc]
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_DEFAULT
             and not isinstance(node.raw_expr, ast.A_Const)
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -129,8 +118,6 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):  # type: igno
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_FOREIGN
             and not node.skip_validation
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -160,8 +147,6 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):  # type: ignore[mi
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_CHECK
             and not node.skip_validation
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -191,8 +176,6 @@ class UniqueConstraintCreatingNewIndex(linter.Checker):  # type: ignore[misc]
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_UNIQUE
             and not node.indexname
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -222,8 +205,6 @@ class PrimaryKeyConstraintCreatingNewIndex(linter.Checker):  # type: ignore[misc
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_PRIMARY
             and not node.indexname
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
         ):
 
             self.violations.append(

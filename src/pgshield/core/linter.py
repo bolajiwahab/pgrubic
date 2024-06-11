@@ -28,12 +28,13 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
 
     def __init__(self) -> None:
         """Init."""
-        self.ignore_rules: list[tuple[int, str]] = []
+        self.noqa_ignore_rules: list[tuple[int, str]] = []
 
         self.violations: list[Violation] = []
 
-        self.config: config.Config = dataclasses.field(default_factory=lambda: config.Config(),  # noqa: E501
-    )
+        self.config: config.Config = dataclasses.field(
+            default_factory=lambda: config.Config(**config.load_default_config()),
+        )
 
     required_attributes: tuple[str, ...] = ("name", "code")
 
@@ -47,7 +48,7 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
 
                 raise TypeError(msg)
 
-    def visit(self, ancestors: typing.Any, node: ast.Node) -> None:  # noqa: ANN401
+    def visit(self, node: ast.Node, ancestors: typing.Any) -> None:  # noqa: ANN401
         """Visit the node."""
 
 
@@ -73,18 +74,21 @@ class Linter:
         """Run all rules on a source file."""
         file_name = pathlib.Path(source_path).name
 
-        with pathlib.Path(source_path).open("r", encoding ="utf-8") as source_file:
+        with pathlib.Path(source_path).open("r", encoding="utf-8") as source_file:
 
             source_code = source_file.read()
 
         # Remove comments
         source_code = re.sub(
-            r"^\s*--.*\n?|^\s*\/[*][\S\s]*?[*]\/", "", source_code, flags=re.MULTILINE,
+            r"^\s*--.*\n?|^\s*\/[*][\S\s]*?[*]\/",
+            "",
+            source_code,
+            flags=re.MULTILINE,
         )
 
         try:
 
-            tree: ast.Node  = parser.parse_sql(source_code)
+            tree: ast.Node = parser.parse_sql(source_code)
 
         except parser.ParseError as error:
 
@@ -93,11 +97,11 @@ class Linter:
 
         violations_found: bool = False
 
-        ignore_rules_through_qa: list[tuple[int, str]] = noqa.extract(source_code)
+        noqa_ignore_rules: list[tuple[int, str]] = noqa.extract(source_code)
 
         for checker in self.checkers:
 
-            checker.ignore_rules = ignore_rules_through_qa
+            checker.noqa_ignore_rules = noqa_ignore_rules
 
             checker.config = self.config
 

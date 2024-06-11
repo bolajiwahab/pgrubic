@@ -19,11 +19,7 @@ class DropColumn(linter.Checker):  # type: ignore[misc]
         """Visit AlterTableCmd."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            node.subtype == enums.AlterTableType.AT_DropColumn
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if node.subtype == enums.AlterTableType.AT_DropColumn:
 
             self.violations.append(
                 linter.Violation(
@@ -48,11 +44,7 @@ class ChangeColumnType(linter.Checker):
         """Visit AlterTableCmd."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            node.subtype == enums.AlterTableType.AT_AlterColumnType
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if node.subtype == enums.AlterTableType.AT_AlterColumnType:
 
             self.violations.append(
                 linter.Violation(
@@ -77,11 +69,7 @@ class RenameColumn(linter.Checker):
         """Visit RenameStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            node.renameType == enums.ObjectType.OBJECT_COLUMN
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
-        ):
+        if node.renameType == enums.ObjectType.OBJECT_COLUMN:
 
             self.violations.append(
                 linter.Violation(
@@ -104,8 +92,6 @@ class AutoIncrementColumn(linter.Checker):
 
         if ast.AlterTableStmt in ancestors and (
             node.typeName.names[-1].sval in ["serial", "bigserial"]
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -134,8 +120,6 @@ class AutoIncrementIdentityColumn(linter.Checker):  # type: ignore[misc]
         if (
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_IDENTITY
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -164,8 +148,6 @@ class StoredGeneratedColumn(linter.Checker):  # type: ignore[misc]
         if (
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_GENERATED
-            and (ancestors[statement_index].stmt_location, self.code)
-            not in self.ignore_rules
         ):
 
             self.violations.append(

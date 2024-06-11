@@ -23,11 +23,6 @@ class IndexNaming(linter.Checker):  # type: ignore[misc]
 
         if (
             not re.match(self.config.regex_index, node.idxname)
-            and (
-                ancestors[statement_index].stmt_location,
-                self.code,
-            )
-            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -79,11 +74,6 @@ class ConstraintNaming(linter.Checker):  # type: ignore[misc]
 
         if constraint.get(node.contype) and (
             not re.match(constraint[node.contype]["naming_convention"], node.conname)
-            and (
-                ancestors[statement_index].stmt_location,
-                self.code,
-            )
-            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -114,11 +104,6 @@ class PartionNaming(linter.Checker):  # type: ignore[misc]
         if (
             node.partbound is not None
             and not re.match(self.config.regex_partition, node.relation.relname)
-            and (
-                ancestors[statement_index].stmt_location,
-                self.code,
-            )
-            not in self.ignore_rules
         ):
 
             self.violations.append(
@@ -147,11 +132,6 @@ class SequenceNaming(linter.Checker):  # type: ignore[misc]
 
         if (
             not re.match(self.config.regex_sequence, node.sequence.relname)
-            and (
-                ancestors[statement_index].stmt_location,
-                self.code,
-            )
-            not in self.ignore_rules
         ):
 
             self.violations.append(

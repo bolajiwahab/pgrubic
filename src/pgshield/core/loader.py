@@ -5,14 +5,14 @@ import inspect
 import importlib
 
 from pgshield import rule_directories
-from pgshield.core import errors, linter
+from pgshield.core import noqa, errors, linter
 
 
-def load_rules(directories: list[str] = rule_directories) -> list[linter.Checker]:
+def load_rules() -> list[linter.Checker]:
     """Load rules."""
     rules: list[linter.Checker] = []
 
-    for directory in directories:
+    for directory in rule_directories:
 
         module = importlib.import_module(directory)
 
@@ -21,6 +21,8 @@ def load_rules(directories: list[str] = rule_directories) -> list[linter.Checker
             if issubclass(obj, linter.Checker) and not obj.__name__.startswith("_"):
 
                 rules.append(typing.cast(linter.Checker, obj))
+
+                _apply_noqa_directive(obj)
 
     _check_duplicate_rules(rules)
 
@@ -39,3 +41,12 @@ def _check_duplicate_rules(rules: list[linter.Checker]) -> None:
 
         seen.add(rule.name)
         seen.add(rule.code)
+
+
+def _apply_noqa_directive(obj: typing.Any) -> None:  # noqa: ANN401
+    """Apply noqa directive on visitors."""
+    for name, method in inspect.getmembers(obj, inspect.isfunction):
+
+        if method.__name__.startswith("visit_"):
+
+            setattr(obj, name, noqa.directive(method))

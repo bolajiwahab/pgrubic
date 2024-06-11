@@ -31,12 +31,12 @@ class Config:
     regex_sequence: str
 
 
-def _load_default_config() -> dict[str, typing.Any]:
+def load_default_config() -> dict[str, typing.Any]:
     """Load default config."""
     return dict(toml.load(default_config))
 
 
-def _load_user_config() -> dict[str, typing.Any]:
+def load_user_config() -> dict[str, typing.Any]:
     """Load config from from absolute path config file."""
     absolute_path_config_file = _get_absolute_path_config_file(config_file)
 
@@ -44,12 +44,14 @@ def _load_user_config() -> dict[str, typing.Any]:
 
         return dict(toml.load(absolute_path_config_file))
 
-    return dict(toml.load(default_config))
+    return {}
 
 
-def _merge_config() -> dict[str, typing.Any]:
+def merge_config() -> dict[str, typing.Any]:
     """Merge default and user config."""
-    return {k: v | _load_user_config()[k] for k, v in _load_default_config().items()}
+    return {
+        k: v | load_user_config().get(k, {}) for k, v in load_default_config().items()
+    }
 
 
 def _get_absolute_path_config_file(config_file: str) -> pathlib.Path | None:
@@ -74,7 +76,7 @@ def _get_absolute_path_config_file(config_file: str) -> pathlib.Path | None:
 def parse_config() -> Config:
     """Parse config."""
     try:
-        config = Config(**_merge_config().get("lint", {}))
+        config = Config(**merge_config().get("lint", {}))
 
     except TypeError as error:
 
