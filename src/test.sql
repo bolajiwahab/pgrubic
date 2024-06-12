@@ -8,7 +8,9 @@ CREATE TABLE measurement ( --noqa: CVS001
     city_id         int not null,
     logdate         date not null,
     peaktemp        int,
-    unitsales       int
+    unitsales       int,
+    created         date,
+    updated         date
 ) PARTITION BY RANGE (logdate)
 ;
 
@@ -68,7 +70,7 @@ drop schema public -- noqa: UNS003
 
 -- truncate table test;
 
-CREATE TABLE people ( --noqa: CVS001
+CREATE TABLE people (
     id SMALLINT,
     height_cm jsonb,
     height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
@@ -87,7 +89,7 @@ CREATE TABLE people ( --noqa: CVS001
 --     Name  "char" not null,
 --     Name  varchar(40) not null
 -- );
--- CREATE TABLE "measurement_y2006m02" () INHERITS (measurement) -- noqa: CVG002
+CREATE TABLE "measurement_y2006m02" (a int) INHERITS (measurement)
 ;
 /* 
                                                  hello 

@@ -6,8 +6,6 @@
 
 # partition schema ?
 **********************
-# prefer bigint over int or smallint
-# prefer identity over bigserial or serial
 # required columns -- created and updated not null typed timestamptz - create table only (not partitions)
 
 ****************
@@ -23,6 +21,7 @@
 # columns: str = ("_").join(stream.RawStream()(node.indexParams).split("; "))
 
 # config to exclude certain files from the check e.g init.sql - should happen at the source file registration to skip
+# exclude rules on pattern matching such as CV*, UN* to skip all rules under such namespace
 
 -- include-convention as an arg (if your service is compliant then enable this to prevent future uncompliance hence no need)
 enable once service is rfc compliant

@@ -19,6 +19,7 @@ class Config:
     schemas: list[str]
     extensions: list[str]
     partition_strategies: list[str]
+    required_columns: dict[str, str]
 
     regex_partition: str
     regex_index: str
