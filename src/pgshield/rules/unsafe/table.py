@@ -138,12 +138,12 @@ class VacuumFull(linter.Checker):
         statement_index: int = linter.get_statement_index(ancestors)
 
         options = (
-            [stream.RawStream()(option).lower() for option in node.options]
+            [stream.RawStream()(option) for option in node.options]
             if node.options is not None
             else []
         )
 
-        if "full" in options:
+        if options and "full" in options:
 
             self.violations.append(
                 linter.Violation(

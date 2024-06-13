@@ -20,6 +20,7 @@ class Config:
     extensions: list[str]
     partition_strategies: list[str]
     required_columns: dict[str, str]
+    not_null_columns: list[str]
 
     regex_partition: str
     regex_index: str

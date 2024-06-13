@@ -7,10 +7,12 @@ partition_strategies = []
 
 required_columns = { created = "timestamptz", updated = "timestamptz" }
 
+not_null_columns = ["created", "updated", "deleted", "deleted_by"]
+
 # schemas = { partition = "partitions", table = "public" } # improvements to whitelisting of schemas
 # object_type: list of schemas
 
-regex_partition = "[a-zA-Z0-9]+__[a-zA-Z0-9]+__[a-zA-Z0-9_]+$"
+regex_partition = "[a-zA-Z0-9]+__[a-zA-Z0-9_]+__[a-zA-Z0-9_]+$"
 regex_index = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_idx$"
 regex_constraint_primary_key = "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_pkey$"
 regex_constraint_unique_key = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"

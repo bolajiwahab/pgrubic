@@ -16,6 +16,8 @@ rule_directories: list[str] = [
     "pgshield.rules.convention.extension",
     "pgshield.rules.convention.general",
     "pgshield.rules.convention.typing",
+    "pgshield.rules.convention.partitioning",
+    "pgshield.rules.convention.constraint",
 ]
 
 config_file: str = "pgshield.toml"

@@ -4,25 +4,32 @@
 --     TEMPLATE template0
 -- ;
 
-CREATE TABLE measurement ( --noqa: CVS001
-    city_id         int not null,
-    logdate         date not null,
-    peaktemp        int,
-    unitsales       int,
-    created         date,
-    updated         date
-) PARTITION BY RANGE (logdate)
+CREATE TABLE measurement_(updated date);
+
+-- CREATE TABLE measurement ( --noqa: CVS001
+--     city_id         int not null,
+--     updated         date,
+--     logdate         date not null,
+--     peaktemp        int,
+--     unitsales       int,
+--     created         date
+-- ) PARTITION BY RANGE (logdate)
+-- ;
+
+ALTER TABLE public.ecdict alter deleted drop not null /* hello */ -- noqa: UNS021, UNS019
 ;
 
+
+select created, updated from tbl;
 CREATE TABLE partitions."public__measurement__y2006m02" PARTITION OF public.measurement
     FOR VALUES FROM ('2006-02-01 00:00:00+00') TO ('2006-02-28 00:00:00+00') -- noqa: CVP001
 ;
 
--- create extension postgis with schema public1;
+-- create extension postgis with schema "Public1";
 
-CREATE SEQUENCE public.serial_seq START 101;
+-- CREATE SEQUENCE public.serial_seq START 101;
 
--- CREATE TYPE uyt."pg_add" AS ENUM ('sad', 'ok', 'happy');
+CREATE TYPE uyt."pg_add" AS ENUM ('sad', 'ok', 'happy');
 
 -- CREATE TRIGGER "Check_update"
 --     BEFORE UPDATE ON accounts
@@ -37,8 +44,8 @@ CREATE SEQUENCE public.serial_seq START 101;
 
 -- CREATE RULE notify_me AS ON UPDATE TO mytable DO ALSO NOTIFY mytable -- noqa: COV003
 -- ;
-drop schema public -- noqa: UNS003
-;
+-- drop schema public -- noqa: UNS003
+-- ;
 -- CREATE VIEW public."vista"
 --   AS SELECT 'Hello World';
 
@@ -70,11 +77,11 @@ drop schema public -- noqa: UNS003
 
 -- truncate table test;
 
-CREATE TABLE people (
-    id SMALLINT,
-    height_cm jsonb,
-    height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
-);
+-- CREATE TABLE people (
+--     id SMALLINT,
+--     height_cm jsonb,
+--     height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
+-- );
 
 -- ALTER TABLE employee
 -- ADD CONSTRAINT "employee_chk" check(length(email) = 60)
@@ -89,8 +96,8 @@ CREATE TABLE people (
 --     Name  "char" not null,
 --     Name  varchar(40) not null
 -- );
-CREATE TABLE "measurement_y2006m02" (a int) INHERITS (measurement)
-;
+-- CREATE TABLE "measurement_y2006m02" (a int) INHERITS (measurement)
+-- ;
 /* 
                                                  hello 
                                                  */
@@ -119,7 +126,7 @@ CREATE TABLE "measurement_y2006m02" (a int) INHERITS (measurement)
 -- ALTER TABLE public.ecdict ADD COLUMN id bigserial PRIMARY KEY not null;
 -- alter table tbl1 rename to tbl3;
 -- alter table tble alter column set type text;
--- VACUUM full analyze tbl;
+-- VACUUM FULL analyze tbl;
 -- cluster tbl;
 -- ALTER TABLE measurement DETACH PARTITION measurement_y2006m02
 -- ;

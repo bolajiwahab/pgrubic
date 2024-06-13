@@ -220,6 +220,20 @@ class _Identifier(abc.ABC, linter.Checker):
             ancestors[statement_index],
         )
 
+    def visit_CreateExtensionStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.CreateExtensionStmt,
+    ) -> None:
+        """Visit CreateExtensionStmt."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        self._check_identifier(
+            node.extname,
+            ancestors[statement_index].stmt_location,
+            ancestors[statement_index],
+        )
+
 
 class IsIdentifierInSnakeCase(_Identifier):
     """Identifier should be in snake case."""

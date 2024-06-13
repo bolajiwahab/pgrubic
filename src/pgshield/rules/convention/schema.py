@@ -89,8 +89,7 @@ class _Schema(abc.ABC, linter.Checker):
         options: dict[str, str] = (
             {
                 re.sub(r"\s*", "", stream.RawStream()(option), flags=re.UNICODE)
-                .split("=")[0]
-                .lower(): re.sub(
+                .split("=")[0]: re.sub(
                     r"\s*",
                     "",
                     stream.RawStream()(option),
@@ -98,7 +97,6 @@ class _Schema(abc.ABC, linter.Checker):
                 )
                 .split("=")[1]
                 .strip("'")
-                .lower()
                 for option in node.options
             }
             if node.options is not None

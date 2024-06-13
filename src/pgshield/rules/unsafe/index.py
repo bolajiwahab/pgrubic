@@ -120,7 +120,7 @@ class NonConcurrentReindex(linter.Checker):
             else []
         )
 
-        if "concurrently" not in params:
+        if params and "concurrently" not in params:
 
             self.violations.append(
                 linter.Violation(

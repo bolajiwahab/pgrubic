@@ -66,7 +66,7 @@ class Linter:
 
             sys.stdout.write(
                 f"{file_name}:{violation.location}: {checker.code}: "
-                f"{violation.description}: {stream.RawStream()(violation.statement)}\n",
+                f"{violation.description}: {stream.RawStream()(violation.statement)}\n\n",  # noqa: E501
             )
 
     def run(self, source_path: str) -> bool:

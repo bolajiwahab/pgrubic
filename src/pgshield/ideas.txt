@@ -6,13 +6,14 @@
 
 # partition schema ?
 **********************
-# required columns -- created and updated not null typed timestamptz - create table only (not partitions)
 
 ****************
 # column that has date should be typed date?
 # column that has at should be typed timestamptz?
 
 # "[a-zA-Z0-9]+__[a-zA-Z0-9]+__[0-9]{4}_[0-9]{2}(?:_[0-9]{2})?$"
+
+# split schemas into type and schema
 
 # we cannot use format {table}_{columns(s)}_idx because postgres only allow 63 characters by default in identifiers
 # e.g in indexname where we are expecting table name and column name, if postgres truncates the identifier

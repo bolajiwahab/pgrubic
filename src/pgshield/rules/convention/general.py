@@ -24,8 +24,7 @@ class PreferNonSQLASCIIEncoding(linter.Checker):
         options: dict[str, str] = (
             {
                 re.sub(r"\s*", "", stream.RawStream()(option), flags=re.UNICODE)
-                .split("=")[0]
-                .lower(): re.sub(
+                .split("=")[0]: re.sub(
                     r"\s*",
                     "",
                     stream.RawStream()(option),
@@ -33,7 +32,6 @@ class PreferNonSQLASCIIEncoding(linter.Checker):
                 )
                 .split("=")[1]
                 .strip("'")
-                .lower()
                 for option in node.options
             }
             if node.options is not None
@@ -113,20 +111,42 @@ class MissingRequiredColumn(linter.Checker):
         """Visit CreateStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
+        required_columns: list[str] = list(self.config.required_columns.keys())
+
         if node.tableElts:
-            # print(stream.RawStream()(node.tableElts))
 
-            for column in list(self.config.required_columns.keys()):
+            given_columns: list[str] = [column.colname for column in node.tableElts]
 
-                for col in node.tableElts:
-                    print(col.colname)
+            for column in required_columns:
 
-                if column not in node.tableElts:
+                if column not in given_columns:
 
                     self.violations.append(
                         linter.Violation(
                             location=ancestors[statement_index].stmt_location,
                             statement=ancestors[statement_index],
-                            description=f"{list(self.config.required_columns.keys())} columns are required.",  # noqa: E501
+                            description=f"Column '{column}' is required",
                         ),
                     )
+
+class PreferLookUpTableOverEnum(linter.Checker):
+    """Prefer look up table over enum."""
+
+    name = "convention.prefer_look_up_table_over_enum"
+    code = "CVG005"
+
+    def visit_CreateEnumStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.CreateEnumStmt,  # noqa: ARG002
+    ) -> None:
+        """Visit CreateEnumStmt."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        self.violations.append(
+            linter.Violation(
+                location=ancestors[statement_index].stmt_location,
+                statement=ancestors[statement_index],
+                description="Prefer look up table over enum",
+            ),
+        )
