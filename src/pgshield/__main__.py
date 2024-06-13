@@ -12,8 +12,6 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
     loaded_config = core.parse_config()
 
-    print(loaded_config.required_columns)
-
     linter: core.Linter = core.Linter(config=loaded_config)
 
     formatter: core.Formatter = core.Formatter()

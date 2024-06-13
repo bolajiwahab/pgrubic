@@ -6,15 +6,15 @@
 
 CREATE TABLE measurement_(updated date);
 
--- CREATE TABLE measurement ( --noqa: CVS001
---     city_id         int not null,
---     updated         date,
---     logdate         date not null,
---     peaktemp        int,
---     unitsales       int,
---     created         date
--- ) PARTITION BY RANGE (logdate)
--- ;
+CREATE TABLE measurement ( --noqa: CVS001
+    city_id         int not null,
+    updated         date,
+    logdate         date not null,
+    peaktemp        int,
+    unitsales       int,
+    created         date
+) PARTITION BY RANGE (logdate)
+;
 
 ALTER TABLE public.ecdict alter deleted drop not null /* hello */ -- noqa: UNS021, UNS019
 ;
