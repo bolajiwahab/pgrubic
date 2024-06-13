@@ -67,12 +67,12 @@ class ConstraintNaming(linter.Checker):
                 "naming_convention": self.config.regex_constraint_check,
             },
             enums.ConstrType.CONSTR_EXCLUSION: {
-                "type": "Check",
+                "type": "Ecxlusion",
                 "naming_convention": self.config.regex_constraint_exclusion,
             },
         }
 
-        if constraint.get(node.contype) and (
+        if constraint.get(node.contype) and node.conname and (
             not re.match(constraint[node.contype]["naming_convention"], node.conname)
         ):
 
@@ -140,5 +140,30 @@ class SequenceNaming(linter.Checker):
                     statement=ancestors[statement_index],
                     description=f"Sequence '{node.sequence.relname}' does not follow"
                                 f" naming convention '{self.config.regex_sequence}'",
+                ),
+            )
+
+
+class ConstraintShouldBeNamed(linter.Checker):
+    """Constraint should be named."""
+
+    name = "convention.constraint_should_be_named"
+    code = "CVN005"
+
+    def visit_Constraint(
+        self,
+        ancestors: ast.Node,
+        node: ast.Constraint,
+    ) -> None:
+        """Visit Constraint."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        if not node.conname and node.contype != enums.ConstrType.CONSTR_NOTNULL:
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Constraint should be named",
                 ),
             )

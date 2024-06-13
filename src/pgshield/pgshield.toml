@@ -8,6 +8,7 @@ partition_strategies = []
 required_columns = { created = "timestamptz", updated = "timestamptz" }
 
 not_null_columns = ["created", "updated", "deleted", "deleted_by"]
+blacklisted_types = ["tsvector"]
 
 # schemas = { partition = "partitions", table = "public" } # improvements to whitelisting of schemas
 # object_type: list of schemas

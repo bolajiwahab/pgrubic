@@ -4,20 +4,20 @@
 --     TEMPLATE template0
 -- ;
 
-CREATE TABLE measurement_(updated date);
+-- CREATE TABLE measurement_(updated date);
 
 CREATE TABLE measurement ( --noqa: CVS001
-    city_id         int not null,
+    city_id         bigint PRIMARY KEY not null,
     updated         date,
     logdate         date not null,
-    peaktemp        int,
-    unitsales       int,
+    peaktemp        bigint,
+    unitsales       bigint,
     created         date
 ) PARTITION BY RANGE (logdate)
 ;
 
-ALTER TABLE public.ecdict alter deleted drop not null /* hello */ -- noqa: UNS021, UNS019
-;
+-- ALTER TABLE public.ecdict alter deleted drop not null /* hello */ -- noqa: UNS021, UNS019
+-- ;
 
 
 select created, updated from tbl;
@@ -29,7 +29,7 @@ CREATE TABLE partitions."public__measurement__y2006m02" PARTITION OF public.meas
 
 -- CREATE SEQUENCE public.serial_seq START 101;
 
-CREATE TYPE uyt."pg_add" AS ENUM ('sad', 'ok', 'happy');
+-- CREATE TYPE uyt."pg_add" AS ENUM ('sad', 'ok', 'happy');
 
 -- CREATE TRIGGER "Check_update"
 --     BEFORE UPDATE ON accounts
@@ -85,10 +85,10 @@ CREATE TYPE uyt."pg_add" AS ENUM ('sad', 'ok', 'happy');
 
 -- ALTER TABLE employee
 -- ADD CONSTRAINT "employee_chk" check(length(email) = 60)
-;
 -- ;
+-- -- ;
 -- CREATE TABLE distributors (
---     did     bigserial PRIMARY KEY,
+--     did     smallserial PRIMARY KEY,
 --     -- cid     time with time zone,
 --     -- diid    timestamptz,
 --     biid    timestamp,

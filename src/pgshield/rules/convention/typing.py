@@ -358,3 +358,58 @@ class WronglyTypedRequiredColumn(linter.Checker):
                                 f" found '{node.typeName.names[-1].sval}'",
                 ),
             )
+
+
+class BlacklistedType(linter.Checker):
+    """Blacklisted type."""
+
+    name = "convention.blacklisted_type"
+    code = "CVT014"
+
+    def visit_ColumnDef(
+    self,
+    ancestors: ast.Node,
+    node: ast.ColumnDef,
+    ) -> None:
+        """Visit ColumnDef."""
+        if (
+            (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors)
+            and node.typeName.names[-1].sval in self.config.blacklisted_types
+        ):
+
+            statement_index: int = linter.get_statement_index(ancestors)
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description=f"Type '{node.typeName.names[-1].sval}' is blacklisted",
+                ),
+            )
+
+
+class PreferIdentityColumnOverSmallSerial(linter.Checker):
+    """Prefer identity column over smallserial."""
+
+    name = "convention.prefer_identity_column_over_smallserial"
+    code = "CVT015"
+
+    def visit_ColumnDef(
+        self,
+        ancestors: ast.Node,
+        node: ast.ColumnDef,
+    ) -> None:
+        """Visit ColumnDef."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
+            node.typeName.names[-1].sval == "smallserial"
+        ):
+
+            self.violations.append(
+                linter.Violation(
+                    location=ancestors[statement_index].stmt_location,
+                    statement=ancestors[statement_index],
+                    description="Prefer identity column over smallserial",
+                ),
+            )

@@ -21,6 +21,7 @@ class Config:
     partition_strategies: list[str]
     required_columns: dict[str, str]
     not_null_columns: list[str]
+    blacklisted_types: list[str]
 
     regex_partition: str
     regex_index: str
