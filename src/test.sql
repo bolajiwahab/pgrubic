@@ -7,9 +7,9 @@
 -- CREATE TABLE measurement_(updated date);
 
 CREATE TABLE measurement ( --noqa: CVS001
-    city_id         bigint PRIMARY KEY not null,
+    city_id         smallserial PRIMARY KEY not null,
     updated         date,
-    logdate         date not null,
+    logdate         boolean not null,
     peaktemp        bigint,
     unitsales       bigint,
     created         date
