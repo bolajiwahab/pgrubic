@@ -1,6 +1,8 @@
-# blacklist config e.g types e.g bool etc
-
 # prevent missing rule numbers
+
+# config to exclude certain files from the check e.g init.sql - should happen at the source file registration to skip
+# exclude rules on pattern matching such as CV*, UN* to skip all rules under such namespace
+
 
 # partition schema ?
 # split schemas into type and schema
@@ -20,12 +22,8 @@
 # and column name
 # columns: str = ("_").join(stream.RawStream()(node.indexParams).split("; "))
 
-# config to exclude certain files from the check e.g init.sql - should happen at the source file registration to skip
-# exclude rules on pattern matching such as CV*, UN* to skip all rules under such namespace
-
 -- include-convention as an arg (if your service is compliant then enable this to prevent future uncompliance hence no need)
 enable once service is rfc compliant
--- support exclude files (files to exclude)
 -- mode -- strict/changed -- strict scans all source files, changed uses git to get changed files
 
 -- update : enable convention by default with default config, since we are following postgres normal conventions
