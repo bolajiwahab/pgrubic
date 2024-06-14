@@ -22,11 +22,12 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
     for rule in loaded_rules:
 
         if (
-            (not loaded_config.select or rule.code in loaded_config.select)
-            # and rule.code not in loaded_config.ignore
-            and not any(
-                fnmatch.fnmatch(rule.code, pattern) for pattern in loaded_config.ignore
+            not loaded_config.select
+            or any(
+                fnmatch.fnmatch(rule.code, pattern) for pattern in loaded_config.select
             )
+        ) and not any(
+            fnmatch.fnmatch(rule.code, pattern) for pattern in loaded_config.ignore
         ):
 
             linter.checkers.add(rule())
@@ -35,11 +36,15 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
     for source_path in source_paths:
 
-        # formatter.diff(source_path=source_path)
+        if not any(
+            fnmatch.fnmatch(source_path, pattern) for pattern in loaded_config.exclude
+        ):
 
-        result: bool = linter.run(source_path)
+            # formatter.diff(source_path=source_path)
 
-        violations_found.append(result)
+            result: bool = linter.run(source_path)
+
+            violations_found.append(result)
 
     if any(violations_found):
 

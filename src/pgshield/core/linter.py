@@ -71,7 +71,7 @@ class Linter:
             )
 
     def run(self, source_path: str) -> bool:
-        """Run all rules on a source file."""
+        """Run rules on a source file."""
         file_name = pathlib.Path(source_path).name
 
         with pathlib.Path(source_path).open("r", encoding="utf-8") as source_file:
@@ -98,6 +98,8 @@ class Linter:
             checker.noqa_ignore_rules = noqa_ignore_rules
 
             checker.config = self.config
+
+            checker.violations = []
 
             checker(tree)
 

@@ -1,6 +1,8 @@
 [lint]
 select = []
 ignore = []
+include = []
+exclude = []
 schemas = []
 extensions = []
 partition_strategies = []

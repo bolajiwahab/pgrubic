@@ -2,10 +2,11 @@ CREATE TABLE measurement (
     city_id         bigint not null,
     updated         timestamptz,
     created         timestamptz,
-    constraint measurement_city_id_updated_key unique(city_id, updated)
+    constraint measurement_city_id_updated_key primary key(city_id, updated)
 )
 ;
 
+create table ecdict();
 ALTER TABLE public.ecdict alter deleted drop not null /* hello */ -- noqa: UNS021, UNS019
 ;
 

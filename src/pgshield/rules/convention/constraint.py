@@ -35,9 +35,8 @@ class NotNullColumn(linter.Checker):
     ) -> None:
         """Visit ColumnDef."""
         if (
-            (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors)
-            and node.colname in self.config.not_null_columns
-        ):
+            ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors
+        ) and node.colname in self.config.not_null_columns:
 
             is_not_null = False
 
@@ -87,14 +86,11 @@ class TableShouldHavePrimaryKey(linter.Checker):
     name = "convention.table_should_have_primary_key"
     code = "CVR002"
 
-    def visit_CreateStmt(
+    def _check_for_table_level_primary_key(
         self,
-        ancestors: ast.Node,
         node: ast.CreateStmt,
-    ) -> None:
-        """Visit CreateStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
+    ) -> bool:
+        """Check for table level primary key."""
         has_primary_key = False
 
         for definition in node.tableElts:
@@ -105,6 +101,17 @@ class TableShouldHavePrimaryKey(linter.Checker):
 
                 has_primary_key = True
 
+        return has_primary_key
+
+    def _check_for_column_level_primary_key(
+        self,
+        node: ast.CreateStmt,
+    ) -> bool:
+        """Check for column level primary key."""
+        has_primary_key = False
+
+        for definition in node.tableElts:
+
             if isinstance(definition, ast.ColumnDef) and definition.constraints:
 
                 for constraint in definition.constraints:
@@ -113,7 +120,21 @@ class TableShouldHavePrimaryKey(linter.Checker):
 
                         has_primary_key = True
 
-        if not has_primary_key:
+        return has_primary_key
+
+    def visit_CreateStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.CreateStmt,
+    ) -> None:
+        """Visit CreateStmt."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        if (
+            node.tableElts
+            and not self._check_for_column_level_primary_key(node)
+            and not self._check_for_table_level_primary_key(node)
+        ):
 
             self.violations.append(
                 linter.Violation(

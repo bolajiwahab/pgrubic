@@ -16,6 +16,8 @@ class Config:
 
     select: list[str]
     ignore: list[str]
+    include: list[str]
+    exclude: list[str]
     schemas: list[str]
     extensions: list[str]
     partition_strategies: list[str]
