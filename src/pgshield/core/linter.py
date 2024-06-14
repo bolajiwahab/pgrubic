@@ -14,7 +14,8 @@ from pgshield.core import noqa, config
 class Violation:
     """Representation of rule violation."""
 
-    location: int
+    lineno: int
+    column_offset: int
     statement: ast.Node
     description: str
 
@@ -65,8 +66,8 @@ class Linter:
         for violation in checker.violations:
 
             sys.stdout.write(
-                f"{file_name}:{violation.location}: {checker.code}: "
-                f"{violation.description}: {stream.RawStream()(violation.statement)}\n\n",  # noqa: E501
+                f"{file_name}:{violation.lineno}:{violation.column_offset}: "
+                f"{checker.code}: {violation.description}: {stream.RawStream()(violation.statement)}\n\n",  # noqa: E501
             )
 
     def run(self, source_path: str) -> bool:

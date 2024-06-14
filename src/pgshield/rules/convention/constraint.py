@@ -14,13 +14,15 @@ class NotNullColumn(linter.Checker):
     def _register_violation(
         self,
         column: str | None,
-        location: int,
+        lineno: int,
+        column_offset: int,
         statement: str,
     ) -> None:
         """Register the violation."""
         self.violations.append(
             linter.Violation(
-                location=location,
+                lineno=lineno,
+                column_offset=column_offset,
                 statement=statement,
                 description=f"Column '{column}' is not nullable",
             ),
@@ -42,7 +44,8 @@ class NotNullColumn(linter.Checker):
 
             self._register_violation(
                 column=node.colname,
-                location=ancestors[statement_index].stmt_location,
+                lineno=ancestors[statement_index].stmt_location,
+                column_offset=node.location,
                 statement=ancestors[statement_index],
             )
 
@@ -61,6 +64,7 @@ class NotNullColumn(linter.Checker):
 
             self._register_violation(
                 column=node.name,
-                location=ancestors[statement_index].stmt_location,
+                lineno=ancestors[statement_index].stmt_location,
+                column_offset=node.location,
                 statement=ancestors[statement_index],
             )

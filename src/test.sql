@@ -1,11 +1,3 @@
--- CREATE DATABASE "Music2"
---     LOCALE 'sv_SE.iso885915'
---     ENCODING SQL_ASCII
---     TEMPLATE template0
--- ;
-
--- CREATE TABLE measurement_(updated date);
-
 CREATE TABLE measurement ( --noqa: CVS001
     city_id         smallserial PRIMARY KEY not null,
     updated         date,
@@ -20,10 +12,10 @@ CREATE TABLE measurement ( --noqa: CVS001
 -- ;
 
 
-select created, updated from tbl;
-CREATE TABLE partitions."public__measurement__y2006m02" PARTITION OF public.measurement
-    FOR VALUES FROM ('2006-02-01 00:00:00+00') TO ('2006-02-28 00:00:00+00') -- noqa: CVP001
-;
+-- select created, updated from tbl;
+-- CREATE TABLE partitions."public__measurement__y2006m02" PARTITION OF public.measurement
+--     FOR VALUES FROM ('2006-02-01 00:00:00+00') TO ('2006-02-28 00:00:00+00') -- noqa: CVP001
+-- ;
 
 -- create extension postgis with schema "Public1";
 

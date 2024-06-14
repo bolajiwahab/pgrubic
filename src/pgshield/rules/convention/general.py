@@ -42,7 +42,8 @@ class PreferNonSQLASCIIEncoding(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=node.location,
                     statement=ancestors[statement_index],
                     description="Prefer non sql_ascii encoding",
                 ),
@@ -67,7 +68,8 @@ class PreferDeclarativePartitioningToTableInheritance(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=node.location,
                     statement=ancestors[statement_index],
                     description="Prefer declarative partitioning to table inheritance",
                 ),
@@ -83,14 +85,15 @@ class PreferTriggerOverRule(linter.Checker):
     def visit_RuleStmt(
         self,
         ancestors: ast.Node,
-        node: ast.RuleStmt,  # noqa: ARG002
+        node: ast.RuleStmt,
     ) -> None:
         """Visit RuleStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
         self.violations.append(
             linter.Violation(
-                location=ancestors[statement_index].stmt_location,
+                lineno=ancestors[statement_index].stmt_location,
+                column_offset=node.location,
                 statement=ancestors[statement_index],
                 description="Prefer trigger over rule",
             ),
@@ -123,7 +126,7 @@ class MissingRequiredColumn(linter.Checker):
 
                     self.violations.append(
                         linter.Violation(
-                            location=ancestors[statement_index].stmt_location,
+                            lineno=ancestors[statement_index].stmt_location,
                             statement=ancestors[statement_index],
                             description=f"Column '{column}' is required",
                         ),
@@ -145,7 +148,7 @@ class PreferLookUpTableOverEnum(linter.Checker):
 
         self.violations.append(
             linter.Violation(
-                location=ancestors[statement_index].stmt_location,
+                lineno=ancestors[statement_index].stmt_location,
                 statement=ancestors[statement_index],
                 description="Prefer look up table over enum",
             ),

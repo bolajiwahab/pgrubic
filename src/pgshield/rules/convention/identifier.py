@@ -32,6 +32,7 @@ class _Identifier(abc.ABC, linter.Checker):
         self._check_identifier(
             node.relation.relname,
             ancestors[statement_index].stmt_location,
+            ancestors[-1].stmt_location,
             ancestors[statement_index],
         )
 
@@ -231,6 +232,7 @@ class _Identifier(abc.ABC, linter.Checker):
         self._check_identifier(
             node.extname,
             ancestors[statement_index].stmt_location,
+            node.location,
             ancestors[statement_index],
         )
 
@@ -244,7 +246,8 @@ class IsIdentifierInSnakeCase(_Identifier):
     def _check_identifier(
         self,
         identifier: str,
-        location: int,
+        lineno: int,
+        column_offset: int,
         statement: str,
     ) -> None:
         """Check that identifier is in snake case."""
@@ -252,7 +255,8 @@ class IsIdentifierInSnakeCase(_Identifier):
 
             self.violations.append(
                 linter.Violation(
-                    location=location,
+                    lineno=lineno,
+                    column_offset=column_offset,
                     statement=statement,
                     description=f"Identifier '{identifier}' should be in snake case",
                 ),
@@ -268,7 +272,8 @@ class IsKeywordInIdentifier(_Identifier):
     def _check_identifier(
         self,
         identifier: str,
-        location: int,
+        lineno: int,
+        column_offset: int,
         statement: str,
     ) -> None:
         """Check for reserved keywords in identifier."""
@@ -285,7 +290,8 @@ class IsKeywordInIdentifier(_Identifier):
 
             self.violations.append(
                 linter.Violation(
-                    location=location,
+                    lineno=lineno,
+                    column_offset=column_offset,
                     statement=statement,
                     description=f"Identifier should not use keyword '{identifier}'",
                 ),
@@ -301,7 +307,8 @@ class IsSpecialCharacterInIdentifier(_Identifier):
     def _check_identifier(
         self,
         identifier: str,
-        location: int,
+        lineno: int,
+        column_offset: int,
         statement: str,
     ) -> None:
         """Check that identifier does contain use special characters."""
@@ -309,7 +316,8 @@ class IsSpecialCharacterInIdentifier(_Identifier):
 
             self.violations.append(
                 linter.Violation(
-                    location=location,
+                    lineno=lineno,
+                    column_offset=column_offset,
                     statement=statement,
                     description=f"Identifier should not contain Special characters '{identifier}'",  # noqa: E501
                 ),
@@ -325,7 +333,8 @@ class IsPostgresPrefixInIdentifier(_Identifier):
     def _check_identifier(
         self,
         identifier: str,
-        location: int,
+        lineno: int,
+        column_offset: int,
         statement: str,
     ) -> None:
         """Check that identifier does not start with pg_."""
@@ -333,7 +342,8 @@ class IsPostgresPrefixInIdentifier(_Identifier):
 
             self.violations.append(
                 linter.Violation(
-                    location=location,
+                    lineno=lineno,
+                    column_offset=column_offset,
                     statement=statement,
                     description="Identifier should not use prefix 'pg_'",
                 ),
