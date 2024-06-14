@@ -27,7 +27,8 @@ class IndexNaming(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description=f"Index '{node.idxname}' does not follow naming"
                                 f" convention '{self.config.regex_index}'",
@@ -78,7 +79,8 @@ class ConstraintNaming(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description=f"{constraint[node.contype]["type"]} constraint"
                                 f" '{node.conname}' does not follow naming convention"
@@ -108,7 +110,8 @@ class PartionNaming(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description=f"Partition '{node.relation.relname}' does not follow"
                                 f" naming convention '{self.config.regex_partition}'",
@@ -136,7 +139,8 @@ class SequenceNaming(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description=f"Sequence '{node.sequence.relname}' does not follow"
                                 f" naming convention '{self.config.regex_sequence}'",
@@ -162,7 +166,8 @@ class ConstraintShouldBeNamed(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Constraint should be named",
                 ),

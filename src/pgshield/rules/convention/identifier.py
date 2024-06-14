@@ -1,7 +1,6 @@
 """Convention around identifiers."""
 
 import abc
-import typing
 
 import inflection
 from pglast import ast, keywords  # type: ignore[import-untyped]
@@ -17,7 +16,14 @@ class _Identifier(abc.ABC, linter.Checker):
     code = ""
 
     @abc.abstractmethod
-    def _check_identifier(self, *args: typing.Any, **kwargs: typing.Any) -> None:
+    def _check_identifier(
+        self,
+        *,
+        identifier: str | None,
+        lineno: int,
+        column_offset: int,
+        statement: ast.Node,
+    ) -> None:
         """Check identifier."""
         ...
 
@@ -30,10 +36,10 @@ class _Identifier(abc.ABC, linter.Checker):
         statement_index: int = linter.get_statement_index(ancestors)
 
         self._check_identifier(
-            node.relation.relname,
-            ancestors[statement_index].stmt_location,
-            ancestors[-1].stmt_location,
-            ancestors[statement_index],
+            identifier=node.relation.relname,
+            lineno=ancestors[statement_index].stmt_location,
+            column_offset=linter.get_column_offset(ancestors, node),
+            statement=ancestors[statement_index],
         )
 
     def visit_ColumnDef(
@@ -47,9 +53,10 @@ class _Identifier(abc.ABC, linter.Checker):
             statement_index: int = linter.get_statement_index(ancestors)
 
             self._check_identifier(
-                node.colname,
-                ancestors[statement_index].stmt_location,
-                ancestors[statement_index],
+                identifier=node.colname,
+                lineno=ancestors[statement_index].stmt_location,
+                column_offset=linter.get_column_offset(ancestors, node),
+                statement=ancestors[statement_index],
             )
 
     def visit_ViewStmt(
@@ -61,9 +68,10 @@ class _Identifier(abc.ABC, linter.Checker):
         statement_index: int = linter.get_statement_index(ancestors)
 
         self._check_identifier(
-            node.view.relname,
-            ancestors[statement_index].stmt_location,
-            ancestors[statement_index],
+            identifier=node.view.relname,
+            lineno=ancestors[statement_index].stmt_location,
+            column_offset=linter.get_column_offset(ancestors, node),
+            statement=ancestors[statement_index],
         )
 
     def visit_CreateTableAsStmt(
@@ -75,9 +83,10 @@ class _Identifier(abc.ABC, linter.Checker):
         statement_index: int = linter.get_statement_index(ancestors)
 
         self._check_identifier(
-            node.into.rel.relname,
-            ancestors[statement_index].stmt_location,
-            ancestors[statement_index],
+            identifier=node.into.rel.relname,
+            lineno=ancestors[statement_index].stmt_location,
+            column_offset=linter.get_column_offset(ancestors, node),
+            statement=ancestors[statement_index],
         )
 
     def visit_IndexStmt(
@@ -89,9 +98,10 @@ class _Identifier(abc.ABC, linter.Checker):
         statement_index: int = linter.get_statement_index(ancestors)
 
         self._check_identifier(
-            node.idxname,
-            ancestors[statement_index].stmt_location,
-            ancestors[statement_index],
+            identifier=node.idxname,
+            lineno=ancestors[statement_index].stmt_location,
+            column_offset=linter.get_column_offset(ancestors, node),
+            statement=ancestors[statement_index],
         )
 
     def visit_CreateSeqStmt(
@@ -103,9 +113,10 @@ class _Identifier(abc.ABC, linter.Checker):
         statement_index: int = linter.get_statement_index(ancestors)
 
         self._check_identifier(
-            node.sequence.relname,
-            ancestors[statement_index].stmt_location,
-            ancestors[statement_index],
+            identifier=node.sequence.relname,
+            lineno=ancestors[statement_index].stmt_location,
+            column_offset=linter.get_column_offset(ancestors, node),
+            statement=ancestors[statement_index],
         )
 
     def visit_CreateSchemaStmt(
@@ -117,9 +128,10 @@ class _Identifier(abc.ABC, linter.Checker):
         statement_index: int = linter.get_statement_index(ancestors)
 
         self._check_identifier(
-            node.schemaname,
-            ancestors[statement_index].stmt_location,
-            ancestors[statement_index],
+            identifier=node.schemaname,
+            lineno=ancestors[statement_index].stmt_location,
+            column_offset=linter.get_column_offset(ancestors, node),
+            statement=ancestors[statement_index],
         )
 
     def visit_CreateFunctionStmt(
@@ -131,9 +143,10 @@ class _Identifier(abc.ABC, linter.Checker):
         statement_index: int = linter.get_statement_index(ancestors)
 
         self._check_identifier(
-            node.funcname[-1].sval,
-            ancestors[statement_index].stmt_location,
-            ancestors[statement_index],
+            identifier=node.funcname[-1].sval,
+            lineno=ancestors[statement_index].stmt_location,
+            column_offset=linter.get_column_offset(ancestors, node),
+            statement=ancestors[statement_index],
         )
 
     def visit_Constraint(
@@ -146,9 +159,10 @@ class _Identifier(abc.ABC, linter.Checker):
 
         if node.conname is not None:
             self._check_identifier(
-                node.conname,
-                ancestors[statement_index].stmt_location,
-                ancestors[statement_index],
+                identifier=node.conname,
+                lineno=ancestors[statement_index].stmt_location,
+                column_offset=linter.get_column_offset(ancestors, node),
+                statement=ancestors[statement_index],
             )
 
     def visit_CreatedbStmt(
@@ -160,9 +174,10 @@ class _Identifier(abc.ABC, linter.Checker):
         statement_index: int = linter.get_statement_index(ancestors)
 
         self._check_identifier(
-            node.dbname,
-            ancestors[statement_index].stmt_location,
-            ancestors[statement_index],
+            identifier=node.dbname,
+            lineno=ancestors[statement_index].stmt_location,
+            column_offset=linter.get_column_offset(ancestors, node),
+            statement=ancestors[statement_index],
         )
 
     def visit_CreateRoleStmt(
@@ -174,9 +189,10 @@ class _Identifier(abc.ABC, linter.Checker):
         statement_index: int = linter.get_statement_index(ancestors)
 
         self._check_identifier(
-            node.role,
-            ancestors[statement_index].stmt_location,
-            ancestors[statement_index],
+            identifier=node.role,
+            lineno=ancestors[statement_index].stmt_location,
+            column_offset=linter.get_column_offset(ancestors, node),
+            statement=ancestors[statement_index],
         )
 
     def visit_CreateTableSpaceStmt(
@@ -188,9 +204,10 @@ class _Identifier(abc.ABC, linter.Checker):
         statement_index: int = linter.get_statement_index(ancestors)
 
         self._check_identifier(
-            node.tablespacename,
-            ancestors[statement_index].stmt_location,
-            ancestors[statement_index],
+            identifier=node.tablespacename,
+            lineno=ancestors[statement_index].stmt_location,
+            column_offset=linter.get_column_offset(ancestors, node),
+            statement=ancestors[statement_index],
         )
 
     def visit_CreateTrigStmt(
@@ -202,9 +219,10 @@ class _Identifier(abc.ABC, linter.Checker):
         statement_index: int = linter.get_statement_index(ancestors)
 
         self._check_identifier(
-            node.trigname,
-            ancestors[statement_index].stmt_location,
-            ancestors[statement_index],
+            identifier=node.trigname,
+            lineno=ancestors[statement_index].stmt_location,
+            column_offset=linter.get_column_offset(ancestors, node),
+            statement=ancestors[statement_index],
         )
 
     def visit_CreateEnumStmt(
@@ -216,9 +234,10 @@ class _Identifier(abc.ABC, linter.Checker):
         statement_index: int = linter.get_statement_index(ancestors)
 
         self._check_identifier(
-            node.typeName[-1].sval,
-            ancestors[statement_index].stmt_location,
-            ancestors[statement_index],
+            identifier=node.typeName[-1].sval,
+            lineno=ancestors[statement_index].stmt_location,
+            column_offset=linter.get_column_offset(ancestors, node),
+            statement=ancestors[statement_index],
         )
 
     def visit_CreateExtensionStmt(
@@ -230,10 +249,10 @@ class _Identifier(abc.ABC, linter.Checker):
         statement_index: int = linter.get_statement_index(ancestors)
 
         self._check_identifier(
-            node.extname,
-            ancestors[statement_index].stmt_location,
-            node.location,
-            ancestors[statement_index],
+            identifier=node.extname,
+            lineno=ancestors[statement_index].stmt_location,
+            column_offset=linter.get_column_offset(ancestors, node),
+            statement=ancestors[statement_index],
         )
 
 
@@ -245,13 +264,13 @@ class IsIdentifierInSnakeCase(_Identifier):
 
     def _check_identifier(
         self,
-        identifier: str,
+        identifier: str | None,
         lineno: int,
         column_offset: int,
         statement: str,
     ) -> None:
         """Check that identifier is in snake case."""
-        if identifier != inflection.underscore(identifier):
+        if identifier and identifier != inflection.underscore(identifier):
 
             self.violations.append(
                 linter.Violation(
@@ -271,7 +290,7 @@ class IsKeywordInIdentifier(_Identifier):
 
     def _check_identifier(
         self,
-        identifier: str,
+        identifier: str | None,
         lineno: int,
         column_offset: int,
         statement: str,
@@ -306,13 +325,13 @@ class IsSpecialCharacterInIdentifier(_Identifier):
 
     def _check_identifier(
         self,
-        identifier: str,
+        identifier: str | None,
         lineno: int,
         column_offset: int,
         statement: str,
     ) -> None:
         """Check that identifier does contain use special characters."""
-        if not identifier.replace("_", "").isalnum():
+        if identifier and not identifier.replace("_", "").isalnum():
 
             self.violations.append(
                 linter.Violation(
@@ -332,7 +351,7 @@ class IsPostgresPrefixInIdentifier(_Identifier):
 
     def _check_identifier(
         self,
-        identifier: str,
+        identifier: str | None,
         lineno: int,
         column_offset: int,
         statement: str,

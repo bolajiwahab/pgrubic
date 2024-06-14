@@ -43,7 +43,7 @@ class PreferNonSQLASCIIEncoding(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Prefer non sql_ascii encoding",
                 ),
@@ -69,7 +69,7 @@ class PreferDeclarativePartitioningToTableInheritance(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Prefer declarative partitioning to table inheritance",
                 ),
@@ -93,7 +93,7 @@ class PreferTriggerOverRule(linter.Checker):
         self.violations.append(
             linter.Violation(
                 lineno=ancestors[statement_index].stmt_location,
-                column_offset=node.location,
+                column_offset=linter.get_column_offset(ancestors, node),
                 statement=ancestors[statement_index],
                 description="Prefer trigger over rule",
             ),
@@ -127,6 +127,7 @@ class MissingRequiredColumn(linter.Checker):
                     self.violations.append(
                         linter.Violation(
                             lineno=ancestors[statement_index].stmt_location,
+                            column_offset=linter.get_column_offset(ancestors, node),
                             statement=ancestors[statement_index],
                             description=f"Column '{column}' is required",
                         ),
@@ -141,7 +142,7 @@ class PreferLookUpTableOverEnum(linter.Checker):
     def visit_CreateEnumStmt(
         self,
         ancestors: ast.Node,
-        node: ast.CreateEnumStmt,  # noqa: ARG002
+        node: ast.CreateEnumStmt,
     ) -> None:
         """Visit CreateEnumStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
@@ -149,6 +150,7 @@ class PreferLookUpTableOverEnum(linter.Checker):
         self.violations.append(
             linter.Violation(
                 lineno=ancestors[statement_index].stmt_location,
+                column_offset=linter.get_column_offset(ancestors, node),
                 statement=ancestors[statement_index],
                 description="Prefer look up table over enum",
             ),

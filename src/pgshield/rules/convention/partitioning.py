@@ -68,7 +68,8 @@ class GapInRangePartitionBound(linter.Checker):
             if all(resolution != 1 for resolution in partitioning_resolution):
                 self.violations.append(
                     linter.Violation(
-                        location=ancestors[statement_index].stmt_location,
+                        lineno=ancestors[statement_index].stmt_location,
+                        column_offset=linter.get_column_offset(ancestors, node),
                         statement=ancestors[statement_index],
                         description="Gap in range partition bound",
                     ),
@@ -103,7 +104,8 @@ class PartitionStrategiesWhitelisted(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description=f"Partitioning strategy '{self.partition_strategies_mapping[node.strategy]}' is not whitelisted",  # noqa: E501
                 ),

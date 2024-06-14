@@ -23,7 +23,8 @@ class NotNullOnExistingColumn(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Not null on existing column",
                 ),
@@ -64,7 +65,8 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
 
                 self.violations.append(
                     linter.Violation(
-                        location=ancestors[statement_index].stmt_location,
+                        lineno=ancestors[statement_index].stmt_location,
+                        column_offset=linter.get_column_offset(ancestors, node),
                         statement=ancestors[statement_index],
                         description="Not null on new column with no static default",
                     ),
@@ -93,7 +95,8 @@ class VolatileDefaultOnNewColumn(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Volatile default on new column",
                 ),
@@ -122,7 +125,8 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Validated foreign key constraint on existing rows",
                 ),
@@ -151,7 +155,8 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Validated check constraint on existing rows",
                 ),
@@ -180,7 +185,8 @@ class UniqueConstraintCreatingNewIndex(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Unique constraint creating new index",
                 ),
@@ -209,7 +215,8 @@ class PrimaryKeyConstraintCreatingNewIndex(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Primary key constraint creating new index",
                 ),

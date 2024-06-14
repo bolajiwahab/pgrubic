@@ -14,14 +14,15 @@ class DropTablespace(linter.Checker):
     def visit_DropTableSpaceStmt(
         self,
         ancestors: ast.Node,
-        node: ast.DropTableSpaceStmt,  # noqa: ARG002
+        node: ast.DropTableSpaceStmt,
     ) -> None:
         """Visit DropTableSpaceStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
         self.violations.append(
             linter.Violation(
-                location=ancestors[statement_index].stmt_location,
+                lineno=ancestors[statement_index].stmt_location,
+                column_offset=linter.get_column_offset(ancestors, node),
                 statement=ancestors[statement_index],
                 description="Drop tablespace",
             ),
@@ -37,14 +38,15 @@ class DropDatabase(linter.Checker):
     def visit_DropdbStmt(
         self,
         ancestors: ast.Node,
-        node: ast.DropdbStmt,  # noqa: ARG002
+        node: ast.DropdbStmt,
     ) -> None:
         """Visit DropdbStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
         self.violations.append(
             linter.Violation(
-                location=ancestors[statement_index].stmt_location,
+                lineno=ancestors[statement_index].stmt_location,
+                column_offset=linter.get_column_offset(ancestors, node),
                 statement=ancestors[statement_index],
                 description="Drop database",
             ),
@@ -69,7 +71,8 @@ class DropSchema(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Drop schema is not safe.",
                 ),

@@ -23,7 +23,7 @@ class IsExtensionWhitelisted(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description=f"Extension '{node.extname}' is not whitelisted",
                 ),

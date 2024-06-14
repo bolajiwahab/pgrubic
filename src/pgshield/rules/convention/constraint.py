@@ -45,7 +45,7 @@ class NotNullColumn(linter.Checker):
             self._register_violation(
                 column=node.colname,
                 lineno=ancestors[statement_index].stmt_location,
-                column_offset=node.location,
+                column_offset=linter.get_column_offset(ancestors, node),
                 statement=ancestors[statement_index],
             )
 
@@ -65,6 +65,6 @@ class NotNullColumn(linter.Checker):
             self._register_violation(
                 column=node.name,
                 lineno=ancestors[statement_index].stmt_location,
-                column_offset=node.location,
+                column_offset=linter.get_column_offset(ancestors, node),
                 statement=ancestors[statement_index],
             )

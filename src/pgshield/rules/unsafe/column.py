@@ -23,7 +23,8 @@ class DropColumn(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Drop column",
                 ),
@@ -48,7 +49,8 @@ class ChangeColumnType(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Change column type",
                 ),
@@ -73,7 +75,8 @@ class RenameColumn(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Rename column",
                 ),
@@ -96,7 +99,8 @@ class AutoIncrementColumn(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Auto increment column",
                 ),
@@ -124,7 +128,8 @@ class AutoIncrementIdentityColumn(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Auto increment identity column",
                 ),
@@ -152,7 +157,8 @@ class StoredGeneratedColumn(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Stored generated column",
                 ),

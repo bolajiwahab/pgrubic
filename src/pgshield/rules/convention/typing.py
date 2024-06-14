@@ -26,7 +26,7 @@ class PreferTimestampWithTimezoneOverTimestampWithoutTimezone(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Prefer timestamp with timezone over timestamp without timezone",  # noqa: E501
                 ),
@@ -54,7 +54,7 @@ class PreferTimestampWithTimezoneOverTimeWithTimezone(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Prefer timestamp with timezone over time with timezone",  # noqa: E501
                 ),
@@ -82,7 +82,7 @@ class PreferEntireTimestampWithoutTimezone(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Prefer entire timestamp without timezone",
                 ),
@@ -110,7 +110,7 @@ class PreferEntireTimestampWithTimezone(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Prefer entire timestamp with timezone",
                 ),
@@ -138,7 +138,7 @@ class PreferTextOverChar(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Prefer text over char",
                 ),
@@ -166,7 +166,7 @@ class PreferTextOverVarChar(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Prefer text over varchar",
                 ),
@@ -194,7 +194,7 @@ class PreferNumericOverMoney(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Prefer numeric over money",
                 ),
@@ -222,7 +222,7 @@ class PreferIdentityColumnOverSerial(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Prefer identity column over serial",
                 ),
@@ -250,7 +250,7 @@ class PreferIdentityColumnOverBigSerial(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Prefer identity column over bigserial",
                 ),
@@ -278,7 +278,7 @@ class PreferJsonbOverJson(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Prefer jsonb over json",
                 ),
@@ -306,7 +306,7 @@ class PreferBigIntOverInt(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Prefer bigint over int",
                 ),
@@ -334,7 +334,7 @@ class PreferBigIntOverSmallInt(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Prefer bigint over smallint",
                 ),
@@ -364,7 +364,7 @@ class WronglyTypedRequiredColumn(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description=f"Column '{node.colname}' expected type is"
                                 f" '{self.config.required_columns[node.colname]}',"
@@ -395,7 +395,7 @@ class BlacklistedType(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description=f"Type '{node.typeName.names[-1].sval}' is blacklisted",
                 ),
@@ -423,11 +423,8 @@ class PreferIdentityColumnOverSmallSerial(linter.Checker):
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
-                    column_offset=node.location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Prefer identity column over smallserial",
                 ),
             )
-
-# contents[:loc].count('\n') + 1
-# line_end = contents.find('\n', loc)

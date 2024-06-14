@@ -23,7 +23,8 @@ class DropTable(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Drop table",
                 ),
@@ -48,7 +49,8 @@ class RenameTable(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Rename table",
                 ),
@@ -72,7 +74,8 @@ class TableMovementToTablespace(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Table movement to tablespace",
                 ),
@@ -97,7 +100,8 @@ class TablesMovementToTablespace(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Tables movement to tablespace",
                 ),
@@ -113,14 +117,15 @@ class Cluster(linter.Checker):
     def visit_ClusterStmt(
         self,
         ancestors: ast.Node,
-        node: ast.ClusterStmt,  # noqa: ARG002
+        node: ast.ClusterStmt,
     ) -> None:
         """Visit ClusterStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
         self.violations.append(
             linter.Violation(
-                location=ancestors[statement_index].stmt_location,
+                lineno=ancestors[statement_index].stmt_location,
+                column_offset=linter.get_column_offset(ancestors, node),
                 statement=ancestors[statement_index],
                 description="Cluster",
             ),
@@ -147,7 +152,8 @@ class VacuumFull(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Vacuum full",
                 ),
@@ -172,7 +178,8 @@ class NonConcurrentDetachPartition(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Non concurrent detach partition",
                 ),
@@ -197,7 +204,8 @@ class NonConcurrentRefreshMaterializedView(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    location=ancestors[statement_index].stmt_location,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description="Non concurrent refresh materialized view",
                 ),
@@ -213,14 +221,15 @@ class TruncateTable(linter.Checker):
     def visit_TruncateStmt(
         self,
         ancestors: ast.Node,
-        node: ast.TruncateStmt,  # noqa: ARG002
+        node: ast.TruncateStmt,
     ) -> None:
         """Visit TruncateStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
         self.violations.append(
             linter.Violation(
-                location=ancestors[statement_index].stmt_location,
+                lineno=ancestors[statement_index].stmt_location,
+                column_offset=linter.get_column_offset(ancestors, node),
                 statement=ancestors[statement_index],
                 description="Truncate table is not safe",
             ),

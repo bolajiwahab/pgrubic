@@ -127,3 +127,15 @@ def get_statement_index(ancestors: ast.Node) -> int:
 
     # The current node's parent is located two indexes from the end of the list.
     return len(nodes) - 2
+
+
+def get_column_offset(ancestors: ast.Node, node: ast.Node) -> int:
+    """Get column offset."""
+    if hasattr(node, "location"):
+        return typing.cast(int, node.location)
+
+    return typing.cast(
+        int,
+        ancestors[get_statement_index(ancestors)].stmt_location
+        + ancestors[get_statement_index(ancestors)].stmt_len,
+    )
