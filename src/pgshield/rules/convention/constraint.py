@@ -37,17 +37,28 @@ class NotNullColumn(linter.Checker):
         if (
             (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors)
             and node.colname in self.config.not_null_columns
-            and not node.is_not_null
         ):
 
-            statement_index: int = linter.get_statement_index(ancestors)
+            is_not_null = False
 
-            self._register_violation(
-                column=node.colname,
-                lineno=ancestors[statement_index].stmt_location,
-                column_offset=linter.get_column_offset(ancestors, node),
-                statement=ancestors[statement_index],
-            )
+            if node.constraints is not None:
+
+                for constraint in node.constraints:
+
+                    if constraint.contype == enums.ConstrType.CONSTR_NOTNULL:
+
+                        is_not_null = True
+
+            if not is_not_null:
+
+                statement_index: int = linter.get_statement_index(ancestors)
+
+                self._register_violation(
+                    column=node.colname,
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
+                    statement=ancestors[statement_index],
+                )
 
     def visit_AlterTableCmd(
         self,
@@ -67,4 +78,48 @@ class NotNullColumn(linter.Checker):
                 lineno=ancestors[statement_index].stmt_location,
                 column_offset=linter.get_column_offset(ancestors, node),
                 statement=ancestors[statement_index],
+            )
+
+
+class TableShouldHavePrimaryKey(linter.Checker):
+    """Table should have a primary key."""
+
+    name = "convention.table_should_have_primary_key"
+    code = "CVR002"
+
+    def visit_CreateStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.CreateStmt,
+    ) -> None:
+        """Visit CreateStmt."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        has_primary_key = False
+
+        for definition in node.tableElts:
+
+            if (
+                isinstance(definition, ast.Constraint)
+            ) and definition.contype == enums.ConstrType.CONSTR_PRIMARY:
+
+                has_primary_key = True
+
+            if isinstance(definition, ast.ColumnDef) and definition.constraints:
+
+                for constraint in definition.constraints:
+
+                    if constraint.contype == enums.ConstrType.CONSTR_PRIMARY:
+
+                        has_primary_key = True
+
+        if not has_primary_key:
+
+            self.violations.append(
+                linter.Violation(
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
+                    statement=ancestors[statement_index],
+                    description="Table should have a primary key",
+                ),
             )

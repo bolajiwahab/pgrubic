@@ -148,10 +148,10 @@ class SequenceNaming(linter.Checker):
             )
 
 
-class ConstraintShouldBeNamed(linter.Checker):
-    """Constraint should be named."""
+class PreferNamedConstraint(linter.Checker):
+    """Prefer named constraint."""
 
-    name = "convention.constraint_should_be_named"
+    name = "convention.prefer_named_constraint"
     code = "CVN005"
 
     def visit_Constraint(
@@ -169,6 +169,6 @@ class ConstraintShouldBeNamed(linter.Checker):
                     lineno=ancestors[statement_index].stmt_location,
                     column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
-                    description="Constraint should be named",
+                    description="Prefer named constraint",
                 ),
             )

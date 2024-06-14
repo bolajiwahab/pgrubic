@@ -118,7 +118,11 @@ class MissingRequiredColumn(linter.Checker):
 
         if node.tableElts:
 
-            given_columns: list[str] = [column.colname for column in node.tableElts]
+            given_columns: list[str] = [
+                column.colname
+                for column in node.tableElts
+                if isinstance(column, ast.ColumnDef)
+            ]
 
             for column in required_columns:
 
@@ -132,6 +136,7 @@ class MissingRequiredColumn(linter.Checker):
                             description=f"Column '{column}' is required",
                         ),
                     )
+
 
 class PreferLookUpTableOverEnum(linter.Checker):
     """Prefer look up table over enum."""
