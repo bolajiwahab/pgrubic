@@ -1,7 +1,8 @@
 [lint]
 # select = ["UNS*"]
-# ignore = ["CV*"]
+ignore = ["CV*"]
+include = ["test.sql", "new.sql"]
 schemas = ["partitions", "public"]
-# exclude = ["*test.sql"]
+exclude = ["*test.sql"]
 partition_strategies = ["range"]
 regex_constraint_check = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"

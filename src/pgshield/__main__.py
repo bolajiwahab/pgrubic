@@ -36,9 +36,19 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
     for source_path in source_paths:
 
-        if not any(
+        if (
+            not loaded_config.include
+            or any(
+                fnmatch.fnmatch(source_path, pattern)
+                for pattern in loaded_config.include
+            )
+        ) and not any(
             fnmatch.fnmatch(source_path, pattern) for pattern in loaded_config.exclude
         ):
+
+            # if not any(
+            #     fnmatch.fnmatch(source_path, pattern) for pattern in loaded_config.exclude
+            # ):
 
             # formatter.diff(source_path=source_path)
 

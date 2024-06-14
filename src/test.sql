@@ -35,8 +35,8 @@ ALTER TABLE public.ecdict alter deleted drop not null /* hello */ -- noqa: UNS02
 
 -- CREATE RULE notify_me AS ON UPDATE TO mytable DO ALSO NOTIFY mytable -- noqa: COV003
 -- ;
--- drop schema public -- noqa: UNS003
--- ;
+drop schema public
+;
 -- CREATE VIEW public."vista"
 --   AS SELECT 'Hello World';
 
