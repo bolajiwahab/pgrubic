@@ -1,6 +1,6 @@
 [lint]
 # select = ["CVS002", "CVI003"]
-ignore = ["CVI003"]
+ignore = ["CVR001", "CVR*"]
 schemas = ["partitions", "public"]
 partition_strategies = ["range"]
 regex_constraint_check = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"

@@ -1,6 +1,7 @@
 """Entry point."""
 
 import sys
+import fnmatch
 from collections import abc
 
 from pgshield import core
@@ -21,8 +22,12 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
     for rule in loaded_rules:
 
         if (
-            not loaded_config.select or rule.code in loaded_config.select
-        ) and rule.code not in loaded_config.ignore:
+            (not loaded_config.select or rule.code in loaded_config.select)
+            # and rule.code not in loaded_config.ignore
+            and not any(
+                fnmatch.fnmatch(rule.code, pattern) for pattern in loaded_config.ignore
+            )
+        ):
 
             linter.checkers.add(rule())
 
