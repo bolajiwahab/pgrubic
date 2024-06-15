@@ -3,7 +3,7 @@
 import sys
 import pathlib
 
-from pglast import parser, prettify  # type: ignore[import-untyped]
+from pglast import parser, prettify
 
 
 class Formatter:

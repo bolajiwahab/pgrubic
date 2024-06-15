@@ -3,8 +3,8 @@
 import typing
 from datetime import datetime
 
-from pglast import ast, enums  # type: ignore[import-untyped]
-from dateutil import relativedelta  # type: ignore[import-untyped]
+from pglast import ast, enums
+from dateutil import relativedelta
 
 from pgshield.core import linter
 
@@ -110,3 +110,6 @@ class PartitionStrategiesWhitelisted(linter.Checker):
                     description=f"Partitioning strategy '{self.partition_strategies_mapping[node.strategy]}' is not whitelisted",  # noqa: E501
                 ),
             )
+
+# partition elements
+# index elements

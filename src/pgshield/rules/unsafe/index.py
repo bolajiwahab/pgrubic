@@ -1,6 +1,6 @@
 """Unsafe index operations."""
 
-from pglast import ast, enums, stream  # type: ignore[import-untyped]
+from pglast import ast, enums, stream
 
 from pgshield.core import linter
 

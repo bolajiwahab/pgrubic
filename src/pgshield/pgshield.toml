@@ -7,7 +7,10 @@ schemas = []
 extensions = []
 partition_strategies = []
 
-required_columns = { created = "timestamptz", updated = "timestamptz" }
+fix = true
+unsafe_fixes = true
+
+required_columns = { created = "timestamptz", updated = "pg_catalog.bool" }
 
 not_null_columns = ["created", "updated", "deleted", "deleted_by"]
 blacklisted_types = []

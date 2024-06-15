@@ -2,7 +2,7 @@
 
 import re
 
-from pglast import ast, stream  # type: ignore[import-untyped]
+from pglast import ast, stream
 
 from pgshield.core import linter
 
@@ -10,8 +10,10 @@ from pgshield.core import linter
 class PreferNonSQLASCIIEncoding(linter.Checker):
     """Prefer non sql_ascii encoding."""
 
-    name = "convention.prefer_non_sql_ascii_encoding"
-    code = "CVG001"
+    name: str = "convention.prefer_non_sql_ascii_encoding"
+    code: str = "CVG001"
+
+    fixable: bool = False
 
     def visit_CreatedbStmt(
         self,
@@ -53,8 +55,10 @@ class PreferNonSQLASCIIEncoding(linter.Checker):
 class PreferDeclarativePartitioningToTableInheritance(linter.Checker):
     """Prefer declarative partitioning to table inheritance."""
 
-    name = "convention.prefer_declarative_partitioning_to_table_inheritance"
-    code = "CVG002"
+    name: str = "convention.prefer_declarative_partitioning_to_table_inheritance"
+    code: str = "CVG002"
+
+    fixable: bool = False
 
     def visit_CreateStmt(
         self,
@@ -62,9 +66,9 @@ class PreferDeclarativePartitioningToTableInheritance(linter.Checker):
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         if node.inhRelations and not node.partbound:
+
+            statement_index: int = linter.get_statement_index(ancestors)
 
             self.violations.append(
                 linter.Violation(
@@ -79,8 +83,10 @@ class PreferDeclarativePartitioningToTableInheritance(linter.Checker):
 class PreferTriggerOverRule(linter.Checker):
     """Prefer trigger over rule."""
 
-    name = "convention.prefer_trigger_over_rule"
-    code = "CVG003"
+    name: str = "convention.prefer_trigger_over_rule"
+    code: str = "CVG003"
+
+    fixable: bool = False
 
     def visit_RuleStmt(
         self,
@@ -103,8 +109,10 @@ class PreferTriggerOverRule(linter.Checker):
 class MissingRequiredColumn(linter.Checker):
     """Missing required column."""
 
-    name = "convention.missing_required_column"
-    code = "CVG004"
+    name: str = "convention.missing_required_column"
+    code: str = "CVG004"
+
+    fixable: bool = True
 
     def visit_CreateStmt(
         self,
@@ -112,11 +120,11 @@ class MissingRequiredColumn(linter.Checker):
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         required_columns: list[str] = list(self.config.required_columns.keys())
 
         if node.tableElts:
+
+            statement_index: int = linter.get_statement_index(ancestors)
 
             given_columns: list[str] = [
                 column.colname
@@ -136,6 +144,73 @@ class MissingRequiredColumn(linter.Checker):
                             description=f"Column '{column}' is required",
                         ),
                     )
+
+                    if self.config.fix is True:
+
+                        node.tableElts = (
+                            *node.tableElts,
+                            ast.ColumnDef(
+                                colname=column,
+                                typeName=ast.TypeName(
+                                    names=(
+                                        {"@": "String", "sval": "timestamp"}, # need to fetch from dictionary
+                                    ),
+                                ),
+                                # typemod=-1,
+                            ),
+                        )
+
+            # b = ast.ColumnDef()
+            # b.colname = "created"
+            # b.typeName = ast.TypeName(names=("timestamp",))
+            # print(b(depth=1, skip_none=True))
+            # ast.Constraint()
+            # # ast.TypeName()
+            # if self.config.fix:
+            #     node.tableElts = (
+            #         {
+            #             "@": "ColumnDef",
+            #             "colname": f"{column}",
+            #             "typeName": {
+            #                 "@": "TypeName",
+            #                 "names": ({"@": "String", "sval": "pg_catalog"}, {"@": "String", "sval": "timestamp"}),
+            #             },
+            #             "typemod": -1,
+            #             # "contype": {"#": "ConstrType", "name": "CONSTR_NOTNULL"},
+            #         },
+            #     )
+            # print(node.tableElts)
+
+            # ({'@': 'ColumnDef',
+            #     'colname': 'K_1',
+            #     'generated': '\x00',
+            #     'identity': '\x00',
+            #     'inhcount': 0,
+            #     'is_from_type': False,
+            #     'is_local': True,
+            #     'is_not_null': False,
+            #     'location': 29,
+            #     'storage': '\x00',
+            #     'typeName': {'@': 'TypeName',
+            #                  'location': 35,
+            #                  'names': ({'@': 'String', 'val': 'pg_catalog'},
+            #                            {'@': 'String', 'val': 'int4'}),
+            #                  'pct_type': False,
+            #                  'setof': False,
+            #                  'typemod': -1}},)}
+
+            # node.constraints = (
+            #     {
+            #         "@": "Constraint",
+            #         "contype": {"#": "ConstrType", "name": "CONSTR_NOTNULL"},
+            #     },
+            # )
+
+
+#     __slots__ = {'colname': 'char*', 'typeName': 'TypeName*', 'compression': 'char*', 'inhcount': 'int', 'is_local': 'bool', 'is_not_null': 'bool', 'is_from_type': 'bool', 'storage': 'char', 'storage_name': 'char*', 'raw_default': 'Node*', 'cooked_default': 'Node*', 'identity': 'char', 'identitySequence': 'RangeVar*', 'generated': 'char', 'collClause': 'CollateClause*', 'constraints': 'List*', 'fdwoptions': 'List*', 'location': 'int'}  # noqa: E501
+#     __slots__ = {'contype': 'ConstrType', 'conname': 'char*', 'deferrable': 'bool', 'initdeferred': 'bool', 'location': 'int', 'is_no_inherit': 'bool', 'raw_expr': 'Node*', 'cooked_expr': 'char*', 'generated_when': 'char', 'nulls_not_distinct': 'bool', 'keys': 'List*', 'including': 'List*', 'exclusions': 'List*', 'options': 'List*', 'indexname': 'char*', 'indexspace': 'char*', 'reset_default_tblspc': 'bool', 'access_method': 'char*', 'where_clause': 'Node*', 'pktable': 'RangeVar*', 'fk_attrs': 'List*', 'pk_attrs': 'List*', 'fk_matchtype': 'char', 'fk_upd_action': 'char', 'fk_del_action': 'char', 'fk_del_set_cols': 'List*', 'old_conpfeqop': 'List*', 'skip_validation': 'bool', 'initially_valid': 'bool'}  # noqa: E501
+
+# node.subtype = enums.AlterTableType.AT_SetNotNull
 
 
 class PreferLookUpTableOverEnum(linter.Checker):

@@ -5,7 +5,7 @@ import typing
 import functools
 from collections import abc
 
-from pglast import parser  # type: ignore[import-untyped]
+from pglast import parser
 
 from pgshield.core import errors, linter
 

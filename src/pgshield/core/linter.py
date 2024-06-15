@@ -5,7 +5,7 @@ import typing
 import pathlib
 import dataclasses
 
-from pglast import ast, parser, stream, visitors  # type: ignore[import-untyped]
+from pglast import ast, parser, stream, visitors
 
 from pgshield.core import noqa, config
 
@@ -25,6 +25,7 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
 
     name: str
     code: str
+    fixable: bool
 
     def __init__(self) -> None:
         """Init."""

@@ -4,7 +4,7 @@ import typing
 import inspect
 import importlib
 
-from pgshield import rule_directories
+from pgshield import RULE_DIRECTORIES
 from pgshield.core import noqa, errors, linter
 
 
@@ -12,7 +12,7 @@ def load_rules() -> list[linter.Checker]:
     """Load rules."""
     rules: list[linter.Checker] = []
 
-    for directory in rule_directories:
+    for directory in RULE_DIRECTORIES:
 
         module = importlib.import_module(directory)
 

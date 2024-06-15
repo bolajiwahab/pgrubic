@@ -2,7 +2,7 @@
 
 import re
 
-from pglast import ast, enums  # type: ignore[import-untyped]
+from pglast import ast, enums
 
 from pgshield.core import linter
 

@@ -100,7 +100,7 @@ class DropColumn(Visitor):  # type: ignore[misc]
         node: ast.Node,
     ) -> None:
         """Visit AlterTableCmd."""
-        print(node)
+        # print(node)
         # print(node.typeName.names)
         # for option in node.typeName.names:
         #     print(stream.RawStream()(option))
@@ -157,19 +157,17 @@ print(raw)
 #     if a.name == "SQL_COMMENT":
 #         print(a)
 DropColumn()(raw)
-# print(stream.RawStream()(raw))
-# print(raw)
-# print(raw)
-# EnsureNoNotNullOnExistingColumn()(raw)
-# EnsureNoNotNullOnExistingColumn()(raw)
-# EnsureConstantDefaultForExistingColumn()(raw)
-# EnsureConstantDefaultForNewColumn()(raw)
-# EnsureNoNotNullNonConstantDefaultOnNewColumn()(raw)
 
-# removing a column
-# changing the type of a column
-# renaming a column
-# renaming a table
-# adding an auto-incrementing column
-# adding a stored generated column
-# adding a check constraint
+sql = 'update translations set italian=$2 where word=$1'
+print(prettify(sql))
+from pglast.printers import node_printer
+
+@node_printer(ast.ParamRef, override=True)
+def replace_param_ref(node, output):
+    output.write(repr(args[node.number - 1]))
+
+args = ["Hello", "Ciao"]
+print(prettify(sql, safety_belt=False))
+
+clone = ast.SelectStmt(stmt())
+clone is stmt

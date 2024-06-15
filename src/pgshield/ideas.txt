@@ -1,14 +1,14 @@
 # prevent missing rule numbers
 
-# config to exclude certain files from the check e.g init.sql - should happen at the source file registration to skip
-# exclude rules on pattern matching such as CV*, UN* to skip all rules under such namespace
-
+# partition elements > 1 raise violation
+# index elements > 3 raise violation
+# foreign key -- no cascade
 
 # partition schema ?
 # split schemas into type and schema
 
 **********************
-
+We do not support custom schema qualified types
 ****************
 # column that has date should be typed date?
 # column that has at should be typed timestamptz?
@@ -37,8 +37,6 @@ enable once service is rfc compliant
 
 -- schemas.partitions []
 -- schemas.tables[] -- not supported
-
--- if identifier starts with pg_
 
 [
     "test": {

@@ -4,9 +4,9 @@ import typing
 import pathlib
 import dataclasses
 
-import toml  # type: ignore[import-untyped]
+import toml
 
-from pgshield import config_file, default_config
+from pgshield import CONFIG_FILE, DEFAULT_CONFIG
 from pgshield.core import errors
 
 
@@ -25,6 +25,9 @@ class Config:
     not_null_columns: list[str]
     blacklisted_types: list[str]
 
+    fix: bool
+    unsafe_fixes: bool
+
     regex_partition: str
     regex_index: str
     regex_constraint_primary_key: str
@@ -38,12 +41,12 @@ class Config:
 
 def load_default_config() -> dict[str, typing.Any]:
     """Load default config."""
-    return dict(toml.load(default_config))
+    return dict(toml.load(DEFAULT_CONFIG))
 
 
 def load_user_config() -> dict[str, typing.Any]:
     """Load config from from absolute path config file."""
-    absolute_path_config_file = _get_absolute_path_config_file(config_file)
+    absolute_path_config_file = _get_absolute_path_config_file(CONFIG_FILE)
 
     if absolute_path_config_file:
 

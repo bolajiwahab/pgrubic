@@ -1,6 +1,6 @@
 """Unsafe constraint operations."""
 
-from pglast import ast, enums  # type: ignore[import-untyped]
+from pglast import ast, enums
 
 from pgshield.core import linter
 
@@ -109,6 +109,8 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):
     name = "unsafe.validated_foreign_key_constraint_on_existing_rows"
     code = "USR004"
 
+    fixable = True
+
     def visit_Constraint(
         self,
         ancestors: ast.Node,
@@ -132,6 +134,9 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):
                 ),
             )
 
+            if self.config.fix is True:
+
+                node.skip_validation = True
 
 class ValidatedCheckConstraintOnExistingRows(linter.Checker):
     """Validated check constraint on existing rows."""

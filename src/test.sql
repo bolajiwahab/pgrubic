@@ -1,14 +1,17 @@
-CREATE TABLE measurement (
+CREATE TABLE public.measurement (
     city_id         bigint not null,
-    updated         timestamptz,
-    created         timestamptz,
-    constraint measurement_city_id_updated_key primary key(city_id, updated)
+    updated         boolean,
+    -- created         timestamptz check (created > updated) not null,
+    constraint measurement_city_id_updated_pkey primary key(city_id, updated)
 )
 ;
 
-create table ecdict();
-ALTER TABLE public.ecdict alter deleted drop not null /* hello */ -- noqa: UNS021, UNS019
-;
+-- -- create table ecdict();
+-- ALTER TABLE public.ecdict alter deleted drop not null /* hello */ -- noqa: UNS021, UNS019
+-- ;
+
+-- ALTER TABLE public.ecdic2 alter deleted set not null /* hello */ -- noqa: UNS021, UNS019
+-- ;
 
 
 -- select created, updated from tbl;
@@ -35,8 +38,8 @@ ALTER TABLE public.ecdict alter deleted drop not null /* hello */ -- noqa: UNS02
 
 -- CREATE RULE notify_me AS ON UPDATE TO mytable DO ALSO NOTIFY mytable -- noqa: COV003
 -- ;
-drop schema public
-;
+-- drop schema public
+-- ;
 -- CREATE VIEW public."vista"
 --   AS SELECT 'Hello World';
 

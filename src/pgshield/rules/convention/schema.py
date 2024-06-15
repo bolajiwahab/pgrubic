@@ -3,7 +3,7 @@
 import re
 import abc
 
-from pglast import ast, stream  # type: ignore[import-untyped]
+from pglast import ast, stream
 
 from pgshield.core import linter
 

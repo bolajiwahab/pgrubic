@@ -1,7 +1,8 @@
 """Convention for typing."""
 
-from pglast import ast  # type: ignore[import-untyped]
+from pglast import ast
 
+from pgshield import SCHEMA_QUALIFIED_TYPE, system_types
 from pgshield.core import linter
 
 
@@ -21,6 +22,7 @@ class PreferTimestampWithTimezoneOverTimestampWithoutTimezone(linter.Checker):
 
         if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
             node.typeName.names[-1].sval == "timestamp"
+            and node.typeName.names[0].sval == "pg_catalog"
         ):
 
             self.violations.append(
@@ -31,6 +33,10 @@ class PreferTimestampWithTimezoneOverTimestampWithoutTimezone(linter.Checker):
                     description="Prefer timestamp with timezone over timestamp without timezone",  # noqa: E501
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.typeName.names[-1].sval = "timestamptz"
 
 
 class PreferTimestampWithTimezoneOverTimeWithTimezone(linter.Checker):
@@ -347,17 +353,30 @@ class WronglyTypedRequiredColumn(linter.Checker):
     name = "convention.wrongly_typed_required_column"
     code = "CVT013"
 
+    fixable = True
+
     def visit_ColumnDef(
-    self,
-    ancestors: ast.Node,
-    node: ast.ColumnDef,
+        self,
+        ancestors: ast.Node,
+        node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
         if (
             (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors)
             and node.colname in self.config.required_columns
-            and node.typeName.names[-1].sval != self.config.required_columns[node.colname]  # noqa: E501
+            and ".".join(a.sval for a in node.typeName.names)
+            != system_types.get(
+                self.config.required_columns[node.colname],
+                self.config.required_columns[node.colname],
+            )
         ):
+
+            expected_type = system_types.get(
+                self.config.required_columns[node.colname],
+                self.config.required_columns[node.colname],
+            ).split(".")
+
+            given_type = ".".join(a.sval for a in node.typeName.names)
 
             statement_index: int = linter.get_statement_index(ancestors)
 
@@ -367,10 +386,19 @@ class WronglyTypedRequiredColumn(linter.Checker):
                     column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
                     description=f"Column '{node.colname}' expected type is"
-                                f" '{self.config.required_columns[node.colname]}',"
-                                f" found '{node.typeName.names[-1].sval}'",
+                    f" '{self.config.required_columns[node.colname]}',"
+                    f" found '{system_types.get(given_type, given_type)}'",
                 ),
             )
+
+            if (
+                self.config.fix is True
+                and len(node.typeName.names) == SCHEMA_QUALIFIED_TYPE
+                and len(expected_type) == SCHEMA_QUALIFIED_TYPE
+            ):
+
+                node.typeName.names[0].sval = expected_type[0]
+                node.typeName.names[1].sval = expected_type[1]
 
 
 class BlacklistedType(linter.Checker):
@@ -380,15 +408,14 @@ class BlacklistedType(linter.Checker):
     code = "CVT014"
 
     def visit_ColumnDef(
-    self,
-    ancestors: ast.Node,
-    node: ast.ColumnDef,
+        self,
+        ancestors: ast.Node,
+        node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
         if (
-            (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors)
-            and node.typeName.names[-1].sval in self.config.blacklisted_types
-        ):
+            ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors
+        ) and node.typeName.names[-1].sval in self.config.blacklisted_types:
 
             statement_index: int = linter.get_statement_index(ancestors)
 

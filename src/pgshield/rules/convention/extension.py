@@ -1,5 +1,6 @@
 """Whitelisted extensions."""
-from pglast import ast  # type: ignore[import-untyped]
+
+from pglast import ast
 
 from pgshield.core import linter
 
@@ -7,8 +8,10 @@ from pgshield.core import linter
 class IsExtensionWhitelisted(linter.Checker):
     """Is extension whitelisted."""
 
-    name = "convention.is_extension_whitelisted"
-    code = "CVE001"
+    name: str = "convention.is_extension_whitelisted"
+    code: str = "CVE001"
+
+    fixable: bool = False
 
     def visit_CreateExtensionStmt(
         self,

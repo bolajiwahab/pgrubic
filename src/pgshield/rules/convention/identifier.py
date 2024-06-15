@@ -3,7 +3,7 @@
 import abc
 
 import inflection
-from pglast import ast, keywords  # type: ignore[import-untyped]
+from pglast import ast, keywords
 
 from pgshield.core import linter
 
@@ -357,7 +357,7 @@ class IsPostgresPrefixInIdentifier(_Identifier):
         statement: str,
     ) -> None:
         """Check that identifier does not start with pg_."""
-        if identifier.startswith("pg_"):
+        if identifier and identifier.startswith("pg_"):
 
             self.violations.append(
                 linter.Violation(
