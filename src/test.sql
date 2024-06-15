@@ -1,6 +1,6 @@
 CREATE TABLE public.measurement (
     city_id         bigint not null,
-    updated         boolean,
+    updated         timestamp with time zone,
     -- created         timestamptz check (created > updated) not null,
     constraint measurement_city_id_updated_pkey primary key(city_id, updated)
 )

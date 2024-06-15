@@ -156,61 +156,8 @@ class MissingRequiredColumn(linter.Checker):
                                         {"@": "String", "sval": "timestamp"}, # need to fetch from dictionary
                                     ),
                                 ),
-                                # typemod=-1,
                             ),
                         )
-
-            # b = ast.ColumnDef()
-            # b.colname = "created"
-            # b.typeName = ast.TypeName(names=("timestamp",))
-            # print(b(depth=1, skip_none=True))
-            # ast.Constraint()
-            # # ast.TypeName()
-            # if self.config.fix:
-            #     node.tableElts = (
-            #         {
-            #             "@": "ColumnDef",
-            #             "colname": f"{column}",
-            #             "typeName": {
-            #                 "@": "TypeName",
-            #                 "names": ({"@": "String", "sval": "pg_catalog"}, {"@": "String", "sval": "timestamp"}),
-            #             },
-            #             "typemod": -1,
-            #             # "contype": {"#": "ConstrType", "name": "CONSTR_NOTNULL"},
-            #         },
-            #     )
-            # print(node.tableElts)
-
-            # ({'@': 'ColumnDef',
-            #     'colname': 'K_1',
-            #     'generated': '\x00',
-            #     'identity': '\x00',
-            #     'inhcount': 0,
-            #     'is_from_type': False,
-            #     'is_local': True,
-            #     'is_not_null': False,
-            #     'location': 29,
-            #     'storage': '\x00',
-            #     'typeName': {'@': 'TypeName',
-            #                  'location': 35,
-            #                  'names': ({'@': 'String', 'val': 'pg_catalog'},
-            #                            {'@': 'String', 'val': 'int4'}),
-            #                  'pct_type': False,
-            #                  'setof': False,
-            #                  'typemod': -1}},)}
-
-            # node.constraints = (
-            #     {
-            #         "@": "Constraint",
-            #         "contype": {"#": "ConstrType", "name": "CONSTR_NOTNULL"},
-            #     },
-            # )
-
-
-#     __slots__ = {'colname': 'char*', 'typeName': 'TypeName*', 'compression': 'char*', 'inhcount': 'int', 'is_local': 'bool', 'is_not_null': 'bool', 'is_from_type': 'bool', 'storage': 'char', 'storage_name': 'char*', 'raw_default': 'Node*', 'cooked_default': 'Node*', 'identity': 'char', 'identitySequence': 'RangeVar*', 'generated': 'char', 'collClause': 'CollateClause*', 'constraints': 'List*', 'fdwoptions': 'List*', 'location': 'int'}  # noqa: E501
-#     __slots__ = {'contype': 'ConstrType', 'conname': 'char*', 'deferrable': 'bool', 'initdeferred': 'bool', 'location': 'int', 'is_no_inherit': 'bool', 'raw_expr': 'Node*', 'cooked_expr': 'char*', 'generated_when': 'char', 'nulls_not_distinct': 'bool', 'keys': 'List*', 'including': 'List*', 'exclusions': 'List*', 'options': 'List*', 'indexname': 'char*', 'indexspace': 'char*', 'reset_default_tblspc': 'bool', 'access_method': 'char*', 'where_clause': 'Node*', 'pktable': 'RangeVar*', 'fk_attrs': 'List*', 'pk_attrs': 'List*', 'fk_matchtype': 'char', 'fk_upd_action': 'char', 'fk_del_action': 'char', 'fk_del_set_cols': 'List*', 'old_conpfeqop': 'List*', 'skip_validation': 'bool', 'initially_valid': 'bool'}  # noqa: E501
-
-# node.subtype = enums.AlterTableType.AT_SetNotNull
 
 
 class PreferLookUpTableOverEnum(linter.Checker):
