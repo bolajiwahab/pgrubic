@@ -13,7 +13,7 @@ class PreferNonSQLASCIIEncoding(linter.Checker):
     name: str = "convention.prefer_non_sql_ascii_encoding"
     code: str = "CVG001"
 
-    fixable: bool = False
+    is_auto_fixable: bool = False
 
     def visit_CreatedbStmt(
         self,
@@ -58,7 +58,7 @@ class PreferDeclarativePartitioningToTableInheritance(linter.Checker):
     name: str = "convention.prefer_declarative_partitioning_to_table_inheritance"
     code: str = "CVG002"
 
-    fixable: bool = False
+    is_auto_fixable: bool = False
 
     def visit_CreateStmt(
         self,
@@ -86,7 +86,7 @@ class PreferTriggerOverRule(linter.Checker):
     name: str = "convention.prefer_trigger_over_rule"
     code: str = "CVG003"
 
-    fixable: bool = False
+    is_auto_fixable: bool = False
 
     def visit_RuleStmt(
         self,
@@ -112,7 +112,7 @@ class MissingRequiredColumn(linter.Checker):
     name: str = "convention.missing_required_column"
     code: str = "CVG004"
 
-    fixable: bool = True
+    is_auto_fixable: bool = True
 
     def visit_CreateStmt(
         self,
@@ -120,8 +120,6 @@ class MissingRequiredColumn(linter.Checker):
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""
-        required_columns: list[str] = list(self.config.required_columns.keys())
-
         if node.tableElts:
 
             statement_index: int = linter.get_statement_index(ancestors)
@@ -132,7 +130,7 @@ class MissingRequiredColumn(linter.Checker):
                 if isinstance(column, ast.ColumnDef)
             ]
 
-            for column in required_columns:
+            for column, data_type in self.config.required_columns.items():
 
                 if column not in given_columns:
 
@@ -153,7 +151,10 @@ class MissingRequiredColumn(linter.Checker):
                                 colname=column,
                                 typeName=ast.TypeName(
                                     names=(
-                                        {"@": "String", "sval": "timestamp"}, # need to fetch from dictionary
+                                        {
+                                            "@": "String",
+                                            "sval": data_type,
+                                        },
                                     ),
                                 ),
                             ),
@@ -165,6 +166,8 @@ class PreferLookUpTableOverEnum(linter.Checker):
 
     name = "convention.prefer_look_up_table_over_enum"
     code = "CVG005"
+
+    is_auto_fixable: bool = False
 
     def visit_CreateEnumStmt(
         self,

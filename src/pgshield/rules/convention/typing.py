@@ -353,7 +353,7 @@ class WronglyTypedRequiredColumn(linter.Checker):
     name = "convention.wrongly_typed_required_column"
     code = "CVT013"
 
-    fixable = True
+    is_auto_fixable = True
 
     def visit_ColumnDef(
         self,

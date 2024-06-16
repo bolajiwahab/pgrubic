@@ -13,6 +13,8 @@ class IndexNaming(linter.Checker):
     name = "convention.index_naming"
     code = "CVN001"
 
+    is_auto_fixable: bool = False
+
     def visit_IndexStmt(
         self,
         ancestors: ast.Node,
@@ -41,6 +43,8 @@ class ConstraintNaming(linter.Checker):
 
     name = "convention.constraint_naming"
     code = "CVN002"
+
+    is_auto_fixable: bool = False
 
     def visit_Constraint(
         self,
@@ -95,6 +99,8 @@ class PartionNaming(linter.Checker):
     name = "convention.partition_naming"
     code = "CVN003"
 
+    is_auto_fixable: bool = False
+
     def visit_CreateStmt(
         self,
         ancestors: ast.Node,
@@ -125,6 +131,8 @@ class SequenceNaming(linter.Checker):
     name = "convention.sequence_naming"
     code = "CVN004"
 
+    is_auto_fixable: bool = False
+
     def visit_CreateSeqStmt(
         self,
         ancestors: ast.Node,
@@ -153,6 +161,8 @@ class PreferNamedConstraint(linter.Checker):
 
     name = "convention.prefer_named_constraint"
     code = "CVN005"
+
+    is_auto_fixable: bool = False
 
     def visit_Constraint(
         self,

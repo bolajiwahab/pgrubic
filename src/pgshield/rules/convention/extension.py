@@ -11,7 +11,7 @@ class IsExtensionWhitelisted(linter.Checker):
     name: str = "convention.is_extension_whitelisted"
     code: str = "CVE001"
 
-    fixable: bool = False
+    is_auto_fixable: bool = False
 
     def visit_CreateExtensionStmt(
         self,

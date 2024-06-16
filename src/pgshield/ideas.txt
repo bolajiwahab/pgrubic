@@ -1,5 +1,7 @@
 # prevent missing rule numbers
 
+##### finish up with fixes tomorrow
+
 # partition elements > 1 raise violation
 # index elements > 3 raise violation
 # foreign key -- no cascade

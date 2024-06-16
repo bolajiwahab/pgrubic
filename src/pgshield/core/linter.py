@@ -25,7 +25,7 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
 
     name: str
     code: str
-    fixable: bool
+    is_auto_fixable: bool
 
     def __init__(self) -> None:
         """Init."""

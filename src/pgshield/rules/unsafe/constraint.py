@@ -109,7 +109,7 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):
     name = "unsafe.validated_foreign_key_constraint_on_existing_rows"
     code = "USR004"
 
-    fixable = True
+    is_auto_fixable = True
 
     def visit_Constraint(
         self,

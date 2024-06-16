@@ -126,6 +126,8 @@ class SchemaQualified(_Schema):
     name = "convention.schema_qualified"
     code = "CVS001"
 
+    is_auto_fixable: bool = False
+
     def _check_schema(
         self,
         schema_name: str | None,
@@ -151,6 +153,8 @@ class SchemasWhitelisted(_Schema):
 
     name = "convention.whitelisted_schemas"
     code = "CVS002"
+
+    is_auto_fixable: bool = False
 
     def _check_schema(
         self,

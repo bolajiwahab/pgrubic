@@ -11,7 +11,7 @@ class NotNullColumn(linter.Checker):
     name: str = "convention.not_null_column"
     code: str = "CVR001"
 
-    fixable: bool = True
+    is_auto_fixable: bool = True
 
     def _register_violation(
         self,
@@ -101,7 +101,7 @@ class TableShouldHavePrimaryKey(linter.Checker):
     name: str = "convention.table_should_have_primary_key"
     code: str = "CVR002"
 
-    fixable: bool = False
+    is_auto_fixable: bool = False
 
     def _check_for_table_level_primary_key(
         self,
