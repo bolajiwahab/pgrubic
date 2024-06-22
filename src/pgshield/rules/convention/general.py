@@ -185,3 +185,63 @@ class PreferLookUpTableOverEnum(linter.Checker):
                 description="Prefer look up table over enum",
             ),
         )
+
+
+class PreferIndexElementsUpToThree(linter.Checker):
+    """Prefer index elements up to three."""
+
+    name = "convention.prefer_index_elements_up_to_three"
+    code = "CVG006"
+
+    is_auto_fixable: bool = False
+
+    def visit_IndexStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.IndexStmt,
+    ) -> None:
+        """Visit IndexStmt."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        max_index_elements = 3
+
+        if len(node.indexParams) > max_index_elements:
+
+            self.violations.append(
+                linter.Violation(
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
+                    statement=ancestors[statement_index],
+                    description="Prefer index elements up to three",
+                ),
+            )
+
+
+class PreferPartitioningByOneKey(linter.Checker):
+    """Prefer partitioning by one key."""
+
+    name = "convention.prefer_partitioning_by_one_key"
+    code = "CVG007"
+
+    is_auto_fixable: bool = False
+
+    def visit_PartitionSpec(
+        self,
+        ancestors: ast.Node,
+        node: ast.PartitionSpec,
+    ) -> None:
+        """Visit PartitionSpec."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        max_partition_elements = 1
+
+        if len(node.partParams) > max_partition_elements:
+
+            self.violations.append(
+                linter.Violation(
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
+                    statement=ancestors[statement_index],
+                    description="Prefer partitioning by one key",
+                ),
+            )

@@ -37,7 +37,7 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
             default_factory=lambda: config.Config(**config.load_default_config()),
         )
 
-    required_attributes: tuple[str, ...] = ("name", "code")
+    required_attributes: tuple[str, ...] = ("name", "code", "is_auto_fixable")
 
     def __init_subclass__(cls, **kwargs: typing.Any) -> None:
         """Check required attributes."""

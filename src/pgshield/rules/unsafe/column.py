@@ -11,6 +11,8 @@ class DropColumn(linter.Checker):
     name = "unsafe.drop_column"
     code = "USC001"
 
+    is_auto_fixable: bool = False
+
     def visit_AlterTableCmd(
         self,
         ancestors: ast.Node,
@@ -36,6 +38,8 @@ class ChangeColumnType(linter.Checker):
 
     name = "unsafe.change_column_type"
     code = "USC002"
+
+    is_auto_fixable: bool = False
 
     def visit_AlterTableCmd(
         self,
@@ -63,6 +67,8 @@ class RenameColumn(linter.Checker):
     name = "unsafe.rename_column"
     code = "USC003"
 
+    is_auto_fixable: bool = False
+
     def visit_RenameStmt(
         self,
         ancestors: ast.Node,
@@ -89,6 +95,8 @@ class AutoIncrementColumn(linter.Checker):
     name = "unsafe.auto_increment_column"
     code = "USC004"
 
+    is_auto_fixable: bool = False
+
     def visit_ColumnDef(self, ancestors: ast.Node, node: ast.ColumnDef) -> None:
         """Visit ColumnDef."""
         statement_index: int = linter.get_statement_index(ancestors)
@@ -112,6 +120,8 @@ class AutoIncrementIdentityColumn(linter.Checker):
 
     name = "unsafe.auto_increment_identity_column"
     code = "USC005"
+
+    is_auto_fixable: bool = False
 
     def visit_Constraint(
         self,
@@ -141,6 +151,8 @@ class StoredGeneratedColumn(linter.Checker):
 
     name = "unsafe.stored_generated_column"
     code = "USC006"
+
+    is_auto_fixable: bool = False
 
     def visit_Constraint(
         self,

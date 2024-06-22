@@ -15,6 +15,8 @@ class GapInRangePartitionBound(linter.Checker):
     name = "convention.gap_in_range_partition_bound"
     code = "CVP001"
 
+    is_auto_fixable: bool = False
+
     def visit_PartitionBoundSpec(
         self,
         ancestors: ast.Node,
@@ -41,18 +43,22 @@ class GapInRangePartitionBound(linter.Checker):
                 upper_bound,
                 lower_bound,
             ).hours
+
             difference_in_days = relativedelta.relativedelta(
                 upper_bound,
                 lower_bound,
             ).days
+
             difference_in_weeks = relativedelta.relativedelta(
                 upper_bound,
                 lower_bound,
             ).weeks
+
             difference_in_months = relativedelta.relativedelta(
                 upper_bound,
                 lower_bound,
             ).months
+
             difference_in_years = relativedelta.relativedelta(
                 upper_bound,
                 lower_bound,
@@ -82,6 +88,8 @@ class PartitionStrategiesWhitelisted(linter.Checker):
     name = "convention.whitelisted_partition_strategies"
     code = "CVP002"
 
+    is_auto_fixable: bool = False
+
     partition_strategies_mapping: typing.ClassVar[dict[str, str]] = {
         "l": "list",
         "r": "range",
@@ -110,6 +118,3 @@ class PartitionStrategiesWhitelisted(linter.Checker):
                     description=f"Partitioning strategy '{self.partition_strategies_mapping[node.strategy]}' is not whitelisted",  # noqa: E501
                 ),
             )
-
-# partition elements
-# index elements

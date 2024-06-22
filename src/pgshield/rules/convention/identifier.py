@@ -9,11 +9,12 @@ from pgshield.core import linter
 
 
 class _Identifier(abc.ABC, linter.Checker):
-    """Get identifiers."""
+    """Base class for identifiers."""
 
     # To be overridden by subclasses
     name = ""
     code = ""
+    is_auto_fixable: bool = False
 
     @abc.abstractmethod
     def _check_identifier(

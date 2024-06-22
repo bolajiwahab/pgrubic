@@ -12,8 +12,9 @@ class _Schema(abc.ABC, linter.Checker):
     """Schema details for table, types, functions, sequences, views."""
 
     # To be overridden by subclasses
-    name = ""
-    code = ""
+    name: str = ""
+    code: str = ""
+    is_auto_fixable: bool = False
 
     @abc.abstractmethod
     def _check_schema(

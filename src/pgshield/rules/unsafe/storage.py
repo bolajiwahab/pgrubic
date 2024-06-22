@@ -11,6 +11,8 @@ class DropTablespace(linter.Checker):
     name = "unsafe.drop_tablespace"
     code = "UNS001"
 
+    is_auto_fixable: bool = False
+
     def visit_DropTableSpaceStmt(
         self,
         ancestors: ast.Node,
@@ -35,6 +37,8 @@ class DropDatabase(linter.Checker):
     name = "unsafe.drop_database"
     code = "UNS002"
 
+    is_auto_fixable: bool = False
+
     def visit_DropdbStmt(
         self,
         ancestors: ast.Node,
@@ -58,6 +62,8 @@ class DropSchema(linter.Checker):
 
     name = "unsafe.drop_schema"
     code = "UNS003"
+
+    is_auto_fixable: bool = False
 
     def visit_DropStmt(
         self,

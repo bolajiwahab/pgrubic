@@ -12,6 +12,8 @@ class PreferTimestampWithTimezoneOverTimestampWithoutTimezone(linter.Checker):
     name = "convention.prefer_timestamp_with_timezone_over_timestamp_without_timezone"
     code = "CVT001"
 
+    is_auto_fixable: bool = False
+
     def visit_ColumnDef(
         self,
         ancestors: ast.Node,
@@ -45,6 +47,8 @@ class PreferTimestampWithTimezoneOverTimeWithTimezone(linter.Checker):
     name = "convention.prefer_timestamp_with_timezone_over_time_with_timezone"
     code = "CVT002"
 
+    is_auto_fixable: bool = False
+
     def visit_ColumnDef(
         self,
         ancestors: ast.Node,
@@ -72,6 +76,8 @@ class PreferEntireTimestampWithoutTimezone(linter.Checker):
 
     name = "convention.prefer_entire_timestamp_without_timezone"
     code = "CVT003"
+
+    is_auto_fixable: bool = False
 
     def visit_ColumnDef(
         self,
@@ -101,6 +107,8 @@ class PreferEntireTimestampWithTimezone(linter.Checker):
     name = "convention.prefer_entire_timestamp_with_timezone"
     code = "CVT004"
 
+    is_auto_fixable: bool = False
+
     def visit_ColumnDef(
         self,
         ancestors: ast.Node,
@@ -129,6 +137,8 @@ class PreferTextOverChar(linter.Checker):
     name = "convention.prefer_text_over_char"
     code = "CVT005"
 
+    is_auto_fixable: bool = False
+
     def visit_ColumnDef(
         self,
         ancestors: ast.Node,
@@ -151,11 +161,13 @@ class PreferTextOverChar(linter.Checker):
             )
 
 
-class PreferTextOverVarChar(linter.Checker):
+class PreferTextOverVarchar(linter.Checker):
     """Prefer text over varchar."""
 
-    name = "convention.prefer_text_over_var_char"
+    name = "convention.prefer_text_over_varchar"
     code = "CVT006"
+
+    is_auto_fixable: bool = False
 
     def visit_ColumnDef(
         self,
@@ -185,6 +197,8 @@ class PreferNumericOverMoney(linter.Checker):
     name = "convention.prefer_numeric_over_money"
     code = "CVT007"
 
+    is_auto_fixable: bool = False
+
     def visit_ColumnDef(
         self,
         ancestors: ast.Node,
@@ -212,6 +226,8 @@ class PreferIdentityColumnOverSerial(linter.Checker):
 
     name = "convention.prefer_identity_column_over_serial"
     code = "CVT008"
+
+    is_auto_fixable: bool = False
 
     def visit_ColumnDef(
         self,
@@ -241,6 +257,8 @@ class PreferIdentityColumnOverBigSerial(linter.Checker):
     name = "convention.prefer_identity_column_over_bigserial"
     code = "CVT009"
 
+    is_auto_fixable: bool = False
+
     def visit_ColumnDef(
         self,
         ancestors: ast.Node,
@@ -268,6 +286,8 @@ class PreferJsonbOverJson(linter.Checker):
 
     name = "convention.prefer_jsonb_over_json"
     code = "CVT010"
+
+    is_auto_fixable: bool = False
 
     def visit_ColumnDef(
         self,
@@ -297,6 +317,8 @@ class PreferBigIntOverInt(linter.Checker):
     name = "convention.prefer_bigint_over_int"
     code = "CVT011"
 
+    is_auto_fixable: bool = False
+
     def visit_ColumnDef(
         self,
         ancestors: ast.Node,
@@ -324,6 +346,8 @@ class PreferBigIntOverSmallInt(linter.Checker):
 
     name = "convention.prefer_bigint_over_smallint"
     code = "CVT012"
+
+    is_auto_fixable: bool = False
 
     def visit_ColumnDef(
         self,
@@ -407,6 +431,8 @@ class BlacklistedType(linter.Checker):
     name = "convention.blacklisted_type"
     code = "CVT014"
 
+    is_auto_fixable: bool = False
+
     def visit_ColumnDef(
         self,
         ancestors: ast.Node,
@@ -434,6 +460,8 @@ class PreferIdentityColumnOverSmallSerial(linter.Checker):
 
     name = "convention.prefer_identity_column_over_smallserial"
     code = "CVT015"
+
+    is_auto_fixable: bool = False
 
     def visit_ColumnDef(
         self,

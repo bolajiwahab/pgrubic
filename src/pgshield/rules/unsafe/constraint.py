@@ -11,6 +11,8 @@ class NotNullOnExistingColumn(linter.Checker):
     name = "unsafe.not_null_on_existing_column"
     code = "USR001"
 
+    is_auto_fixable: bool = False
+
     def visit_AlterTableCmd(
         self,
         ancestors: ast.Node,
@@ -36,6 +38,8 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
 
     name = "unsafe.not_null_on_new_column_with_no_static_default"
     code = "USR002"
+
+    is_auto_fixable: bool = False
 
     def visit_ColumnDef(
         self,
@@ -78,6 +82,8 @@ class VolatileDefaultOnNewColumn(linter.Checker):
 
     name = "unsafe.volatile_default_on_new_column"
     code = "USR003"
+
+    is_auto_fixable: bool = False
 
     def visit_Constraint(
         self,
@@ -144,6 +150,8 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):
     name = "unsafe.validated_check_constraint_on_existing_rows"
     code = "USR005"
 
+    is_auto_fixable: bool = False
+
     def visit_Constraint(
         self,
         ancestors: ast.Node,
@@ -174,6 +182,8 @@ class UniqueConstraintCreatingNewIndex(linter.Checker):
     name = "unsafe.unique_constraint_creating_new_index"
     code = "USR006"
 
+    is_auto_fixable: bool = False
+
     def visit_Constraint(
         self,
         ancestors: ast.Node,
@@ -203,6 +213,8 @@ class PrimaryKeyConstraintCreatingNewIndex(linter.Checker):
 
     name = "unsafe.primary_key_constraint_creating_new_index"
     code = "USR007"
+
+    is_auto_fixable: bool = False
 
     def visit_Constraint(
         self,

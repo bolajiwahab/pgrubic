@@ -94,67 +94,46 @@ class DropColumn(Visitor):  # type: ignore[misc]
     name = "unsafe.drop_column"
     code = "US015"
 
+    def visit_JoinExpr(
+        self,
+        ancestors: ast.Node,
+        node: ast.Node,
+    ) -> None:
+        """Visit JoinExpr."""
+        print(node)
     def visit_RangeVar(
         self,
         ancestors: ast.Node,
         node: ast.Node,
     ) -> None:
         """Visit AlterTableCmd."""
-        # print(node)
-        # print(node.typeName.names)
-        # for option in node.typeName.names:
-        #     print(stream.RawStream()(option))
-        # if node.subtype == enums.AlterTableType.AT_AddColumn:
-        # if "bigserial" in node.def_.typeName.names:
-        #     print("okay")
-        #     # print(node.def_.typeName.names)
-        #     raise ValueError("nay")
 
 
 # sql = """ALTER TABLE transaction ADD COLUMN "transactionDate" timestamp without time zone GENERATED ALWAYS AS ("dateTime"::date) STORED;"""
 sql = """
--- DROP database tbl;
--- ALTER TABLE public.ecdict ADD COLUMN id serial --noqa: UNS01 /* hello */
-; /* hello */
-
--- select * from ec.baba;
-create index record_id_idx on pop (record_id);
-/* hello */ ALTER TABLE /*one*/ public.ecdict ADD COLUMN id serial --noqa: UNS02
-;
--- ALTER TABLE public.ecdict ADD COLUMN id serial;
-CREATE FUNCTION public."Add"(integer, integer) RETURNS integer
-     AS 'select $1 + $2;'
-     LANGUAGE SQL
-     IMMUTABLE
-     security definer
-     RETURNS NULL ON NULL INPUT;
+select * from tble join tble2 on tble.id = tble2.id;
+select * from tble join tble2 on true;
+select * from tble join tble2 on 1 = 1;
+select * from tble join tble2 on tble.id > tble2.id;
+select * from tble join tble2 on tble.id is not null;
+select * from tble join tble2 on tble.id > 1;
+delete from tble using tble2 where tble.id = tble2.id;
 """
 
-# sql = "alter index tble set tablespace col"
-# sql = "alter table tble add column b text default 'a'"
-# sql = "create table tble (a text default a)"
-# raw1 = parse_sql("""create table foo (
-#                 a integer null,
-#                 b integer not null
-#             )""")
+sql = """select * from tble join tble2 on tble.id is null;"""
+
 # print(raw1)
 # contype=<ConstrType.CONSTR_DEFAULT: 2> deferrable=False initdeferred=False is_no_inherit=False raw_expr=<ColumnRef fields=(<String sval='a'>,)>
 sql_no_comment = re.sub(r"^\s*--.*\n|^\s*\/[*][\S\s]*?[*]\/", "", sql, flags=re.MULTILINE)
 # print(sql_no_comment)
 # print(_extract_comments(sql))
 _extract_comments(sql)
-raw = parse_sql(sql_no_comment)
+raw = parse_sql_json(sql_no_comment)
+print(raw)
+# raw = parse_sql(sql_no_comment)
 raw2 = scan(sql)
 # print(raw2)
 
-print(raw)
-# print(raw[2].stmt_location)
-# raw2 = scan(sql)
-# print(raw)
-# print(raw2)
-# print(_extract_comments(sql))
-# for a in raw2:
-#     if a.name == "SQL_COMMENT":
 #         print(a)
 DropColumn()(raw)
 

@@ -11,6 +11,8 @@ class NonConcurrentIndexCreation(linter.Checker):
     name = "unsafe.non_concurrent_index_creation"
     code = "UNI001"
 
+    is_auto_fixable: bool = False
+
     def visit_IndexStmt(
         self,
         ancestors: ast.Node,
@@ -37,6 +39,8 @@ class IndexMovementToTablespace(linter.Checker):
     name = "unsafe.index_movement_to_tablespace"
     code = "UNI002"
 
+    is_auto_fixable: bool = False
+
     def visit_AlterTableCmd(self, ancestors: ast.Node, node: ast.AlterTableCmd) -> None:
         """Visit AlterTableCmd."""
         statement_index: int = linter.get_statement_index(ancestors)
@@ -61,6 +65,8 @@ class IndexesMovementToTablespace(linter.Checker):
 
     name = "unsafe.indexes_movement_to_tablespace"
     code = "UNI003"
+
+    is_auto_fixable: bool = False
 
     def visit_AlterTableMoveAllStmt(
         self,
@@ -88,6 +94,8 @@ class NonConcurrentIndexDrop(linter.Checker):
     name = "unsafe.non_concurrent_index_drop"
     code = "UNI004"
 
+    is_auto_fixable: bool = False
+
     def visit_DropStmt(
         self,
         ancestors: ast.Node,
@@ -113,6 +121,8 @@ class NonConcurrentReindex(linter.Checker):
 
     name = "unsafe.non_concurrent_reindex"
     code = "UNI005"
+
+    is_auto_fixable: bool = False
 
     def visit_ReindexStmt(self, ancestors: ast.Node, node: ast.ReindexStmt) -> None:
         """Visit ReindexStmt."""

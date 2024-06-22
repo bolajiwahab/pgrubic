@@ -11,6 +11,8 @@ class DropTable(linter.Checker):
     name = "unsafe.drop_table"
     code = "UST001"
 
+    is_auto_fixable: bool = False
+
     def visit_DropStmt(
         self,
         ancestors: ast.Node,
@@ -36,6 +38,8 @@ class RenameTable(linter.Checker):
 
     name = "unsafe.rename_table"
     code = "UST002"
+
+    is_auto_fixable: bool = False
 
     def visit_RenameStmt(
         self,
@@ -63,6 +67,8 @@ class TableMovementToTablespace(linter.Checker):
     name = "unsafe.table_movement_to_tablespace"
     code = "UST003"
 
+    is_auto_fixable: bool = False
+
     def visit_AlterTableCmd(self, ancestors: ast.Node, node: ast.AlterTableCmd) -> None:
         """Visit AlterTableCmd."""
         statement_index: int = linter.get_statement_index(ancestors)
@@ -87,6 +93,8 @@ class TablesMovementToTablespace(linter.Checker):
 
     name = "unsafe.tables_movement_to_tablespace"
     code = "UST004"
+
+    is_auto_fixable: bool = False
 
     def visit_AlterTableMoveAllStmt(
         self,
@@ -114,6 +122,8 @@ class Cluster(linter.Checker):
     name = "unsafe.cluster"
     code = "UST005"
 
+    is_auto_fixable: bool = False
+
     def visit_ClusterStmt(
         self,
         ancestors: ast.Node,
@@ -137,6 +147,8 @@ class VacuumFull(linter.Checker):
 
     name = "unsafe.vacuum_full"
     code = "UST006"
+
+    is_auto_fixable: bool = False
 
     def visit_VacuumStmt(self, ancestors: ast.Node, node: ast.VacuumStmt) -> None:
         """Visit VacuumStmt."""
@@ -166,6 +178,8 @@ class NonConcurrentDetachPartition(linter.Checker):
     name = "unsafe.detach_partition"
     code = "UST007"
 
+    is_auto_fixable: bool = False
+
     def visit_PartitionCmd(
         self,
         ancestors: ast.Node,
@@ -192,6 +206,8 @@ class NonConcurrentRefreshMaterializedView(linter.Checker):
     name = "unsafe.non_concurrent_refresh_materialized_view"
     code = "UST008"
 
+    is_auto_fixable: bool = False
+
     def visit_RefreshMatViewStmt(
         self,
         ancestors: ast.Node,
@@ -217,6 +233,8 @@ class TruncateTable(linter.Checker):
 
     name = "unsafe.truncate_table"
     code = "UNT009"
+
+    is_auto_fixable: bool = False
 
     def visit_TruncateStmt(
         self,

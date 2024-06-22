@@ -7,6 +7,16 @@
 -- CREATE RULE notify_me AS ON UPDATE TO mytable DO ALSO NOTIFY mytable -- noqa: COV003
 -- ;
 
+CREATE TABLE measurement (
+    city_id         int not null,
+    logdate         date not null,
+    peaktemp        int,
+    unitsales       int
+) PARTITION BY RANGE (logdate);
+
+create table hp(a int,b text, c int) -- noqa: CVP003
+      partition by list(a part_test_int4_ops, b part_test_text_ops);
+
 drop schema partitions;
 
 CREATE MATERIALIZED VIEW "Vista" AS SELECT 'Hello World';
