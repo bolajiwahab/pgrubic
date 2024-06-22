@@ -2,8 +2,9 @@
 
 ##### finish up with fixes tomorrow
 # ensure code and name are typed in all classes
-# boolean field should not be nullable
 
+# fixes for required columns
+# fix gap_in_range_partition_bound
 # partition schema ?
 # split schemas into type and schema
 
