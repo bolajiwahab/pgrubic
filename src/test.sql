@@ -1,6 +1,7 @@
 CREATE TABLE public.measurement (
     city_id         bigint not null,
     updated         timestamp with time zone,
+    is_created      boolean,
     -- created         timestamptz check (created > updated) not null,
     constraint measurement_city_id_updated_fkey foreign key(city_id) references bc(city_id) on update cascade
 )

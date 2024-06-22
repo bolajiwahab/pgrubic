@@ -280,3 +280,47 @@ class TableShouldHavePrimaryKey(linter.Checker):
                     description=f"Table {node.relation.relname} should have a primary key",  # noqa: E501
                 ),
             )
+
+
+class BooleanFieldShouldBeNonNullable(linter.Checker):
+    """Boolean field should be non-nullable."""
+
+    name: str = "convention.boolean_field_should_be_non_nullable"
+    code: str = "CVG008"
+
+    is_auto_fixable: bool = False
+
+    def visit_ColumnDef(
+        self,
+        ancestors: ast.Node,
+        node: ast.ColumnDef,
+    ) -> None:
+        """Visit ColumnDef."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        if (
+            ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors
+        ) and node.typeName.names[-1].sval == "bool":
+
+            is_not_null = bool(
+                (
+                    [
+                        constraint
+                        for constraint in node.constraints
+                        if constraint.contype == enums.ConstrType.CONSTR_NOTNULL
+                    ]
+                    if node.constraints is not None
+                    else []
+                ),
+            )
+
+            if not is_not_null:
+
+                self.violations.append(
+                    linter.Violation(
+                        lineno=ancestors[statement_index].stmt_location,
+                        column_offset=linter.get_column_offset(ancestors, node),
+                        statement=ancestors[statement_index],
+                        description="Boolean field should be non-nullable",
+                    ),
+                )
