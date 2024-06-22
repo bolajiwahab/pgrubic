@@ -2,6 +2,7 @@ CREATE TABLE public.measurement (
     city_id         bigint not null,
     updated         timestamp with time zone,
     -- created         timestamptz check (created > updated) not null,
+    tel hstore,
     constraint measurement_city_id_updated_pkey primary key(city_id, updated)
 )
 ;

@@ -483,3 +483,63 @@ class PreferIdentityColumnOverSmallSerial(linter.Checker):
                     description="Prefer identity column over smallserial",
                 ),
             )
+
+
+class PreferJsonbOverHstore(linter.Checker):
+    """Prefer jsonb over hstore."""
+
+    name = "convention.prefer_jsonb_over_hstore"
+    code = "CVT016"
+
+    is_auto_fixable: bool = False
+
+    def visit_ColumnDef(
+        self,
+        ancestors: ast.Node,
+        node: ast.ColumnDef,
+    ) -> None:
+        """Visit ColumnDef."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
+            node.typeName.names[-1].sval == "hstore"
+        ):
+
+            self.violations.append(
+                linter.Violation(
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
+                    statement=ancestors[statement_index],
+                    description="Prefer jsonb over hstore",
+                ),
+            )
+
+
+class PreferJsonbOverXml(linter.Checker):
+    """Prefer jsonb over xml."""
+
+    name = "convention.prefer_jsonb_over_xml"
+    code = "CVT017"
+
+    is_auto_fixable: bool = False
+
+    def visit_ColumnDef(
+        self,
+        ancestors: ast.Node,
+        node: ast.ColumnDef,
+    ) -> None:
+        """Visit ColumnDef."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
+            node.typeName.names[-1].sval == "xml"
+        ):
+
+            self.violations.append(
+                linter.Violation(
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
+                    statement=ancestors[statement_index],
+                    description="Prefer jsonb over xml",
+                ),
+            )
