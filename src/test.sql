@@ -2,10 +2,12 @@ CREATE TABLE public.measurement (
     city_id         bigint not null,
     updated         timestamp with time zone,
     -- created         timestamptz check (created > updated) not null,
-    tel hstore,
-    constraint measurement_city_id_updated_pkey primary key(city_id, updated)
+    constraint measurement_city_id_updated_fkey foreign key(city_id) references bc(city_id) on update cascade
 )
 ;
+
+ALTER TABLE public.ecdict ADD COLUMN id bigint default current_timestamp not null;
+
 
 -- -- create table ecdict();
 -- ALTER TABLE public.ecdict alter deleted drop not null /* hello */ -- noqa: UNS021, UNS019
@@ -110,7 +112,7 @@ CREATE TABLE public.measurement (
 -- ;
 -- ALTER TABLE transaction ADD COLUMN "transactionDate" timestamp without time zone GENERATED ALWAYS AS ("dateTime"::date) STORED;
 -- alter table tbl drop column a;
--- alter table abc add constraint fkey foreign key(a) references bc(a);
+-- alter table abc add constraint fkey foreign key(a) references bc(a) on delete cascade not valid;
 -- alter table abc add constraint uniq unique using index tbl;
 -- alter table abc add constraint uniq primary key using index tbl;
 -- alter index all in tablespace tble set tablespace col;

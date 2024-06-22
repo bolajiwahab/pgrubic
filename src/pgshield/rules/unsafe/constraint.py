@@ -51,6 +51,8 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
 
         if ast.AlterTableStmt in ancestors and node.constraints:
 
+            print(node.generated)
+
             is_not_null = False
             has_default = False
 

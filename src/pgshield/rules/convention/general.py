@@ -2,7 +2,7 @@
 
 import re
 
-from pglast import ast, stream
+from pglast import ast, enums, stream
 
 from pgshield.core import linter
 
@@ -217,31 +217,66 @@ class PreferIndexElementsUpToThree(linter.Checker):
             )
 
 
-class PreferPartitioningByOneKey(linter.Checker):
-    """Prefer partitioning by one key."""
+class TableShouldHavePrimaryKey(linter.Checker):
+    """Table should have a primary key."""
 
-    name = "convention.prefer_partitioning_by_one_key"
-    code = "CVG007"
+    name: str = "convention.table_should_have_primary_key"
+    code: str = "CVG007"
 
     is_auto_fixable: bool = False
 
-    def visit_PartitionSpec(
+    def _check_for_table_level_primary_key(
+        self,
+        node: ast.CreateStmt,
+    ) -> bool:
+        """Check for table level primary key."""
+        return bool(
+            (
+                [
+                    definition
+                    for definition in node.tableElts
+                    if isinstance(definition, ast.Constraint)
+                    and definition.contype == enums.ConstrType.CONSTR_PRIMARY
+                ]
+            ),
+        )
+
+    def _check_for_column_level_primary_key(
+        self,
+        node: ast.CreateStmt,
+    ) -> bool:
+        """Check for column level primary key."""
+        return bool(
+            (
+                [
+                    definition
+                    for definition in node.tableElts
+                    if isinstance(definition, ast.ColumnDef) and definition.constraints
+                    for constraint in definition.constraints
+                    if constraint.contype == enums.ConstrType.CONSTR_PRIMARY
+                ]
+            ),
+        )
+
+    def visit_CreateStmt(
         self,
         ancestors: ast.Node,
-        node: ast.PartitionSpec,
+        node: ast.CreateStmt,
     ) -> None:
-        """Visit PartitionSpec."""
+        """Visit CreateStmt."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        max_partition_elements = 1
-
-        if len(node.partParams) > max_partition_elements:
+        if (
+            node.tableElts
+            and not self._check_for_column_level_primary_key(node)
+            and not self._check_for_table_level_primary_key(node)
+        ):
 
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
                     column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
-                    description="Prefer partitioning by one key",
+                    description=f"Table {node.relation.relname} should have a primary key",  # noqa: E501
                 ),
             )

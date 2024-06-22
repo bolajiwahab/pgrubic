@@ -95,66 +95,63 @@ class NotNullColumn(linter.Checker):
                 node.subtype = enums.AlterTableType.AT_SetNotNull
 
 
-class TableShouldHavePrimaryKey(linter.Checker):
-    """Table should have a primary key."""
+class PreferNoCascadeDelete(linter.Checker):
+    """Prefer no cascade delete."""
 
-    name: str = "convention.table_should_have_primary_key"
+    name: str = "convention.prefer_no_cascade_delete"
     code: str = "CVR002"
 
     is_auto_fixable: bool = False
 
-    def _check_for_table_level_primary_key(
-        self,
-        node: ast.CreateStmt,
-    ) -> bool:
-        """Check for table level primary key."""
-        return bool(
-            (
-                [
-                    definition
-                    for definition in node.tableElts
-                    if isinstance(definition, ast.Constraint)
-                    and definition.contype == enums.ConstrType.CONSTR_PRIMARY
-                ]
-            ),
-        )
-
-    def _check_for_column_level_primary_key(
-        self,
-        node: ast.CreateStmt,
-    ) -> bool:
-        """Check for column level primary key."""
-        return bool(
-            (
-                [
-                    definition
-                    for definition in node.tableElts
-                    if isinstance(definition, ast.ColumnDef) and definition.constraints
-                    for constraint in definition.constraints
-                    if constraint.contype == enums.ConstrType.CONSTR_PRIMARY
-                ]
-            ),
-        )
-
-    def visit_CreateStmt(
+    def visit_Constraint(
         self,
         ancestors: ast.Node,
-        node: ast.CreateStmt,
+        node: ast.Constraint,
     ) -> None:
-        """Visit CreateStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
+        """Visit Constraint."""
         if (
-            node.tableElts
-            and not self._check_for_column_level_primary_key(node)
-            and not self._check_for_table_level_primary_key(node)
+            node.contype == enums.ConstrType.CONSTR_FOREIGN
+            and node.fk_del_action == enums.FKCONSTR_ACTION_CASCADE
         ):
+
+            statement_index: int = linter.get_statement_index(ancestors)
 
             self.violations.append(
                 linter.Violation(
                     lineno=ancestors[statement_index].stmt_location,
                     column_offset=linter.get_column_offset(ancestors, node),
                     statement=ancestors[statement_index],
-                    description=f"Table {node.relation.relname} should have a primary key",  # noqa: E501
+                    description="Prefer no cascade delete",
+                ),
+            )
+
+
+class PreferNoCascadeUpdate(linter.Checker):
+    """Prefer no cascade update."""
+
+    name: str = "convention.prefer_no_cascade_update"
+    code: str = "CVR003"
+
+    is_auto_fixable: bool = False
+
+    def visit_Constraint(
+        self,
+        ancestors: ast.Node,
+        node: ast.Constraint,
+    ) -> None:
+        """Visit Constraint."""
+        if (
+            node.contype == enums.ConstrType.CONSTR_FOREIGN
+            and node.fk_upd_action == enums.FKCONSTR_ACTION_CASCADE
+        ):
+
+            statement_index: int = linter.get_statement_index(ancestors)
+
+            self.violations.append(
+                linter.Violation(
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
+                    statement=ancestors[statement_index],
+                    description="Prefer no cascade update",
                 ),
             )

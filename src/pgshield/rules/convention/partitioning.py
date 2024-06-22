@@ -118,3 +118,33 @@ class PartitionStrategiesWhitelisted(linter.Checker):
                     description=f"Partitioning strategy '{self.partition_strategies_mapping[node.strategy]}' is not whitelisted",  # noqa: E501
                 ),
             )
+
+
+class PreferPartitioningByOneKey(linter.Checker):
+    """Prefer partitioning by one key."""
+
+    name = "convention.prefer_partitioning_by_one_key"
+    code = "CVP003"
+
+    is_auto_fixable: bool = False
+
+    def visit_PartitionSpec(
+        self,
+        ancestors: ast.Node,
+        node: ast.PartitionSpec,
+    ) -> None:
+        """Visit PartitionSpec."""
+        statement_index: int = linter.get_statement_index(ancestors)
+
+        max_partition_elements = 1
+
+        if len(node.partParams) > max_partition_elements:
+
+            self.violations.append(
+                linter.Violation(
+                    lineno=ancestors[statement_index].stmt_location,
+                    column_offset=linter.get_column_offset(ancestors, node),
+                    statement=ancestors[statement_index],
+                    description="Prefer partitioning by one key",
+                ),
+            )

@@ -1,9 +1,9 @@
 # prevent missing rule numbers
 
 ##### finish up with fixes tomorrow
-
 # ensure code and name are typed in all classes
 # foreign key -- no cascade
+# boolean field should not be nullable
 
 # partition schema ?
 # split schemas into type and schema

@@ -120,7 +120,7 @@ select * from tble join tble2 on tble.id > 1;
 delete from tble using tble2 where tble.id = tble2.id;
 """
 
-sql = """select * from tble join tble2 on tble.id is null;"""
+sql = """delete from tble using tble2, tble3 where tble.id = tble2.id and tble.id = tble3.id;"""
 
 # print(raw1)
 # contype=<ConstrType.CONSTR_DEFAULT: 2> deferrable=False initdeferred=False is_no_inherit=False raw_expr=<ColumnRef fields=(<String sval='a'>,)>

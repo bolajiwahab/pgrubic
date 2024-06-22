@@ -172,7 +172,13 @@ class PreferNamedConstraint(linter.Checker):
         """Visit Constraint."""
         statement_index: int = linter.get_statement_index(ancestors)
 
-        if not node.conname and node.contype != enums.ConstrType.CONSTR_NOTNULL:
+        if not node.conname and node.contype in (
+            enums.ConstrType.CONSTR_CHECK,
+            enums.ConstrType.CONSTR_PRIMARY,
+            enums.ConstrType.CONSTR_UNIQUE,
+            enums.ConstrType.CONSTR_EXCLUSION,
+            enums.ConstrType.CONSTR_FOREIGN,
+        ):
 
             self.violations.append(
                 linter.Violation(
