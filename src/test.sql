@@ -20,7 +20,8 @@
 --
 select 1;
 
-ALTER TABLE public.ecdict ADD COLUMN id bigint default now() not null;
+ALTER TABLE public.ecdict
+    ADD COLUMN id bigint default now() not null;
 
 select 1;
 

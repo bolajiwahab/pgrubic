@@ -203,8 +203,8 @@ def get_statement_details(
 
     # print(statement_location)
 
-    line_start = source_code[:statement_location].rfind("\n") + 1
-    line_end = source_code.find("\n", statement_location)
+    line_start = source_code[:statement_location].rfind(";\n") + 1
+    line_end = source_code.find(";\n", statement_location)
 
     print(source_code[line_start:line_end])
     print(line_start, statement_location, line_end)
@@ -230,4 +230,4 @@ def get_statement_details(
 
     # text = text + arrow
 
-    return Statement(line_no=line_no, column_offset=_column_offset, text=text)
+    return Statement(line_no=line_no, column_offset=_column_offset, text=source_code[line_start:line_end].strip("\n"))
