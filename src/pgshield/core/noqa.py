@@ -51,7 +51,7 @@ def _split_sql(statement: str) -> list[tuple[int, int, str]]:
 
 def extract(statement: str) -> list[tuple[int, str]]:
     """Extract noqa from inline SQL comment."""
-    statement = remove_sql_comments(statement)
+    # statement = remove_sql_comments(statement)
 
     lines = _split_sql(statement)
 
@@ -103,6 +103,13 @@ def directive(func: abc.Callable[..., typing.Any]) -> abc.Callable[..., typing.A
     ) -> typing.Any:  # noqa: ANN401
 
         statement_index: int = linter.get_statement_index(args[0])
+
+        print(args[0][statement_index].stmt_location)
+
+        if args[0][statement_index].stmt_location == 0:
+           location = args[0][statement_index].stmt_len
+           print(location)
+
 
         if (
             args[0][statement_index].stmt_location,

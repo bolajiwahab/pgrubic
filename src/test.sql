@@ -18,14 +18,15 @@
 -- ALTER TABLE public.ecdict ADD COLUMN id bigint default current_timestamp not null;
 -- thht
 --
-select 1;
+-- select 1;
 
-ALTER TABLE public.ecdict
+ALTER TABLE public.ecdict -- noqa: USR002
     ADD COLUMN id bigint default now() not null;
 
-select 1;
+-- select 1;
 
-ALTER TABLE public.ecdict ADD COLUMN id bigint default current_timestamp not null;
+ALTER TABLE public.ecdict ADD COLUMN id bigint default current_timestamp not null -- noqa: USR002
+;
 
 -- -- create table ecdict();
 -- ALTER TABLE public.ecdict alter deleted drop not null /* hello */ -- noqa: UNS021, UNS019
