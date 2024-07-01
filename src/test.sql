@@ -1,14 +1,30 @@
-CREATE TABLE public.measurement (
-    city_id         bigint not null,
-    updated         timestamp with time zone,
-    is_created      boolean,
-    -- created         timestamptz check (created > updated) not null,
-    constraint measurement_city_id_updated_fkey foreign key(city_id) references bc(city_id) on update cascade
-)
-;
+-- create table ecdict();
+-- CREATE TABLE public.measurement (
+--     city_id         bigint not null, updated         timestamp with time zone,
+--     is_created      boolean,
+--     created         timestamptz check (created > updated) not null,
+--     constraint measurement_city_id_updated_fkey foreign key(city_id) references bc(city_id) on update cascade
+-- )
+-- ;
+--
+--
+-- CREATE TABLE distributors (
+--   did bigserial PRIMARY KEY,
+--   biid timestamptz,
+--   name "char" NOT NULL -- noqa: COV011
+-- )
+-- ;
+
+-- ALTER TABLE public.ecdict ADD COLUMN id bigint default current_timestamp not null;
+-- thht
+--
+select 1;
+
+ALTER TABLE public.ecdict ADD COLUMN id bigint default now() not null;
+
+select 1;
 
 ALTER TABLE public.ecdict ADD COLUMN id bigint default current_timestamp not null;
-
 
 -- -- create table ecdict();
 -- ALTER TABLE public.ecdict alter deleted drop not null /* hello */ -- noqa: UNS021, UNS019

@@ -52,61 +52,72 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
         if ast.AlterTableStmt in ancestors and node.constraints:
 
             is_not_null = False
-            has_default = False
+            has_static_default = False
 
             for constraint in node.constraints:
 
                 if constraint.contype == enums.ConstrType.CONSTR_NOTNULL:
                     is_not_null = True
+                    location = constraint.location
 
                 if (
                     constraint.contype == enums.ConstrType.CONSTR_DEFAULT
                     and isinstance(constraint.raw_expr, ast.A_Const)
                 ):
-                    has_default = True
+                    has_static_default = True
 
-            if is_not_null and not has_default:
+            if is_not_null and not has_static_default:
+
+                # print(node.location)
+
+                # print(linter.get_column_offset(ancestors, node))
+                # print(ancestors.node)
+                # print(ancestors.parent)
+                # print(abs(ancestors))
+                # print(ancestors[statement_index].stmt_location)
+                # print(node.location)
+                # print(node.constraints)
 
                 self.violations.append(
                     linter.Violation(
-                        lineno=ancestors[statement_index].stmt_location,
-                        column_offset=linter.get_column_offset(ancestors, node),
-                        statement=ancestors[statement_index],
+                        statement_location=ancestors[statement_index].stmt_location,
+                        statement_length=ancestors[statement_index].stmt_len,
+                        column_offset=location,
                         description="Not null on new column with no static default",
                     ),
                 )
 
 
-class VolatileDefaultOnNewColumn(linter.Checker):
-    """Volatile default on new column."""
+# class VolatileDefaultOnNewColumn(linter.Checker):
+#     """Volatile default on new column."""
 
-    name = "unsafe.volatile_default_on_new_column"
-    code = "USR003"
+#     name = "unsafe.volatile_default_on_new_column"
+#     code = "USR003"
 
-    is_auto_fixable: bool = False
+#     is_auto_fixable: bool = False
 
-    def visit_Constraint(
-        self,
-        ancestors: ast.Node,
-        node: ast.Constraint,
-    ) -> None:
-        """Visit Constraint."""
-        statement_index: int = linter.get_statement_index(ancestors)
+#     def visit_Constraint(
+#         self,
+#         ancestors: ast.Node,
+#         node: ast.Constraint,
+#     ) -> None:
+#         """Visit Constraint."""
+#         statement_index: int = linter.get_statement_index(ancestors)
 
-        if (
-            ast.AlterTableStmt in ancestors
-            and node.contype == enums.ConstrType.CONSTR_DEFAULT
-            and not isinstance(node.raw_expr, ast.A_Const)
-        ):
+#         if (
+#             ast.AlterTableStmt in ancestors
+#             and node.contype == enums.ConstrType.CONSTR_DEFAULT
+#             and not isinstance(node.raw_expr, ast.A_Const)
+#         ):
 
-            self.violations.append(
-                linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
-                    description="Volatile default on new column",
-                ),
-            )
+#             self.violations.append(
+#                 linter.Violation(
+#                     statement_location=ancestors[statement_index].stmt_location,
+#                     statement_length=ancestors[statement_index].stmt_len,
+#                     column_offset=linter.get_column_offset(ancestors, node),
+#                     description="Volatile default on new column",
+#                 ),
+#             )
 
 
 class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):

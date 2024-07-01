@@ -10,11 +10,28 @@ from pglast import parser
 from pgshield.core import errors, linter
 
 
+def replace_comments_with_spaces(sql: str) -> str:
+    """Replace comments with spaces."""
+    # Regex pattern for single-line comments at the start of a line
+    single_line_pattern = re.compile(r"^--.*$", re.MULTILINE)
+    # Regex pattern for multi-line comments at the start of a line
+    multi_line_pattern = re.compile(r"^\s*/\*[\s\S]*?\*/\s*$", re.MULTILINE)
+
+    # Function to replace matches with spaces of the same length
+    def replace_with_spaces(match):
+        return " " * len(match.group(0))
+
+    # Replace single-line comments with spaces
+    sql = single_line_pattern.sub(replace_with_spaces, sql)
+    # Replace multi-line comments with spaces
+    return multi_line_pattern.sub(replace_with_spaces, sql)
+
+
 def remove_sql_comments(statement: str) -> str:
     """Remove comments from SQL statement."""
     # We remove only comments that start a line, not inline comments
     return re.sub(
-        r"^\s*--.*\n?|^\s*\/[*][\S\s]*?[*]\/", "", statement, flags=re.MULTILINE,
+        r"^\s*--.*|^\s*\/[*][\S\s]*?[*]\/", "", statement, flags=re.MULTILINE,
     )
 
 
@@ -22,8 +39,6 @@ def _split_sql(statement: str) -> list[tuple[int, int, str]]:
     """Split SQL statement into lines."""
     lines: list[tuple[int, int, str]] = []
     line_offset = 0
-
-    statement = remove_sql_comments(statement)
 
     for line in statement.split(";"):
 
@@ -36,6 +51,8 @@ def _split_sql(statement: str) -> list[tuple[int, int, str]]:
 
 def extract(statement: str) -> list[tuple[int, str]]:
     """Extract noqa from inline SQL comment."""
+    statement = remove_sql_comments(statement)
+
     lines = _split_sql(statement)
 
     comments: list[tuple[int, str]] = []

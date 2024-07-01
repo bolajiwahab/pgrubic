@@ -8,6 +8,9 @@
 # partition schema ?
 # split schemas into type and schema
 
+# no float, prefer numeric to float
+# truncated numeric
+
 **********************
 We do not support custom schema qualified types
 ****************

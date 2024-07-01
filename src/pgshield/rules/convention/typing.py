@@ -406,9 +406,10 @@ class WronglyTypedRequiredColumn(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
+                    statement_location=ancestors[statement_index].stmt_location,
+                    statement_length=ancestors[statement_index].stmt_len,
                     column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    # statement=ancestors[statement_index],
                     description=f"Column '{node.colname}' expected type is"
                     f" '{self.config.required_columns[node.colname]}',"
                     f" found '{system_types.get(given_type, given_type)}'",
