@@ -102,7 +102,6 @@ class Linter:
             source_code = source_file.read()
 
         source_code = noqa.remove_sql_comments(source_code)
-        # print(source_code)
 
         try:
 
@@ -118,8 +117,6 @@ class Linter:
         noqa_ignore_rules: list[tuple[int, str]] = noqa.extract(source_code)
 
         print(noqa_ignore_rules)
-        print([x[0] for x in noqa_ignore_rules])
-        print(dict(noqa_ignore_rules).values())
 
         for checker in self.checkers:
 
@@ -176,7 +173,7 @@ def get_statement_details(
 ) -> Statement:
     """Get statement details."""
     # print(column_offset, statement_location)
-    print(source_code)
+    # print(source_code)
     column_offset = 0 if statement_location == 0 else column_offset - statement_location
 
     total_statement_length = statement_location + statement_length

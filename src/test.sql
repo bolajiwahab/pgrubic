@@ -7,7 +7,7 @@ sel
 ect;
 */
 
--- select;
+-- select ';';
 
 ALTER TABLE public.ecdict
 ADD COLUMN id bigint default current_timestamp not null -- select 1 -- noqa: USR002
@@ -23,3 +23,21 @@ ALTER TABLE public.ecdict ADD COLUMN id bigint default current_timestamp not nul
 ;
 
 -- REINDEX SCHEMA CONCURRENTLY my_broken_schema;
+
+
+-- REINDEX SCHEMA CONCURRENTLY my_broken_schema;
+
+
+
+-- REINDEX SCHEMA CONCURRENTLY my_broken_schema;
+
+
+
+-- REINDEX SCHEMA CONCURRENTLY my_broken_schema;
+
+
+
+-- REINDEX SCHEMA CONCURRENTLY my_broken_schema;
+
+ALTER TABLE public.ecdict ADD COLUMN id bigint default current_timestamp not null -- noqa: USR002
+;

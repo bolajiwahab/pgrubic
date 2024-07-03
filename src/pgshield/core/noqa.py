@@ -154,16 +154,16 @@ def directive(func: abc.Callable[..., typing.Any]) -> abc.Callable[..., typing.A
 
         # print(args[0][statement_index].stmt_location)
 
-        if args[0][statement_index].stmt_location == 0:
-            location = args[0][statement_index].stmt_len
-        #    print(location)
+        # if args[0][statement_index].stmt_location == 0:
+        #     location = args[0][statement_index].stmt_len
+        # #    print(location)
 
-        # statement_location = args[0][statement_index].stmt_location == 0
-        total_statement_location = (
-            args[0][statement_index].stmt_location + args[0][statement_index].stmt_len
-        )
+        # # statement_location = args[0][statement_index].stmt_location == 0
+        # total_statement_location = (
+        #     args[0][statement_index].stmt_location + args[0][statement_index].stmt_len
+        # )
 
-        print(args[0][statement_index].stmt_location)
+        # print(args[0][statement_index].stmt_location)
 
         if (
             args[0][statement_index].stmt_location,
