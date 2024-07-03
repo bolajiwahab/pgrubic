@@ -72,11 +72,11 @@ class Linter:
         self.config = config
 
     @staticmethod
-    def print_violations(*, checker: Checker, file_name: str) -> None:
+    def print_violations(*, checker: Checker, file_name: str, source_code: str) -> None:
         """Print all violations collected by a checker."""
-        with pathlib.Path(file_name).open("r", encoding="utf-8") as source_file:
+        # with pathlib.Path(file_name).open("r", encoding="utf-8") as source_file:
 
-            source_code = source_file.read()
+        #     source_code = source_file.read()
 
         for violation in checker.violations:
 
@@ -101,7 +101,8 @@ class Linter:
 
             source_code = source_file.read()
 
-        # source_code = noqa.remove_sql_comments(source_code)
+        source_code = noqa.remove_sql_comments(source_code)
+        # print(source_code)
 
         try:
 
@@ -117,6 +118,8 @@ class Linter:
         noqa_ignore_rules: list[tuple[int, str]] = noqa.extract(source_code)
 
         print(noqa_ignore_rules)
+        print([x[0] for x in noqa_ignore_rules])
+        print(dict(noqa_ignore_rules).values())
 
         for checker in self.checkers:
 
@@ -135,6 +138,7 @@ class Linter:
                 self.print_violations(
                     checker=checker,
                     file_name=file_name,
+                    source_code=source_code,
                 )
 
         return violations_found
@@ -171,18 +175,27 @@ def get_statement_details(
     source_code: str,
 ) -> Statement:
     """Get statement details."""
+    # print(column_offset, statement_location)
+    print(source_code)
     column_offset = 0 if statement_location == 0 else column_offset - statement_location
 
     total_statement_length = statement_location + statement_length
 
-    print(statement_location, statement_length)
+    # print(statement_location, statement_length)
 
     line_no = source_code[:total_statement_length].count("\n") + 1
 
+    # print(source_code[:total_statement_length].rstrip(";"))
+
     line_start = source_code[:total_statement_length].rfind(";\n") + 1
+    # s[:s.rfind("b")].rfind("b")
+    # line_start = source_code.rfind(";", 0, total_statement_length) + 1
+    # contents.rfind('\n', 0, loc) + 1
 
     line_end = source_code.find("\n", total_statement_length)
 
     text = source_code[line_start:line_end].strip("\n")
+
+    # print(line_start, line_end)
 
     return Statement(line_no=line_no, column_offset=column_offset, text=text)

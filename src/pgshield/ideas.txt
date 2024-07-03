@@ -10,6 +10,8 @@
 
 # no float, prefer numeric to float
 # truncated numeric
+# comparison with nulls
+
 
 **********************
 We do not support custom schema qualified types
