@@ -361,7 +361,8 @@ class WronglyTypedRequiredColumn(linter.Checker):
         if (
             _is_column_creation(ancestors)
             and node.colname in self.config.required_columns
-            and node.typeName.names[-1].sval != self.config.required_columns[node.colname]  # noqa: E501
+            and node.typeName.names[-1].sval
+            != self.config.required_columns[node.colname]  # noqa: E501
         ):
 
             given_type = ".".join(a.sval for a in node.typeName.names)
@@ -374,8 +375,8 @@ class WronglyTypedRequiredColumn(linter.Checker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description=f"Column '{node.colname}' expected type is"
-                                f" '{self.config.required_columns[node.colname]}',"
-                                f" found '{given_type}'",
+                    f" '{self.config.required_columns[node.colname]}',"
+                    f" found '{given_type}'",
                 ),
             )
 
@@ -495,5 +496,33 @@ class PreferJsonbOverXml(linter.Checker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description="Prefer jsonb over xml",
+                ),
+            )
+
+
+class PreferNumericOverFloat(linter.Checker):
+    """Prefer numeric over float."""
+
+    name = "convention.prefer_numeric_over_float"
+    code = "CVT018"
+
+    is_auto_fixable: bool = False
+
+    def visit_ColumnDef(
+        self,
+        ancestors: ast.Node,
+        node: ast.ColumnDef,
+    ) -> None:
+        """Visit ColumnDef."""
+        if _is_column_creation(ancestors) and (
+            node.typeName.names[-1].sval == "float8"
+        ):
+
+            self.violations.append(
+                linter.Violation(
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
+                    description="Prefer numeric over float",
                 ),
             )
