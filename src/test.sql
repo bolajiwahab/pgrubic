@@ -1,50 +1,18 @@
--- select;
-ALTER TABLE public.ecdict ADD COLUMN id bigint default now() not null -- noqa: USR002
+CREATE TABLE public.measurement (
+    city_id         bigint not null,
+    updated         text,
+    created         timestamptz check (created > updated) not null,
+    constraint measurement_city_id_updated_pkey primary key(city_id, updated)
+)
 ;
 
-/*
-sel
-ect;
-*/
+-- CREATE or replace VIEW nums_1_100 (n) AS
+--     -- with a as (select 1)
+--     select * from a
+-- UNION ALL
+--     SELECT nums_1_102.n FROM public.nums_1_101 WHERE nums_1_102.n < 100;
 
--- select ';';
+-- update tbl set a = 20
+-- ;
 
-ALTER TABLE public.ecdict
-ADD COLUMN id bigint default current_timestamp not null -- select 1 -- noqa: USR002
-;
-
--- -- create table ecdict()
--- ALTER TABLE public.ecdict alter deleted drop not null /* hello */ -- noqa: UNS021, UNS019
--- 
-
--- REINDEX SCHEMA CONCURRENTLY my_broken_schema
-
-ALTER TABLE public.ecdict ADD COLUMN id bigint default current_timestamp not null -- noqa: USR002
-;
-
--- REINDEX SCHEMA CONCURRENTLY my_broken_schema;
-
-
--- REINDEX SCHEMA CONCURRENTLY my_broken_schema;
-
-
-
--- REINDEX SCHEMA CONCURRENTLY my_broken_schema;
-
-
-
--- REINDEX SCHEMA CONCURRENTLY my_broken_schema;
-
-
-
--- REINDEX SCHEMA CONCURRENTLY my_broken_schema;
-
-ALTER TABLE public.ecdict ADD COLUMN id bigint default current_timestamp not null -- noqa: USR004
-;
-
--- create extension postgis with schema public1;
-
-CREATE SEQUENCE "Serial" START 101 -- noqa: CVI001
-;
-
-alter table tble set tablespace col;
+-- alter table tble set tablespace col;

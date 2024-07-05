@@ -34,23 +34,33 @@ class _Schema(abc.ABC, linter.Checker):
         node: ast.RangeVar,
     ) -> None:
         """Visit RangeVar."""
-        create = [
-            ast.CreateStmt,
-            ast.CreateTableAsStmt,
-            ast.CreateSeqStmt,
-            ast.ViewStmt,
-        ]
+        # View has been intentionally excluded here as recursive cte in recursive view
+        # is not schema qualified.
+        # https://www.postgresql.org/docs/16/sql-createview.html#:~:text=Notice%20that%20although%20the%20recursive%20view%27s%20name%20is%20schema%2Dqualified%20in%20this%20CREATE%2C%20its%20internal%20self%2Dreference%20is%20not%20schema%2Dqualified.%20This%20is%20because%20the%20implicitly%2Dcreated%20CTE%27s%20name%20cannot%20be%20schema%2Dqualified.
+        if ast.ViewStmt not in ancestors:
 
-        for stmt in create:
+            self._check_schema(
+                schema_name=node.schemaname,
+                statement_location=self.statement_location,
+                statement_length=self.statement_length,
+                node_location=self.node_location,
+            )
 
-            if stmt in ancestors:
+    def visit_ViewStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.ViewStmt,
+    ) -> None:
+        """Visit ViewStmt."""
+        # We are only checking that the view is schema qualified here.
+        # We do not check the body of the query as it can be of any forms.
+        self._check_schema(
+            schema_name=node.view.schemaname,
+            statement_location=self.statement_location,
+            statement_length=self.statement_length,
+            node_location=self.node_location,
+        )
 
-                self._check_schema(
-                    schema_name=node.schemaname,
-                    statement_location=self.statement_location,
-                    statement_length=self.statement_length,
-                    node_location=self.node_location,
-                )
 
     def visit_CreateEnumStmt(
         self,
@@ -113,10 +123,10 @@ class _Schema(abc.ABC, linter.Checker):
         )
 
 
-class SchemaQualified(_Schema):
-    """Schema details for table, types, functions, sequences, views."""
+class DatabaseObjectShouldSchemaQualified(_Schema):
+    """Database object should be schema qualified."""
 
-    name = "convention.schema_qualified"
+    name = "convention.database_object_should_schema_qualified"
     code = "CVS001"
 
     is_auto_fixable: bool = False

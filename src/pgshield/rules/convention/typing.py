@@ -361,19 +361,12 @@ class WronglyTypedRequiredColumn(linter.Checker):
         if (
             _is_column_creation(ancestors)
             and node.colname in self.config.required_columns
-            and ".".join(a.sval for a in node.typeName.names)
-            != system_types.get(
-                self.config.required_columns[node.colname],
-                self.config.required_columns[node.colname],
-            )
+            and node.typeName.names[-1].sval != self.config.required_columns[node.colname]  # noqa: E501
         ):
 
-            expected_type = system_types.get(
-                self.config.required_columns[node.colname],
-                self.config.required_columns[node.colname],
-            ).split(".")
-
             given_type = ".".join(a.sval for a in node.typeName.names)
+
+            expected_type = self.config.required_columns[node.colname].split(".")
 
             self.violations.append(
                 linter.Violation(
@@ -381,8 +374,8 @@ class WronglyTypedRequiredColumn(linter.Checker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description=f"Column '{node.colname}' expected type is"
-                    f" '{self.config.required_columns[node.colname]}',"
-                    f" found '{system_types.get(given_type, given_type)}'",
+                                f" '{self.config.required_columns[node.colname]}',"
+                                f" found '{given_type}'",
                 ),
             )
 

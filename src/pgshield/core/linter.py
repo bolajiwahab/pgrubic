@@ -3,12 +3,14 @@
 import sys
 import typing
 import pathlib
+import functools
 import dataclasses
+from collections import abc
 
-from pglast import ast, parser, stream, visitors
+from pglast import ast, parser, visitors
+from colorama import Fore, Style
 
 from pgshield.core import noqa, config
-from colorama import Fore, Style
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
@@ -18,14 +20,6 @@ class Line:
     number: int
     column_offset: int
     text: str
-
-
-@dataclasses.dataclass(kw_only=True, frozen=True)
-class Statement:
-    """Representation of statement."""
-
-    location: int
-    length: int
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
@@ -46,7 +40,7 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
     is_auto_fixable: bool
 
     def __init__(self) -> None:
-        """Init."""
+        """Initialize variables."""
         self.noqa_ignore_rules: list[tuple[int, str]] = []
 
         self.violations: list[Violation] = []
@@ -73,7 +67,7 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
 
                 raise TypeError(msg)
 
-    def visit(self, node: ast.Node, ancestors: typing.Any) -> None:  # noqa: ANN401
+    def visit(self, node: ast.Node, ancestors: typing.Any) -> None:
         """Visit the node."""
 
 
@@ -81,17 +75,13 @@ class Linter:
     """Holds all lint rules, and runs them against a source file."""
 
     def __init__(self, config: config.Config) -> None:
-        """Init."""
+        """Initialize variables."""
         self.checkers: set[Checker] = set()
         self.config = config
 
     @staticmethod
     def print_violations(*, checker: Checker, file_name: str, source_code: str) -> None:
         """Print all violations collected by a checker."""
-        # with pathlib.Path(file_name).open("r", encoding="utf-8") as source_file:
-
-        #     source_code = source_file.read()
-
         for violation in checker.violations:
 
             line: Line = get_line_details(
@@ -115,7 +105,7 @@ class Linter:
 
             source_code = source_file.read()
 
-        source_code = noqa.remove_sql_comments(source_code)
+        source_code = noqa.remove_delimiter_from_sql_comment(source_code)
 
         try:
 
@@ -129,8 +119,6 @@ class Linter:
         violations_found: bool = False
 
         noqa_ignore_rules: list[tuple[int, str]] = noqa.extract(source_code)
-
-        print(noqa_ignore_rules)
 
         for checker in self.checkers:
 
@@ -155,31 +143,38 @@ class Linter:
         return violations_found
 
 
-def get_statement_details(ancestors: ast.Node) -> Statement:
-    """Get statement details.
+def set_locations_for_node(
+    func: abc.Callable[..., typing.Any],
+) -> abc.Callable[..., typing.Any]:
+    """Set locations for node."""
 
-    pglast's AST is not a python list hence we cannot use list functions such as `len`
-    directly on it. We need to build a list from the AST.
-    """
-    nodes: list[str] = []
+    @functools.wraps(func)
+    def wrapper(
+        self: Checker,
+        ancestors: ast.Node,
+        node: ast.Node,
+    ) -> typing.Any:
 
-    for node in ancestors:
+        parents: list[str] = []
 
-        if node is None:
-            break
+        for parent in ancestors:
 
-        nodes.append(node)
+            if parent is None:
+                break
 
-    # The current node's parent is located two indexes from the end of the list.
-    return Statement(
-        location=ancestors[len(nodes) - 2].stmt_location,
-        length=ancestors[len(nodes) - 2].stmt_len,
-    )
+            parents.append(node)
 
+        self.node_location = getattr(node, "location", 0)
 
-def get_node_location(node: ast.Node) -> int:
-    """Get node location."""
-    return getattr(node, "location", 0)
+        # The current node's parent is located two indexes from the end of the list.
+
+        self.statement_location = ancestors[len(parents) - 2].stmt_location
+
+        self.statement_length = ancestors[len(parents) - 2].stmt_len
+
+        return func(self, ancestors, node)
+
+    return wrapper
 
 
 def get_line_details(

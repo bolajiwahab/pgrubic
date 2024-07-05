@@ -308,3 +308,54 @@ class BooleanFieldShouldBeNonNullable(linter.Checker):
                         description="Boolean field should be non-nullable",
                     ),
                 )
+
+
+class PreferReplaceForFunction(linter.Checker):
+    """Prefer replace for function."""
+
+    name: str = "convention.prefer_replace_for_function"
+    code: str = "CVG009"
+
+    is_auto_fixable: bool = False
+
+    def visit_CreateFunctionStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.CreateFunctionStmt,
+    ) -> None:
+        """Visit CreateFunctionStmt."""
+        if not node.replace:
+            self.violations.append(
+                linter.Violation(
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
+                    description="Prefer replace for function",
+                ),
+            )
+
+
+class PreferReplaceForView(linter.Checker):
+    """Prefer replace for view."""
+
+    name: str = "convention.prefer_replace_for_view"
+    code: str = "CVG010"
+
+    is_auto_fixable: bool = False
+
+    def visit_ViewStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.ViewStmt,
+    ) -> None:
+        """Visit ViewStmt."""
+        # print(node)
+        if not node.replace:
+            self.violations.append(
+                linter.Violation(
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
+                    description="Prefer replace for view",
+                ),
+            )

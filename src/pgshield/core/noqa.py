@@ -10,42 +10,18 @@ from pglast import parser
 from pgshield.core import errors, linter
 
 
-def replace_comments_with_spaces(sql: str) -> str:
-    """Replace comments with spaces."""
-    # Regex pattern for single-line comments at the start of a line
-    single_line_pattern = re.compile(r"^--.*$", re.MULTILINE)
-    # Regex pattern for multi-line comments at the start of a line
-    multi_line_pattern = re.compile(r"^\s*/\*[\s\S]*?\*/\s*$", re.MULTILINE)
-
-    # Function to replace matches with spaces of the same length
-    def replace_with_spaces(match):
-        return " " * len(match.group(0))
-
-    # Replace single-line comments with spaces
-    sql = single_line_pattern.sub(replace_with_spaces, sql)
-    # Replace multi-line comments with spaces
-    return multi_line_pattern.sub(replace_with_spaces, sql)
-
-
-def remove_sql_comments(statement: str) -> str:
-    """Remove comments from SQL statement."""
-    # We remove only comments that start a line, not inline comments
+def remove_delimiter_from_sql_comment(statement: str, delimter: str = ";") -> str:
+    """Remove delimiter from SQL statement."""
     comment_pattern = r"\s*--.*|^\s*\/[*][\S\s]*?[*]\/"
     return re.sub(
         comment_pattern,
-        lambda match: match.group(0).replace(";", ""),
+        lambda match: match.group(0).replace(delimter, ""),
         statement,
         flags=re.MULTILINE,
     )
-    # return re.sub(
-    #     r"^\s*--.*|^\s*\/[*][\S\s]*?[*]\/",
-    #     "",
-    #     statement,
-    #     flags=re.MULTILINE,
-    # )
 
 
-def _split_sql(statement: str) -> list[tuple[int, int, str]]:
+def _split_statement(statement: str) -> list[tuple[int, int, str]]:
     """Split SQL statement into lines."""
     lines: list[tuple[int, int, str]] = []
     line_offset = 0
@@ -56,41 +32,12 @@ def _split_sql(statement: str) -> list[tuple[int, int, str]]:
         lines.append((line_offset, line_offset + line_length, line))
         line_offset += line_length + 1
 
-    # print(lines)
-
     return lines
-
-
-# def _extract_comments(statement):
-#     lines = []
-#     lofs = 0
-#     for line in statement.splitlines(True):
-#         llen = len(line)
-#         lines.append((lofs, lofs+llen, line))
-#         lofs += llen
-#     comments = []
-#     continue_previous = False
-#     for token in scan(statement):
-#         if token.name in ('C_COMMENT', 'SQL_COMMENT'):
-#             for bol_ofs, eol_ofs, line in lines:
-#                 if bol_ofs <= token.start < eol_ofs:
-#                     break
-#             else:  # pragma: no cover
-#                 raise RuntimeError('Uhm, logic error!')
-#             at_start_of_line = not line[:token.start - bol_ofs].strip()
-#             text = statement[token.start:token.end+1]
-#             comments.append(Comment(token.start, text, at_start_of_line, continue_previous))
-#             continue_previous = True
-#         else:
-#             continue_previous = False
-#     return comments
 
 
 def extract(statement: str) -> list[tuple[int, str]]:
     """Extract noqa from inline SQL comment."""
-    # statement = remove_sql_comments(statement)
-
-    lines = _split_sql(statement)
+    lines = _split_statement(statement)
 
     comments: list[tuple[int, str]] = []
 
@@ -100,31 +47,22 @@ def extract(statement: str) -> list[tuple[int, str]]:
 
         if token.name == "SQL_COMMENT":
 
-            # print(token)
-
             for beginning_of_line_offset, end_of_line_offset, _ in lines:
                 if beginning_of_line_offset <= token.start < end_of_line_offset:
                     break
-            # print(beginning_of_line_offset)
 
             comment = statement[token.start : (token.end + 1)]
-            # print(comment)
-            # is_sql_comment = comment.text.startswith('--')
-            # if is_sql_comment:
-            #     text = comment.text[2:].strip()
-            # else:
-            #     text = comment.text[2:-2].strip()
 
             # Normal comment lines can also have noqa e.g. --new table -- noqa: UNS05
             # Therefore extract last possible inline ignore.
             comment = [c.strip() for c in comment.split("--")][-1]
-            # print(comment)
 
             if comment.startswith("noqa"):
                 # This is an ignore identifier
                 comment_remainder = comment[4:]
 
                 if comment_remainder:
+
                     if not comment_remainder.startswith(":"):
                         raise errors.SQLParseError(
                             msg,
@@ -140,51 +78,22 @@ def extract(statement: str) -> list[tuple[int, str]]:
     return comments
 
 
-def directive(func: abc.Callable[..., typing.Any]) -> abc.Callable[..., typing.Any]:
-    """Handle application of noqa on rules."""
+def apply(func: abc.Callable[..., typing.Any]) -> abc.Callable[..., typing.Any]:
+    """Apply noqa on rules."""
 
     @functools.wraps(func)
     def wrapper(
-        self: typing.Any,  # noqa: ANN401
+        self: typing.Any,
         *args: typing.Any,
         **kwargs: typing.Any,
-    ) -> typing.Any:  # noqa: ANN401
-
-        statement: linter.Statement = linter.get_statement_details(args[0])
-
-        self.statement = statement
+    ) -> typing.Any:
 
         if (
-            statement.location,
+            self.statement_location,
             self.code,
         ) in self.noqa_ignore_rules:
 
             return None
-
-        return func(self, *args, **kwargs)
-
-    return wrapper
-
-
-def set_locations_for_node(
-    func: abc.Callable[..., typing.Any],
-) -> abc.Callable[..., typing.Any]:
-    """Set locations for node."""
-
-    @functools.wraps(func)
-    def wrapper(
-        self: linter.Checker,
-        *args: typing.Any,
-        **kwargs: typing.Any,
-    ) -> typing.Any:  # noqa: ANN401
-
-        statement: linter.Statement = linter.get_statement_details(args[0])
-
-        self.node_location = linter.get_node_location(args[1])
-
-        self.statement_location = statement.location
-
-        self.statement_length = statement.length
 
         return func(self, *args, **kwargs)
 

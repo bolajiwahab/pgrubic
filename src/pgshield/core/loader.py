@@ -22,7 +22,7 @@ def load_rules() -> list[linter.Checker]:
 
                 rules.append(typing.cast(linter.Checker, obj))
 
-                _apply_noqa_directive(obj)
+                _apply_noqa(obj)
                 _set_locations_for_node(obj)
 
     _check_duplicate_rules(rules)
@@ -44,19 +44,19 @@ def _check_duplicate_rules(rules: list[linter.Checker]) -> None:
         seen.add(rule.code)
 
 
-def _apply_noqa_directive(obj: typing.Any) -> None:  # noqa: ANN401
-    """Apply noqa directive on visitors."""
+def _apply_noqa(obj: typing.Any) -> None:
+    """Apply noqa on visitors."""
     for name, method in inspect.getmembers(obj, inspect.isfunction):
 
         if method.__name__.startswith("visit_"):
 
-            setattr(obj, name, noqa.directive(method))
+            setattr(obj, name, noqa.apply(method))
 
 
-def _set_locations_for_node(obj: typing.Any) -> None:  # noqa: ANN401
+def _set_locations_for_node(obj: typing.Any) -> None:
     """Set locations for node in visitors."""
     for name, method in inspect.getmembers(obj, inspect.isfunction):
 
         if method.__name__.startswith("visit_"):
 
-            setattr(obj, name, noqa.set_locations_for_node(method))
+            setattr(obj, name, linter.set_locations_for_node(method))
