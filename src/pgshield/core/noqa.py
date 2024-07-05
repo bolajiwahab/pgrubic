@@ -150,27 +150,41 @@ def directive(func: abc.Callable[..., typing.Any]) -> abc.Callable[..., typing.A
         **kwargs: typing.Any,
     ) -> typing.Any:  # noqa: ANN401
 
-        statement_index: int = linter.get_statement_index(args[0])
+        statement: linter.Statement = linter.get_statement_details(args[0])
 
-        # print(args[0][statement_index].stmt_location)
-
-        # if args[0][statement_index].stmt_location == 0:
-        #     location = args[0][statement_index].stmt_len
-        # #    print(location)
-
-        # # statement_location = args[0][statement_index].stmt_location == 0
-        # total_statement_location = (
-        #     args[0][statement_index].stmt_location + args[0][statement_index].stmt_len
-        # )
-
-        # print(args[0][statement_index].stmt_location)
+        self.statement = statement
 
         if (
-            args[0][statement_index].stmt_location,
+            statement.location,
             self.code,
         ) in self.noqa_ignore_rules:
 
             return None
+
+        return func(self, *args, **kwargs)
+
+    return wrapper
+
+
+def set_locations_for_node(
+    func: abc.Callable[..., typing.Any],
+) -> abc.Callable[..., typing.Any]:
+    """Set locations for node."""
+
+    @functools.wraps(func)
+    def wrapper(
+        self: linter.Checker,
+        *args: typing.Any,
+        **kwargs: typing.Any,
+    ) -> typing.Any:  # noqa: ANN401
+
+        statement: linter.Statement = linter.get_statement_details(args[0])
+
+        self.node_location = linter.get_node_location(args[1])
+
+        self.statement_location = statement.location
+
+        self.statement_length = statement.length
 
         return func(self, *args, **kwargs)
 

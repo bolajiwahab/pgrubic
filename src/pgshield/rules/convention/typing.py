@@ -6,6 +6,11 @@ from pgshield import SCHEMA_QUALIFIED_TYPE, system_types
 from pgshield.core import linter
 
 
+def _is_column_creation(ancestors: ast.Node) -> bool:
+    """Check system type."""
+    return ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors
+
+
 class PreferTimestampWithTimezoneOverTimestampWithoutTimezone(linter.Checker):
     """Prefer timestamp with timezone over timestamp without timezone."""
 
@@ -20,18 +25,16 @@ class PreferTimestampWithTimezoneOverTimestampWithoutTimezone(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
-        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
+        if _is_column_creation(ancestors) and (
             node.typeName.names[-1].sval == "timestamp"
             and node.typeName.names[0].sval == "pg_catalog"
         ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer timestamp with timezone over timestamp without timezone",  # noqa: E501
                 ),
             )
@@ -55,17 +58,15 @@ class PreferTimestampWithTimezoneOverTimeWithTimezone(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
-        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
+        if _is_column_creation(ancestors) and (
             node.typeName.names[-1].sval == "timetz"
         ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer timestamp with timezone over time with timezone",  # noqa: E501
                 ),
             )
@@ -85,17 +86,15 @@ class PreferEntireTimestampWithoutTimezone(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
-        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
+        if _is_column_creation(ancestors) and (
             node.typeName.names[-1].sval == "timestamp" and node.typeName.typmods
         ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer entire timestamp without timezone",
                 ),
             )
@@ -115,17 +114,15 @@ class PreferEntireTimestampWithTimezone(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
-        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
+        if _is_column_creation(ancestors) and (
             node.typeName.names[-1].sval == "timestamptz" and node.typeName.typmods
         ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer entire timestamp with timezone",
                 ),
             )
@@ -145,17 +142,15 @@ class PreferTextOverChar(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
-        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
+        if _is_column_creation(ancestors) and (
             node.typeName.names[-1].sval in ["bpchar", "char"]
         ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer text over char",
                 ),
             )
@@ -175,17 +170,15 @@ class PreferTextOverVarchar(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
-        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
+        if _is_column_creation(ancestors) and (
             node.typeName.names[-1].sval == "varchar"
         ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer text over varchar",
                 ),
             )
@@ -205,17 +198,13 @@ class PreferNumericOverMoney(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
-        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
-            node.typeName.names[-1].sval == "money"
-        ):
+        if _is_column_creation(ancestors) and (node.typeName.names[-1].sval == "money"):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer numeric over money",
                 ),
             )
@@ -235,17 +224,15 @@ class PreferIdentityColumnOverSerial(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
-        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
+        if _is_column_creation(ancestors) and (
             node.typeName.names[-1].sval == "serial"
         ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer identity column over serial",
                 ),
             )
@@ -265,17 +252,15 @@ class PreferIdentityColumnOverBigSerial(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
-        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
+        if _is_column_creation(ancestors) and (
             node.typeName.names[-1].sval == "bigserial"
         ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer identity column over bigserial",
                 ),
             )
@@ -295,17 +280,13 @@ class PreferJsonbOverJson(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
-        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
-            node.typeName.names[-1].sval == "json"
-        ):
+        if _is_column_creation(ancestors) and (node.typeName.names[-1].sval == "json"):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer jsonb over json",
                 ),
             )
@@ -325,17 +306,13 @@ class PreferBigIntOverInt(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
-        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
-            node.typeName.names[-1].sval == "int4"
-        ):
+        if _is_column_creation(ancestors) and (node.typeName.names[-1].sval == "int4"):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer bigint over int",
                 ),
             )
@@ -355,17 +332,13 @@ class PreferBigIntOverSmallInt(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
-        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
-            node.typeName.names[-1].sval == "int2"
-        ):
+        if _is_column_creation(ancestors) and (node.typeName.names[-1].sval == "int2"):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer bigint over smallint",
                 ),
             )
@@ -386,7 +359,7 @@ class WronglyTypedRequiredColumn(linter.Checker):
     ) -> None:
         """Visit ColumnDef."""
         if (
-            (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors)
+            _is_column_creation(ancestors)
             and node.colname in self.config.required_columns
             and ".".join(a.sval for a in node.typeName.names)
             != system_types.get(
@@ -402,14 +375,11 @@ class WronglyTypedRequiredColumn(linter.Checker):
 
             given_type = ".".join(a.sval for a in node.typeName.names)
 
-            statement_index: int = linter.get_statement_index(ancestors)
-
             self.violations.append(
                 linter.Violation(
-                    statement_location=ancestors[statement_index].stmt_location,
-                    statement_length=ancestors[statement_index].stmt_len,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    # statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description=f"Column '{node.colname}' expected type is"
                     f" '{self.config.required_columns[node.colname]}',"
                     f" found '{system_types.get(given_type, given_type)}'",
@@ -444,13 +414,11 @@ class BlacklistedType(linter.Checker):
             ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors
         ) and node.typeName.names[-1].sval in self.config.blacklisted_types:
 
-            statement_index: int = linter.get_statement_index(ancestors)
-
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description=f"Type '{node.typeName.names[-1].sval}' is blacklisted",
                 ),
             )
@@ -470,17 +438,15 @@ class PreferIdentityColumnOverSmallSerial(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
-        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
+        if _is_column_creation(ancestors) and (
             node.typeName.names[-1].sval == "smallserial"
         ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer identity column over smallserial",
                 ),
             )
@@ -500,17 +466,15 @@ class PreferJsonbOverHstore(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
-        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
+        if _is_column_creation(ancestors) and (
             node.typeName.names[-1].sval == "hstore"
         ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer jsonb over hstore",
                 ),
             )
@@ -530,17 +494,13 @@ class PreferJsonbOverXml(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
-        if (ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors) and (
-            node.typeName.names[-1].sval == "xml"
-        ):
+        if _is_column_creation(ancestors) and (node.typeName.names[-1].sval == "xml"):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer jsonb over xml",
                 ),
             )

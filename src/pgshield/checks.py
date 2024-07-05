@@ -25,7 +25,7 @@ class Comment:
 
 import re
 
-def _extract_comments(statement: str) -> Comment:
+def _extract_comments(statement: linter.Statement) -> Comment:
 
     lines: list[tuple[int, int, str]] = []
     line_offset = 0

@@ -19,13 +19,13 @@ class DropTablespace(linter.Checker):
         node: ast.DropTableSpaceStmt,
     ) -> None:
         """Visit DropTableSpaceStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
+        statement: linter.Statement = linter.get_statement_details(ancestors)
 
         self.violations.append(
             linter.Violation(
-                lineno=ancestors[statement_index].stmt_location,
-                column_offset=linter.get_column_offset(ancestors, node),
-                statement=ancestors[statement_index],
+                lineno=statement.location,
+                column_offset=linter.get_node_location(node),
+                statement=ancestors[statement],
                 description="Drop tablespace",
             ),
         )
@@ -45,13 +45,13 @@ class DropDatabase(linter.Checker):
         node: ast.DropdbStmt,
     ) -> None:
         """Visit DropdbStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
+        statement: linter.Statement = linter.get_statement_details(ancestors)
 
         self.violations.append(
             linter.Violation(
-                lineno=ancestors[statement_index].stmt_location,
-                column_offset=linter.get_column_offset(ancestors, node),
-                statement=ancestors[statement_index],
+                lineno=statement.location,
+                column_offset=linter.get_node_location(node),
+                statement=ancestors[statement],
                 description="Drop database",
             ),
         )
@@ -71,15 +71,15 @@ class DropSchema(linter.Checker):
         node: ast.DropStmt,
     ) -> None:
         """Visit DropStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
+        statement: linter.Statement = linter.get_statement_details(ancestors)
 
         if node.removeType == enums.ObjectType.OBJECT_SCHEMA:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    lineno=statement.location,
+                    column_offset=linter.get_node_location(node),
+                    statement=ancestors[statement],
                     description="Drop schema is not safe.",
                 ),
             )

@@ -25,8 +25,6 @@ class GapInRangePartitionBound(linter.Checker):
         """Visit PartitionBoundSpec."""
         partitioning_resolution: list[int] = []
 
-        statement_index: int = linter.get_statement_index(ancestors)
-
         if (
             not node.is_default
             and node.strategy == enums.PartitionStrategy.PARTITION_STRATEGY_RANGE
@@ -74,9 +72,9 @@ class GapInRangePartitionBound(linter.Checker):
             if all(resolution != 1 for resolution in partitioning_resolution):
                 self.violations.append(
                     linter.Violation(
-                        lineno=ancestors[statement_index].stmt_location,
-                        column_offset=linter.get_column_offset(ancestors, node),
-                        statement=ancestors[statement_index],
+                        statement_location=self.statement_location,
+                        statement_length=self.statement_length,
+                        node_location=self.node_location,
                         description="Gap in range partition bound",
                     ),
                 )
@@ -102,8 +100,6 @@ class PartitionStrategiesWhitelisted(linter.Checker):
         node: ast.PartitionSpec,
     ) -> None:
         """Visit PartitionSpec."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         if (
             self.config.partition_strategies
             and self.partition_strategies_mapping[node.strategy]
@@ -112,9 +108,9 @@ class PartitionStrategiesWhitelisted(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description=f"Partitioning strategy '{self.partition_strategies_mapping[node.strategy]}' is not whitelisted",  # noqa: E501
                 ),
             )
@@ -134,17 +130,15 @@ class PreferPartitioningByOneKey(linter.Checker):
         node: ast.PartitionSpec,
     ) -> None:
         """Visit PartitionSpec."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         max_partition_elements = 1
 
         if len(node.partParams) > max_partition_elements:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer partitioning by one key",
                 ),
             )

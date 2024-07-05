@@ -75,7 +75,7 @@ no_implicit_reexport = true
 
 [tool.ruff]
 select = ["ALL"]
-ignore = ["ANN101", "ANN102", "N802"]
+ignore = ["ANN101", "ANN102", "N802", "ARG002"]
 line-length = 88
 
 [tool.ruff.lint.flake8-annotations]

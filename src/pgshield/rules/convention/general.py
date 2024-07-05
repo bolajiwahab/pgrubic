@@ -21,8 +21,6 @@ class PreferNonSQLASCIIEncoding(linter.Checker):
         node: ast.CreatedbStmt,
     ) -> None:
         """Visit CreatedbStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         options: dict[str, str] = (
             {
                 re.sub(r"\s*", "", stream.RawStream()(option), flags=re.UNICODE)
@@ -44,9 +42,9 @@ class PreferNonSQLASCIIEncoding(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer non sql_ascii encoding",
                 ),
             )
@@ -68,13 +66,11 @@ class PreferDeclarativePartitioningToTableInheritance(linter.Checker):
         """Visit CreateStmt."""
         if node.inhRelations and not node.partbound:
 
-            statement_index: int = linter.get_statement_index(ancestors)
-
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer declarative partitioning to table inheritance",
                 ),
             )
@@ -94,13 +90,11 @@ class PreferTriggerOverRule(linter.Checker):
         node: ast.RuleStmt,
     ) -> None:
         """Visit RuleStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         self.violations.append(
             linter.Violation(
-                lineno=ancestors[statement_index].stmt_location,
-                column_offset=linter.get_column_offset(ancestors, node),
-                statement=ancestors[statement_index],
+                statement_location=self.statement_location,
+                statement_length=self.statement_length,
+                node_location=self.node_location,
                 description="Prefer trigger over rule",
             ),
         )
@@ -122,8 +116,6 @@ class MissingRequiredColumn(linter.Checker):
         """Visit CreateStmt."""
         if node.tableElts:
 
-            statement_index: int = linter.get_statement_index(ancestors)
-
             given_columns: list[str] = [
                 column.colname
                 for column in node.tableElts
@@ -136,9 +128,9 @@ class MissingRequiredColumn(linter.Checker):
 
                     self.violations.append(
                         linter.Violation(
-                            lineno=ancestors[statement_index].stmt_location,
-                            column_offset=linter.get_column_offset(ancestors, node),
-                            statement=ancestors[statement_index],
+                            statement_location=self.statement_location,
+                            statement_length=self.statement_length,
+                            node_location=self.node_location,
                             description=f"Column '{column}' is required",
                         ),
                     )
@@ -175,13 +167,11 @@ class PreferLookUpTableOverEnum(linter.Checker):
         node: ast.CreateEnumStmt,
     ) -> None:
         """Visit CreateEnumStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         self.violations.append(
             linter.Violation(
-                lineno=ancestors[statement_index].stmt_location,
-                column_offset=linter.get_column_offset(ancestors, node),
-                statement=ancestors[statement_index],
+                statement_location=self.statement_location,
+                statement_length=self.statement_length,
+                node_location=self.node_location,
                 description="Prefer look up table over enum",
             ),
         )
@@ -201,18 +191,16 @@ class PreferIndexElementsUpToThree(linter.Checker):
         node: ast.IndexStmt,
     ) -> None:
         """Visit IndexStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         max_index_elements = 3
 
         if len(node.indexParams) > max_index_elements:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
-                    description="Prefer index elements up to three",
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
+                    description=f"Prefer index elements up to {max_index_elements}",
                 ),
             )
 
@@ -264,8 +252,6 @@ class TableShouldHavePrimaryKey(linter.Checker):
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         if (
             node.tableElts
             and not self._check_for_column_level_primary_key(node)
@@ -274,9 +260,9 @@ class TableShouldHavePrimaryKey(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description=f"Table {node.relation.relname} should have a primary key",  # noqa: E501
                 ),
             )
@@ -296,8 +282,6 @@ class BooleanFieldShouldBeNonNullable(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         if (
             ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors
         ) and node.typeName.names[-1].sval == "bool":
@@ -318,9 +302,9 @@ class BooleanFieldShouldBeNonNullable(linter.Checker):
 
                 self.violations.append(
                     linter.Violation(
-                        lineno=ancestors[statement_index].stmt_location,
-                        column_offset=linter.get_column_offset(ancestors, node),
-                        statement=ancestors[statement_index],
+                        statement_location=self.statement_location,
+                        statement_length=self.statement_length,
+                        node_location=self.node_location,
                         description="Boolean field should be non-nullable",
                     ),
                 )

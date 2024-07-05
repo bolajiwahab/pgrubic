@@ -21,17 +21,15 @@ class IndexNaming(linter.Checker):
         node: ast.IndexStmt,
     ) -> None:
         """Visit IndexStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         if (
             not re.match(self.config.regex_index, node.idxname)
         ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description=f"Index '{node.idxname}' does not follow naming"
                                 f" convention '{self.config.regex_index}'",
                 ),
@@ -52,8 +50,6 @@ class ConstraintNaming(linter.Checker):
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         constraint = {
             enums.ConstrType.CONSTR_PRIMARY: {
                 "type": "Primary key",
@@ -83,9 +79,9 @@ class ConstraintNaming(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description=f"{constraint[node.contype]["type"]} constraint"
                                 f" '{node.conname}' does not follow naming convention"
                                 f" '{constraint[node.contype]["naming_convention"]}",
@@ -107,8 +103,6 @@ class PartionNaming(linter.Checker):
         node: ast.CreateStmt,
     ) -> None:
         """Visit PartitionCmd."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         if (
             node.partbound is not None
             and not re.match(self.config.regex_partition, node.relation.relname)
@@ -116,9 +110,9 @@ class PartionNaming(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description=f"Partition '{node.relation.relname}' does not follow"
                                 f" naming convention '{self.config.regex_partition}'",
                 ),
@@ -139,17 +133,15 @@ class SequenceNaming(linter.Checker):
         node: ast.CreateSeqStmt,
     ) -> None:
         """Visit CreateSeqStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         if (
             not re.match(self.config.regex_sequence, node.sequence.relname)
         ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description=f"Sequence '{node.sequence.relname}' does not follow"
                                 f" naming convention '{self.config.regex_sequence}'",
                 ),
@@ -170,8 +162,6 @@ class PreferNamedConstraint(linter.Checker):
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         if not node.conname and node.contype in (
             enums.ConstrType.CONSTR_CHECK,
             enums.ConstrType.CONSTR_PRIMARY,
@@ -182,9 +172,9 @@ class PreferNamedConstraint(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer named constraint",
                 ),
             )

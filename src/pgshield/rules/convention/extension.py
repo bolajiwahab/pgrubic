@@ -1,4 +1,4 @@
-"""Whitelisted extensions."""
+"""Convention for extensions."""
 
 from pglast import ast
 
@@ -19,15 +19,13 @@ class IsExtensionWhitelisted(linter.Checker):
         node: ast.CreateExtensionStmt,
     ) -> None:
         """Visit CreateExtensionStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         if node.extname not in self.config.extensions:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description=f"Extension '{node.extname}' is not whitelisted",
                 ),
             )

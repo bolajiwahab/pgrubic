@@ -21,9 +21,9 @@ class _Schema(abc.ABC, linter.Checker):
         self,
         *,
         schema_name: str | None,
-        lineno: int,
-        column_offset: int,
-        statement: str,
+        statement_length: int,
+        statement_location: int,
+        node_location: int,
     ) -> None:
         """Check schema."""
         ...
@@ -34,8 +34,6 @@ class _Schema(abc.ABC, linter.Checker):
         node: ast.RangeVar,
     ) -> None:
         """Visit RangeVar."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         create = [
             ast.CreateStmt,
             ast.CreateTableAsStmt,
@@ -49,9 +47,9 @@ class _Schema(abc.ABC, linter.Checker):
 
                 self._check_schema(
                     schema_name=node.schemaname,
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                 )
 
     def visit_CreateEnumStmt(
@@ -60,15 +58,13 @@ class _Schema(abc.ABC, linter.Checker):
         node: ast.CreateEnumStmt,
     ) -> None:
         """Visit CreateEnumStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         schema_name = node.typeName[0].sval if len(node.typeName) != 1 else None
 
         self._check_schema(
             schema_name=schema_name,
-            lineno=ancestors[statement_index].stmt_location,
-            column_offset=linter.get_column_offset(ancestors, node),
-            statement=ancestors[statement_index],
+            statement_location=self.statement_location,
+            statement_length=self.statement_length,
+            node_location=self.node_location,
         )
 
     def visit_CreateFunctionStmt(
@@ -77,15 +73,13 @@ class _Schema(abc.ABC, linter.Checker):
         node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         schema_name = node.funcname[0].sval if len(node.funcname) != 1 else None
 
         self._check_schema(
             schema_name=schema_name,
-            lineno=ancestors[statement_index].stmt_location,
-            column_offset=linter.get_column_offset(ancestors, node),
-            statement=ancestors[statement_index],
+            statement_location=self.statement_location,
+            statement_length=self.statement_length,
+            node_location=self.node_location,
         )
 
     def visit_CreateExtensionStmt(
@@ -94,8 +88,6 @@ class _Schema(abc.ABC, linter.Checker):
         node: ast.CreateExtensionStmt,
     ) -> None:
         """Visit CreateExtensionStmt."""
-        statement_index: int = linter.get_statement_index(ancestors)
-
         options: dict[str, str] = (
             {
                 re.sub(r"\s*", "", stream.RawStream()(option), flags=re.UNICODE)
@@ -115,9 +107,9 @@ class _Schema(abc.ABC, linter.Checker):
 
         self._check_schema(
             schema_name=options.get("schema"),
-            lineno=ancestors[statement_index].stmt_location,
-            column_offset=linter.get_column_offset(ancestors, node),
-            statement=ancestors[statement_index],
+            statement_location=self.statement_location,
+            statement_length=self.statement_length,
+            node_location=self.node_location,
         )
 
 
@@ -132,19 +124,19 @@ class SchemaQualified(_Schema):
     def _check_schema(
         self,
         schema_name: str | None,
-        lineno: int,
-        column_offset: int,
-        statement: str,
+        statement_location: int,
+        statement_length: int,
+        node_location: int,
     ) -> None:
         """Check that object is schema qualified."""
         if not schema_name:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=lineno,
-                    column_offset=column_offset,
-                    statement=statement,
-                    description="Object should be schema qualified",
+                    statement_location=statement_location,
+                    statement_length=statement_length,
+                    node_location=node_location,
+                    description="Database object should be schema qualified",
                 ),
             )
 
@@ -160,9 +152,9 @@ class SchemasWhitelisted(_Schema):
     def _check_schema(
         self,
         schema_name: str | None,
-        lineno: int,
-        column_offset: int,
-        statement: str,
+        statement_location: int,
+        statement_length: int,
+        node_location: int,
     ) -> None:
         """Check schema is whitelisted."""
         if (
@@ -173,9 +165,9 @@ class SchemasWhitelisted(_Schema):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=lineno,
-                    column_offset=column_offset,
-                    statement=statement,
+                    statement_location=statement_location,
+                    statement_length=statement_length,
+                    node_location=node_location,
                     description=f"Schema '{schema_name}' is not whitelisted",
                 ),
             )

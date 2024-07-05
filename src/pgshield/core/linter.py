@@ -12,12 +12,20 @@ from colorama import Fore, Style
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
+class Line:
+    """Representation of line of statement."""
+
+    number: int
+    column_offset: int
+    text: str
+
+
+@dataclasses.dataclass(kw_only=True, frozen=True)
 class Statement:
     """Representation of statement."""
 
-    line_no: int
-    column_offset: int
-    text: str
+    location: int
+    length: int
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
@@ -26,7 +34,7 @@ class Violation:
 
     statement_location: int
     statement_length: int
-    column_offset: ast.Node
+    node_location: int
     description: str
 
 
@@ -46,6 +54,12 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
         self.config: config.Config = dataclasses.field(
             default_factory=lambda: config.Config(**config.load_default_config()),
         )
+
+        self.statement_location: int = 0
+
+        self.statement_length: int = 0
+
+        self.node_location: int = 0
 
     required_attributes: tuple[str, ...] = ("name", "code", "is_auto_fixable")
 
@@ -80,17 +94,17 @@ class Linter:
 
         for violation in checker.violations:
 
-            statement = get_statement_details(
+            line: Line = get_line_details(
                 violation.statement_location,
                 violation.statement_length,
-                violation.column_offset,
+                violation.node_location,
                 source_code,
             )
 
             sys.stdout.write(
-                f"{file_name}:{statement.line_no}:{statement.column_offset}:"
+                f"{file_name}:{line.number}:{line.column_offset}:"
                 f" {checker.code}: {violation.description}:"
-                f" {Fore.GREEN}\n\n{statement.text}\n\n{Style.RESET_ALL}",
+                f" {Fore.GREEN}\n\n{line.text}\n\n{Style.RESET_ALL}",
             )
 
     def run(self, source_path: str) -> bool:
@@ -141,8 +155,8 @@ class Linter:
         return violations_found
 
 
-def get_statement_index(ancestors: ast.Node) -> int:
-    """Get statement index.
+def get_statement_details(ancestors: ast.Node) -> Statement:
+    """Get statement details.
 
     pglast's AST is not a python list hence we cannot use list functions such as `len`
     directly on it. We need to build a list from the AST.
@@ -157,42 +171,36 @@ def get_statement_index(ancestors: ast.Node) -> int:
         nodes.append(node)
 
     # The current node's parent is located two indexes from the end of the list.
-    return len(nodes) - 2
+    return Statement(
+        location=ancestors[len(nodes) - 2].stmt_location,
+        length=ancestors[len(nodes) - 2].stmt_len,
+    )
 
 
-def get_column_offset(ancestors: ast.Node, node: ast.Node) -> int:
-    """Get column offset."""
+def get_node_location(node: ast.Node) -> int:
+    """Get node location."""
     return getattr(node, "location", 0)
 
 
-def get_statement_details(
+def get_line_details(
     statement_location: int,
     statement_length: int,
     column_offset: int,
     source_code: str,
-) -> Statement:
-    """Get statement details."""
-    # print(column_offset, statement_location)
-    # print(source_code)
-    column_offset = 0 if statement_location == 0 else column_offset - statement_location
+) -> Line:
+    """Get line details."""
+    actual_column_offset = (
+        column_offset - statement_location if column_offset != 0 else statement_length
+    )
 
-    total_statement_length = statement_location + statement_length
+    statement_location_end = statement_location + statement_length
 
-    # print(statement_location, statement_length)
+    number = source_code[:statement_location_end].count("\n") + 1
 
-    line_no = source_code[:total_statement_length].count("\n") + 1
+    line_start = source_code[:statement_location_end].rfind(";\n") + 1
 
-    # print(source_code[:total_statement_length].rstrip(";"))
-
-    line_start = source_code[:total_statement_length].rfind(";\n") + 1
-    # s[:s.rfind("b")].rfind("b")
-    # line_start = source_code.rfind(";", 0, total_statement_length) + 1
-    # contents.rfind('\n', 0, loc) + 1
-
-    line_end = source_code.find("\n", total_statement_length)
+    line_end = source_code.find("\n", statement_location_end)
 
     text = source_code[line_start:line_end].strip("\n")
 
-    # print(line_start, line_end)
-
-    return Statement(line_no=line_no, column_offset=column_offset, text=text)
+    return Line(number=number, column_offset=actual_column_offset, text=text)

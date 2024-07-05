@@ -41,3 +41,8 @@ ALTER TABLE public.ecdict ADD COLUMN id bigint default current_timestamp not nul
 
 ALTER TABLE public.ecdict ADD COLUMN id bigint default current_timestamp not null -- noqa: USR002
 ;
+
+-- create extension postgis with schema public1;
+
+CREATE SEQUENCE "Serial" START 101 -- noqa: CVI001
+;

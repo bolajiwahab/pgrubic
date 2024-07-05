@@ -19,15 +19,15 @@ class NotNullOnExistingColumn(linter.Checker):
         node: ast.AlterTableCmd,
     ) -> None:
         """Visit AlterTableCmd."""
-        statement_index: int = linter.get_statement_index(ancestors)
+        statement: linter.Statement = linter.get_statement_details(ancestors)
 
         if node.subtype == enums.AlterTableType.AT_SetNotNull:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    lineno=statement.location,
+                    column_offset=linter.get_node_location(node),
+                    statement=ancestors[statement],
                     description="Not null on existing column",
                 ),
             )
@@ -47,7 +47,7 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        statement_index: int = linter.get_statement_index(ancestors)
+        statement: linter.Statement = linter.get_statement_details(ancestors)
 
         if ast.AlterTableStmt in ancestors and node.constraints:
 
@@ -70,18 +70,18 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
 
                 # print(node.location)
 
-                # print(linter.get_column_offset(ancestors, node))
+                # print(linter.get_node_location(node))
                 # print(ancestors.node)
                 # print(ancestors.parent)
                 # print(abs(ancestors))
-                # print(ancestors[statement_index].stmt_location)
+                # print(statement.location)
                 # print(node.location)
                 # print(node.constraints)
 
                 self.violations.append(
                     linter.Violation(
-                        statement_location=ancestors[statement_index].stmt_location,
-                        statement_length=ancestors[statement_index].stmt_len,
+                        statement_location=statement.location,
+                        statement_length=ancestors[statement].stmt_len,
                         column_offset=location,
                         description="Not null on new column with no static default",
                     ),
@@ -102,7 +102,7 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
 #         node: ast.Constraint,
 #     ) -> None:
 #         """Visit Constraint."""
-#         statement_index: int = linter.get_statement_index(ancestors)
+#         statement: linter.Statement = linter.get_statement_details(ancestors)
 
 #         if (
 #             ast.AlterTableStmt in ancestors
@@ -112,9 +112,9 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
 
 #             self.violations.append(
 #                 linter.Violation(
-#                     statement_location=ancestors[statement_index].stmt_location,
-#                     statement_length=ancestors[statement_index].stmt_len,
-#                     column_offset=linter.get_column_offset(ancestors, node),
+#                     statement_location=statement.location,
+#                     statement_length=ancestors[statement].stmt_len,
+#                     column_offset=linter.get_node_location(node),
 #                     description="Volatile default on new column",
 #                 ),
 #             )
@@ -134,7 +134,7 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        statement_index: int = linter.get_statement_index(ancestors)
+        statement: linter.Statement = linter.get_statement_details(ancestors)
 
         if (
             ast.AlterTableStmt in ancestors
@@ -144,9 +144,9 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    lineno=statement.location,
+                    column_offset=linter.get_node_location(node),
+                    statement=ancestors[statement],
                     description="Validated foreign key constraint on existing rows",
                 ),
             )
@@ -169,7 +169,7 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        statement_index: int = linter.get_statement_index(ancestors)
+        statement: linter.Statement = linter.get_statement_details(ancestors)
 
         if (
             ast.AlterTableStmt in ancestors
@@ -179,9 +179,9 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    lineno=statement.location,
+                    column_offset=linter.get_node_location(node),
+                    statement=ancestors[statement],
                     description="Validated check constraint on existing rows",
                 ),
             )
@@ -201,7 +201,7 @@ class UniqueConstraintCreatingNewIndex(linter.Checker):
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        statement_index: int = linter.get_statement_index(ancestors)
+        statement: linter.Statement = linter.get_statement_details(ancestors)
 
         if (
             ast.AlterTableStmt in ancestors
@@ -211,9 +211,9 @@ class UniqueConstraintCreatingNewIndex(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    lineno=statement.location,
+                    column_offset=linter.get_node_location(node),
+                    statement=ancestors[statement],
                     description="Unique constraint creating new index",
                 ),
             )
@@ -233,7 +233,7 @@ class PrimaryKeyConstraintCreatingNewIndex(linter.Checker):
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        statement_index: int = linter.get_statement_index(ancestors)
+        statement: linter.Statement = linter.get_statement_details(ancestors)
 
         if (
             ast.AlterTableStmt in ancestors
@@ -243,9 +243,9 @@ class PrimaryKeyConstraintCreatingNewIndex(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    lineno=statement.location,
+                    column_offset=linter.get_node_location(node),
+                    statement=ancestors[statement],
                     description="Primary key constraint creating new index",
                 ),
             )

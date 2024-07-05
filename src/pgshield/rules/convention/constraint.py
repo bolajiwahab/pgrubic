@@ -15,18 +15,18 @@ class NotNullColumn(linter.Checker):
 
     def _register_violation(
         self,
-        column: str,
-        lineno: int,
-        column_offset: int,
-        statement: str,
+        column_name: str,
+        statement_location: int,
+        statement_length: int,
+        node_location: int,
     ) -> None:
         """Register the violation."""
         self.violations.append(
             linter.Violation(
-                lineno=lineno,
-                column_offset=column_offset,
-                statement=statement,
-                description=f"Column '{column}' is required as not nullable",
+                statement_location=statement_location,
+                statement_length=statement_length,
+                node_location=node_location,
+                description=f"Column '{column_name}' is required as not nullable",
             ),
         )
 
@@ -37,8 +37,6 @@ class NotNullColumn(linter.Checker):
     ) -> None:
         """Visit ColumnDef."""
         if ast.CreateStmt in ancestors and node.colname in self.config.not_null_columns:
-
-            statement_index: int = linter.get_statement_index(ancestors)
 
             is_not_null = bool(
                 (
@@ -55,10 +53,10 @@ class NotNullColumn(linter.Checker):
             if not is_not_null:
 
                 self._register_violation(
-                    column=node.colname,
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    column_name=node.colname,
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                 )
 
                 if self.config.fix is True:
@@ -81,13 +79,11 @@ class NotNullColumn(linter.Checker):
             and node.name in self.config.not_null_columns
         ):
 
-            statement_index: int = linter.get_statement_index(ancestors)
-
             self._register_violation(
-                column=node.name,
-                lineno=ancestors[statement_index].stmt_location,
-                column_offset=linter.get_column_offset(ancestors, node),
-                statement=ancestors[statement_index],
+                column_name=node.name,
+                statement_location=self.statement_location,
+                statement_length=self.statement_length,
+                node_location=self.node_location,
             )
 
             if self.config.fix is True and self.config.unsafe_fixes is True:
@@ -114,13 +110,11 @@ class PreferNoCascadeDelete(linter.Checker):
             and node.fk_del_action == enums.FKCONSTR_ACTION_CASCADE
         ):
 
-            statement_index: int = linter.get_statement_index(ancestors)
-
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer no cascade delete",
                 ),
             )
@@ -145,13 +139,11 @@ class PreferNoCascadeUpdate(linter.Checker):
             and node.fk_upd_action == enums.FKCONSTR_ACTION_CASCADE
         ):
 
-            statement_index: int = linter.get_statement_index(ancestors)
-
             self.violations.append(
                 linter.Violation(
-                    lineno=ancestors[statement_index].stmt_location,
-                    column_offset=linter.get_column_offset(ancestors, node),
-                    statement=ancestors[statement_index],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Prefer no cascade update",
                 ),
             )
