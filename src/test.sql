@@ -39,10 +39,12 @@ ALTER TABLE public.ecdict ADD COLUMN id bigint default current_timestamp not nul
 
 -- REINDEX SCHEMA CONCURRENTLY my_broken_schema;
 
-ALTER TABLE public.ecdict ADD COLUMN id bigint default current_timestamp not null -- noqa: USR002
+ALTER TABLE public.ecdict ADD COLUMN id bigint default current_timestamp not null -- noqa: USR004
 ;
 
 -- create extension postgis with schema public1;
 
 CREATE SEQUENCE "Serial" START 101 -- noqa: CVI001
 ;
+
+alter table tble set tablespace col;

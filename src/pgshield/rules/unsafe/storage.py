@@ -19,13 +19,11 @@ class DropTablespace(linter.Checker):
         node: ast.DropTableSpaceStmt,
     ) -> None:
         """Visit DropTableSpaceStmt."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         self.violations.append(
             linter.Violation(
-                lineno=statement.location,
-                column_offset=linter.get_node_location(node),
-                statement=ancestors[statement],
+                statement_location=self.statement_location,
+                statement_length=self.statement_length,
+                node_location=self.node_location,
                 description="Drop tablespace",
             ),
         )
@@ -45,13 +43,11 @@ class DropDatabase(linter.Checker):
         node: ast.DropdbStmt,
     ) -> None:
         """Visit DropdbStmt."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         self.violations.append(
             linter.Violation(
-                lineno=statement.location,
-                column_offset=linter.get_node_location(node),
-                statement=ancestors[statement],
+                statement_location=self.statement_location,
+                statement_length=self.statement_length,
+                node_location=self.node_location,
                 description="Drop database",
             ),
         )
@@ -71,15 +67,13 @@ class DropSchema(linter.Checker):
         node: ast.DropStmt,
     ) -> None:
         """Visit DropStmt."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if node.removeType == enums.ObjectType.OBJECT_SCHEMA:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Drop schema is not safe.",
                 ),
             )

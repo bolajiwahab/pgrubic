@@ -5,10 +5,10 @@ from pglast import ast, enums
 from pgshield.core import linter
 
 
-class DropColumn(linter.Checker):
+class ForbidDropColumn(linter.Checker):
     """Drop column."""
 
-    name = "unsafe.drop_column"
+    name = "unsafe.forbid_drop_column"
     code = "USC001"
 
     is_auto_fixable: bool = False
@@ -19,24 +19,22 @@ class DropColumn(linter.Checker):
         node: ast.AlterTableCmd,
     ) -> None:
         """Visit AlterTableCmd."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if node.subtype == enums.AlterTableType.AT_DropColumn:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
-                    description="Drop column",
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
+                    description="Forbid drop column",
                 ),
             )
 
 
-class ChangeColumnType(linter.Checker):
-    """Change column type."""
+class ForbidColumnTypeChange(linter.Checker):
+    """Forbid column type change."""
 
-    name = "unsafe.change_column_type"
+    name = "unsafe.forbid_column_type_change"
     code = "USC002"
 
     is_auto_fixable: bool = False
@@ -47,24 +45,22 @@ class ChangeColumnType(linter.Checker):
         node: ast.AlterTableCmd,
     ) -> None:
         """Visit AlterTableCmd."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if node.subtype == enums.AlterTableType.AT_AlterColumnType:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
-                    description="Change column type",
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
+                    description="Forbid column type change",
                 ),
             )
 
 
-class RenameColumn(linter.Checker):
-    """Rename column."""
+class ForbidColumnRename(linter.Checker):
+    """Forbid column rename."""
 
-    name = "unsafe.rename_column"
+    name = "unsafe.forbid_column_rename"
     code = "USC003"
 
     is_auto_fixable: bool = False
@@ -75,50 +71,46 @@ class RenameColumn(linter.Checker):
         node: ast.RenameStmt,
     ) -> None:
         """Visit RenameStmt."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if node.renameType == enums.ObjectType.OBJECT_COLUMN:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
-                    description="Rename column",
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
+                    description="Forbid column rename",
                 ),
             )
 
 
-class AutoIncrementColumn(linter.Checker):
-    """Auto increment column."""
+class ForbidAddingAutoIncrementColumn(linter.Checker):
+    """Forbid adding auto increment column."""
 
-    name = "unsafe.auto_increment_column"
+    name = "unsafe.forbid_adding_auto_increment_column"
     code = "USC004"
 
     is_auto_fixable: bool = False
 
     def visit_ColumnDef(self, ancestors: ast.Node, node: ast.ColumnDef) -> None:
         """Visit ColumnDef."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if ast.AlterTableStmt in ancestors and (
             node.typeName.names[-1].sval in ["serial", "bigserial"]
         ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
-                    description="Auto increment column",
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
+                    description="Forbid adding auto increment column",
                 ),
             )
 
 
-class AutoIncrementIdentityColumn(linter.Checker):
-    """Auto increment identity column."""
+class ForbidAddingAutoIncrementIdentityColumn(linter.Checker):
+    """Forbid adding auto increment identity column."""
 
-    name = "unsafe.auto_increment_identity_column"
+    name = "unsafe.forbid_adding_auto_increment_identity_column"
     code = "USC005"
 
     is_auto_fixable: bool = False
@@ -129,8 +121,6 @@ class AutoIncrementIdentityColumn(linter.Checker):
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if (
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_IDENTITY
@@ -138,10 +128,10 @@ class AutoIncrementIdentityColumn(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
-                    description="Auto increment identity column",
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
+                    description="Forbid adding auto increment identity column",
                 ),
             )
 
@@ -160,8 +150,6 @@ class StoredGeneratedColumn(linter.Checker):
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if (
             ast.AlterTableStmt in ancestors
             and node.contype == enums.ConstrType.CONSTR_GENERATED
@@ -169,9 +157,9 @@ class StoredGeneratedColumn(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Stored generated column",
                 ),
             )

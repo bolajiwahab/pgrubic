@@ -19,15 +19,13 @@ class NonConcurrentIndexCreation(linter.Checker):
         node: ast.IndexStmt,
     ) -> None:
         """Visit IndexStmt."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if not node.concurrent:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Non concurrent index creation",
                 ),
             )
@@ -43,18 +41,16 @@ class IndexMovementToTablespace(linter.Checker):
 
     def visit_AlterTableCmd(self, ancestors: ast.Node, node: ast.AlterTableCmd) -> None:
         """Visit AlterTableCmd."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if (
             node.subtype == enums.AlterTableType.AT_SetTableSpace
-            and ancestors[statement].stmt.objtype == enums.ObjectType.OBJECT_INDEX
+            and ancestors[2].stmt.objtype == enums.ObjectType.OBJECT_INDEX
         ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Index movement to tablespace",
                 ),
             )
@@ -74,15 +70,13 @@ class IndexesMovementToTablespace(linter.Checker):
         node: ast.AlterTableMoveAllStmt,
     ) -> None:
         """Visit AlterTableMoveAllStmt."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if node.objtype == enums.ObjectType.OBJECT_INDEX:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Indexes movement to tablespace",
                 ),
             )
@@ -102,15 +96,13 @@ class NonConcurrentIndexDrop(linter.Checker):
         node: ast.DropStmt,
     ) -> None:
         """Visit DropStmt."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if node.removeType == enums.ObjectType.OBJECT_INDEX and not node.concurrent:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Non concurrent index drop",
                 ),
             )
@@ -126,8 +118,6 @@ class NonConcurrentReindex(linter.Checker):
 
     def visit_ReindexStmt(self, ancestors: ast.Node, node: ast.ReindexStmt) -> None:
         """Visit ReindexStmt."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         params = (
             [stream.RawStream()(param) for param in node.params]
             if node.params is not None
@@ -138,9 +128,9 @@ class NonConcurrentReindex(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Non concurrent reindex",
                 ),
             )

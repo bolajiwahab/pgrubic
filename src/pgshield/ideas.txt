@@ -2,6 +2,8 @@
 
 ##### finish up with fixes tomorrow
 # ensure code and name are typed in all classes
+# found commented code, any statement that ends with ; and commented
+# we need to rename few classes
 
 # fixes for required columns
 # fix gap_in_range_partition_bound

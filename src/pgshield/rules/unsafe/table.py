@@ -19,15 +19,13 @@ class DropTable(linter.Checker):
         node: ast.DropStmt,
     ) -> None:
         """Visit DropStmt."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if node.removeType == enums.ObjectType.OBJECT_TABLE:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Drop table",
                 ),
             )
@@ -47,15 +45,13 @@ class RenameTable(linter.Checker):
         node: ast.RenameStmt,
     ) -> None:
         """Visit RenameStmt."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if node.renameType == enums.ObjectType.OBJECT_TABLE:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Rename table",
                 ),
             )
@@ -71,18 +67,16 @@ class TableMovementToTablespace(linter.Checker):
 
     def visit_AlterTableCmd(self, ancestors: ast.Node, node: ast.AlterTableCmd) -> None:
         """Visit AlterTableCmd."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if (
             node.subtype == enums.AlterTableType.AT_SetTableSpace
-            and ancestors[statement].stmt.objtype == enums.ObjectType.OBJECT_TABLE
+            and ancestors[2].stmt.objtype == enums.ObjectType.OBJECT_TABLE
         ):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Table movement to tablespace",
                 ),
             )
@@ -102,15 +96,13 @@ class TablesMovementToTablespace(linter.Checker):
         node: ast.AlterTableMoveAllStmt,
     ) -> None:
         """Visit AlterTableMoveAllStmt."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if node.objtype == enums.ObjectType.OBJECT_TABLE:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Tables movement to tablespace",
                 ),
             )
@@ -130,13 +122,11 @@ class Cluster(linter.Checker):
         node: ast.ClusterStmt,
     ) -> None:
         """Visit ClusterStmt."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         self.violations.append(
             linter.Violation(
-                lineno=statement.location,
-                column_offset=linter.get_node_location(node),
-                statement=ancestors[statement],
+                statement_location=self.statement_location,
+                statement_length=self.statement_length,
+                node_location=self.node_location,
                 description="Cluster",
             ),
         )
@@ -152,8 +142,6 @@ class VacuumFull(linter.Checker):
 
     def visit_VacuumStmt(self, ancestors: ast.Node, node: ast.VacuumStmt) -> None:
         """Visit VacuumStmt."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         options = (
             [stream.RawStream()(option) for option in node.options]
             if node.options is not None
@@ -164,9 +152,9 @@ class VacuumFull(linter.Checker):
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Vacuum full",
                 ),
             )
@@ -186,15 +174,13 @@ class NonConcurrentDetachPartition(linter.Checker):
         node: ast.PartitionCmd,
     ) -> None:
         """Visit PartitionCmd."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if not node.concurrent:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Non concurrent detach partition",
                 ),
             )
@@ -214,15 +200,13 @@ class NonConcurrentRefreshMaterializedView(linter.Checker):
         node: ast.RefreshMatViewStmt,
     ) -> None:
         """Visit RefreshMatViewStmt."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         if not node.concurrent:
 
             self.violations.append(
                 linter.Violation(
-                    lineno=statement.location,
-                    column_offset=linter.get_node_location(node),
-                    statement=ancestors[statement],
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
                     description="Non concurrent refresh materialized view",
                 ),
             )
@@ -242,13 +226,11 @@ class TruncateTable(linter.Checker):
         node: ast.TruncateStmt,
     ) -> None:
         """Visit TruncateStmt."""
-        statement: linter.Statement = linter.get_statement_details(ancestors)
-
         self.violations.append(
             linter.Violation(
-                lineno=statement.location,
-                column_offset=linter.get_node_location(node),
-                statement=ancestors[statement],
+                statement_location=self.statement_location,
+                statement_length=self.statement_length,
+                node_location=self.node_location,
                 description="Truncate table is not safe",
             ),
         )

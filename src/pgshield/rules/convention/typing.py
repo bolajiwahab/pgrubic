@@ -2,12 +2,12 @@
 
 from pglast import ast
 
-from pgshield import SCHEMA_QUALIFIED_TYPE, system_types
+from pgshield import SCHEMA_QUALIFIED_TYPE
 from pgshield.core import linter
 
 
 def _is_column_creation(ancestors: ast.Node) -> bool:
-    """Check system type."""
+    """Check ancestors for column creation."""
     return ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors
 
 
