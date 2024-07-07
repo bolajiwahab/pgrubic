@@ -93,7 +93,8 @@ class Linter:
 
             sys.stdout.write(
                 f"{file_name}:{line.number}:{line.column_offset}:"
-                f" {checker.code}: {violation.description}:"
+                f" \033]8;;http://example.com\033\\{checker.code}\033]8;;\033\\:"
+                f" {violation.description}:"
                 f" {Fore.GREEN}\n\n{line.text}\n\n{Style.RESET_ALL}",
             )
 

@@ -1,3 +1,7 @@
+# ideas for documentation
+# extract __doc__ of the classes and generate a markdown from them?
+
+
 # prevent missing rule numbers
 
 ##### finish up with fixes tomorrow

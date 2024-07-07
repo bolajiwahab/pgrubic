@@ -349,7 +349,6 @@ class PreferReplaceForView(linter.Checker):
         node: ast.ViewStmt,
     ) -> None:
         """Visit ViewStmt."""
-        # print(node)
         if not node.replace:
             self.violations.append(
                 linter.Violation(
@@ -359,3 +358,69 @@ class PreferReplaceForView(linter.Checker):
                     description="Prefer replace for view",
                 ),
             )
+
+
+class ForbidRedefinitionOfTableColumn(linter.Checker):
+    """Forbid redefinition of table column."""
+
+    name: str = "convention.forbid_redefinition_of_table_column"
+    code: str = "CVG011"
+
+    is_auto_fixable: bool = True
+
+    def visit_CreateStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.CreateStmt,
+    ) -> None:
+        """Visit CreateStmt."""
+        if node.tableElts:
+
+            given_columns: list[str] = [
+                column.colname
+                for column in node.tableElts
+                if isinstance(column, ast.ColumnDef)
+            ]
+
+            duplicates: set[str] = {
+                x for x in given_columns if given_columns.count(x) > 1
+            }
+
+            for column in duplicates:
+
+                self.violations.append(
+                    linter.Violation(
+                        statement_location=self.statement_location,
+                        statement_length=self.statement_length,
+                        node_location=self.node_location,
+                        description=f"Column '{column}' specified more than once",
+                    ),
+                )
+
+            if node.relation.relname in given_columns:
+
+                self.violations.append(
+                    linter.Violation(
+                        statement_location=self.statement_location,
+                        statement_length=self.statement_length,
+                        node_location=self.node_location,
+                        description=f"Table '{node.relation.relname}' found in columns",
+                    ),
+                )
+
+
+class ForbidRedefinitionOfTableColumn(linter.Checker):
+    """Forbid redefinition of table column."""
+
+    name: str = "convention.forbid_redefinition_of_table_column"
+    code: str = "CVG011"
+
+    is_auto_fixable: bool = True
+
+    def visit_RawStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.RawStmt,
+    ) -> None:
+        """Visit CreateStmt."""
+        print(node)
