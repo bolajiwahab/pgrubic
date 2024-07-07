@@ -22,6 +22,7 @@ def load_rules() -> list[linter.Checker]:
 
                 rules.append(typing.cast(linter.Checker, obj))
 
+                # These are decorators and they are executed inner --> outer
                 _apply_noqa(obj)
                 _set_locations_for_node(obj)
 

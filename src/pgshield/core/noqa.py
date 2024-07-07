@@ -5,9 +5,9 @@ import typing
 import functools
 from collections import abc
 
-from pglast import parser
+from pglast import ast, parser
 
-from pgshield.core import errors, linter
+from pgshield.core import errors
 
 
 def remove_delimiter_from_sql_comment(statement: str, delimter: str = ";") -> str:
@@ -84,8 +84,8 @@ def apply(func: abc.Callable[..., typing.Any]) -> abc.Callable[..., typing.Any]:
     @functools.wraps(func)
     def wrapper(
         self: typing.Any,
-        *args: typing.Any,
-        **kwargs: typing.Any,
+        ancestors: ast.Node,
+        node: ast.Node,
     ) -> typing.Any:
 
         if (
@@ -95,6 +95,6 @@ def apply(func: abc.Callable[..., typing.Any]) -> abc.Callable[..., typing.Any]:
 
             return None
 
-        return func(self, *args, **kwargs)
+        return func(self, ancestors, node)
 
     return wrapper

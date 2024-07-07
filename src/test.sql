@@ -20,5 +20,5 @@ update public.tbl set a = 20 -- noqa: UNT010
 delete from public.tbl -- noqa: UNT011
 ;
 
-select a = null;
+-- select a = null;
 -- alter table tble set tablespace col;
