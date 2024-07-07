@@ -17,7 +17,7 @@
 update public.tbl set a = 20 -- noqa: UNT010
 ;
 
-delete from public.tbl -- noqa: UNT011
+delete from public.tbl -- noqa: *
 ;
 
 -- select a = null;

@@ -91,6 +91,9 @@ def apply(func: abc.Callable[..., typing.Any]) -> abc.Callable[..., typing.Any]:
         if (
             self.statement_location,
             self.code,
+        ) in self.noqa_ignore_rules or (
+            self.statement_location,
+            "*",
         ) in self.noqa_ignore_rules:
 
             return None
