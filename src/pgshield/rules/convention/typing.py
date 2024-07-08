@@ -362,7 +362,7 @@ class WronglyTypedRequiredColumn(linter.Checker):
             _is_column_creation(ancestors)
             and node.colname in self.config.required_columns
             and node.typeName.names[-1].sval
-            != self.config.required_columns[node.colname]  # noqa: E501
+            != self.config.required_columns[node.colname]
         ):
 
             given_type = ".".join(a.sval for a in node.typeName.names)

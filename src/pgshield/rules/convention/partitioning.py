@@ -88,10 +88,10 @@ class PartitionStrategiesWhitelisted(linter.Checker):
 
     is_auto_fixable: bool = False
 
-    partition_strategies_mapping: typing.ClassVar[dict[str, str]] = {
-        "l": "list",
-        "r": "range",
-        "h": "hash",
+    strategy: typing.ClassVar[dict[str, str]] = {
+        enums.PartitionStrategy.PARTITION_STRATEGY_LIST: "list",
+        enums.PartitionStrategy.PARTITION_STRATEGY_RANGE: "range",
+        enums.PartitionStrategy.PARTITION_STRATEGY_HASH: "hash",
     }
 
     def visit_PartitionSpec(
@@ -102,7 +102,7 @@ class PartitionStrategiesWhitelisted(linter.Checker):
         """Visit PartitionSpec."""
         if (
             self.config.partition_strategies
-            and self.partition_strategies_mapping[node.strategy]
+            and self.strategy[node.strategy]
             not in self.config.partition_strategies
         ):
 

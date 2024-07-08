@@ -263,7 +263,7 @@ class TableShouldHavePrimaryKey(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description=f"Table {node.relation.relname} should have a primary key",  # noqa: E501
+                    description=f"Table '{node.relation.relname}' should have a primary key",  # noqa: E501
                 ),
             )
 

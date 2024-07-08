@@ -11,7 +11,7 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
     """CLI."""
     source_paths: abc.Sequence[str] = argv[1:]
 
-    loaded_config = core.parse_config()
+    loaded_config: core.Config = core.parse_config()
 
     linter: core.Linter = core.Linter(config=loaded_config)
 

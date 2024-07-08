@@ -163,9 +163,11 @@ def set_locations_for_node(
             if parent is None:
                 break
 
-            parents.append(node)
+            parents.append(parent)
 
-        self.node_location = getattr(node, "location", 0)
+        node_location = getattr(node, "location", 0)
+
+        self.node_location = node_location if node_location is not None else 0
 
         # The current node's parent is located two indexes from the end of the list.
 
