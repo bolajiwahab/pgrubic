@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 # [tool.setuptools]
-# packages = ["datashift"]
+# packages = ["pgrubic"]
 
 # [tool.setuptools.find]
 # where = "src"
@@ -11,12 +11,12 @@ build-backend = "setuptools.build_meta"
 # [tool.setuptools.packages.find]
 # where = ["."]
 # exclude = ["src"]
-# include = ["datashift"]
+# include = ["pgrubic"]
 # namespaces = true
 
 [project]
-name = "datashift"
-version = "2.0"
+name = "pgrubic"
+version = "0.0.1"
 description = "Data migrations for PostgreSQL databases"
 readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.12"
@@ -35,7 +35,7 @@ classifiers = [
     "Topic :: Utilities :: Data Migrations",
 ]
 keywords = [
-    "datashift",
+    "pgrubic",
     "sql",
     "postgres",
     "postgresql",
@@ -52,14 +52,14 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/n26/datashift"
-Documentation = "https://github.com/n26/datashift/blob/master/README.md"
-Repository = "https://github.com/n26/datashift"
-"Issue Tracker" = "https://github.com/n26/datashift/issues"
-Changelog = "https://github.com/n26/datashift/blob/master/CHANGELOG.md"
+Homepage = "https://github.com/n26/pgrubic"
+Documentation = "https://github.com/n26/pgrubic/blob/master/README.md"
+Repository = "https://github.com/n26/pgrubic"
+"Issue Tracker" = "https://github.com/n26/pgrubic/issues"
+Changelog = "https://github.com/n26/pgrubic/blob/master/CHANGELOG.md"
 
 [project.scripts]
-datashift = "datashift.cli.commands:cli"
+pgrubic = "pgrubic.cli.commands:cli"
 
 [tool.mypy]
 python_version = "3.12"
@@ -83,12 +83,12 @@ allow-star-arg-any = true
 
 [tool.ruff.lint.isort]
 length-sort = true
-known-first-party = ["datashift"]
+known-first-party = ["pgrubic"]
 
 [tool.isort]
 profile = "black"
 length_sort = true
-known_first_party = "datashift"
+known_first_party = "pgrubic"
 
 [tool.djlint]
 profile="jinja"

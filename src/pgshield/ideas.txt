@@ -1,6 +1,12 @@
 # ideas for documentation
 # extract __doc__ of the classes and generate a markdown from them?
 
+# discard names from rules and leave code, we can generate the rule name 
+# from the class name, leaving it can lead to duplication and mistakes.
+# less code, less bug, less maintenance
+# we need to keep the groups e.g unsafe, convention
+# also ensure we validate them against known groups
+# missing rule number
 
 # prevent missing rule numbers
 

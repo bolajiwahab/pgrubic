@@ -5,6 +5,7 @@ import fnmatch
 from collections import abc
 
 from pgshield import core
+from pgshield.core import docs_generator
 
 
 def cli(argv: abc.Sequence[str] = sys.argv) -> None:

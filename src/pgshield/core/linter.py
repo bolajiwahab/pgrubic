@@ -6,7 +6,7 @@ import pathlib
 import functools
 import dataclasses
 from collections import abc
-
+from caseconverter import kebabcase
 from pglast import ast, parser, visitors
 from colorama import Fore, Style
 
@@ -93,7 +93,7 @@ class Linter:
 
             sys.stdout.write(
                 f"{file_name}:{line.number}:{line.column_offset}:"
-                f" \033]8;;http://example.com\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"
+                f" \033]8;;http://127.0.0.1:8000/rules/{checker.name.split(".")[0]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"
                 f" {violation.description}:"
                 f" {Fore.GREEN}\n\n{line.text}\n\n{Style.RESET_ALL}",
             )

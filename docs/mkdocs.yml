@@ -94,4 +94,4 @@ nav:
 
 not_in_nav: |
   ./rules/unsafe/.*
-  /private.md
+  ./rules/convention/.*
