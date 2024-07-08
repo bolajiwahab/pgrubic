@@ -93,18 +93,18 @@ class Linter:
 
             sys.stdout.write(
                 f"{file_name}:{line.number}:{line.column_offset}:"
-                f" \033]8;;http://example.com\033\\{checker.code}\033]8;;\033\\:"
+                f" \033]8;;http://example.com\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"
                 f" {violation.description}:"
                 f" {Fore.GREEN}\n\n{line.text}\n\n{Style.RESET_ALL}",
             )
 
-    def run(self, source_path: str) -> bool:
+    def run(self, source_path: str) -> int:
         """Run rules on a source file."""
-        file_name = pathlib.Path(source_path).name
+        file_name: str = pathlib.Path(source_path).name
 
         with pathlib.Path(source_path).open("r", encoding="utf-8") as source_file:
 
-            source_code = source_file.read()
+            source_code: str = source_file.read()
 
         source_code = noqa.remove_delimiter_from_sql_comment(source_code)
 
@@ -117,7 +117,7 @@ class Linter:
             sys.stdout.write(f"{file_name}: {Fore.RED}{error!s}{Style.RESET_ALL}")
             sys.exit(1)
 
-        violations_found: bool = False
+        total_violations: int = 0
 
         noqa_ignore_rules: list[tuple[int, str]] = noqa.extract(source_code)
 
@@ -131,17 +131,15 @@ class Linter:
 
             checker(tree)
 
-            if checker.violations:
+            self.print_violations(
+                checker=checker,
+                file_name=file_name,
+                source_code=source_code,
+            )
 
-                violations_found = True
+            total_violations += len(checker.violations)
 
-                self.print_violations(
-                    checker=checker,
-                    file_name=file_name,
-                    source_code=source_code,
-                )
-
-        return violations_found
+        return total_violations
 
 
 def set_locations_for_node(

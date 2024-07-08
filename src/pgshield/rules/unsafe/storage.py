@@ -74,6 +74,6 @@ class DropSchema(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Drop schema is not safe.",
+                    description="Drop schema is not safe",
                 ),
             )

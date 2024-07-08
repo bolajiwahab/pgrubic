@@ -1,4 +1,7 @@
-CREATE TABLE public."Color"();
+CREATE TABLE public."Color"(
+
+) -- noqa: CVI002
+;
 
 -- ALTER TABLE public.incoming_credit
 --     ADD COLUMN account_id UUID NOT NULL;

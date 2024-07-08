@@ -33,7 +33,7 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
             linter.checkers.add(rule())
 
-    violations_found: list[bool] = []
+    total_violations: int = 0
 
     # Add only included and not excluded files
     for source_path in source_paths:
@@ -50,11 +50,15 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
             # formatter.diff(source_path=source_path)
 
-            result: bool = linter.run(source_path)
+            violations: int = linter.run(source_path)
 
-            violations_found.append(result)
+            total_violations += violations
 
-    if any(violations_found):
+    if total_violations > 0:
+
+        sys.stdout.write(
+            f"Found {total_violations} violations.\n",
+        )
 
         sys.exit(1)
 
