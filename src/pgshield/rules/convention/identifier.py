@@ -257,8 +257,8 @@ class IsIdentifierInSnakeCase(_Identifier):
 class IsKeywordInIdentifier(_Identifier):
     """Is keyword in identifier."""
 
-    name = "convention.is_keyword_in_identifier"
-    code = "CVI002"
+    name: str = "convention.is_keyword_in_identifier"
+    code: str = "CVI002"
 
     def _check_identifier(
         self,
@@ -292,8 +292,8 @@ class IsKeywordInIdentifier(_Identifier):
 class IsSpecialCharacterInIdentifier(_Identifier):
     """Is special character in identifier."""
 
-    name = "convention.is_special_character_in_identifier"
-    code = "CVI004"
+    name: str = "convention.is_special_character_in_identifier"
+    code: str = "CVI004"
 
     def _check_identifier(
         self,
@@ -318,8 +318,8 @@ class IsSpecialCharacterInIdentifier(_Identifier):
 class IsPostgresPrefixInIdentifier(_Identifier):
     """Is pg_ in identifier."""
 
-    name = "convention.is_pg_prefix_in_identifier"
-    code = "CVI003"
+    name: str = "convention.is_pg_prefix_in_identifier"
+    code: str = "CVI003"
 
     def _check_identifier(
         self,

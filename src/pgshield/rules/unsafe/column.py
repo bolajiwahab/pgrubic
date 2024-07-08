@@ -8,8 +8,8 @@ from pgshield.core import linter
 class ForbidDropColumn(linter.Checker):
     """Drop column."""
 
-    name = "unsafe.forbid_drop_column"
-    code = "USC001"
+    name: str = "unsafe.forbid_drop_column"
+    code: str = "USC001"
 
     is_auto_fixable: bool = False
 
@@ -34,8 +34,8 @@ class ForbidDropColumn(linter.Checker):
 class ForbidColumnTypeChange(linter.Checker):
     """Forbid column type change."""
 
-    name = "unsafe.forbid_column_type_change"
-    code = "USC002"
+    name: str = "unsafe.forbid_column_type_change"
+    code: str = "USC002"
 
     is_auto_fixable: bool = False
 
@@ -60,8 +60,8 @@ class ForbidColumnTypeChange(linter.Checker):
 class ForbidColumnRename(linter.Checker):
     """Forbid column rename."""
 
-    name = "unsafe.forbid_column_rename"
-    code = "USC003"
+    name: str = "unsafe.forbid_column_rename"
+    code: str = "USC003"
 
     is_auto_fixable: bool = False
 
@@ -86,8 +86,8 @@ class ForbidColumnRename(linter.Checker):
 class ForbidAddingAutoIncrementColumn(linter.Checker):
     """Forbid adding auto increment column."""
 
-    name = "unsafe.forbid_adding_auto_increment_column"
-    code = "USC004"
+    name: str = "unsafe.forbid_adding_auto_increment_column"
+    code: str = "USC004"
 
     is_auto_fixable: bool = False
 
@@ -110,8 +110,8 @@ class ForbidAddingAutoIncrementColumn(linter.Checker):
 class ForbidAddingAutoIncrementIdentityColumn(linter.Checker):
     """Forbid adding auto increment identity column."""
 
-    name = "unsafe.forbid_adding_auto_increment_identity_column"
-    code = "USC005"
+    name: str = "unsafe.forbid_adding_auto_increment_identity_column"
+    code: str = "USC005"
 
     is_auto_fixable: bool = False
 
@@ -139,8 +139,8 @@ class ForbidAddingAutoIncrementIdentityColumn(linter.Checker):
 class StoredGeneratedColumn(linter.Checker):
     """Stored generated column."""
 
-    name = "unsafe.stored_generated_column"
-    code = "USC006"
+    name: str = "unsafe.stored_generated_column"
+    code: str = "USC006"
 
     is_auto_fixable: bool = False
 

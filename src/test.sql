@@ -1,4 +1,4 @@
-CREATE TABLE public.Color();
+CREATE TABLE public."Color"();
 
 -- ALTER TABLE public.incoming_credit
 --     ADD COLUMN account_id UUID NOT NULL;

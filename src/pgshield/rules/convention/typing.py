@@ -14,8 +14,8 @@ def _is_column_creation(ancestors: ast.Node) -> bool:
 class PreferTimestampWithTimezoneOverTimestampWithoutTimezone(linter.Checker):
     """Prefer timestamp with timezone over timestamp without timezone."""
 
-    name = "convention.prefer_timestamp_with_timezone_over_timestamp_without_timezone"
-    code = "CVT001"
+    name: str = "convention.prefer_timestamp_with_timezone_over_timestamp_without_timezone"  # noqa: E501
+    code: str = "CVT001"
 
     is_auto_fixable: bool = False
 
@@ -47,8 +47,8 @@ class PreferTimestampWithTimezoneOverTimestampWithoutTimezone(linter.Checker):
 class PreferTimestampWithTimezoneOverTimeWithTimezone(linter.Checker):
     """Prefer timestamp with timezone over time with timezone."""
 
-    name = "convention.prefer_timestamp_with_timezone_over_time_with_timezone"
-    code = "CVT002"
+    name: str = "convention.prefer_timestamp_with_timezone_over_time_with_timezone"
+    code: str = "CVT002"
 
     is_auto_fixable: bool = False
 
@@ -75,8 +75,8 @@ class PreferTimestampWithTimezoneOverTimeWithTimezone(linter.Checker):
 class PreferEntireTimestampWithoutTimezone(linter.Checker):
     """Prefer entire timestamp without timezone."""
 
-    name = "convention.prefer_entire_timestamp_without_timezone"
-    code = "CVT003"
+    name: str = "convention.prefer_entire_timestamp_without_timezone"
+    code: str = "CVT003"
 
     is_auto_fixable: bool = False
 
@@ -103,8 +103,8 @@ class PreferEntireTimestampWithoutTimezone(linter.Checker):
 class PreferEntireTimestampWithTimezone(linter.Checker):
     """Prefer entire timestamp with timezone."""
 
-    name = "convention.prefer_entire_timestamp_with_timezone"
-    code = "CVT004"
+    name: str = "convention.prefer_entire_timestamp_with_timezone"
+    code: str = "CVT004"
 
     is_auto_fixable: bool = False
 
@@ -131,8 +131,8 @@ class PreferEntireTimestampWithTimezone(linter.Checker):
 class PreferTextOverChar(linter.Checker):
     """Prefer text over char."""
 
-    name = "convention.prefer_text_over_char"
-    code = "CVT005"
+    name: str = "convention.prefer_text_over_char"
+    code: str = "CVT005"
 
     is_auto_fixable: bool = False
 
@@ -159,8 +159,8 @@ class PreferTextOverChar(linter.Checker):
 class PreferTextOverVarchar(linter.Checker):
     """Prefer text over varchar."""
 
-    name = "convention.prefer_text_over_varchar"
-    code = "CVT006"
+    name: str = "convention.prefer_text_over_varchar"
+    code: str = "CVT006"
 
     is_auto_fixable: bool = False
 
@@ -187,8 +187,8 @@ class PreferTextOverVarchar(linter.Checker):
 class PreferNumericOverMoney(linter.Checker):
     """Prefer numeric over money."""
 
-    name = "convention.prefer_numeric_over_money"
-    code = "CVT007"
+    name: str = "convention.prefer_numeric_over_money"
+    code: str = "CVT007"
 
     is_auto_fixable: bool = False
 
@@ -213,8 +213,8 @@ class PreferNumericOverMoney(linter.Checker):
 class PreferIdentityColumnOverSerial(linter.Checker):
     """Prefer identity column over serial."""
 
-    name = "convention.prefer_identity_column_over_serial"
-    code = "CVT008"
+    name: str = "convention.prefer_identity_column_over_serial"
+    code: str = "CVT008"
 
     is_auto_fixable: bool = False
 
@@ -241,8 +241,8 @@ class PreferIdentityColumnOverSerial(linter.Checker):
 class PreferIdentityColumnOverBigSerial(linter.Checker):
     """Prefer identity column over bigserial."""
 
-    name = "convention.prefer_identity_column_over_bigserial"
-    code = "CVT009"
+    name: str = "convention.prefer_identity_column_over_bigserial"
+    code: str = "CVT009"
 
     is_auto_fixable: bool = False
 
@@ -269,8 +269,8 @@ class PreferIdentityColumnOverBigSerial(linter.Checker):
 class PreferJsonbOverJson(linter.Checker):
     """Prefer jsonb over json."""
 
-    name = "convention.prefer_jsonb_over_json"
-    code = "CVT010"
+    name: str = "convention.prefer_jsonb_over_json"
+    code: str = "CVT010"
 
     is_auto_fixable: bool = False
 
@@ -295,8 +295,8 @@ class PreferJsonbOverJson(linter.Checker):
 class PreferBigIntOverInt(linter.Checker):
     """Prefer bigint over int."""
 
-    name = "convention.prefer_bigint_over_int"
-    code = "CVT011"
+    name: str = "convention.prefer_bigint_over_int"
+    code: str = "CVT011"
 
     is_auto_fixable: bool = False
 
@@ -321,8 +321,8 @@ class PreferBigIntOverInt(linter.Checker):
 class PreferBigIntOverSmallInt(linter.Checker):
     """Prefer bigint over smallint."""
 
-    name = "convention.prefer_bigint_over_smallint"
-    code = "CVT012"
+    name: str = "convention.prefer_bigint_over_smallint"
+    code: str = "CVT012"
 
     is_auto_fixable: bool = False
 
@@ -347,8 +347,8 @@ class PreferBigIntOverSmallInt(linter.Checker):
 class WronglyTypedRequiredColumn(linter.Checker):
     """Wrongly typed required column."""
 
-    name = "convention.wrongly_typed_required_column"
-    code = "CVT013"
+    name: str = "convention.wrongly_typed_required_column"
+    code: str = "CVT013"
 
     is_auto_fixable = True
 
@@ -393,8 +393,8 @@ class WronglyTypedRequiredColumn(linter.Checker):
 class BlacklistedType(linter.Checker):
     """Blacklisted type."""
 
-    name = "convention.blacklisted_type"
-    code = "CVT014"
+    name: str = "convention.blacklisted_type"
+    code: str = "CVT014"
 
     is_auto_fixable: bool = False
 
@@ -421,8 +421,8 @@ class BlacklistedType(linter.Checker):
 class PreferIdentityColumnOverSmallSerial(linter.Checker):
     """Prefer identity column over smallserial."""
 
-    name = "convention.prefer_identity_column_over_smallserial"
-    code = "CVT015"
+    name: str = "convention.prefer_identity_column_over_smallserial"
+    code: str = "CVT015"
 
     is_auto_fixable: bool = False
 
@@ -449,8 +449,8 @@ class PreferIdentityColumnOverSmallSerial(linter.Checker):
 class PreferJsonbOverHstore(linter.Checker):
     """Prefer jsonb over hstore."""
 
-    name = "convention.prefer_jsonb_over_hstore"
-    code = "CVT016"
+    name: str = "convention.prefer_jsonb_over_hstore"
+    code: str = "CVT016"
 
     is_auto_fixable: bool = False
 
@@ -477,8 +477,8 @@ class PreferJsonbOverHstore(linter.Checker):
 class PreferJsonbOverXml(linter.Checker):
     """Prefer jsonb over xml."""
 
-    name = "convention.prefer_jsonb_over_xml"
-    code = "CVT017"
+    name: str = "convention.prefer_jsonb_over_xml"
+    code: str = "CVT017"
 
     is_auto_fixable: bool = False
 
@@ -503,8 +503,8 @@ class PreferJsonbOverXml(linter.Checker):
 class PreferNumericOverFloat(linter.Checker):
     """Prefer numeric over float."""
 
-    name = "convention.prefer_numeric_over_float"
-    code = "CVT018"
+    name: str = "convention.prefer_numeric_over_float"
+    code: str = "CVT018"
 
     is_auto_fixable: bool = False
 

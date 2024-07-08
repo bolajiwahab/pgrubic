@@ -8,8 +8,8 @@ from pgshield.core import linter
 class DropTable(linter.Checker):
     """Drop table."""
 
-    name = "unsafe.drop_table"
-    code = "UST001"
+    name: str = "unsafe.drop_table"
+    code: str = "UST001"
 
     is_auto_fixable: bool = False
 
@@ -34,8 +34,8 @@ class DropTable(linter.Checker):
 class RenameTable(linter.Checker):
     """Rename table."""
 
-    name = "unsafe.rename_table"
-    code = "UST002"
+    name: str = "unsafe.rename_table"
+    code: str = "UST002"
 
     is_auto_fixable: bool = False
 
@@ -60,8 +60,8 @@ class RenameTable(linter.Checker):
 class TableMovementToTablespace(linter.Checker):
     """Table movement to tablespace."""
 
-    name = "unsafe.table_movement_to_tablespace"
-    code = "UST003"
+    name: str = "unsafe.table_movement_to_tablespace"
+    code: str = "UST003"
 
     is_auto_fixable: bool = False
 
@@ -85,8 +85,8 @@ class TableMovementToTablespace(linter.Checker):
 class TablesMovementToTablespace(linter.Checker):
     """Tables movement to tablespace."""
 
-    name = "unsafe.tables_movement_to_tablespace"
-    code = "UST004"
+    name: str = "unsafe.tables_movement_to_tablespace"
+    code: str = "UST004"
 
     is_auto_fixable: bool = False
 
@@ -111,8 +111,8 @@ class TablesMovementToTablespace(linter.Checker):
 class Cluster(linter.Checker):
     """Cluster."""
 
-    name = "unsafe.cluster"
-    code = "UST005"
+    name: str = "unsafe.cluster"
+    code: str = "UST005"
 
     is_auto_fixable: bool = False
 
@@ -135,8 +135,8 @@ class Cluster(linter.Checker):
 class VacuumFull(linter.Checker):
     """Vacuum full."""
 
-    name = "unsafe.vacuum_full"
-    code = "UST006"
+    name: str = "unsafe.vacuum_full"
+    code: str = "UST006"
 
     is_auto_fixable: bool = False
 
@@ -163,8 +163,8 @@ class VacuumFull(linter.Checker):
 class NonConcurrentDetachPartition(linter.Checker):
     """Detach partition."""
 
-    name = "unsafe.detach_partition"
-    code = "UST007"
+    name: str = "unsafe.detach_partition"
+    code: str = "UST007"
 
     is_auto_fixable: bool = False
 
@@ -189,8 +189,8 @@ class NonConcurrentDetachPartition(linter.Checker):
 class NonConcurrentRefreshMaterializedView(linter.Checker):
     """Non concurrent refresh materialized view."""
 
-    name = "unsafe.non_concurrent_refresh_materialized_view"
-    code = "UST008"
+    name: str = "unsafe.non_concurrent_refresh_materialized_view"
+    code: str = "UST008"
 
     is_auto_fixable: bool = False
 
@@ -215,8 +215,8 @@ class NonConcurrentRefreshMaterializedView(linter.Checker):
 class TruncateTable(linter.Checker):
     """Truncate table."""
 
-    name = "unsafe.truncate_table"
-    code = "UNT009"
+    name: str = "unsafe.truncate_table"
+    code: str = "UNT009"
 
     is_auto_fixable: bool = False
 
@@ -239,8 +239,8 @@ class TruncateTable(linter.Checker):
 class ForbidUpdateWithoutWhereClause(linter.Checker):
     """Forbid update without where clause."""
 
-    name = "unsafe.forbid_update_without_where_clause"
-    code = "UNT010"
+    name: str = "unsafe.forbid_update_without_where_clause"
+    code: str = "UNT010"
 
     is_auto_fixable: bool = False
 
@@ -265,8 +265,8 @@ class ForbidUpdateWithoutWhereClause(linter.Checker):
 class ForbidDeleteWithoutWhereClause(linter.Checker):
     """Forbid delete without where clause."""
 
-    name = "unsafe.forbid_delete_without_where_clause"
-    code = "UNT011"
+    name: str = "unsafe.forbid_delete_without_where_clause"
+    code: str = "UNT011"
 
     is_auto_fixable: bool = False
 

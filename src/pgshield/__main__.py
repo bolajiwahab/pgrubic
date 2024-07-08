@@ -19,6 +19,7 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
     loaded_rules: list[core.Checker] = core.load_rules()
 
+    # Add only seleted and not ignored rules
     for rule in loaded_rules:
 
         if (
@@ -34,6 +35,7 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
     violations_found: list[bool] = []
 
+    # Add only included and not excluded files
     for source_path in source_paths:
 
         if (
@@ -45,10 +47,6 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
         ) and not any(
             fnmatch.fnmatch(source_path, pattern) for pattern in loaded_config.exclude
         ):
-
-            # if not any(
-            #     fnmatch.fnmatch(source_path, pattern) for pattern in loaded_config.exclude
-            # ):
 
             # formatter.diff(source_path=source_path)
 

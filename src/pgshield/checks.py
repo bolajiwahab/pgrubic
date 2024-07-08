@@ -25,6 +25,7 @@ class Comment:
 
 import re
 
+
 def _extract_comments(statement: linter.Statement) -> Comment:
 
     lines: list[tuple[int, int, str]] = []
@@ -51,7 +52,7 @@ def _extract_comments(statement: linter.Statement) -> Comment:
                 if beginning_of_line_offset <= token.start < end_of_line_offset:
                     break
 
-            print(statement[token.start:(token.end + 1)])
+            print(statement[token.start : (token.end + 1)])
 
         if token.name == "SQL_COMMENT":
 
@@ -101,6 +102,7 @@ class DropColumn(Visitor):  # type: ignore[misc]
     ) -> None:
         """Visit JoinExpr."""
         print(node)
+
     def visit_RangeVar(
         self,
         ancestors: ast.Node,
@@ -124,7 +126,9 @@ sql = """delete from tble using tble2, tble3 where tble.id = tble2.id and tble.i
 
 # print(raw1)
 # contype=<ConstrType.CONSTR_DEFAULT: 2> deferrable=False initdeferred=False is_no_inherit=False raw_expr=<ColumnRef fields=(<String sval='a'>,)>
-sql_no_comment = re.sub(r"^\s*--.*\n|^\s*\/[*][\S\s]*?[*]\/", "", sql, flags=re.MULTILINE)
+sql_no_comment = re.sub(
+    r"^\s*--.*\n|^\s*\/[*][\S\s]*?[*]\/", "", sql, flags=re.MULTILINE
+)
 # print(sql_no_comment)
 # print(_extract_comments(sql))
 _extract_comments(sql)
@@ -137,13 +141,15 @@ raw2 = scan(sql)
 #         print(a)
 DropColumn()(raw)
 
-sql = 'update translations set italian=$2 where word=$1'
+sql = "update translations set italian=$2 where word=$1"
 print(prettify(sql))
 from pglast.printers import node_printer
+
 
 @node_printer(ast.ParamRef, override=True)
 def replace_param_ref(node, output):
     output.write(repr(args[node.number - 1]))
+
 
 args = ["Hello", "Ciao"]
 print(prettify(sql, safety_belt=False))

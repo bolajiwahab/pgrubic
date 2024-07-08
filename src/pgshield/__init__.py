@@ -45,7 +45,6 @@ system_types = {
     "time with time zone": "pg_catalog.timetz",
     "bit varying": "pg_catalog.varbit",
     "varchar": varchar,
-
     "pg_catalog.bool": "pg_catalog.bool",
     "pg_catalog.bpchar": "pg_catalog.bpchar",
     "pg_catalog.float4": "pg_catalog.float4",

@@ -8,8 +8,8 @@ from pgshield.core import linter
 class NotNullOnExistingColumn(linter.Checker):
     """Not null on existing column."""
 
-    name = "unsafe.not_null_on_existing_column"
-    code = "USR001"
+    name: str = "unsafe.not_null_on_existing_column"
+    code: str = "USR001"
 
     is_auto_fixable: bool = False
 
@@ -34,8 +34,8 @@ class NotNullOnExistingColumn(linter.Checker):
 class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
     """Not null on new column with no static default."""
 
-    name = "unsafe.not_null_on_new_column_with_no_static_default"
-    code = "USR002"
+    name: str = "unsafe.not_null_on_new_column_with_no_static_default"
+    code: str = "USR002"
 
     is_auto_fixable: bool = False
 
@@ -76,8 +76,8 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
 class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):
     """Validated foreign key constraint on existing rows."""
 
-    name = "unsafe.validated_foreign_key_constraint_on_existing_rows"
-    code = "USR004"
+    name: str = "unsafe.validated_foreign_key_constraint_on_existing_rows"
+    code: str = "USR004"
 
     is_auto_fixable = True
 
@@ -109,8 +109,8 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):
 class ValidatedCheckConstraintOnExistingRows(linter.Checker):
     """Validated check constraint on existing rows."""
 
-    name = "unsafe.validated_check_constraint_on_existing_rows"
-    code = "USR005"
+    name: str = "unsafe.validated_check_constraint_on_existing_rows"
+    code: str = "USR005"
 
     is_auto_fixable: bool = False
 
@@ -139,8 +139,8 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):
 class UniqueConstraintCreatingNewIndex(linter.Checker):
     """Unique constraint creating new index."""
 
-    name = "unsafe.unique_constraint_creating_new_index"
-    code = "USR006"
+    name: str = "unsafe.unique_constraint_creating_new_index"
+    code: str = "USR006"
 
     is_auto_fixable: bool = False
 
@@ -169,8 +169,8 @@ class UniqueConstraintCreatingNewIndex(linter.Checker):
 class PrimaryKeyConstraintCreatingNewIndex(linter.Checker):
     """Primary key constraint creating new index."""
 
-    name = "unsafe.primary_key_constraint_creating_new_index"
-    code = "USR007"
+    name: str = "unsafe.primary_key_constraint_creating_new_index"
+    code: str = "USR007"
 
     is_auto_fixable: bool = False
 

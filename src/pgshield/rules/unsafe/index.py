@@ -8,8 +8,8 @@ from pgshield.core import linter
 class NonConcurrentIndexCreation(linter.Checker):
     """Non concurrent index creation."""
 
-    name = "unsafe.non_concurrent_index_creation"
-    code = "UNI001"
+    name: str = "unsafe.non_concurrent_index_creation"
+    code: str = "UNI001"
 
     is_auto_fixable: bool = False
 
@@ -34,8 +34,8 @@ class NonConcurrentIndexCreation(linter.Checker):
 class IndexMovementToTablespace(linter.Checker):
     """Index movement to tablespace."""
 
-    name = "unsafe.index_movement_to_tablespace"
-    code = "UNI002"
+    name: str = "unsafe.index_movement_to_tablespace"
+    code: str = "UNI002"
 
     is_auto_fixable: bool = False
 
@@ -59,8 +59,8 @@ class IndexMovementToTablespace(linter.Checker):
 class IndexesMovementToTablespace(linter.Checker):
     """Indexes movement to tablespace."""
 
-    name = "unsafe.indexes_movement_to_tablespace"
-    code = "UNI003"
+    name: str = "unsafe.indexes_movement_to_tablespace"
+    code: str = "UNI003"
 
     is_auto_fixable: bool = False
 
@@ -85,8 +85,8 @@ class IndexesMovementToTablespace(linter.Checker):
 class NonConcurrentIndexDrop(linter.Checker):
     """Non concurrent index drop."""
 
-    name = "unsafe.non_concurrent_index_drop"
-    code = "UNI004"
+    name: str = "unsafe.non_concurrent_index_drop"
+    code: str = "UNI004"
 
     is_auto_fixable: bool = False
 
@@ -111,8 +111,8 @@ class NonConcurrentIndexDrop(linter.Checker):
 class NonConcurrentReindex(linter.Checker):
     """Non concurrent reindex."""
 
-    name = "unsafe.non_concurrent_reindex"
-    code = "UNI005"
+    name: str = "unsafe.non_concurrent_reindex"
+    code: str = "UNI005"
 
     is_auto_fixable: bool = False
 

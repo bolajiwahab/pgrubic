@@ -10,8 +10,8 @@ from pgshield.core import linter
 class IndexNaming(linter.Checker):
     """Index naming."""
 
-    name = "convention.index_naming"
-    code = "CVN001"
+    name: str = "convention.index_naming"
+    code: str = "CVN001"
 
     is_auto_fixable: bool = False
 
@@ -39,8 +39,8 @@ class IndexNaming(linter.Checker):
 class ConstraintNaming(linter.Checker):
     """Constraint naming."""
 
-    name = "convention.constraint_naming"
-    code = "CVN002"
+    name: str = "convention.constraint_naming"
+    code: str = "CVN002"
 
     is_auto_fixable: bool = False
 
@@ -92,8 +92,8 @@ class ConstraintNaming(linter.Checker):
 class PartionNaming(linter.Checker):
     """Partition naming."""
 
-    name = "convention.partition_naming"
-    code = "CVN003"
+    name: str = "convention.partition_naming"
+    code: str = "CVN003"
 
     is_auto_fixable: bool = False
 
@@ -122,8 +122,8 @@ class PartionNaming(linter.Checker):
 class SequenceNaming(linter.Checker):
     """Sequence naming."""
 
-    name = "convention.sequence_naming"
-    code = "CVN004"
+    name: str = "convention.sequence_naming"
+    code: str = "CVN004"
 
     is_auto_fixable: bool = False
 
@@ -151,8 +151,8 @@ class SequenceNaming(linter.Checker):
 class PreferNamedConstraint(linter.Checker):
     """Prefer named constraint."""
 
-    name = "convention.prefer_named_constraint"
-    code = "CVN005"
+    name: str = "convention.prefer_named_constraint"
+    code: str = "CVN005"
 
     is_auto_fixable: bool = False
 

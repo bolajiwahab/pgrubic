@@ -8,8 +8,8 @@ from pgshield.core import linter
 class DropTablespace(linter.Checker):
     """Drop tablespace."""
 
-    name = "unsafe.drop_tablespace"
-    code = "UNS001"
+    name: str = "unsafe.drop_tablespace"
+    code: str = "UNS001"
 
     is_auto_fixable: bool = False
 
@@ -32,8 +32,8 @@ class DropTablespace(linter.Checker):
 class DropDatabase(linter.Checker):
     """Drop database."""
 
-    name = "unsafe.drop_database"
-    code = "UNS002"
+    name: str = "unsafe.drop_database"
+    code: str = "UNS002"
 
     is_auto_fixable: bool = False
 
@@ -56,8 +56,8 @@ class DropDatabase(linter.Checker):
 class DropSchema(linter.Checker):
     """Drop schema."""
 
-    name = "unsafe.drop_schema"
-    code = "UNS003"
+    name: str = "unsafe.drop_schema"
+    code: str = "UNS003"
 
     is_auto_fixable: bool = False
 

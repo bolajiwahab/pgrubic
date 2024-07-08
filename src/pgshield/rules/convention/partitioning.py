@@ -12,8 +12,8 @@ from pgshield.core import linter
 class GapInRangePartitionBound(linter.Checker):
     """Gap in range partition bound."""
 
-    name = "convention.gap_in_range_partition_bound"
-    code = "CVP001"
+    name: str = "convention.gap_in_range_partition_bound"
+    code: str = "CVP001"
 
     is_auto_fixable: bool = False
 
@@ -83,8 +83,8 @@ class GapInRangePartitionBound(linter.Checker):
 class PartitionStrategiesWhitelisted(linter.Checker):
     """Only whitelisted partition strategies are allowed."""
 
-    name = "convention.whitelisted_partition_strategies"
-    code = "CVP002"
+    name: str = "convention.whitelisted_partition_strategies"
+    code: str = "CVP002"
 
     is_auto_fixable: bool = False
 
@@ -119,8 +119,8 @@ class PartitionStrategiesWhitelisted(linter.Checker):
 class PreferPartitioningByOneKey(linter.Checker):
     """Prefer partitioning by one key."""
 
-    name = "convention.prefer_partitioning_by_one_key"
-    code = "CVP003"
+    name: str = "convention.prefer_partitioning_by_one_key"
+    code: str = "CVP003"
 
     is_auto_fixable: bool = False
 

@@ -68,7 +68,7 @@ class _Schema(abc.ABC, linter.Checker):
         node: ast.CreateEnumStmt,
     ) -> None:
         """Visit CreateEnumStmt."""
-        schema_name = node.typeName[0].sval if len(node.typeName) != 1 else None
+        schema_name: str =  node.typeName[0].sval if len(node.typeName) != 1 else None
 
         self._check_schema(
             schema_name=schema_name,
@@ -83,7 +83,7 @@ class _Schema(abc.ABC, linter.Checker):
         node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""
-        schema_name = node.funcname[0].sval if len(node.funcname) != 1 else None
+        schema_name: str =  node.funcname[0].sval if len(node.funcname) != 1 else None
 
         self._check_schema(
             schema_name=schema_name,
@@ -126,8 +126,8 @@ class _Schema(abc.ABC, linter.Checker):
 class DatabaseObjectShouldSchemaQualified(_Schema):
     """Database object should be schema qualified."""
 
-    name = "convention.database_object_should_schema_qualified"
-    code = "CVS001"
+    name: str =  "convention.database_object_should_schema_qualified"
+    code: str = "CVS001"
 
     is_auto_fixable: bool = False
 
@@ -154,8 +154,8 @@ class DatabaseObjectShouldSchemaQualified(_Schema):
 class SchemasWhitelisted(_Schema):
     """Only whitelisted schemas are allowed."""
 
-    name = "convention.whitelisted_schemas"
-    code = "CVS002"
+    name: str =  "convention.whitelisted_schemas"
+    code: str = "CVS002"
 
     is_auto_fixable: bool = False
 
