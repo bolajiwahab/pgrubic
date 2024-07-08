@@ -156,8 +156,8 @@ class MissingRequiredColumn(linter.Checker):
 class PreferLookUpTableOverEnum(linter.Checker):
     """Prefer look up table over enum."""
 
-    name = "convention.prefer_look_up_table_over_enum"
-    code = "CVG005"
+    name: str = "convention.prefer_look_up_table_over_enum"
+    code: str = "CVG005"
 
     is_auto_fixable: bool = False
 
@@ -180,8 +180,8 @@ class PreferLookUpTableOverEnum(linter.Checker):
 class PreferIndexElementsUpToThree(linter.Checker):
     """Prefer index elements up to three."""
 
-    name = "convention.prefer_index_elements_up_to_three"
-    code = "CVG006"
+    name: str = "convention.prefer_index_elements_up_to_three"
+    code: str = "CVG006"
 
     is_auto_fixable: bool = False
 

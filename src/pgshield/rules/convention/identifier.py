@@ -3,7 +3,7 @@
 import abc
 
 import inflection
-from pglast import ast, keywords, stream
+from pglast import ast, stream, keywords
 
 from pgshield.core import linter
 
@@ -12,8 +12,8 @@ class _Identifier(abc.ABC, linter.Checker):
     """Base class for identifiers."""
 
     # To be overridden by subclasses
-    name = ""
-    code = ""
+    name: str = ""
+    code: str = ""
     is_auto_fixable: bool = False
 
     @abc.abstractmethod
@@ -230,8 +230,9 @@ class _Identifier(abc.ABC, linter.Checker):
 class IsIdentifierInSnakeCase(_Identifier):
     """Identifier should be in snake case."""
 
-    name = "convention.is_identifier_in_snake_case"
-    code = "CVI001"
+    name: str = "convention.is_identifier_in_snake_case"
+    code: str = "CVI001"
+    is_auto_fixable: bool = False
 
     def _check_identifier(
         self,
@@ -241,8 +242,6 @@ class IsIdentifierInSnakeCase(_Identifier):
         node_location: int,
     ) -> None:
         """Check that identifier is in snake case."""
-        # if identifier and identifier != inflection.underscore(identifier):
-
         if identifier and not stream.is_simple_name(identifier):
 
             self.violations.append(
@@ -269,7 +268,7 @@ class IsKeywordInIdentifier(_Identifier):
         node_location: int,
     ) -> None:
         """Check for reserved keywords in identifier."""
-        full_keywords = (
+        full_keywords: set[str] = (
             set(keywords.RESERVED_KEYWORDS)
             .union(
                 set(keywords.UNRESERVED_KEYWORDS),
@@ -285,7 +284,7 @@ class IsKeywordInIdentifier(_Identifier):
                     statement_location=statement_location,
                     statement_length=statement_length,
                     node_location=node_location,
-                    description=f"Identifier should not use keyword '{identifier}'",
+                    description=f"Identifier '{identifier}' should not use keyword",
                 ),
             )
 
