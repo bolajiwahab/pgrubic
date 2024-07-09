@@ -11,156 +11,11 @@ def _is_column_creation(ancestors: ast.Node) -> bool:
     return ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors
 
 
-class PreferTimestampWithTimezoneOverTimestampWithoutTimezone(linter.Checker):
-    """Prefer timestamp with timezone over timestamp without timezone."""
-
-    name: str = "convention.prefer_timestamp_with_timezone_over_timestamp_without_timezone"  # noqa: E501
-    code: str = "CVT001"
-
-    is_auto_fixable: bool = False
-
-    def visit_ColumnDef(
-        self,
-        ancestors: ast.Node,
-        node: ast.ColumnDef,
-    ) -> None:
-        """Visit ColumnDef."""
-        if _is_column_creation(ancestors) and (
-            node.typeName.names[-1].sval == "timestamp"
-            and node.typeName.names[0].sval == "pg_catalog"
-        ):
-
-            self.violations.append(
-                linter.Violation(
-                    statement_location=self.statement_location,
-                    statement_length=self.statement_length,
-                    node_location=self.node_location,
-                    description="Prefer timestamp with timezone over timestamp without timezone",  # noqa: E501
-                ),
-            )
-
-            if self.config.fix is True:
-
-                node.typeName.names[-1].sval = "timestamptz"
-
-
-class PreferTimestampWithTimezoneOverTimeWithTimezone(linter.Checker):
-    """Prefer timestamp with timezone over time with timezone."""
-
-    name: str = "convention.prefer_timestamp_with_timezone_over_time_with_timezone"
-    code: str = "CVT002"
-
-    is_auto_fixable: bool = False
-
-    def visit_ColumnDef(
-        self,
-        ancestors: ast.Node,
-        node: ast.ColumnDef,
-    ) -> None:
-        """Visit ColumnDef."""
-        if _is_column_creation(ancestors) and (
-            node.typeName.names[-1].sval == "timetz"
-        ):
-
-            self.violations.append(
-                linter.Violation(
-                    statement_location=self.statement_location,
-                    statement_length=self.statement_length,
-                    node_location=self.node_location,
-                    description="Prefer timestamp with timezone over time with timezone",  # noqa: E501
-                ),
-            )
-
-
-class PreferEntireTimestampWithoutTimezone(linter.Checker):
-    """Prefer entire timestamp without timezone."""
-
-    name: str = "convention.prefer_entire_timestamp_without_timezone"
-    code: str = "CVT003"
-
-    is_auto_fixable: bool = False
-
-    def visit_ColumnDef(
-        self,
-        ancestors: ast.Node,
-        node: ast.ColumnDef,
-    ) -> None:
-        """Visit ColumnDef."""
-        if _is_column_creation(ancestors) and (
-            node.typeName.names[-1].sval == "timestamp" and node.typeName.typmods
-        ):
-
-            self.violations.append(
-                linter.Violation(
-                    statement_location=self.statement_location,
-                    statement_length=self.statement_length,
-                    node_location=self.node_location,
-                    description="Prefer entire timestamp without timezone",
-                ),
-            )
-
-
-class PreferEntireTimestampWithTimezone(linter.Checker):
-    """Prefer entire timestamp with timezone."""
-
-    name: str = "convention.prefer_entire_timestamp_with_timezone"
-    code: str = "CVT004"
-
-    is_auto_fixable: bool = False
-
-    def visit_ColumnDef(
-        self,
-        ancestors: ast.Node,
-        node: ast.ColumnDef,
-    ) -> None:
-        """Visit ColumnDef."""
-        if _is_column_creation(ancestors) and (
-            node.typeName.names[-1].sval == "timestamptz" and node.typeName.typmods
-        ):
-
-            self.violations.append(
-                linter.Violation(
-                    statement_location=self.statement_location,
-                    statement_length=self.statement_length,
-                    node_location=self.node_location,
-                    description="Prefer entire timestamp with timezone",
-                ),
-            )
-
-
-class PreferTextOverChar(linter.Checker):
-    """Prefer text over char."""
-
-    name: str = "convention.prefer_text_over_char"
-    code: str = "CVT005"
-
-    is_auto_fixable: bool = False
-
-    def visit_ColumnDef(
-        self,
-        ancestors: ast.Node,
-        node: ast.ColumnDef,
-    ) -> None:
-        """Visit ColumnDef."""
-        if _is_column_creation(ancestors) and (
-            node.typeName.names[-1].sval in ["bpchar", "char"]
-        ):
-
-            self.violations.append(
-                linter.Violation(
-                    statement_location=self.statement_location,
-                    statement_length=self.statement_length,
-                    node_location=self.node_location,
-                    description="Prefer text over char",
-                ),
-            )
-
-
 class PreferTextOverVarchar(linter.Checker):
     """Prefer text over varchar."""
 
     name: str = "convention.prefer_text_over_varchar"
-    code: str = "CVT006"
+    code: str = "TYP006"
 
     is_auto_fixable: bool = False
 
@@ -188,7 +43,7 @@ class PreferNumericOverMoney(linter.Checker):
     """Prefer numeric over money."""
 
     name: str = "convention.prefer_numeric_over_money"
-    code: str = "CVT007"
+    code: str = "TYP007"
 
     is_auto_fixable: bool = False
 
@@ -214,7 +69,7 @@ class PreferIdentityColumnOverSerial(linter.Checker):
     """Prefer identity column over serial."""
 
     name: str = "convention.prefer_identity_column_over_serial"
-    code: str = "CVT008"
+    code: str = "TYP008"
 
     is_auto_fixable: bool = False
 
@@ -242,7 +97,7 @@ class PreferIdentityColumnOverBigSerial(linter.Checker):
     """Prefer identity column over bigserial."""
 
     name: str = "convention.prefer_identity_column_over_bigserial"
-    code: str = "CVT009"
+    code: str = "TYP009"
 
     is_auto_fixable: bool = False
 
@@ -270,7 +125,7 @@ class PreferJsonbOverJson(linter.Checker):
     """Prefer jsonb over json."""
 
     name: str = "convention.prefer_jsonb_over_json"
-    code: str = "CVT010"
+    code: str = "TYP010"
 
     is_auto_fixable: bool = False
 
@@ -296,7 +151,7 @@ class PreferBigIntOverInt(linter.Checker):
     """Prefer bigint over int."""
 
     name: str = "convention.prefer_bigint_over_int"
-    code: str = "CVT011"
+    code: str = "TYP011"
 
     is_auto_fixable: bool = False
 
@@ -322,7 +177,7 @@ class PreferBigIntOverSmallInt(linter.Checker):
     """Prefer bigint over smallint."""
 
     name: str = "convention.prefer_bigint_over_smallint"
-    code: str = "CVT012"
+    code: str = "TYP012"
 
     is_auto_fixable: bool = False
 
@@ -348,7 +203,7 @@ class WronglyTypedRequiredColumn(linter.Checker):
     """Wrongly typed required column."""
 
     name: str = "convention.wrongly_typed_required_column"
-    code: str = "CVT013"
+    code: str = "TYP013"
 
     is_auto_fixable = True
 
@@ -394,7 +249,7 @@ class BlacklistedType(linter.Checker):
     """Blacklisted type."""
 
     name: str = "convention.blacklisted_type"
-    code: str = "CVT014"
+    code: str = "TYP014"
 
     is_auto_fixable: bool = False
 
@@ -422,7 +277,7 @@ class PreferIdentityColumnOverSmallSerial(linter.Checker):
     """Prefer identity column over smallserial."""
 
     name: str = "convention.prefer_identity_column_over_smallserial"
-    code: str = "CVT015"
+    code: str = "TYP015"
 
     is_auto_fixable: bool = False
 
@@ -450,7 +305,7 @@ class PreferJsonbOverHstore(linter.Checker):
     """Prefer jsonb over hstore."""
 
     name: str = "convention.prefer_jsonb_over_hstore"
-    code: str = "CVT016"
+    code: str = "TYP016"
 
     is_auto_fixable: bool = False
 
@@ -478,7 +333,7 @@ class PreferJsonbOverXml(linter.Checker):
     """Prefer jsonb over xml."""
 
     name: str = "convention.prefer_jsonb_over_xml"
-    code: str = "CVT017"
+    code: str = "TYP017"
 
     is_auto_fixable: bool = False
 
@@ -504,7 +359,7 @@ class PreferNumericOverFloat(linter.Checker):
     """Prefer numeric over float."""
 
     name: str = "convention.prefer_numeric_over_float"
-    code: str = "CVT018"
+    code: str = "TYP018"
 
     is_auto_fixable: bool = False
 

@@ -7,6 +7,15 @@ import importlib
 from pgshield import RULE_DIRECTORIES
 from pgshield.core import noqa, errors, linter
 
+import pathlib
+module_path = pathlib.Path("pgshield/rules/")
+
+# print(module_path)
+
+for path in module_path.glob("**/*.py"):
+    module = importlib.import_module(str(path).replace(".py", "").replace("/", "."))
+    print(module)
+
 
 def load_rules() -> list[linter.Checker]:
     """Load rules."""
@@ -15,6 +24,9 @@ def load_rules() -> list[linter.Checker]:
     for directory in RULE_DIRECTORIES:
 
         module = importlib.import_module(directory)
+        # print(dir(module.__path__))
+        # print(inspect.getmembers(module, inspect.isclass))
+
 
         for _, obj in inspect.getmembers(module, inspect.isclass):
 
