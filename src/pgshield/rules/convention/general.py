@@ -50,10 +50,29 @@ class PreferNonSQLASCIIEncoding(linter.Checker):
             )
 
 
-class PreferDeclarativePartitioningToTableInheritance(linter.Checker):
-    """Prefer declarative partitioning to table inheritance."""
+class TableInheritance(linter.Checker):
+    """## **What it does**
+    Checks for usage of table inheritance.
 
-    name: str = "convention.prefer_declarative_partitioning_to_table_inheritance"
+    ## **Why not?**
+    Table inheritance was a part of a fad wherein the database was closely coupled to
+    object-oriented code. It turned out that coupling things that closely didn't
+    actually produce the desired results.
+
+    ## **When should you?**
+    Never …almost. Now that table partitioning is done natively, that common use case
+    for table inheritance has been replaced by a native feature that handles tuple
+    routing, etc., without bespoke code. One of the very few exceptions would be
+    temporal_tables extension if you are in a pinch and want to use that for row
+    versioning in place of a lacking SQL 2011 support. Table inheritance will provide a
+    small shortcut instead of using UNION ALL to get both historical as well as current
+    rows. Even then you ought to be wary of caveats while working with parent table.
+
+    ## **Use instead:**
+    Don't use table inheritance. If you think you want to, use foreign keys instead.
+    """
+
+    name: str = "convention.usage_of_table_inheritance"
     code: str = "CVG002"
 
     is_auto_fixable: bool = False
@@ -76,8 +95,22 @@ class PreferDeclarativePartitioningToTableInheritance(linter.Checker):
             )
 
 
-class PreferTriggerOverRule(linter.Checker):
-    """Prefer trigger over rule."""
+class CreateRule(linter.Checker):
+    """## **What it does**
+    Checks for creation of rules.
+
+    ## **Why not?**
+    Rules are incredibly powerful, but they don't do what they look like they do.
+    They look like they're some conditional logic, but they actually rewrite a query
+    to modify it or add additional queries to it.
+
+    ## **When should you?**
+    Never. While the rewriter is an implementation detail of VIEWs,
+    there is no reason to pry up this cover plate directly.
+
+    ## **Use instead:**
+    Don't use rules. If you think you want to, use a trigger instead.
+    """
 
     name: str = "convention.prefer_trigger_over_rule"
     code: str = "CVG003"

@@ -1,6 +1,6 @@
-# Overview
+# **Overview**
 
-Advanced SQL linter for Postgres migrations and best practices.
+Advanced SQL linter for PostgreSQL schema migrations and best practices.
 
 
 ## Project layout

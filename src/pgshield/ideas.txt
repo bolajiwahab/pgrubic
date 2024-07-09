@@ -1,3 +1,8 @@
+# building locally probably with make
+- python3 -m build
+- pip install dist/pgshield-*.tar.gz
+
+
 # ideas for documentation
 # extract __doc__ of the classes and generate a markdown from them?
 
