@@ -12,18 +12,18 @@ module_path = pathlib.Path("pgshield/rules/")
 
 # print(module_path)
 
-for path in module_path.glob("**/*.py"):
-    module = importlib.import_module(str(path).replace(".py", "").replace("/", "."))
-    print(module)
+# for path in module_path.glob("**/*.py"):
+#     module = importlib.import_module(str(path).replace(".py", "").replace("/", "."))
+#     print(module)
 
 
 def load_rules() -> list[linter.Checker]:
     """Load rules."""
     rules: list[linter.Checker] = []
 
-    for directory in RULE_DIRECTORIES:
+    for path in module_path.glob("**/*.py"):
 
-        module = importlib.import_module(directory)
+        module = importlib.import_module(str(path).replace(".py", "").replace("/", "."))
         # print(dir(module.__path__))
         # print(inspect.getmembers(module, inspect.isclass))
 

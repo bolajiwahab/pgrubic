@@ -1,4 +1,4 @@
-# prefer-numeric-over-money (CVT007)
+# prefer-numeric-over-money (TYP007)
 
-::: pgshield.rules.convention.typing.PreferNumericOverMoney
+::: pgshield.rules.convention._typing.PreferNumericOverMoney
 

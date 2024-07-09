@@ -1,4 +1,4 @@
-# prefer-text-over-varchar (CVT006)
+# prefer-text-over-varchar (TYP006)
 
-::: pgshield.rules.convention.typing.PreferTextOverVarchar
+::: pgshield.rules.convention._typing.PreferTextOverVarchar
 

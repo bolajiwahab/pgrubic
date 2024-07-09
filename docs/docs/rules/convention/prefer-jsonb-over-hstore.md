@@ -1,4 +1,4 @@
-# prefer-jsonb-over-hstore (CVT016)
+# prefer-jsonb-over-hstore (TYP016)
 
-::: pgshield.rules.convention.typing.PreferJsonbOverHstore
+::: pgshield.rules.convention._typing.PreferJsonbOverHstore
 

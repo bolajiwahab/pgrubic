@@ -1,4 +1,4 @@
-# prefer-jsonb-over-json (CVT010)
+# prefer-jsonb-over-json (TYP010)
 
-::: pgshield.rules.convention.typing.PreferJsonbOverJson
+::: pgshield.rules.convention._typing.PreferJsonbOverJson
 

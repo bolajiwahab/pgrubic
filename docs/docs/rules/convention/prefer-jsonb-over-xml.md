@@ -1,4 +1,4 @@
-# prefer-jsonb-over-xml (CVT017)
+# prefer-jsonb-over-xml (TYP017)
 
-::: pgshield.rules.convention.typing.PreferJsonbOverXml
+::: pgshield.rules.convention._typing.PreferJsonbOverXml
 

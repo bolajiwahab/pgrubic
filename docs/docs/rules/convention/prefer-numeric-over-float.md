@@ -1,4 +1,4 @@
-# prefer-numeric-over-float (CVT018)
+# prefer-numeric-over-float (TYP018)
 
-::: pgshield.rules.convention.typing.PreferNumericOverFloat
+::: pgshield.rules.convention._typing.PreferNumericOverFloat
 

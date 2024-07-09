@@ -1,4 +1,4 @@
-# prefer-identity-column-over-serial (CVT008)
+# prefer-identity-column-over-serial (TYP008)
 
-::: pgshield.rules.convention.typing.PreferIdentityColumnOverSerial
+::: pgshield.rules.convention._typing.PreferIdentityColumnOverSerial
 

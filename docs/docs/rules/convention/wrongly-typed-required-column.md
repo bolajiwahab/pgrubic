@@ -1,4 +1,4 @@
-# wrongly-typed-required-column (CVT013)
+# wrongly-typed-required-column (TYP013)
 
-::: pgshield.rules.convention.typing.WronglyTypedRequiredColumn
+::: pgshield.rules.convention._typing.WronglyTypedRequiredColumn
 

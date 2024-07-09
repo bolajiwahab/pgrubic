@@ -1,4 +1,4 @@
-# prefer-big-int-over-int (CVT011)
+# prefer-big-int-over-int (TYP011)
 
-::: pgshield.rules.convention.typing.PreferBigIntOverInt
+::: pgshield.rules.convention._typing.PreferBigIntOverInt
 

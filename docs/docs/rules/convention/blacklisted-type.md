@@ -1,4 +1,4 @@
-# blacklisted-type (CVT014)
+# blacklisted-type (TYP014)
 
-::: pgshield.rules.convention.typing.BlacklistedType
+::: pgshield.rules.convention._typing.BlacklistedType
 

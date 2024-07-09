@@ -1,4 +1,4 @@
-# prefer-identity-column-over-small-serial (CVT015)
+# prefer-identity-column-over-small-serial (TYP015)
 
-::: pgshield.rules.convention.typing.PreferIdentityColumnOverSmallSerial
+::: pgshield.rules.convention._typing.PreferIdentityColumnOverSmallSerial
 

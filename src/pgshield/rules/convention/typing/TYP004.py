@@ -22,8 +22,8 @@ class TimestampWithTimezoneWithPrecision(linter.Checker):
     timestamptz (also known as timestamp with time zone) without precision.
     """
 
-    name: str = "convention.prefer_entire_timestamp_without_timezone"
-    code: str = "TYP003"
+    name: str = "convention.prefer_entire_timestamp_with_timezone"
+    code: str = "TYP004"
 
     is_auto_fixable: bool = False
 

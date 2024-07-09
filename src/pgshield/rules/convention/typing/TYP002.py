@@ -6,18 +6,18 @@ from pgshield.core import linter
 from pgshield.rules.convention.typing import is_column_creation
 
 
-class TimeWithTimezone(linter.Checker):
+class TimeWithTimeZone(linter.Checker):
     """## **What it does**
     Checks for usage of time with time zone.
 
     ## **Why not?**
     Even the manual tells you it's only implemented for SQL compliance.
 
-        The type time with time zone is defined by the SQL standard, but the definition
-        exhibits properties which lead to questionable usefulness. In most cases,
-        a combination of date, time, timestamp without time zone, and
-        timestamp with time zone should provide a complete range of date/time
-        functionality required by any application.
+    > The type time with time zone is defined by the SQL standard, but the definition
+    > exhibits properties which lead to questionable usefulness. In most cases,
+    > a combination of date, time, timestamp without time zone, and
+    > timestamp with time zone should provide a complete range of date/time
+    > functionality required by any application.
 
     ## **When should you?**
     Never.

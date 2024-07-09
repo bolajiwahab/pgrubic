@@ -1,4 +1,4 @@
-# prefer-identity-column-over-big-serial (CVT009)
+# prefer-identity-column-over-big-serial (TYP009)
 
-::: pgshield.rules.convention.typing.PreferIdentityColumnOverBigSerial
+::: pgshield.rules.convention._typing.PreferIdentityColumnOverBigSerial
 
