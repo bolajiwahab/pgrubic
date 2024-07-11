@@ -2,6 +2,21 @@
 - python3 -m build
 - pip install dist/pgshield-*.tar.gz
 
+# if a column is required then it should not be nullable,
+# in this case we don't need to have a different key for not null columns
+
+# concurrently should not be a transaction block
+
+# is it possible to build a cache of nullable columns with their tables 
+# and then count, if greater than 1, report
+# can we do same for foreign keys to check they are indexed
+
+# no drop cascade
+# maybe make ondelete and onupdate actions tunable but by default it is restrict? no
+
+#### parsed_tree, tokenized_tree then we supply to respective callers such as noqa, identifier checks such as length
+
+
 # all extensions are allowed by default, we use [*]
 # to block all extensions, give empty list []
 

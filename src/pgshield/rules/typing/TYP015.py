@@ -25,15 +25,15 @@ class BlacklistedDataTypes(linter.Checker):
 
     is_auto_fixable: bool = False
 
-    def visit_ColumnDef(
+    def visit_TypeName(
         self,
         ancestors: ast.Node,
-        node: ast.ColumnDef,
+        node: ast.TypeName,
     ) -> None:
-        """Visit ColumnDef."""
+        """Visit TypeName."""
         if (
             is_column_creation(ancestors)
-            and node.typeName.names[-1].sval in self.config.blacklisted_types
+            and node.names[-1].sval in self.config.blacklisted_types
         ):
 
             self.violations.append(
@@ -41,6 +41,6 @@ class BlacklistedDataTypes(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description=f"Data type '{node.typeName.names[-1].sval}' is blacklisted",  # noqa: E501
+                    description=f"Data type '{node.names[-1].sval}' is blacklisted",
                 ),
             )

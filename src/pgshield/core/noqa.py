@@ -21,15 +21,15 @@ def remove_delimiter_from_sql_comment(statement: str, delimter: str = ";") -> st
     )
 
 
-def _split_statement(statement: str) -> list[tuple[int, int, str]]:
+def _split_statement_into_lines(statement: str) -> list[tuple[int, int]]:
     """Split SQL statement into lines."""
-    lines: list[tuple[int, int, str]] = []
+    lines: list[tuple[int, int]] = []
     line_offset = 0
 
     for line in statement.split(";"):
 
         line_length = len(line)
-        lines.append((line_offset, line_offset + line_length, line))
+        lines.append((line_offset, line_offset + line_length))
         line_offset += line_length + 1
 
     return lines
@@ -37,17 +37,19 @@ def _split_statement(statement: str) -> list[tuple[int, int, str]]:
 
 def extract(statement: str) -> list[tuple[int, str]]:
     """Extract noqa from inline SQL comment."""
-    lines = _split_statement(statement)
+    lines = _split_statement_into_lines(statement)
 
     comments: list[tuple[int, str]] = []
 
     for token in parser.scan(statement):
 
         msg = f"Malformed 'noqa' section in line {token.start}. Expected 'noqa: <rule>"
+        if token.name == "IDENT":
+            print(statement[token.start:token.end+1])
 
         if token.name == "SQL_COMMENT":
 
-            for beginning_of_line_offset, end_of_line_offset, _ in lines:
+            for beginning_of_line_offset, end_of_line_offset in lines:
                 if beginning_of_line_offset <= token.start < end_of_line_offset:
                     break
 
