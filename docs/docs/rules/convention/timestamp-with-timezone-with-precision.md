@@ -1,4 +1,4 @@
 # timestamp-with-timezone-with-precision (TYP004)
 
-::: pgshield.rules.convention.typing.TYP004.TimestampWithTimezoneWithPrecision
+::: pgshield.rules.typing.TYP004.TimestampWithTimezoneWithPrecision
 

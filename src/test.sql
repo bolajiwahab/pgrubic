@@ -1,4 +1,5 @@
 CREATE TABLE public."Color"(
+    color_id "char"
 
 ) -- noqa: CVI002
 ;

@@ -3,7 +3,7 @@
 from pglast import ast
 
 from pgshield.core import linter
-from pgshield.rules.convention.typing import is_column_creation
+from pgshield.rules.typing import is_column_creation
 
 
 class TimeWithTimeZone(linter.Checker):
@@ -11,7 +11,7 @@ class TimeWithTimeZone(linter.Checker):
     Checks for usage of time with time zone.
 
     ## **Why not?**
-    Even the manual tells you it's only implemented for SQL compliance.
+    Even the manual tells you it's only implemented for SQL compliance:
 
     > The type time with time zone is defined by the SQL standard, but the definition
     > exhibits properties which lead to questionable usefulness. In most cases,

@@ -3,7 +3,7 @@
 from pglast import ast
 
 from pgshield.core import linter
-from pgshield.rules.convention.typing import is_column_creation
+from pgshield.rules.typing import is_column_creation
 
 
 class TimestampWithoutTimezone(linter.Checker):

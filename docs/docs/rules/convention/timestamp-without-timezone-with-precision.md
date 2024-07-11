@@ -1,4 +1,4 @@
 # timestamp-without-timezone-with-precision (TYP003)
 
-::: pgshield.rules.convention.typing.TYP003.TimestampWithoutTimezoneWithPrecision
+::: pgshield.rules.typing.TYP003.TimestampWithoutTimezoneWithPrecision
 
