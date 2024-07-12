@@ -34,7 +34,10 @@ class ExtensionWhitelist(linter.Checker):
         node: ast.CreateExtensionStmt,
     ) -> None:
         """Visit CreateExtensionStmt."""
-        if node.extname not in self.config.extensions:
+        if (
+            node.extname not in self.config.extensions
+            and "*" not in self.config.extensions
+        ):
 
             self.violations.append(
                 linter.Violation(

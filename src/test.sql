@@ -1,11 +1,15 @@
-CREATE TABLE public.color38b9ab45fbd90acbada4db35c0864185824b430b77321dbad4891e47f4fbc(
-    color_id public.point(10)
+-- CREATE TABLE public.color38b9ab45fbd90acbada4db35c0864185824b430b77321dbad4891e47f4fbc(
+--     color_id public.point(10)
 
-) -- noqa: CVI002
-;
+-- ) -- noqa: CVI002
+-- ;
 
 select b = true from b where c = 10 -- noqa: MIS002
 ;
+
+create extension pg_buffercache
+;
+
 -- ALTER TABLE public.incoming_credit
 --     ADD COLUMN account_id UUID NOT NULL;
 
