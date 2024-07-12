@@ -5,6 +5,7 @@ include = []
 exclude = []
 schemas = []
 extensions = ["*"]
+languages = ["*"]
 partition_strategies = []
 
 fix = true

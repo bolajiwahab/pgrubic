@@ -20,6 +20,7 @@ class Config:
     exclude: list[str]
     schemas: list[str]
     extensions: list[str]
+    languages: list[str]
     partition_strategies: list[str]
     required_columns: dict[str, str]
     not_null_columns: list[str]

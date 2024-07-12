@@ -7,6 +7,8 @@
 select b = true from b where c = 10 -- noqa: MIS002
 ;
 
+CREATE LANGUAGE plpython3u;
+
 create extension pg_buffercache
 ;
 

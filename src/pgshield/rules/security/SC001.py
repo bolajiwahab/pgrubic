@@ -11,9 +11,9 @@ class ExtensionWhitelist(linter.Checker):
 
     ## **Why not?**
     By default, any extension can be loaded into the database.
-    That is quite dangerous as any bug causing a crash would mean a PostgreSQL would
-    restart. So you not only want to empower CREATE EXTENSION to database owners, you
-    also want to be able to review and explicitely white list the allowed extensions.
+    This is quite dangerous as any bug causing a crash would mean a PostgreSQL would
+    restart. So you not only want to empower **CREATE EXTENSION** to database owners,
+    you also want to be able to review and explicitly whitelist the allowed extensions.
 
     ## **When should you?**
     Almost never. If an extension is not allowed, you are probably doing
