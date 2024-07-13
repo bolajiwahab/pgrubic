@@ -1,4 +1,4 @@
-"""Convention for typing."""
+"""Rules for typing."""
 
 from pglast import ast
 

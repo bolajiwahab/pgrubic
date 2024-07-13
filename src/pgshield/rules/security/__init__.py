@@ -1,1 +1,1 @@
-"""Convention around security."""
+"""Rules around security."""
