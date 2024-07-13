@@ -1,10 +1,11 @@
--- CREATE TABLE public.color38b9ab45fbd90acbada4db35c0864185824b430b77321dbad4891e47f4fbc(
---     color_id public.point(10)
+--- jello
+CREATE TABLE public.color38b9ab45fbd90acbada4db35c0864185824b430b77321dbad4891e47f4fbc(
+    color_id public.point(10)
 
--- ) -- noqa: CVI002
--- ;
+) -- noqa: *
+;
 
-select b = true from b where c = 10 -- noqa: MIS002
+select b = true from b where c = 10 -- noqa: MIS002, CVS001
 ;
 
 CREATE LANGUAGE plpython3u;
@@ -40,8 +41,11 @@ create extension pg_buffercache
 -- update public.tbl set a = 20 -- noqa: UNT010
 -- ;
 
--- delete from public.tbl -- noqa: *
+-- delete from public.tbl -- noqa: UNT010
 -- ;
 
 -- select a = null;
 -- alter table tble set tablespace col;
+
+select b = true from b where c = 10 -- noqa: MIS003
+;

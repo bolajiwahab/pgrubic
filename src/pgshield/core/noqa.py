@@ -10,51 +10,87 @@ from pglast import ast, parser
 from pgshield.core import errors
 
 
-def remove_delimiter_from_sql_comment(statement: str, delimter: str = ";") -> str:
-    """Remove delimiter from SQL statement."""
+def remove_delimiter_from_sql_comment(source_code: str, delimter: str = ";") -> str:
+    """Remove delimiter from SQL comment."""
     comment_pattern = r"\s*--.*|^\s*\/[*][\S\s]*?[*]\/"
     return re.sub(
         comment_pattern,
         lambda match: match.group(0).replace(delimter, ""),
-        statement,
+        source_code,
         flags=re.MULTILINE,
     )
 
 
-def _split_statement_into_lines(statement: str) -> list[tuple[int, int]]:
-    """Split SQL statement into lines."""
-    lines: list[tuple[int, int]] = []
-    line_offset = 0
+def _build_start_end_location(source_code: str) -> list[tuple[int, int]]:
+    """Build start and end location."""
+    locations: list[tuple[int, int]] = []
 
-    for line in statement.split(";"):
+    start_location = 0
 
-        line_length = len(line)
-        lines.append((line_offset, line_offset + line_length))
-        line_offset += line_length + 1
+    for statement in source_code.split(";"):
 
-    return lines
+        statement_length = len(statement)
+        locations.append((start_location, start_location + statement_length))
+        start_location += statement_length + 1
+
+    return locations
 
 
-def extract(statement: str) -> list[tuple[int, str]]:
+def _get_rule_from_inline_comment(comment: str, location: int) -> str:
+    """Get rule from inline comment."""
+    msg = f"Malformed 'noqa' section in line {location}. Expected 'noqa: <rule>"
+    # Normal comment lines can also have noqa e.g. --new table -- noqa: UNS05
+    # Therefore extract last possible inline ignore.
+    comment = [c.strip() for c in comment.split("--")][-1]
+
+    comment_remainder = ""
+
+    if comment.startswith("noqa"):
+        # This is an ignore identifier
+        comment_remainder = comment[4:]
+
+        if comment_remainder:
+
+            if not comment_remainder.startswith(":"):
+                raise errors.SQLParseError(
+                    msg,
+                )
+
+            comment_remainder = comment_remainder[1:].strip()
+
+    return comment_remainder
+
+
+def _get_start_location(locations: list[tuple[int, int]], stop: int) -> int:
+    """Get start location."""
+    for start_location, end_location in locations:
+
+        if start_location <= stop < end_location:
+
+            break
+
+    return start_location
+
+
+def extract(source_code: str) -> list[tuple[int, str]]:
     """Extract noqa from inline SQL comment."""
-    lines = _split_statement_into_lines(statement)
+    locations = _build_start_end_location(source_code)
 
-    comments: list[tuple[int, str]] = []
+    inline_ignores: list[tuple[int, str]] = []
 
-    for token in parser.scan(statement):
+    for token in parser.scan(source_code):
 
         msg = f"Malformed 'noqa' section in line {token.start}. Expected 'noqa: <rule>"
-        if token.name == "IDENT":
-            print(statement[token.start:token.end+1])
+        # if token.name == "IDENT":
+        #     print(source_code[token.start:token.end+1])
 
         if token.name == "SQL_COMMENT":
 
-            for beginning_of_line_offset, end_of_line_offset in lines:
-                if beginning_of_line_offset <= token.start < end_of_line_offset:
-                    break
+            start_location = _get_start_location(locations, token.start)
 
-            comment = statement[token.start : (token.end + 1)]
+            comment = source_code[token.start : (token.end + 1)]
 
+            rules = _get_rule_from_inline_comment(comment, token.start)
             # Normal comment lines can also have noqa e.g. --new table -- noqa: UNS05
             # Therefore extract last possible inline ignore.
             comment = [c.strip() for c in comment.split("--")][-1]
@@ -66,6 +102,7 @@ def extract(statement: str) -> list[tuple[int, str]]:
                 if comment_remainder:
 
                     if not comment_remainder.startswith(":"):
+
                         raise errors.SQLParseError(
                             msg,
                         )
@@ -73,11 +110,11 @@ def extract(statement: str) -> list[tuple[int, str]]:
                     comment_remainder = comment_remainder[1:].strip()
 
                 [
-                    comments.append((beginning_of_line_offset, rule.strip()))  # type: ignore[func-returns-value]
-                    for rule in comment_remainder.split(",")
+                    inline_ignores.append((start_location, rule.strip()))  # type: ignore[func-returns-value]
+                    for rule in rules.split(",")
                 ]
 
-    return comments
+    return inline_ignores
 
 
 def apply(func: abc.Callable[..., typing.Any]) -> abc.Callable[..., typing.Any]:

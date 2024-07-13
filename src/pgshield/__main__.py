@@ -20,7 +20,7 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
     loaded_rules: list[core.Checker] = core.load_rules()
 
-    # Add only seleted and not ignored rules
+    # Add only selected and not ignored rules
     for rule in loaded_rules:
 
         if (
@@ -36,9 +36,9 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
     total_violations: int = 0
 
-    # Add only included and not excluded files
     for source_path in source_paths:
 
+        # Run lint on only included and not excluded files
         if (
             not loaded_config.include
             or any(

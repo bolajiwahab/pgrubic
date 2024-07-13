@@ -3,7 +3,6 @@
 from pglast import ast, enums
 
 from pgshield.core import linter
-from pgshield.core.enums import IdentityConstraintMode
 
 
 class NotNullColumn(linter.Checker):
@@ -166,7 +165,7 @@ class PreferGeneratedAlwaysOverGeneratedByDefaultIdentity(linter.Checker):
         """Visit Constraint."""
         if (
             node.contype == enums.ConstrType.CONSTR_IDENTITY
-            and node.generated_when == IdentityConstraintMode.IDENTITY_BY_DEFAULT
+            and node.generated_when == enums.ATTRIBUTE_IDENTITY_BY_DEFAULT
         ):
 
             self.violations.append(

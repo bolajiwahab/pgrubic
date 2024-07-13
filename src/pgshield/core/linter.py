@@ -6,9 +6,10 @@ import pathlib
 import functools
 import dataclasses
 from collections import abc
-from caseconverter import kebabcase
+
 from pglast import ast, parser, visitors
 from colorama import Fore, Style
+from caseconverter import kebabcase
 
 from pgshield.core import noqa, config
 
@@ -120,6 +121,7 @@ class Linter:
         total_violations: int = 0
 
         noqa_ignore_rules: list[tuple[int, str]] = noqa.extract(source_code)
+        print(noqa_ignore_rules)
 
         for checker in self.checkers:
 

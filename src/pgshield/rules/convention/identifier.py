@@ -2,7 +2,6 @@
 
 import abc
 
-import inflection
 from pglast import ast, stream, keywords
 
 from pgshield.core import linter
