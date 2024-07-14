@@ -25,7 +25,7 @@ class NumericWithPrecision(linter.Checker):
     numeric.
     """
 
-    name: str = "convention.prefer_entire_numeric"
+    name: str = "typing.prefer_entire_numeric"
     code: str = "TYP017"
 
     is_auto_fixable: bool = False

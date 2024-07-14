@@ -23,7 +23,7 @@ class Hstore(linter.Checker):
     jsonb.
     """
 
-    name: str = "convention.prefer_jsonb_over_hstore"
+    name: str = "typing.prefer_jsonb_over_hstore"
     code: str = "TYP014"
 
     is_auto_fixable: bool = False

@@ -22,7 +22,7 @@ class TimestampWithoutTimezoneWithPrecision(linter.Checker):
     timestamp (also known as timestamp without time zone) without precision.
     """
 
-    name: str = "convention.prefer_entire_timestamp_without_timezone"
+    name: str = "typing.prefer_entire_timestamp_without_timezone"
     code: str = "TYP003"
 
     is_auto_fixable: bool = False

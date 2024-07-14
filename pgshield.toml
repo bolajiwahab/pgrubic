@@ -2,7 +2,18 @@
 # select = ["UNS*"]
 # ignore = ["CV*"]
 # include = ["test.sql", "new.sql"]
-schemas = ["partitions", "public"]
+disallowed_schemas = [
+    { name = "partitions", reason = "Deprecated" },
+    { name = "public", reason = "Default schema" },
+]
+
+disallowed_data_types = [{ name = "point", reason = "Deprecated" }]
+
+required_columns = [
+    { name = "created", data_type = "timestamptz" },
+    { name = "update", data_type = "timestamptz" },
+]
+
 # exclude = ["*test.sql"]
 partition_strategies = ["hash", "list", "range"]
 regex_constraint_check = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"

@@ -20,5 +20,5 @@ class DuplicateConfigDetectedError(SQLBaseError):
     """Raised when duplicate config is detected."""
 
 
-class UnexpectedConfigDetectedError(SQLBaseError):
-    """Raised when unexpected config is detected."""
+class ConfigMissingKeyError(SQLBaseError):
+    """Raised when there is a config error."""

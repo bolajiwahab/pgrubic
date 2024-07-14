@@ -21,7 +21,7 @@ class Smallint(linter.Checker):
     bigint.
     """
 
-    name: str = "convention.prefer_bigint_over_smallint"
+    name: str = "typing.prefer_bigint_over_smallint"
     code: str = "TYP011"
 
     is_auto_fixable: bool = False

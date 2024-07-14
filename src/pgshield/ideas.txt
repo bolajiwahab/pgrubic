@@ -5,6 +5,8 @@
 # if a column is required then it should not be nullable,
 # in this case we don't need to have a different key for not null columns
 
+# set line length and remove # noqa: E501
+
 # concurrently should not be a transaction block
 
 # is it possible to build a cache of nullable columns with their tables 

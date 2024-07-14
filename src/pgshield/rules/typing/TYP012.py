@@ -25,7 +25,7 @@ class Float(linter.Checker):
     2. decimal
     """
 
-    name: str = "convention.prefer_numeric_over_float"
+    name: str = "typing.prefer_numeric_over_float"
     code: str = "TYP012"
 
     is_auto_fixable: bool = False

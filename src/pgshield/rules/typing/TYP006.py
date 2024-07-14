@@ -48,7 +48,7 @@ class Varchar(linter.Checker):
     2. text with a constraint that enforces a maximum string length
     """
 
-    name: str = "convention.prefer_text_to_varchar"
+    name: str = "typing.prefer_text_to_varchar"
     code: str = "TYP006"
 
     is_auto_fixable: bool = False

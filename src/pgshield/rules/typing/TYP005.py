@@ -57,7 +57,7 @@ class Char(linter.Checker):
     2. text with a constraint that enforces a maximum string length
     """
 
-    name: str = "convention.prefer_text_over_char"
+    name: str = "typing.prefer_text_over_char"
     code: str = "TYP005"
 
     is_auto_fixable: bool = False

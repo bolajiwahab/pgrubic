@@ -26,7 +26,7 @@ class Xml(linter.Checker):
     jsonb.
     """
 
-    name: str = "convention.prefer_jsonb_over_xml"
+    name: str = "typing.prefer_jsonb_over_xml"
     code: str = "TYP013"
 
     is_auto_fixable: bool = False

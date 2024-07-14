@@ -33,7 +33,7 @@ class Money(linter.Checker):
     numeric
     """
 
-    name: str = "convention.prefer_numeric_over_money"
+    name: str = "typing.prefer_numeric_over_money"
     code: str = "TYP007"
 
     is_auto_fixable: bool = False

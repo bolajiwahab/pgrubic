@@ -133,7 +133,7 @@ class CreateRule(linter.Checker):
         )
 
 
-class MissingRequiredColumn(linter.Checker):
+class RequiredColumn(linter.Checker):
     """Missing required column."""
 
     name: str = "convention.missing_required_column"
@@ -155,16 +155,17 @@ class MissingRequiredColumn(linter.Checker):
                 if isinstance(column, ast.ColumnDef)
             ]
 
-            for column, data_type in self.config.required_columns.items():
+            for column in self.config.required_columns:
 
-                if column not in given_columns:
+                if column.name not in given_columns:
 
                     self.violations.append(
                         linter.Violation(
                             statement_location=self.statement_location,
                             statement_length=self.statement_length,
                             node_location=self.node_location,
-                            description=f"Column '{column}' is required",
+                            description=f"Column '{column.name}' of type"
+                            f" '{column.data_type}' is required",
                         ),
                     )
 
@@ -173,12 +174,12 @@ class MissingRequiredColumn(linter.Checker):
                         node.tableElts = (
                             *node.tableElts,
                             ast.ColumnDef(
-                                colname=column,
+                                colname=column.name,
                                 typeName=ast.TypeName(
                                     names=(
                                         {
                                             "@": "String",
-                                            "sval": data_type,
+                                            "sval": column.data_type,
                                         },
                                     ),
                                 ),

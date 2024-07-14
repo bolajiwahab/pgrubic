@@ -22,7 +22,7 @@ class WronglyTypedRequiredColumn(linter.Checker):
     Right data types for the required column.
     """
 
-    name: str = "convention.wrongly_typed_required_column"
+    name: str = "typing.wrongly_typed_required_column"
     code: str = "TYP016"
 
     is_auto_fixable = True

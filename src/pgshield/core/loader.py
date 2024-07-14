@@ -2,34 +2,29 @@
 
 import typing
 import inspect
+import pathlib
 import importlib
 
-from pgshield import RULE_DIRECTORIES
 from pgshield.core import noqa, errors, linter
 
-import pathlib
 module_path = pathlib.Path("pgshield/rules/")
-
-# print(module_path)
-
-# for path in module_path.glob("**/*.py"):
-#     module = importlib.import_module(str(path).replace(".py", "").replace("/", "."))
-#     print(module)
 
 
 def load_rules() -> list[linter.Checker]:
     """Load rules."""
     rules: list[linter.Checker] = []
 
-    for path in module_path.glob("**/*.py"):
+    for path in module_path.glob("**/[!_]*.py"):
 
         module = importlib.import_module(str(path).replace(".py", "").replace("/", "."))
-        # print(dir(module.__path__))
-        # print(inspect.getmembers(module, inspect.isclass))
 
+        for _, obj in inspect.getmembers(
+            module,
+            lambda x: inspect.isclass(x)
+            and x.__module__ == module.__name__,  # noqa: B023
+        ):
 
-        for _, obj in inspect.getmembers(module, inspect.isclass):
-
+            # remove private classes
             if issubclass(obj, linter.Checker) and not obj.__name__.startswith("_"):
 
                 rules.append(typing.cast(linter.Checker, obj))

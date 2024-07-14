@@ -41,9 +41,9 @@ class TimestampWithoutTimezone(linter.Checker):
     """
 
     name: str = (
-        "convention.prefer_timestamp_with_timezone_over_timestamp_without_timezone"
+        "typing.prefer_timestamp_with_timezone_over_timestamp_without_timezone"
     )
-    groups: tuple[str, ...] = ("convention", "typing")
+    groups: tuple[str, ...] = ("typing", "typing")
     code: str = "TYP001"
 
     is_auto_fixable: bool = False

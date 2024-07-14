@@ -29,7 +29,7 @@ class Json(linter.Checker):
     jsonb.
     """
 
-    name: str = "convention.prefer_jsonb_over_json"
+    name: str = "typing.prefer_jsonb_over_json"
     code: str = "TYP009"
 
     is_auto_fixable: bool = False

@@ -79,7 +79,7 @@ no_implicit_reexport = true
 [tool.ruff]
 lint.select = ["ALL"]
 lint.ignore = ["ANN101", "ANN102", "N802", "ARG002", "ANN401", "D205", "N999"]
-line-length = 88
+line-length = 90
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

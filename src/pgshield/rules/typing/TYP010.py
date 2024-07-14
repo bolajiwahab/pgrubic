@@ -21,7 +21,7 @@ class Integer(linter.Checker):
     bigint.
     """
 
-    name: str = "convention.prefer_bigint_over_int"
+    name: str = "typing.prefer_bigint_over_int"
     code: str = "TYP010"
 
     is_auto_fixable: bool = False

@@ -24,7 +24,7 @@ class Serial(linter.Checker):
     For new applications, identity columns should be used.
     """
 
-    name: str = "convention.prefer_identity_column_over_serial"
+    name: str = "typing.prefer_identity_column_over_serial"
     code: str = "TYP008"
 
     is_auto_fixable: bool = False
