@@ -3,7 +3,7 @@
 from pglast import ast
 
 from pgshield.core import linter
-from pgshield.rules.general import get_column_details_from_table_creation
+from pgshield.rules.general import get_columns_from_table_creation
 
 
 class DuplicateColumn(linter.Checker):
@@ -25,7 +25,7 @@ class DuplicateColumn(linter.Checker):
     name: str = "general.duplicate_column"
     code: str = "GN009"
 
-    is_auto_fixable: bool = True
+    is_auto_fixable: bool = False
 
     def visit_CreateStmt(
         self,
@@ -33,7 +33,7 @@ class DuplicateColumn(linter.Checker):
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""
-        _, duplicate_columns = get_column_details_from_table_creation(node)
+        _, duplicate_columns = get_columns_from_table_creation(node)
 
         for column in duplicate_columns:
 
@@ -45,14 +45,3 @@ class DuplicateColumn(linter.Checker):
                     description=f"Column '{column}' specified more than once",
                 ),
             )
-
-            # if node.relation.relname in given_columns:
-
-            #     self.violations.append(
-            #         linter.Violation(
-            #             statement_location=self.statement_location,
-            #             statement_length=self.statement_length,
-            #             node_location=self.node_location,
-            #             description=f"Table '{node.relation.relname}' found in columns",
-            #         ),
-            #     )

@@ -3,7 +3,6 @@
 from pglast import ast
 
 from pgshield.core import linter
-from pgshield.rules.typing import is_column_creation
 
 
 class Json(linter.Checker):
@@ -32,7 +31,7 @@ class Json(linter.Checker):
     name: str = "typing.prefer_jsonb_over_json"
     code: str = "TYP009"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_ColumnDef(
         self,
@@ -40,7 +39,7 @@ class Json(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if is_column_creation(ancestors) and (node.typeName.names[-1].sval == "json"):
+        if node.typeName.names[-1].sval == "json":
 
             self.violations.append(
                 linter.Violation(
@@ -50,3 +49,14 @@ class Json(linter.Checker):
                     description="Prefer jsonb over json",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.typeName = ast.TypeName(
+                    names=(
+                        {
+                            "@": "String",
+                            "sval": "jsonb",
+                        },
+                    ),
+                )

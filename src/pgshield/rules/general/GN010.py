@@ -3,7 +3,7 @@
 from pglast import ast, enums
 
 from pgshield.core import linter
-from pgshield.rules.general import get_column_details_from_table_creation
+from pgshield.rules.general import get_columns_from_table_creation
 
 
 class TableColumnConflict(linter.Checker):
@@ -26,7 +26,7 @@ class TableColumnConflict(linter.Checker):
     name: str = "general.table_column_conflict"
     code: str = "GN010"
 
-    is_auto_fixable: bool = True
+    is_auto_fixable: bool = False
 
     def _register_violation(
         self,
@@ -52,7 +52,7 @@ class TableColumnConflict(linter.Checker):
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""
-        given_columns, _ = get_column_details_from_table_creation(node)
+        given_columns, _ = get_columns_from_table_creation(node)
 
         if node.relation.relname in given_columns:
 

@@ -29,7 +29,7 @@ class MissingReplaceInProcedure(linter.Checker):
     name: str = "general.missing_replace_in_procedure"
     code: str = "GN008"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_CreateFunctionStmt(
         self,
@@ -46,3 +46,7 @@ class MissingReplaceInProcedure(linter.Checker):
                     description="Prefer replace for procedure",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.replace = True

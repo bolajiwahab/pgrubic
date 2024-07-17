@@ -1,9 +1,8 @@
 """Checker for serial types."""
 
-from pglast import ast
+from pglast import ast, enums
 
 from pgshield.core import linter
-from pgshield.rules.typing import is_column_creation
 
 
 class Serial(linter.Checker):
@@ -27,7 +26,7 @@ class Serial(linter.Checker):
     name: str = "typing.prefer_identity_column_over_serial"
     code: str = "TYP008"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_ColumnDef(
         self,
@@ -35,9 +34,7 @@ class Serial(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if is_column_creation(ancestors) and (
-            node.typeName.names[-1].sval in ["smallserial", "serial", "bigserial"]
-        ):
+        if node.typeName.names[-1].sval in ["smallserial", "serial", "bigserial"]:
 
             self.violations.append(
                 linter.Violation(
@@ -47,3 +44,22 @@ class Serial(linter.Checker):
                     description="Prefer identity column over serial types",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.typeName = ast.TypeName(
+                    names=(
+                        {
+                            "@": "String",
+                            "sval": "bigint",
+                        },
+                    ),
+                )
+
+                node.constraints = (
+                    *(node.constraints or []),
+                    ast.Constraint(
+                        contype=enums.ConstrType.CONSTR_IDENTITY,
+                        generated_when=enums.ATTRIBUTE_IDENTITY_ALWAYS,
+                    ),
+                )

@@ -1,48 +1,69 @@
-"""Checker for removal of required columns."""
+"""Checker for existence of not null constraint on required columns."""
 
 from pglast import ast, enums
 
 from pgshield.core import linter
 
 
-class RemoveRequiredColumn(linter.Checker):
+class NullableRequiredColumn(linter.Checker):
     """## **What it does**
-    Checks for removal of required columns.
+    Checks for existence of not null constraint on required columns.
 
     ## **Why not?**
-    If a column has been specified as required and you are removing it from a table,
-    you are probably doing something wrong.
+    If a column has been specified as required then it should not be nullable.
+    Having a required column as nullable is an anti-pattern and should be avoided.
 
     ## **When should you?**
     Never.
 
     ## **Use instead:**
-    Leave the required column.
+    Set the required column as **Not Null**.
     """
 
-    name: str = "general.remove_required_column"
+    name: str = "general.remove_not_null_from_required_column"
     code: str = "GN013"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
-    def visit_AlterTableCmd(
+    def visit_ColumnDef(
         self,
         ancestors: ast.Node,
-        node: ast.AlterTableCmd,
+        node: ast.ColumnDef,
     ) -> None:
-        """Visit AlterTableCmd."""
-        if node.subtype == enums.AlterTableType.AT_DropColumn:
+        """Visit ColumnDef."""
+        for column in self.config.required_columns:
 
-            for column in self.config.required_columns:
+            if node.colname == column.name:
 
-                if node.name == column.name:
+                is_not_null = bool(
+                    (
+                        [
+                            constraint
+                            for constraint in node.constraints
+                            if constraint.contype == enums.ConstrType.CONSTR_NOTNULL
+                        ]
+                        if node.constraints is not None
+                        else []
+                    ),
+                )
+
+                if not is_not_null:
 
                     self.violations.append(
                         linter.Violation(
                             statement_location=self.statement_location,
                             statement_length=self.statement_length,
                             node_location=self.node_location,
-                            description=f"Column {node.name} is marked as required"
+                            description=f"Column '{node.colname}' is marked as required"
                             " in config",
                         ),
                     )
+
+                    if self.config.fix is True:
+
+                        node.constraints = (
+                            *(node.constraints or []),
+                            ast.Constraint(
+                                contype=enums.ConstrType.CONSTR_NOTNULL,
+                            ),
+                        )

@@ -1,8 +1,8 @@
 """Checker for floating point types."""
+
 from pglast import ast
 
 from pgshield.core import linter
-from pgshield.rules.typing import is_column_creation
 
 
 class Float(linter.Checker):
@@ -28,7 +28,7 @@ class Float(linter.Checker):
     name: str = "typing.prefer_numeric_over_float"
     code: str = "TYP012"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_ColumnDef(
         self,
@@ -36,9 +36,7 @@ class Float(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if is_column_creation(ancestors) and (
-            node.typeName.names[-1].sval in ["float4", "float8"]
-        ):
+        if node.typeName.names[-1].sval in ["float4", "float8"]:
 
             self.violations.append(
                 linter.Violation(
@@ -48,3 +46,14 @@ class Float(linter.Checker):
                     description="Prefer numeric over float",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.typeName = ast.TypeName(
+                    names=(
+                        {
+                            "@": "String",
+                            "sval": "numeric",
+                        },
+                    ),
+                )

@@ -3,7 +3,6 @@
 from pglast import ast
 
 from pgshield.core import linter
-from pgshield.rules.typing import is_column_creation
 
 
 class Char(linter.Checker):
@@ -57,10 +56,10 @@ class Char(linter.Checker):
     2. text with a constraint that enforces a maximum string length
     """
 
-    name: str = "typing.prefer_text_over_char"
+    name: str = "typing.char"
     code: str = "TYP005"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_ColumnDef(
         self,
@@ -68,9 +67,7 @@ class Char(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if is_column_creation(ancestors) and (
-            node.typeName.names[-1].sval in ["bpchar", "char"]
-        ):
+        if node.typeName.names[-1].sval in ["bpchar", "char"]:
 
             self.violations.append(
                 linter.Violation(
@@ -80,3 +77,14 @@ class Char(linter.Checker):
                     description="Prefer text over char",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.typeName = ast.TypeName(
+                    names=(
+                        {
+                            "@": "String",
+                            "sval": "text",
+                        },
+                    ),
+                )

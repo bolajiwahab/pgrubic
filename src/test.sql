@@ -1,3 +1,11 @@
+-- CREATE PROCEDURE insert_data(a integer, b integer)
+-- LANGUAGE SQL
+-- AS $$
+-- INSERT INTO tbl VALUES (a);
+-- INSERT INTO tbl VALUES (b);
+-- $$;
+
+select a <> null;
 --- jello
 -- CREATE TABLE public.color_id(
 --     color_id bigint,
@@ -7,14 +15,29 @@
 -- ) -- noqa:
 -- ;
 
-CREATE TABLE public.color(
-    color_id bigint,
-    created bigint
+-- drop index ayaya;
+-- CREATE TYPE public.address_type AS(
+--    street text, 
+--    city text,
+--    state text, 
+--    country text
+-- );
 
-) -- noqa:
-;
+-- CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy');
 
-alter table temp.color_id add column created bigint;
+-- create view ayaya as select 1;
+-- create MATERIALIZED VIEW public.bay as select * from public.ayaya;
+
+-- ALTER INDEX public.ayaya RENAME TO new_name
+
+-- CREATE TABLE public.color(
+--     color_id point primary key,
+--     created boolean
+
+-- ) -- noqa:
+-- ;
+
+-- alter table temp.color_id add column created serial;
 
 -- CREATE RECURSIVE VIEW public.nums_1_100 (n) AS
 --     VALUES (1)

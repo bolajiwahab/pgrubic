@@ -3,7 +3,6 @@
 from pglast import ast
 
 from pgshield.core import linter
-from pgshield.rules.typing import is_column_creation
 
 
 class Integer(linter.Checker):
@@ -24,7 +23,7 @@ class Integer(linter.Checker):
     name: str = "typing.prefer_bigint_over_int"
     code: str = "TYP010"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_ColumnDef(
         self,
@@ -32,7 +31,7 @@ class Integer(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if is_column_creation(ancestors) and (node.typeName.names[-1].sval == "int4"):
+        if node.typeName.names[-1].sval == "int4":
 
             self.violations.append(
                 linter.Violation(
@@ -42,3 +41,14 @@ class Integer(linter.Checker):
                     description="Prefer bigint over int",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.typeName = ast.TypeName(
+                    names=(
+                        {
+                            "@": "String",
+                            "sval": "bigint",
+                        },
+                    ),
+                )

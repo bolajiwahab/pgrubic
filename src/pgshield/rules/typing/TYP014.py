@@ -3,7 +3,6 @@
 from pglast import ast
 
 from pgshield.core import linter
-from pgshield.rules.typing import is_column_creation
 
 
 class Hstore(linter.Checker):
@@ -26,7 +25,7 @@ class Hstore(linter.Checker):
     name: str = "typing.prefer_jsonb_over_hstore"
     code: str = "TYP014"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_ColumnDef(
         self,
@@ -34,9 +33,7 @@ class Hstore(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if is_column_creation(ancestors) and (
-            node.typeName.names[-1].sval == "hstore"
-        ):
+        if node.typeName.names[-1].sval == "hstore":
 
             self.violations.append(
                 linter.Violation(
@@ -46,3 +43,14 @@ class Hstore(linter.Checker):
                     description="Prefer jsonb over hstore",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.typeName = ast.TypeName(
+                    names=(
+                        {
+                            "@": "String",
+                            "sval": "jsonb",
+                        },
+                    ),
+                )

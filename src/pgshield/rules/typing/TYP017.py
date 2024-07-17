@@ -3,7 +3,6 @@
 from pglast import ast
 
 from pgshield.core import linter
-from pgshield.rules.typing import is_column_creation
 
 
 class NumericWithPrecision(linter.Checker):
@@ -28,7 +27,7 @@ class NumericWithPrecision(linter.Checker):
     name: str = "typing.prefer_entire_numeric"
     code: str = "TYP017"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_ColumnDef(
         self,
@@ -36,15 +35,24 @@ class NumericWithPrecision(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if is_column_creation(ancestors) and (
-            node.typeName.names[-1].sval == "timestamptz" and node.typeName.typmods
-        ):
+        if node.typeName.names[-1].sval == "numeric" and node.typeName.typmods:
 
             self.violations.append(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Prefer entire timestamp with timezone",
+                    description="Prefer entire numeric",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.typeName = ast.TypeName(
+                    names=(
+                        {
+                            "@": "String",
+                            "sval": "numeric",
+                        },
+                    ),
+                )

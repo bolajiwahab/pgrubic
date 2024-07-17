@@ -16,6 +16,7 @@ class DisallowedSchema:
 
     name: str
     reason: str
+    use_instead: str
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
@@ -24,6 +25,7 @@ class DisallowedType:
 
     name: str
     reason: str
+    use_instead: str
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
@@ -141,6 +143,7 @@ def parse_config() -> Config:
                 DisallowedType(
                     name=data_type["name"],
                     reason=data_type["reason"],
+                    use_instead=data_type["use_instead"],
                 )
                 for data_type in config["disallowed_data_types"]
             ],
@@ -148,6 +151,7 @@ def parse_config() -> Config:
                 DisallowedSchema(
                     name=schema["name"],
                     reason=schema["reason"],
+                    use_instead=schema["use_instead"],
                 )
                 for schema in config["disallowed_schemas"]
             ],

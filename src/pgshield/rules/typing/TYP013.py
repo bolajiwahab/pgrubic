@@ -1,8 +1,8 @@
 """Checker for xml."""
+
 from pglast import ast
 
 from pgshield.core import linter
-from pgshield.rules.typing import is_column_creation
 
 
 class Xml(linter.Checker):
@@ -29,7 +29,7 @@ class Xml(linter.Checker):
     name: str = "typing.prefer_jsonb_over_xml"
     code: str = "TYP013"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_ColumnDef(
         self,
@@ -37,7 +37,7 @@ class Xml(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if is_column_creation(ancestors) and (node.typeName.names[-1].sval == "xml"):
+        if node.typeName.names[-1].sval == "xml":
 
             self.violations.append(
                 linter.Violation(
@@ -47,3 +47,14 @@ class Xml(linter.Checker):
                     description="Prefer jsonb over xml",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.typeName = ast.TypeName(
+                    names=(
+                        {
+                            "@": "String",
+                            "sval": "jsonb",
+                        },
+                    ),
+                )

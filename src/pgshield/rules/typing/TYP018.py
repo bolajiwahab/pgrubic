@@ -25,7 +25,7 @@ class NullableBooleanField(linter.Checker):
     name: str = "typing.nullable_boolean_field"
     code: str = "TYP018"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_ColumnDef(
         self,
@@ -56,6 +56,15 @@ class NullableBooleanField(linter.Checker):
                         statement_location=self.statement_location,
                         statement_length=self.statement_length,
                         node_location=self.node_location,
-                        description="Boolean field should be non-nullable",
+                        description="Boolean field should be not be nullable",
                     ),
                 )
+
+                if self.config.fix is True:
+
+                    node.constraints = (
+                        *(node.constraints or []),
+                        ast.Constraint(
+                            contype=enums.ConstrType.CONSTR_NOTNULL,
+                        ),
+                    )

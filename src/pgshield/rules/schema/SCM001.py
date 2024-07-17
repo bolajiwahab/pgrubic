@@ -1,10 +1,11 @@
 """Checker for objects that are schema-qualifiable but are not schema qualified."""
 
+from pglast import ast
+
 from pgshield.core import linter
-from pgshield.rules.schema import Schema
 
 
-class SchemaUnqualifiedObject(Schema):
+class SchemaUnqualifiedObject(linter.Checker):
     """## **What it does**
     Checks for objects that are schema-qualifiable but are not schema qualified.
 
@@ -21,23 +22,65 @@ class SchemaUnqualifiedObject(Schema):
     name: str = "schema.schema_qualification"
     code: str = "SCM001"
 
+    description: str = "Database object should be schema qualified"
+
     is_auto_fixable: bool = False
 
-    def _check_schema(
+    def visit_RangeVar(
         self,
-        schema_name: str | None,
-        statement_location: int,
-        statement_length: int,
-        node_location: int,
+        ancestors: ast.Node,
+        node: ast.RangeVar,
     ) -> None:
-        """Check that object is schema qualified."""
+        """Visit RangeVar."""
+        # skip DMLs mainly due to recursive views.
+        if not isinstance(
+            abs(ancestors).node,
+            ast.SelectStmt | ast.InsertStmt | ast.UpdateStmt | ast.DeleteStmt,
+        ) and not node.schemaname:
+
+            self.violations.append(
+                linter.Violation(
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
+                    description=self.description,
+                ),
+            )
+
+    def visit_CreateEnumStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.CreateEnumStmt,
+    ) -> None:
+        """Visit CreateEnumStmt."""
+        schema_name: str = node.typeName[0].sval if len(node.typeName) > 1 else None
+
         if not schema_name:
 
             self.violations.append(
                 linter.Violation(
-                    statement_location=statement_location,
-                    statement_length=statement_length,
-                    node_location=node_location,
-                    description="Database object should be schema qualified",
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
+                    description=self.description,
+                ),
+            )
+
+    def visit_CreateFunctionStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.CreateFunctionStmt,
+    ) -> None:
+        """Visit CreateFunctionStmt."""
+        schema_name: str = node.funcname[0].sval if len(node.funcname) > 1 else None
+
+        if not schema_name:
+
+            self.violations.append(
+                linter.Violation(
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
+                    description=self.description,
                 ),
             )

@@ -1,4 +1,4 @@
-# nullable-required-column (GN014)
+# nullable-required-column (GN013)
 
-::: pgshield.rules.general.GN014.NullableRequiredColumn
+::: pgshield.rules.general.GN013.NullableRequiredColumn
 

@@ -3,11 +3,13 @@
 # ignore = ["CV*"]
 # include = ["test.sql", "new.sql"]
 disallowed_schemas = [
-    { name = "partitions", reason = "Deprecated" },
-    { name = "public", reason = "Default schema" },
+    { name = "partitions", reason = "Deprecated", use_instead = "part" },
+    { name = "public", reason = "Default schema", use_instead = "amlex" },
 ]
 
-disallowed_data_types = [{ name = "point", reason = "Deprecated" }]
+disallowed_data_types = [
+    { name = "point", reason = "Deprecated", use_instead = "text" },
+]
 
 required_columns = [
     { name = "created", data_type = "timestamptz" },

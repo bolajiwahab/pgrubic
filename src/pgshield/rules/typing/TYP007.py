@@ -3,7 +3,6 @@
 from pglast import ast
 
 from pgshield.core import linter
-from pgshield.rules.typing import is_column_creation
 
 
 class Money(linter.Checker):
@@ -36,7 +35,7 @@ class Money(linter.Checker):
     name: str = "typing.prefer_numeric_over_money"
     code: str = "TYP007"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_ColumnDef(
         self,
@@ -44,7 +43,7 @@ class Money(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if is_column_creation(ancestors) and (node.typeName.names[-1].sval == "money"):
+        if node.typeName.names[-1].sval == "money":
 
             self.violations.append(
                 linter.Violation(
@@ -54,3 +53,14 @@ class Money(linter.Checker):
                     description="Prefer numeric over money",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.typeName = ast.TypeName(
+                    names=(
+                        {
+                            "@": "String",
+                            "sval": "numeric",
+                        },
+                    ),
+                )

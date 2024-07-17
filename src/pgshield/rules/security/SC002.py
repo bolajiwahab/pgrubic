@@ -35,8 +35,8 @@ class ProceduralLanguageWhitelist(linter.Checker):
     ) -> None:
         """Visit CreatePLangStmt."""
         if (
-            node.plname not in self.config.languages
-            and "*" not in self.config.languages
+            node.plname not in self.config.allowed_languages
+            and "*" not in self.config.allowed_languages
         ):
 
             self.violations.append(
@@ -44,6 +44,7 @@ class ProceduralLanguageWhitelist(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description=f"Language '{node.plname}' is not whitelisted",
+                    description=f"Language '{node.plname}' not in"
+                                " config.allowed_languages",
                 ),
             )

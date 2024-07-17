@@ -1,10 +1,11 @@
 """Checker for usage of disallowed schemas."""
 
+from pglast import ast
+
 from pgshield.core import linter
-from pgshield.rules.schema import Schema
 
 
-class DisallowedSchema(Schema):
+class DisallowedSchema(linter.Checker):
     """## **What it does**
     Checks for usage of disallowed schemas.
 
@@ -21,31 +22,92 @@ class DisallowedSchema(Schema):
     name: str = "schema.disallowed_schema"
     code: str = "SCM002"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
-    def _check_schema(
+    def visit_RangeVar(
         self,
-        schema_name: str | None,
-        statement_location: int,
-        statement_length: int,
-        node_location: int,
+        ancestors: ast.Node,
+        node: ast.RangeVar,
     ) -> None:
-        """Check schema is not disallowed."""
-        if (
-            schema_name
-            and self.config.disallowed_schemas
+        """Visit RangeVar."""
+        if isinstance(
+            abs(ancestors).node,
+            ast.CreateStmt
+            | ast.ViewStmt
+            | ast.CompositeTypeStmt
+            | ast.CreateSeqStmt
+            | ast.IntoClause,
         ):
 
             for schema in self.config.disallowed_schemas:
 
-                if schema_name == schema.name:
+                if node.schemaname == schema.name:
 
                     self.violations.append(
                         linter.Violation(
-                            statement_location=statement_location,
-                            statement_length=statement_length,
-                            node_location=node_location,
-                            description=f"Schema '{schema_name}' is disallowed in config"
-                            f""" in config with reason: '{schema.reason}'""",
+                            statement_location=self.statement_location,
+                            statement_length=self.statement_length,
+                            node_location=self.node_location,
+                            description=f"Schema '{node.schemaname}' is disallowed in"
+                            f" config with reason: '{schema.reason}'"
+                            f", use '{schema.use_instead}' instead",
                         ),
                     )
+
+                    if self.config.fix is True:
+
+                        node.schemaname = schema.use_instead
+
+    def visit_CreateEnumStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.CreateEnumStmt,
+    ) -> None:
+        """Visit CreateEnumStmt."""
+        schema_name: str = node.typeName[0].sval if len(node.typeName) > 1 else None
+
+        for schema in self.config.disallowed_schemas:
+
+            if schema_name == schema.name:
+
+                self.violations.append(
+                    linter.Violation(
+                        statement_location=self.statement_location,
+                        statement_length=self.statement_length,
+                        node_location=self.node_location,
+                        description=f"Schema '{schema_name}' is disallowed in"
+                        f" config with reason: '{schema.reason}'"
+                        f", use '{schema.use_instead}' instead",
+                    ),
+                )
+
+                if self.config.fix is True:
+
+                    node.typeName[0].sval = schema.use_instead
+
+    def visit_CreateFunctionStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.CreateFunctionStmt,
+    ) -> None:
+        """Visit CreateFunctionStmt."""
+        schema_name: str = node.funcname[0].sval if len(node.funcname) > 1 else None
+
+        for schema in self.config.disallowed_schemas:
+
+            if schema_name == schema.name:
+
+                self.violations.append(
+                    linter.Violation(
+                        statement_location=self.statement_location,
+                        statement_length=self.statement_length,
+                        node_location=self.node_location,
+                        description=f"Schema '{schema_name}' is disallowed in"
+                        f" config with reason: '{schema.reason}'"
+                        f", use '{schema.use_instead}' instead",
+                    ),
+                )
+
+                if self.config.fix is True:
+
+                    node.funcname[0].sval = schema.use_instead

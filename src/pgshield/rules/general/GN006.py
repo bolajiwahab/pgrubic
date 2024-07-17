@@ -38,6 +38,6 @@ class CreateEnum(linter.Checker):
                 statement_location=self.statement_location,
                 statement_length=self.statement_length,
                 node_location=self.node_location,
-                description="Prefer look up table over enum",
+                description="Prefer mapping table to enum",
             ),
         )

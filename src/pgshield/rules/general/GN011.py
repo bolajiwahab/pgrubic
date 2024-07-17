@@ -1,9 +1,9 @@
 """Checker for missing required columns."""
 
-from pglast import ast
+from pglast import ast, enums
 
 from pgshield.core import linter
-from pgshield.rules.general import get_column_details_from_table_creation
+from pgshield.rules.general import get_columns_from_table_creation
 
 
 class MissingRequiredColumn(linter.Checker):
@@ -34,7 +34,7 @@ class MissingRequiredColumn(linter.Checker):
         """Visit CreateStmt."""
         if node.tableElts:
 
-            given_columns, _ = get_column_details_from_table_creation(node)
+            given_columns, _ = get_columns_from_table_creation(node)
 
             for column in self.config.required_columns:
 
@@ -64,6 +64,11 @@ class MissingRequiredColumn(linter.Checker):
                                         },
                                     ),
                                 ),
-                                # is_not_null=True,
+                                constraints=(
+                                    *(node.constraints or []),
+                                    ast.Constraint(
+                                        contype=enums.ConstrType.CONSTR_NOTNULL,
+                                    ),
+                                ),
                             ),
                         )

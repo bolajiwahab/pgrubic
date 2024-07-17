@@ -35,8 +35,8 @@ class ExtensionWhitelist(linter.Checker):
     ) -> None:
         """Visit CreateExtensionStmt."""
         if (
-            node.extname not in self.config.extensions
-            and "*" not in self.config.extensions
+            node.extname not in self.config.allowed_extensions
+            and "*" not in self.config.allowed_extensions
         ):
 
             self.violations.append(
@@ -44,6 +44,7 @@ class ExtensionWhitelist(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description=f"Extension '{node.extname}' is not whitelisted",
+                    description=f"Extension '{node.extname}' not in"
+                                " config.allowed_languages",
                 ),
             )

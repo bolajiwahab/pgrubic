@@ -67,7 +67,7 @@ class Schema(abc.ABC, linter.Checker):
         node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""
-        schema_name: str = node.funcname[0].sval if len(node.funcname) != 1 else None
+        schema_name: str = node.funcname[0].sval if len(node.funcname) > 1 else None
 
         self._check_schema(
             schema_name=schema_name,

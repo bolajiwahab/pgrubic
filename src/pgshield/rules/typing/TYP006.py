@@ -3,7 +3,6 @@
 from pglast import ast
 
 from pgshield.core import linter
-from pgshield.rules.typing import is_column_creation
 
 
 class Varchar(linter.Checker):
@@ -48,10 +47,10 @@ class Varchar(linter.Checker):
     2. text with a constraint that enforces a maximum string length
     """
 
-    name: str = "typing.prefer_text_to_varchar"
+    name: str = "typing.varchar"
     code: str = "TYP006"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_ColumnDef(
         self,
@@ -59,9 +58,7 @@ class Varchar(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if is_column_creation(ancestors) and (
-            node.typeName.names[-1].sval == "varchar"
-        ):
+        if node.typeName.names[-1].sval == "varchar":
 
             self.violations.append(
                 linter.Violation(
@@ -71,3 +68,14 @@ class Varchar(linter.Checker):
                     description="Prefer text to varchar",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.typeName = ast.TypeName(
+                    names=(
+                        {
+                            "@": "String",
+                            "sval": "timestamptz",
+                        },
+                    ),
+                )

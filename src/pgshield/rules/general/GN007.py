@@ -29,7 +29,7 @@ class MissingReplaceInFunction(linter.Checker):
     name: str = "general.missing_replace_for_function"
     code: str = "GN007"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_CreateFunctionStmt(
         self,
@@ -46,3 +46,7 @@ class MissingReplaceInFunction(linter.Checker):
                     description="Prefer replace for function",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.replace = True

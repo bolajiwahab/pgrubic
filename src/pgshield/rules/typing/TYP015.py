@@ -3,7 +3,6 @@
 from pglast import ast
 
 from pgshield.core import linter
-from pgshield.rules.typing import is_column_creation
 
 
 class DisallowedDataType(linter.Checker):
@@ -23,7 +22,7 @@ class DisallowedDataType(linter.Checker):
     name: str = "typing.disallowed_data_type"
     code: str = "TYP015"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_TypeName(
         self,
@@ -31,18 +30,26 @@ class DisallowedDataType(linter.Checker):
         node: ast.TypeName,
     ) -> None:
         """Visit TypeName."""
-        if is_column_creation(ancestors):
+        for data_type in self.config.disallowed_data_types:
 
-            for data_type in self.config.disallowed_data_types:
+            if node.names[-1].sval == data_type.name:
 
-                if node.names[-1].sval == data_type.name:
+                self.violations.append(
+                    linter.Violation(
+                        statement_location=self.statement_location,
+                        statement_length=self.statement_length,
+                        node_location=self.node_location,
+                        description=f"Data type '{node.names[-1].sval}' is disallowed"
+                        f" in config with reason: '{data_type.reason}', use"
+                        f" '{data_type.use_instead}' instead",
+                    ),
+                )
 
-                    self.violations.append(
-                        linter.Violation(
-                            statement_location=self.statement_location,
-                            statement_length=self.statement_length,
-                            node_location=self.node_location,
-                            description=f"Data type '{node.names[-1].sval}' is disallowed"
-                            f""" in config with reason: '{data_type.reason}'""",
-                        ),
+                if self.config.fix is True:
+
+                    node.names = (
+                        {
+                            "@": "String",
+                            "sval": data_type.use_instead,
+                        },
                     )

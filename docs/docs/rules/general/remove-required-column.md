@@ -1,4 +1,4 @@
-# remove-required-column (GN013)
+# remove-required-column (GN012)
 
-::: pgshield.rules.general.GN013.RemoveRequiredColumn
+::: pgshield.rules.general.GN012.RemoveRequiredColumn
 

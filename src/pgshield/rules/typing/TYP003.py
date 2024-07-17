@@ -3,7 +3,6 @@
 from pglast import ast
 
 from pgshield.core import linter
-from pgshield.rules.typing import is_column_creation
 
 
 class TimestampWithoutTimezoneWithPrecision(linter.Checker):
@@ -22,10 +21,10 @@ class TimestampWithoutTimezoneWithPrecision(linter.Checker):
     timestamp (also known as timestamp without time zone) without precision.
     """
 
-    name: str = "typing.prefer_entire_timestamp_without_timezone"
+    name: str = "typing.timestamp_without_timezone_with_precision"
     code: str = "TYP003"
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_ColumnDef(
         self,
@@ -33,9 +32,7 @@ class TimestampWithoutTimezoneWithPrecision(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if is_column_creation(ancestors) and (
-            node.typeName.names[-1].sval == "timestamp" and node.typeName.typmods
-        ):
+        if node.typeName.names[-1].sval == "timestamp" and node.typeName.typmods:
 
             self.violations.append(
                 linter.Violation(
@@ -45,3 +42,14 @@ class TimestampWithoutTimezoneWithPrecision(linter.Checker):
                     description="Prefer entire timestamp without timezone",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.typeName = ast.TypeName(
+                    names=(
+                        {
+                            "@": "String",
+                            "sval": "timestamptz",
+                        },
+                    ),
+                )
