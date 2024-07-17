@@ -1,4 +1,4 @@
-"""Checker for existence of primary key."""
+"""Checker for missing primary key."""
 
 from pglast import ast, enums
 

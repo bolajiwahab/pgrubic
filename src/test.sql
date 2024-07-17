@@ -1,15 +1,27 @@
 --- jello
-CREATE TABLE public.color38b9ab45fbd90acbada4db35c0864185824b430b77321dbad4891e47f4fbc(
-    color_id TIMESTAMPtz
+-- CREATE TABLE public.color_id(
+--     color_id bigint,
+--     color_id bigint,
+--     created bigint
+
+-- ) -- noqa:
+-- ;
+
+CREATE TABLE public.color(
+    color_id bigint,
+    created bigint
 
 ) -- noqa:
 ;
 
-CREATE RECURSIVE VIEW public.nums_1_100 (n) AS
-    VALUES (1)
-UNION ALL
-    SELECT n+1 FROM nums_1_100 WHERE n < 100;
+alter table temp.color_id add column created bigint;
 
+-- CREATE RECURSIVE VIEW public.nums_1_100 (n) AS
+--     VALUES (1)
+-- UNION ALL
+--     SELECT n+1 FROM nums_1_100 WHERE n < 100;
+
+-- alter table temp.color_id add column color_id timestamptz, add column color_id timestamptz;
 -- SELECT * INTO films_recent FROM films WHERE date_prod >= '2002-01-01';
 
 -- select b = true from b where c = 10 -- noqa: MIS002, CVS001

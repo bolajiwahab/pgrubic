@@ -22,7 +22,7 @@ class IdentityGeneratedByDefault(linter.Checker):
     """
 
     name: str = "constraint.identity_generated_by_default"
-    code: str = "CST004"
+    code: str = "CST003"
 
     is_auto_fixable: bool = False
 

@@ -7,7 +7,7 @@ import functools
 import dataclasses
 from collections import abc
 
-from pglast import ast, parser, visitors
+from pglast import ast, parser, visitors, stream
 from colorama import Fore, Style
 from caseconverter import kebabcase
 
@@ -121,7 +121,6 @@ class Linter:
         total_violations: int = 0
 
         noqa_ignore_rules: list[tuple[int, str]] = noqa.extract(source_code)
-        print(noqa_ignore_rules)
 
         for checker in self.checkers:
 
@@ -140,6 +139,8 @@ class Linter:
             )
 
             total_violations += len(checker.violations)
+
+        print(stream.RawStream()(tree))
 
         return total_violations
 

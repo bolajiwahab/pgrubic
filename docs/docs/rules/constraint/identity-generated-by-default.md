@@ -1,4 +1,4 @@
-# identity-generated-by-default (CST004)
+# identity-generated-by-default (CST003)
 
 ::: pgshield.rules.constraint.CST003.IdentityGeneratedByDefault
 

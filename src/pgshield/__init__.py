@@ -1,30 +1,21 @@
 """pgshield."""
 
+import typing
 import pathlib
 
 POSTGRES_MAX_IDENTIFIER: int = 63
 
 SCHEMA_QUALIFIED_TYPE: int = 2
 
-RULE_DIRECTORIES: list[str] = [
-    # "pgshield.rules.unsafe.table",
-    # "pgshield.rules.unsafe.column",
-    # "pgshield.rules.unsafe.index",
-    # "pgshield.rules.unsafe.constraint",
-    # "pgshield.rules.unsafe.storage",
-    # "pgshield.rules.convention.naming",
-    # "pgshield.rules.convention.schema",
-    # "pgshield.rules.convention.identifier",
-    # "pgshield.rules.convention.extension",
-    # "pgshield.rules.convention.general",
-    "pgshield.rules.convention.typing",
-    # "pgshield.rules.convention.partitioning",
-    # "pgshield.rules.convention.constraint",
-]
-
 CONFIG_FILE: str = "pgshield.toml"
 
 DEFAULT_CONFIG: pathlib.Path = pathlib.Path(__file__).resolve().parent / CONFIG_FILE
+
+
+def get_full_qualified_type_name(node: tuple[typing.Any]) -> str:
+    """Get fully qualified type name."""
+    return ".".join(n.sval for n in node)
+
 
 # Map system type name to generic one
 varchar = "pg_catalog.varchar"

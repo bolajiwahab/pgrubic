@@ -11,7 +11,7 @@ disallowed_data_types = [{ name = "point", reason = "Deprecated" }]
 
 required_columns = [
     { name = "created", data_type = "timestamptz" },
-    { name = "update", data_type = "timestamptz" },
+    { name = "updated", data_type = "timestamptz" },
 ]
 
 # exclude = ["*test.sql"]

@@ -1,8 +1,8 @@
 """Checker for wrongly typed required columns."""
 
-from pglast import ast
+from pglast import ast, visitors
 
-from pgshield import SCHEMA_QUALIFIED_TYPE
+from pgshield import get_full_qualified_type_name
 from pgshield.core import linter
 from pgshield.rules.typing import is_column_creation
 
@@ -33,33 +33,76 @@ class WronglyTypedRequiredColumn(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if (
-            is_column_creation(ancestors)
-            and node.colname in self.config.required_columns
-            and node.typeName.names[-1].sval
-            != self.config.required_columns[node.colname]
-        ):
+        if is_column_creation(ancestors):
 
-            given_type = ".".join(a.sval for a in node.typeName.names)
+            for column in self.config.required_columns:
 
-            expected_type = self.config.required_columns[node.colname].split(".")
+                if (
+                    column.name == node.colname
+                    and node.typeName.names[-1].sval != column.data_type
+                ):
 
-            self.violations.append(
-                linter.Violation(
-                    statement_location=self.statement_location,
-                    statement_length=self.statement_length,
-                    node_location=self.node_location,
-                    description=f"Column '{node.colname}' expected type is"
-                    f" '{self.config.required_columns[node.colname]}',"
-                    f" found '{given_type}'",
-                ),
-            )
+                    print(type(node.typeName.names))
 
-            if (
-                self.config.fix is True
-                and len(node.typeName.names) == SCHEMA_QUALIFIED_TYPE
-                and len(expected_type) == SCHEMA_QUALIFIED_TYPE
-            ):
+                    self.violations.append(
+                        linter.Violation(
+                            statement_location=self.statement_location,
+                            statement_length=self.statement_length,
+                            node_location=self.node_location,
+                            description=f"Column '{node.colname}' expected type is"
+                            f" '{column.data_type}', found"
+                            f" '{get_full_qualified_type_name(node.typeName.names)}'",
+                        ),
+                    )
 
-                node.typeName.names[0].sval = expected_type[0]
-                node.typeName.names[1].sval = expected_type[1]
+                    # if self.config.fix is True:
+
+                    #     node.tableElts = (
+                    #         *node.tableElts,
+                    #         ast.ColumnDef(
+                    #             colname=column.name,
+                    #             typeName=ast.TypeName(
+                    #                 names=(
+                    #                     {
+                    #                         "@": "String",
+                    #                         "sval": column.data_type,
+                    #                     },
+                    #                 ),
+                    #             ),
+                    #             is_not_null=True,
+                    #         ),
+                    #     )
+
+
+                # if self.config.fix is True:
+                    # visitors.Delete
+                    # node.constraints = (
+                    #         *(node.constraints or []),
+                    #         ast.Constraint(
+                    #             contype=enums.ConstrType.CONSTR_NOTNULL,
+                    #         ),
+                    #     )
+
+                    # node.typeName = (
+                    #     *node.typeName,
+                    #     ast.TypeName(
+                    #             names=(
+                    #                 {
+                    #                     "@": "String",
+                    #                     "sval": column.data_type,
+                    #                 },
+                    #             ),
+                    #         )
+                        # ast.ColumnDef(
+                        #     colname=column.name,
+                        #     typeName=ast.TypeName(
+                        #         names=(
+                        #             {
+                        #                 "@": "String",
+                        #                 "sval": column.data_type,
+                        #             },
+                        #         ),
+                        #     ),
+                        #     is_not_null=True,
+                        # ),
+                    # )

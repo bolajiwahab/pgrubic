@@ -5,8 +5,6 @@ from pglast import ast
 from pgshield.core import linter
 from pgshield.rules.typing import is_column_creation
 
-import dataclasses
-
 
 class DisallowedDataType(linter.Checker):
     """## **What it does**
