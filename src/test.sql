@@ -5,7 +5,14 @@
 -- INSERT INTO tbl VALUES (b);
 -- $$;
 
-select a <> null;
+-- select a <> null;
+-- create table public.bay as select * from ayaya;
+
+-- create MATERIALIZED VIEW public.bay as select * from public.ayaya;
+-- with a as (select * from public.ayaya)
+SELECT * INTO films_recent FROM films WHERE date_prod >= '2002-01-01';
+-- select * from public.ade;
+-- alter table public.car alter column name drop not null;
 --- jello
 -- CREATE TABLE public.color_id(
 --     color_id bigint,
@@ -26,7 +33,6 @@ select a <> null;
 -- CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy');
 
 -- create view ayaya as select 1;
--- create MATERIALIZED VIEW public.bay as select * from public.ayaya;
 
 -- ALTER INDEX public.ayaya RENAME TO new_name
 
