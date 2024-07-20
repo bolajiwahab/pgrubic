@@ -14,14 +14,14 @@ class RemoveConstraint(linter.Checker):
     and adherence to certain business rules.
 
     If a constraint is removed without due consideration, the data in the database can
-    become inconsistent.
+    become corrupted.
 
     ## **When should you?**
     You can remove constraints if they are no longer needed or need adjustment. Don't just
     remove them without due consideration.
 
     ## **Use instead:**
-    Use a more appropriate constraint.
+    **No suggestions**.
     """
 
     name: str = "constraint.remove_constraint"

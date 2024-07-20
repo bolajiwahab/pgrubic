@@ -2,13 +2,14 @@
 - python3 -m build
 - pip install dist/pgshield-*.tar.gz
 
+- id int GENERATED ALWAYS AS (1) STORED UNIQUE -- will allow only one row
+1. table with 0 defined columns
+2. single letter column, table or identifier?
+
 # get codes from file name instead, update name to groups
 or maybe we can group rules per paths and then we can get the group from the path
 
-# if a column is required then it should not be nullable,
-# in this case we don't need to have a different key for not null columns
 # cyclic references A -> B, B -> A
-# non descriptive column name such as id etc
 
 # set line length and remove # noqa: E501
 
@@ -16,11 +17,10 @@ RULES
 1. concurrently should not be a transaction block
 2. Check there is an index on a foreign key column
 - register foreign key columns
-- resgister indexes 
+- register indexes 
 But how do we guarantee this is only checked at the end of the whole rules
 
-3. Check for dropping of constraints e.g primary, unique, check etc
-4. Check for dropping of unique index
+4. Check for dropping of unique index no possiblre as dont have access to the catalog.
 5. Check for duplicate indexes - we use memory here?
 
 
@@ -28,17 +28,7 @@ But how do we guarantee this is only checked at the end of the whole rules
 # and then count, if greater than 1, report
 # can we do same for foreign keys to check they are indexed
 
-# no drop cascade
-# maybe make ondelete and onupdate actions tunable but by default it is restrict? no
-
 #### parsed_tree, tokenized_tree then we supply to respective callers such as noqa, identifier checks such as length
-
-
-# all extensions are allowed by default, we use [*]
-# to block all extensions, give empty list []
-
-# ideas for documentation
-# extract __doc__ of the classes and generate a markdown from them?
 
 # discard names from rules and leave code, we can generate the rule name 
 # from the class name, leaving it can lead to duplication and mistakes.
@@ -54,14 +44,9 @@ But how do we guarantee this is only checked at the end of the whole rules
 # found commented code, any statement that ends with ; and commented
 # we need to rename few classes
 
-# fixes for required columns
 # fix gap_in_range_partition_bound
 # partition schema ?
 # split schemas into type and schema
-
-# no float, prefer numeric to float
-# truncated numeric
-# comparison with nulls
 
 
 **********************

@@ -1,4 +1,5 @@
 """Checker for nullable boolean field."""
+
 from pglast import ast, enums
 
 from pgshield.core import linter
@@ -33,9 +34,7 @@ class NullableBooleanField(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if (
-            ast.CreateStmt in ancestors or ast.AlterTableCmd in ancestors
-        ) and node.typeName.names[-1].sval == "bool":
+        if node.typeName.names[-1].sval == "bool":
 
             is_not_null = bool(
                 (

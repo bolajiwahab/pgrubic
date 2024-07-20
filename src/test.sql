@@ -7,10 +7,15 @@
 
 -- select a <> null;
 -- create table public.bay as select * from ayaya;
-
+CREATE TABLE people (
+    "ID" numeric,
+    height_in numeric GENERATED ALWAYS AS (2/2.54) STORED
+);
+-- drop table aj, cj cascade;
 -- create MATERIALIZED VIEW public.bay as select * from public.ayaya;
 -- with a as (select * from public.ayaya)
-SELECT * INTO films_recent FROM films WHERE date_prod >= '2002-01-01';
+-- SELECT * INTO films_recent FROM films WHERE date_prod >= '2002-01-01';
+-- drop index CONCURRENTLY public.ayaya cascade;
 -- select * from public.ade;
 -- alter table public.car alter column name drop not null;
 --- jello
