@@ -7,10 +7,14 @@
 
 -- select a <> null;
 -- create table public.bay as select * from ayaya;
-CREATE TABLE people (
-    "ID" numeric,
-    height_in numeric GENERATED ALWAYS AS (2/2.54) STORED
-);
+
+CREATE TABLE yamaya.measurement_y2006m02 PARTITION OF yamaya.measurement
+    FOR VALUES FROM ('2006-02-01') TO ('2006-03-02');
+
+-- CREATE TABLE people (
+--     "ID" numeric,
+--     height_in numeric GENERATED ALWAYS AS (2/2.54) STORED
+-- );
 -- drop table aj, cj cascade;
 -- create MATERIALIZED VIEW public.bay as select * from public.ayaya;
 -- with a as (select * from public.ayaya)

@@ -7,21 +7,23 @@
 -- CREATE RULE notify_me AS ON UPDATE TO mytable DO ALSO NOTIFY mytable -- noqa: COV003
 -- ;
 
-CREATE TABLE measurement (
-    city_id         int not null,
-    logdate         date not null,
-    peaktemp        int,
-    unitsales       int
-) PARTITION BY RANGE (logdate);
+CREATE INDEX i0 ON t0((nullif(FALSE, TRUE)));
 
-create table hp(a int,b text, c int) -- noqa: CVP003
-      partition by list(a part_test_int4_ops, b part_test_text_ops);
+-- CREATE TABLE measurement (
+--     city_id         int not null,
+--     logdate         date not null,
+--     peaktemp        int,
+--     unitsales       int
+-- ) PARTITION BY RANGE (logdate);
 
-drop schema partitions;
+-- create table hp(a int,b text, c int) -- noqa: CVP003
+--       partition by list(a part_test_int4_ops, b part_test_text_ops);
 
-CREATE MATERIALIZED VIEW "Vista" AS SELECT 'Hello World';
+-- drop schema partitions;
 
-CREATE TABLE public."Films_recent"();
+-- CREATE MATERIALIZED VIEW "Vista" AS SELECT 'Hello World';
+
+-- CREATE TABLE public."Films_recent"();
 
 -- CREATE TABLE public."Films_recent" AS
 --   SELECT * FROM films WHERE date_prod >= '2002-01-01';
