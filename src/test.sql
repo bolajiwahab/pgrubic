@@ -9,7 +9,7 @@
 -- create table public.bay as select * from ayaya;
 
 CREATE TABLE yamaya.measurement_y2006m02 PARTITION OF yamaya.measurement
-    FOR VALUES FROM ('2006-02-01') TO ('2006-03-02');
+    FOR VALUES FROM ('2006-02-01 00:00:00') TO ('2006-03-02');
 
 -- CREATE TABLE people (
 --     "ID" numeric,
