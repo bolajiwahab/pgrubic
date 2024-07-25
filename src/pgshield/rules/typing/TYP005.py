@@ -15,17 +15,17 @@ class Char(linter.Checker):
 
     The manual says:
 
-        Values of type character are physically padded with spaces to the specified
-        width n, and are stored and displayed that way. However, trailing spaces are
-        treated as semantically insignificant and disregarded when comparing two
-        values of type character. In collations where whitespace is significant,
-        this behavior can produce unexpected results; for example
-        SELECT 'a '::CHAR(2) collate "C" < E'a\n'::CHAR(2) returns true, even though
-        C locale would consider a space to be greater than a newline.
-        Trailing spaces are removed when converting a character value to one of the
-        other string types. Note that trailing spaces are semantically significant in
-        character varying and text values, and when using pattern matching, that is LIKE
-        and regular expressions. That should scare you off it.
+    > Values of type character are physically padded with spaces to the specified
+    > width n, and are stored and displayed that way.
+    > However, trailing spaces are treated as semantically insignificant and disregarded
+    > when comparing two values of type character. In collations where whitespace is
+    > significant, this behavior can produce unexpected results; for example
+    > SELECT 'a '::CHAR(2) collate "C" < E'a\n'::CHAR(2) returns true, even though
+    > C locale would consider a space to be greater than a newline.
+    > Trailing spaces are removed when converting a character value to one of the
+    > other string types. Note that trailing spaces are semantically significant in
+    > character varying and text values, and when using pattern matching, that is LIKE
+    > and regular expressions. That should scare you off it.
 
     The space-padding does waste space, but doesn't make operations on it any faster;
     in fact the reverse, thanks to the need to strip spaces in many contexts.

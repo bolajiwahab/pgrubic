@@ -92,6 +92,6 @@ nav:
   - Tutorial: tutorial.md
   - Rules: rules.md
 
-not_in_nav: |
-  ./rules/unsafe/.*
-  ./rules/convention/.*
+# not_in_nav: |
+#   ./rules/unsafe/.*
+#   ./rules/convention/.*

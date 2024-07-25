@@ -10,7 +10,7 @@ class PgPrefixIdentifier(CollectIdentifiers):
 
     ## **Why not?**
     From the documentation:
-    ```text
+
     Schema names beginning with pg_ are reserved for system purposes and cannot be
     created by users.
 
