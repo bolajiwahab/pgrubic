@@ -1,4 +1,5 @@
 """Checker for invalid partition name according to naming convention."""
+
 import re
 
 from pglast import ast
@@ -35,9 +36,8 @@ class InvalidPartitionName(linter.Checker):
         node: ast.CreateStmt,
     ) -> None:
         """Visit PartitionCmd."""
-        if (
-            node.partbound is not None
-            and not re.match(self.config.regex_partition, node.relation.relname)
+        if node.partbound is not None and not re.match(
+            self.config.regex_partition, node.relation.relname
         ):
 
             self.violations.append(
@@ -46,6 +46,6 @@ class InvalidPartitionName(linter.Checker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description=f"Partition '{node.relation.relname}' does not follow"
-                                f" naming convention '{self.config.regex_partition}'",
+                    f" naming convention '{self.config.regex_partition}'",
                 ),
             )

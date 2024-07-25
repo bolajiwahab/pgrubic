@@ -1,4 +1,5 @@
 """Core functionalities."""
+
 from pgshield.core import docs_generator
 from pgshield.core.config import Config, parse_config
 from pgshield.core.linter import Linter, Checker

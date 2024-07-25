@@ -1,4 +1,5 @@
 """Checker for invalid unique key constraint name according to naming convention."""
+
 import re
 
 from pglast import ast, enums
@@ -6,7 +7,7 @@ from pglast import ast, enums
 from pgshield.core import linter
 
 
-class InvalidUniqueKey(linter.Checker):
+class InvalidUniqueKeyName(linter.Checker):
     """## **What it does**
     Checks that the name of the unique key constraint to be created is valid according to
     naming convention.
@@ -35,8 +36,10 @@ class InvalidUniqueKey(linter.Checker):
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        if node.contype == enums.ConstrType.CONSTR_UNIQUE and node.conname and (
-            not re.match(self.config.regex_constraint_unique_key, node.conname)
+        if (
+            node.contype == enums.ConstrType.CONSTR_UNIQUE
+            and node.conname
+            and (not re.match(self.config.regex_constraint_unique_key, node.conname))
         ):
 
             self.violations.append(
@@ -45,7 +48,7 @@ class InvalidUniqueKey(linter.Checker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description=f"Unique key constraint"
-                                f" '{node.conname}' does not follow naming convention"
-                                f" '{self.config.regex_constraint_unique_key}'",
+                    f" '{node.conname}' does not follow naming convention"
+                    f" '{self.config.regex_constraint_unique_key}'",
                 ),
             )

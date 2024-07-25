@@ -10,7 +10,7 @@ class TimeWithTimeZone(linter.Checker):
     Checks for usage of time with time zone.
 
     ## **Why not?**
-    Even the manual tells you it's only implemented for SQL compliance:
+    Even the manual tells you it is only implemented for SQL compliance:
 
     > The type time with time zone is defined by the SQL standard, but the definition
     > exhibits properties which lead to questionable usefulness. In most cases,

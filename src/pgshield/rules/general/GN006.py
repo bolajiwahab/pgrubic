@@ -1,4 +1,5 @@
 """Checker for creation of enum."""
+
 from pglast import ast
 
 from pgshield.core import linter

@@ -1,4 +1,5 @@
 """Checker for invalid primary key constraint name according to naming convention."""
+
 import re
 
 from pglast import ast, enums
@@ -35,8 +36,10 @@ class InvalidPrimaryKeyName(linter.Checker):
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        if node.contype == enums.ConstrType.CONSTR_PRIMARY and node.conname and (
-            not re.match(self.config.regex_constraint_primary_key, node.conname)
+        if (
+            node.contype == enums.ConstrType.CONSTR_PRIMARY
+            and node.conname
+            and (not re.match(self.config.regex_constraint_primary_key, node.conname))
         ):
 
             self.violations.append(
@@ -45,7 +48,7 @@ class InvalidPrimaryKeyName(linter.Checker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description=f"Primary key constraint"
-                                f" '{node.conname}' does not follow naming convention"
-                                f" '{self.config.regex_constraint_primary_key}'",
+                    f" '{node.conname}' does not follow naming convention"
+                    f" '{self.config.regex_constraint_primary_key}'",
                 ),
             )

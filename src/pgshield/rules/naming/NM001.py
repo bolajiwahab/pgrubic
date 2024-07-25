@@ -36,9 +36,7 @@ class InvalidIndexName(linter.Checker):
         node: ast.IndexStmt,
     ) -> None:
         """Visit IndexStmt."""
-        if (
-            not re.match(self.config.regex_index, node.idxname)
-        ):
+        if not re.match(self.config.regex_index, node.idxname):
 
             self.violations.append(
                 linter.Violation(
@@ -46,6 +44,6 @@ class InvalidIndexName(linter.Checker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description=f"Index '{node.idxname}' does not follow naming"
-                                f" convention '{self.config.regex_index}'",
+                    f" convention '{self.config.regex_index}'",
                 ),
             )

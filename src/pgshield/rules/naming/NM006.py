@@ -1,4 +1,5 @@
 """Checker for invalid exclusion constraint name according to naming convention."""
+
 import re
 
 from pglast import ast, enums
@@ -34,8 +35,10 @@ class InvalidExclusionConstraintName(linter.Checker):
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        if node.contype == enums.ConstrType.CONSTR_EXCLUSION and node.conname and (
-            not re.match(self.config.regex_constraint_exclusion, node.conname)
+        if (
+            node.contype == enums.ConstrType.CONSTR_EXCLUSION
+            and node.conname
+            and (not re.match(self.config.regex_constraint_exclusion, node.conname))
         ):
 
             self.violations.append(
@@ -44,7 +47,7 @@ class InvalidExclusionConstraintName(linter.Checker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description=f"Exclusion constraint"
-                                f" '{node.conname}' does not follow naming convention"
-                                f" '{self.config.regex_constraint_exclusion}'",
+                    f" '{node.conname}' does not follow naming convention"
+                    f" '{self.config.regex_constraint_exclusion}'",
                 ),
             )

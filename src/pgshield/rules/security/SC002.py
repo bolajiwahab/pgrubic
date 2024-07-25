@@ -45,6 +45,6 @@ class ProceduralLanguageWhitelist(linter.Checker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description=f"Language '{node.plname}' not in"
-                                " config.allowed_languages",
+                    " config.allowed_languages",
                 ),
             )

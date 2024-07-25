@@ -65,9 +65,9 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
 
                 self.violations.append(
                     linter.Violation(
-                    statement_location=self.statement_location,
-                    statement_length=self.statement_length,
-                    node_location=self.node_location,
+                        statement_location=self.statement_location,
+                        statement_length=self.statement_length,
+                        node_location=self.node_location,
                         description="Not null on new column with no static default",
                     ),
                 )
@@ -105,6 +105,7 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):
             if self.config.fix is True:
 
                 node.skip_validation = True
+
 
 class ValidatedCheckConstraintOnExistingRows(linter.Checker):
     """Validated check constraint on existing rows."""

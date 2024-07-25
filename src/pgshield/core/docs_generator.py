@@ -18,7 +18,8 @@ for rule in rules:
     pathlib.Path(base_path / rule.name.split(".")[0]).mkdir(parents=True, exist_ok=True)
 
     with pathlib.Path.open(
-        base_path / rule.name.split(".")[0] / f"{kebabcase(rule.__name__)}.md", "w",
+        base_path / rule.name.split(".")[0] / f"{kebabcase(rule.__name__)}.md",
+        "w",
     ) as file:
 
         file.write(f"# {kebabcase(rule.__name__)} ({rule.code})\n\n")

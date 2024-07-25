@@ -1,4 +1,5 @@
 """Checker for rule."""
+
 from pglast import ast
 
 from pgshield.core import linter

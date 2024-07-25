@@ -1,4 +1,5 @@
 """Checker for invalid check constraint name according to naming convention."""
+
 import re
 
 from pglast import ast, enums
@@ -35,8 +36,10 @@ class InvalidCheckConstraintName(linter.Checker):
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        if node.contype == enums.ConstrType.CONSTR_CHECK and node.conname and (
-            not re.match(self.config.regex_constraint_check, node.conname)
+        if (
+            node.contype == enums.ConstrType.CONSTR_CHECK
+            and node.conname
+            and (not re.match(self.config.regex_constraint_check, node.conname))
         ):
 
             self.violations.append(
@@ -45,7 +48,7 @@ class InvalidCheckConstraintName(linter.Checker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description=f"Check constraint"
-                                f" '{node.conname}' does not follow naming convention"
-                                f" '{self.config.regex_constraint_check}'",
+                    f" '{node.conname}' does not follow naming convention"
+                    f" '{self.config.regex_constraint_check}'",
                 ),
             )

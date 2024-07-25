@@ -32,11 +32,15 @@ class SchemaUnqualifiedObject(linter.Checker):
         node: ast.RangeVar,
     ) -> None:
         """Visit RangeVar."""
-        # skip DMLs mainly due to recursive views.
-        if not isinstance(
-            abs(ancestors).node,
-            ast.SelectStmt | ast.InsertStmt | ast.UpdateStmt | ast.DeleteStmt,
-        ) and not node.schemaname:
+        if (
+            isinstance(
+                abs(ancestors).node,
+                ast.CreateStmt | ast.CreateSeqStmt | ast.CreateEnumStmt
+                # | ast.CreateTableAsStmt
+                | ast.IntoClause | ast.ViewStmt,
+            )
+            and not node.schemaname
+        ):
 
             self.violations.append(
                 linter.Violation(

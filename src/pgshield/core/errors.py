@@ -12,6 +12,7 @@ class SQLParseError(SQLBaseError):
 class SQLLintError(SQLBaseError):
     """Lint error."""
 
+
 class DuplicateRuleDetectedError(SQLBaseError):
     """Raised when duplicate rule is detected."""
 

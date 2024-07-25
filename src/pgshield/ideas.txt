@@ -6,7 +6,7 @@
 1. You realize of course that an index on a constant is pretty
  Tom> useless. I wonder if we should disallow that. Not needed as there are
 several ways to define an index that probably or definitely results in
-a useless index
+a useless index - maybe we can enforce this still
 1. table with 0 defined columns. No need really, no mention anywhere online.
 2. single letter column, table or identifier?
 

@@ -7,7 +7,7 @@ import functools
 import dataclasses
 from collections import abc
 
-from pglast import ast, parser, visitors, stream
+from pglast import ast, parser, stream, visitors
 from colorama import Fore, Style
 from caseconverter import kebabcase
 

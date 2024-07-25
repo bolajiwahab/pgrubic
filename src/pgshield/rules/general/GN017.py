@@ -40,6 +40,6 @@ class IdColumn(linter.Checker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description="Use descriptive name for column instead of"
-                                f" '{node.colname}'",
+                    f" '{node.colname}'",
                 ),
             )

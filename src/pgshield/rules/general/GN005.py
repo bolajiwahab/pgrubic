@@ -1,4 +1,5 @@
 """Checker for index elements."""
+
 from pglast import ast
 
 from pgshield.core import linter
@@ -27,7 +28,6 @@ class IndexElementsMoreThanThree(linter.Checker):
 
     name: str = "general.index_elements_more_than_three"
     code: str = "GN005"
-
 
     is_auto_fixable: bool = False
 

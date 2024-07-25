@@ -1,4 +1,5 @@
 """Checker for invalid foreign key constraint name according to naming convention."""
+
 import re
 
 from pglast import ast, enums
@@ -35,8 +36,10 @@ class InvalidForeignKeyName(linter.Checker):
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        if node.contype == enums.ConstrType.CONSTR_FOREIGN and node.conname and (
-            not re.match(self.config.regex_constraint_foreign_key, node.conname)
+        if (
+            node.contype == enums.ConstrType.CONSTR_FOREIGN
+            and node.conname
+            and (not re.match(self.config.regex_constraint_foreign_key, node.conname))
         ):
 
             self.violations.append(
@@ -45,7 +48,7 @@ class InvalidForeignKeyName(linter.Checker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description=f"Foreign key constraint"
-                                f" '{node.conname}' does not follow naming convention"
-                                f" '{self.config.regex_constraint_foreign_key}'",
+                    f" '{node.conname}' does not follow naming convention"
+                    f" '{self.config.regex_constraint_foreign_key}'",
                 ),
             )

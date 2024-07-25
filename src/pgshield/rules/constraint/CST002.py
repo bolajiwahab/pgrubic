@@ -1,4 +1,5 @@
 """Checker for cascade delete."""
+
 from pglast import ast, enums
 
 from pgshield.core import linter

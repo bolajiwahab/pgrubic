@@ -45,6 +45,6 @@ class ExtensionWhitelist(linter.Checker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description=f"Extension '{node.extname}' not in"
-                                " config.allowed_languages",
+                    " config.allowed_languages",
                 ),
             )

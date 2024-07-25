@@ -1,4 +1,5 @@
 """Checker for invalid sequence name according to naming convention."""
+
 import re
 
 from pglast import ast
@@ -35,9 +36,7 @@ class InvalidSequenceName(linter.Checker):
         node: ast.CreateSeqStmt,
     ) -> None:
         """Visit CreateSeqStmt."""
-        if (
-            not re.match(self.config.regex_sequence, node.sequence.relname)
-        ):
+        if not re.match(self.config.regex_sequence, node.sequence.relname):
 
             self.violations.append(
                 linter.Violation(
@@ -45,6 +44,6 @@ class InvalidSequenceName(linter.Checker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description=f"Sequence '{node.sequence.relname}' does not follow"
-                                f" naming convention '{self.config.regex_sequence}'",
+                    f" naming convention '{self.config.regex_sequence}'",
                 ),
             )
