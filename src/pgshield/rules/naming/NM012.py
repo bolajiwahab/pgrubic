@@ -1,10 +1,10 @@
 """Checker for identifiers with special characters."""
 
 from pgshield.core import linter
-from pgshield.rules.naming import CollectIdentifiers
+from pgshield.rules.naming import CheckIdentifier
 
 
-class SpecialCharacterInIdentifier(CollectIdentifiers):
+class SpecialCharacterInIdentifier(CheckIdentifier):
     """## **What it does**
     Checks for identifiers with special characters.
 

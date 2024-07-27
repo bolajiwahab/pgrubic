@@ -35,9 +35,9 @@ class InvalidPartitionName(linter.Checker):
         ancestors: ast.Node,
         node: ast.CreateStmt,
     ) -> None:
-        """Visit PartitionCmd."""
+        """Visit CreateStmt."""
         if node.partbound is not None and not re.match(
-            self.config.regex_partition, node.relation.relname
+            self.config.regex_partition, node.relation.relname,
         ):
 
             self.violations.append(

@@ -7,8 +7,8 @@ from pglast import ast
 from pgshield.core import linter
 
 
-class CollectIdentifiers(abc.ABC, linter.Checker):
-    """Collect identifiers."""
+class CheckIdentifier(abc.ABC, linter.Checker):
+    """Collect identifier."""
 
     # To be overridden by subclasses
     name: str = ""

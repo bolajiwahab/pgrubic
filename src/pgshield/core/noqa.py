@@ -81,8 +81,6 @@ def extract(source_code: str) -> list[tuple[int, str]]:
     for token in parser.scan(source_code):
 
         msg = f"Malformed 'noqa' section in line {token.start}. Expected 'noqa: <rule>"
-        # if token.name == "IDENT":
-        #     print(source_code[token.start:token.end+1])
 
         if token.name == "SQL_COMMENT":
 

@@ -3,10 +3,10 @@
 from pglast import keywords
 
 from pgshield.core import linter
-from pgshield.rules.naming import CollectIdentifiers
+from pgshield.rules.naming import CheckIdentifier
 
 
-class KeywordIdentifier(CollectIdentifiers):
+class KeywordIdentifier(CheckIdentifier):
     """## **What it does**
     Checks for keywords used as identifiers.
 

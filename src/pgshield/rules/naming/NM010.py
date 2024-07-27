@@ -3,10 +3,10 @@
 from pglast import stream
 
 from pgshield.core import linter
-from pgshield.rules.naming import CollectIdentifiers
+from pgshield.rules.naming import CheckIdentifier
 
 
-class NonSnakeCaseIdentifier(CollectIdentifiers):
+class NonSnakeCaseIdentifier(CheckIdentifier):
     """## **What it does**
     Check if identifier is not in snake case.
 

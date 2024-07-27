@@ -35,9 +35,7 @@ class MultiColumnPartitioning(linter.Checker):
         node: ast.PartitionSpec,
     ) -> None:
         """Visit PartitionSpec."""
-        max_partition_elements = 1
-
-        if len(node.partParams) > max_partition_elements:
+        if len(node.partParams) > 1:
 
             self.violations.append(
                 linter.Violation(

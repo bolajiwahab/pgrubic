@@ -1,4 +1,6 @@
-"""Checker for objects that are schema-qualifiable but are not schema qualified."""
+"""Checker for objects that are schema-qualifiable but are not schema qualified
+at creation time.
+"""
 
 from pglast import ast
 
@@ -7,7 +9,8 @@ from pgshield.core import linter
 
 class SchemaUnqualifiedObject(linter.Checker):
     """## **What it does**
-    Checks for objects that are schema-qualifiable but are not schema qualified.
+    Checks for objects that are schema-qualifiable but are not schema qualified
+    at creation time.
 
     ## **Why not?**
     Explicitly specifying schema improves code readability and improves clarity.
@@ -35,9 +38,11 @@ class SchemaUnqualifiedObject(linter.Checker):
         if (
             isinstance(
                 abs(ancestors).node,
-                ast.CreateStmt | ast.CreateSeqStmt | ast.CreateEnumStmt
-                # | ast.CreateTableAsStmt
-                | ast.IntoClause | ast.ViewStmt,
+                ast.CreateStmt
+                | ast.CreateSeqStmt
+                | ast.CreateEnumStmt
+                | ast.IntoClause
+                | ast.ViewStmt,
             )
             and not node.schemaname
         ):

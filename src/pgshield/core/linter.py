@@ -162,6 +162,7 @@ def set_locations_for_node(
         for parent in ancestors:
 
             if parent is None:
+
                 break
 
             parents.append(parent)

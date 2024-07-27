@@ -1,10 +1,10 @@
 """Checker for identifiers prefix with pg_."""
 
 from pgshield.core import linter
-from pgshield.rules.naming import CollectIdentifiers
+from pgshield.rules.naming import CheckIdentifier
 
 
-class PgPrefixIdentifier(CollectIdentifiers):
+class PgPrefixIdentifier(CheckIdentifier):
     """## **What it does**
     Checks for identifiers prefix with pg_.
 
