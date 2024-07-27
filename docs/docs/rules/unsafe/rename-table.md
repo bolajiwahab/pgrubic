@@ -1,4 +1,4 @@
 # rename-table (UST002)
 
-::: pgshield.rules.unsafe.table.RenameTable
+::: pgshield.rules.unsafe.UN022.RenameTable
 

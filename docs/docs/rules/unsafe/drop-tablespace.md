@@ -1,4 +1,4 @@
 # drop-tablespace (UNS001)
 
-::: pgshield.rules.unsafe.storage.DropTablespace
+::: pgshield.rules.unsafe.UN007.DropTablespace
 

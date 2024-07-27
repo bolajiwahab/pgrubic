@@ -1,4 +1,4 @@
 # not-null-on-existing-column (USR001)
 
-::: pgshield.rules.unsafe.constraint.NotNullOnExistingColumn
+::: pgshield.rules.unsafe.UN0010.NotNullOnExistingColumn
 

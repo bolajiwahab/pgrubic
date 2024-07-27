@@ -1,4 +1,4 @@
 # unique-constraint-creating-new-index (USR006)
 
-::: pgshield.rules.unsafe.constraint.UniqueConstraintCreatingNewIndex
+::: pgshield.rules.unsafe.UN014.UniqueConstraintCreatingNewIndex
 

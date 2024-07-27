@@ -1,4 +1,4 @@
 # vacuum-full (UST006)
 
-::: pgshield.rules.unsafe.table.VacuumFull
+::: pgshield.rules.unsafe.UN026.VacuumFull
 

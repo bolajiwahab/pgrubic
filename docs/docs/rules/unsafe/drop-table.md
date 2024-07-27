@@ -1,4 +1,4 @@
 # drop-table (UST001)
 
-::: pgshield.rules.unsafe.table.DropTable
+::: pgshield.rules.unsafe.UN021.DropTable
 

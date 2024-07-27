@@ -1,4 +1,4 @@
 # validated-check-constraint-on-existing-rows (USR005)
 
-::: pgshield.rules.unsafe.constraint.ValidatedCheckConstraintOnExistingRows
+::: pgshield.rules.unsafe.UN013.ValidatedCheckConstraintOnExistingRows
 

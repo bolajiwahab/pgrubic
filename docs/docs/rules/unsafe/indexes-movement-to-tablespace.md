@@ -1,4 +1,4 @@
 # indexes-movement-to-tablespace (UNI003)
 
-::: pgshield.rules.unsafe.index.IndexesMovementToTablespace
+::: pgshield.rules.unsafe.UN018.IndexesMovementToTablespace
 

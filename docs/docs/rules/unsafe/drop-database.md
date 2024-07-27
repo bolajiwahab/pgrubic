@@ -1,4 +1,4 @@
 # drop-database (UNS002)
 
-::: pgshield.rules.unsafe.storage.DropDatabase
+::: pgshield.rules.unsafe.UN008.DropDatabase
 

@@ -1,4 +1,4 @@
 # non-concurrent-reindex (UNI005)
 
-::: pgshield.rules.unsafe.index.NonConcurrentReindex
+::: pgshield.rules.unsafe.UN020.NonConcurrentReindex
 

@@ -1,4 +1,4 @@
 # drop-schema (UNS003)
 
-::: pgshield.rules.unsafe.storage.DropSchema
+::: pgshield.rules.unsafe.UN009.DropSchema
 

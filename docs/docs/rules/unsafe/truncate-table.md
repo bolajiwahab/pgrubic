@@ -1,4 +1,4 @@
 # truncate-table (UNT009)
 
-::: pgshield.rules.unsafe.table.TruncateTable
+::: pgshield.rules.unsafe.UN029.TruncateTable
 

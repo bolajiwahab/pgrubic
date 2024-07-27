@@ -1,4 +1,4 @@
 # cluster (UST005)
 
-::: pgshield.rules.unsafe.table.Cluster
+::: pgshield.rules.unsafe.UN025.Cluster
 

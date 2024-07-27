@@ -1,4 +1,4 @@
 # forbid-delete-without-where-clause (UNT011)
 
-::: pgshield.rules.unsafe.table.ForbidDeleteWithoutWhereClause
+::: pgshield.rules.unsafe.UN031.ForbidDeleteWithoutWhereClause
 
