@@ -40,7 +40,7 @@ class DropColumn(linter.Checker):
     """
 
     name: str = "unsafe.forbid_drop_column"
-    code: str = "USC001"
+    code: str = "UN001"
 
     is_auto_fixable: bool = False
 

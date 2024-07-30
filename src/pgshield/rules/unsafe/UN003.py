@@ -40,7 +40,7 @@ class ColumnRename(linter.Checker):
     """
 
     name: str = "unsafe.forbid_column_rename"
-    code: str = "USC003"
+    code: str = "UN003"
 
     is_auto_fixable: bool = False
 

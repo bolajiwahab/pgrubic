@@ -9,7 +9,7 @@ class AddingAutoIncrementIdentityColumn(linter.Checker):
     """Forbid adding auto increment identity column."""
 
     name: str = "unsafe.forbid_adding_auto_increment_identity_column"
-    code: str = "USC005"
+    code: str = "UN005"
 
     is_auto_fixable: bool = False
 

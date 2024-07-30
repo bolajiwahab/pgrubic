@@ -1,4 +1,4 @@
-# adding-auto-increment-identity-column (USC005)
+# adding-auto-increment-identity-column (UN005)
 
 ::: pgshield.rules.unsafe.UN005.AddingAutoIncrementIdentityColumn
 

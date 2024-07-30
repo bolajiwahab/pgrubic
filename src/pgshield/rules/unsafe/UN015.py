@@ -9,7 +9,7 @@ class PrimaryKeyConstraintCreatingNewIndex(linter.Checker):
     """Primary key constraint creating new index."""
 
     name: str = "unsafe.primary_key_constraint_creating_new_index"
-    code: str = "USR007"
+    code: str = "UN015"
 
     is_auto_fixable: bool = False
 

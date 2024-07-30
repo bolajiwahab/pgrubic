@@ -9,7 +9,7 @@ class UniqueConstraintCreatingNewIndex(linter.Checker):
     """Unique constraint creating new index."""
 
     name: str = "unsafe.unique_constraint_creating_new_index"
-    code: str = "USR006"
+    code: str = "UN014"
 
     is_auto_fixable: bool = False
 

@@ -9,7 +9,7 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):
     """Validated check constraint on existing rows."""
 
     name: str = "unsafe.validated_check_constraint_on_existing_rows"
-    code: str = "USR005"
+    code: str = "UN013"
 
     is_auto_fixable: bool = False
 

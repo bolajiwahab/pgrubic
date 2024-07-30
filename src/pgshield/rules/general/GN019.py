@@ -30,6 +30,8 @@ class UnloggedTable(linter.Checker):
 
     is_auto_fixable: bool = False
 
+    description: str = "Prefer regular table to unlogged table"
+
     def visit_CreateStmt(
         self,
         ancestors: ast.Node,
@@ -43,7 +45,7 @@ class UnloggedTable(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Prefer regular table instead to unlogged table",
+                    description=self.description,
                 ),
             )
 
@@ -60,6 +62,6 @@ class UnloggedTable(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Prefer regular table instead to unlogged table",
+                    description=self.description,
                 ),
             )

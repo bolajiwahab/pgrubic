@@ -1,6 +1,7 @@
 """Linter."""
 
 import sys
+import copy
 import typing
 import pathlib
 import functools
@@ -83,7 +84,30 @@ class Linter:
     @staticmethod
     def print_violations(*, checker: Checker, file_name: str, source_code: str) -> None:
         """Print all violations collected by a checker."""
-        for violation in checker.violations:
+        violations = copy.copy(checker.violations)
+
+        for violation in violations:
+
+            if (
+                violation.statement_location,
+                checker.code,
+            ) in checker.noqa_ignore_rules or (
+                violation.statement_location,
+                "*",
+            ) in checker.noqa_ignore_rules:
+
+                noqa_index = checker.noqa_ignore_rules.index(
+                    (violation.statement_location, checker.code),
+                )
+
+                # Remove used noqa directive
+                del checker.noqa_ignore_rules[noqa_index]
+
+                # Suppress violation
+                violation_index = violations.index(violation)
+                del checker.violations[violation_index]
+
+                continue
 
             line: Line = get_line_details(
                 violation.statement_location,
@@ -98,6 +122,7 @@ class Linter:
                 f" {violation.description}:"
                 f" {Fore.GREEN}\n\n{line.text}\n\n{Style.RESET_ALL}",
             )
+
 
     def run(self, source_path: str) -> int:
         """Run rules on a source file."""
@@ -141,6 +166,11 @@ class Linter:
             total_violations += len(checker.violations)
 
         print(stream.RawStream()(tree))
+        for ignore in noqa_ignore_rules:
+
+            sys.stdout.write(f"{file_name}: Unused noqa directive:"
+                            f" (unused: {Fore.YELLOW}{ignore[1]}{Style.RESET_ALL},"
+                            f" location: {Fore.YELLOW}{ignore[0]}{Style.RESET_ALL})\n")
 
         return total_violations
 
@@ -161,7 +191,7 @@ def set_locations_for_node(
 
         for parent in ancestors:
 
-            if parent is None:
+            if not parent:
 
                 break
 
@@ -169,7 +199,7 @@ def set_locations_for_node(
 
         node_location = getattr(node, "location", 0)
 
-        self.node_location = node_location if node_location is not None else 0
+        self.node_location = node_location if node_location else 0
 
         # The current node's parent is located two indexes from the end of the list.
 

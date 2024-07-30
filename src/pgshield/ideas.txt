@@ -1,3 +1,5 @@
+- maybe we should also check for schema name at alter statements?
+
 # building locally probably with make
 - python3 -m build
 - pip install dist/pgshield-*.tar.gz

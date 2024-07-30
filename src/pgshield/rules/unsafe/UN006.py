@@ -9,7 +9,7 @@ class StoredGeneratedColumn(linter.Checker):
     """Stored generated column."""
 
     name: str = "unsafe.stored_generated_column"
-    code: str = "USC006"
+    code: str = "UN006"
 
     is_auto_fixable: bool = False
 

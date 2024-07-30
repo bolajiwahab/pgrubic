@@ -5,7 +5,7 @@ import inspect
 import pathlib
 import importlib
 
-from pgshield.core import noqa, errors, linter
+from pgshield.core import errors, linter
 
 module_path = pathlib.Path("pgshield/rules/")
 
@@ -29,8 +29,6 @@ def load_rules() -> list[linter.Checker]:
 
                 rules.append(typing.cast(linter.Checker, obj))
 
-                # These are decorators and they are executed inner --> outer
-                _apply_noqa(obj)
                 _set_locations_for_node(obj)
 
     _check_duplicate_rules(rules)
@@ -50,15 +48,6 @@ def _check_duplicate_rules(rules: list[linter.Checker]) -> None:
 
         seen.add(rule.name)
         seen.add(rule.code)
-
-
-def _apply_noqa(obj: typing.Any) -> None:
-    """Apply noqa on visitors."""
-    for name, method in inspect.getmembers(obj, inspect.isfunction):
-
-        if method.__name__.startswith("visit_"):
-
-            setattr(obj, name, noqa.apply(method))
 
 
 def _set_locations_for_node(obj: typing.Any) -> None:

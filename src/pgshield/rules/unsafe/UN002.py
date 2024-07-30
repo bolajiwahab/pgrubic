@@ -40,7 +40,7 @@ class ColumnTypeChange(linter.Checker):
     """
 
     name: str = "unsafe.forbid_column_type_change"
-    code: str = "USC002"
+    code: str = "UN002"
 
     is_auto_fixable: bool = False
 
