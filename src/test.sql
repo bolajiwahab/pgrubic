@@ -1,4 +1,4 @@
-select current_time -- noqa: NM009, GN020
+select current_time -- noqa: GN020, GN020,
 ;
 
 select current_time -- noqa: NM009

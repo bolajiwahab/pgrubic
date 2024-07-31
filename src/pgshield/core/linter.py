@@ -62,7 +62,7 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
 
                 raise TypeError(msg)
 
-    def visit(self, node: ast.Node, ancestors: typing.Any) -> None:
+    def visit(self, node: ast.Node, ancestors: visitors.Ancestor) -> None:
         """Visit the node."""
 
 
@@ -93,15 +93,13 @@ class Linter:
                 ):
 
                     suppressed_violations.append(violation)
-                    index = inline_ignore.rules.index(checker.code)
 
-                    # We only want to set used to True if all violations have been
-                    # suppressed
-                    inline_ignore.used = len(inline_ignore.rules) == 1
+                    # We only want to set used to True if all ignore rules have been used
+                    inline_ignore.used = len(inline_ignore.rules) <= 1
 
                     if len(inline_ignore.rules) > 1:
 
-                        del inline_ignore.rules[index]
+                        del inline_ignore.rules[inline_ignore.rules.index(checker.code)]
 
         checker.violations = [
             v for v in checker.violations if v not in suppressed_violations
@@ -172,7 +170,7 @@ class Linter:
 
         print(stream.RawStream()(tree))
 
-        noqa.get_unused_ignores(file_name=file_name, inline_ignores=inline_ignores)
+        noqa.report_unused_ignores(file_name=file_name, inline_ignores=inline_ignores)
 
         return total_violations
 

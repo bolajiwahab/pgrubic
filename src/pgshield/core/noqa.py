@@ -59,7 +59,7 @@ def _get_rules_from_inline_comment(comment: str, location: int) -> list[str]:
 
         rules = comment_remainder[1:].replace(",", "").split()
 
-    return list(set(rules))
+    return rules
 
 
 def _get_locations(locations: list[tuple[int, int]], stop: int) -> tuple[int, int]:
@@ -124,7 +124,7 @@ def extract_ignores_from_inline_comments(
     return inline_ignores
 
 
-def get_unused_ignores(*, file_name: str, inline_ignores: list[NoQaDirective]) -> None:
+def report_unused_ignores(*, file_name: str, inline_ignores: list[NoQaDirective]) -> None:
     """Get unused ignores."""
     for ignore in inline_ignores:
 
