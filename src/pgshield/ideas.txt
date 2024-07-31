@@ -1,3 +1,7 @@
+- config disable-noqa
+- stmt_location should be strong
+- merge get line details and set locations
+
 - maybe we should also check for schema name at alter statements?
 
 # building locally probably with make

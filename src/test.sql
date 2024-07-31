@@ -1,4 +1,4 @@
-select current_time -- noqa: GN020
+select current_time -- noqa: NM009, GN020
 ;
 
 select current_time -- noqa: NM009
@@ -8,5 +8,5 @@ select current_time -- noqa: NM009
 
 ALTER TABLE child_table 
 ADD CONSTRAINT constraint_name 
-FOREIGN KEY (fk_columns) -- noqa: UN015, GN020
+FOREIGN KEY (fk_columns) -- noqa: UN015, GN020,   GN020
 REFERENCES parent_table (parent_key_columns);

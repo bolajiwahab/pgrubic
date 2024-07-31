@@ -1,6 +1,6 @@
 """Unsafe table operations."""
 
-from pglast import ast, enums, stream
+from pglast import ast
 
 from pgshield.core import linter
 

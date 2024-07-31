@@ -1,6 +1,6 @@
 """Unsafe storage operations."""
 
-from pglast import ast, enums
+from pglast import ast
 
 from pgshield.core import linter
 

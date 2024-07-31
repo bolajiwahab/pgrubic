@@ -1,7 +1,6 @@
 """Linter."""
 
 import sys
-import copy
 import typing
 import pathlib
 import functools
@@ -43,19 +42,13 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
 
     def __init__(self) -> None:
         """Initialize variables."""
-        self.noqa_ignore_rules: list[tuple[int, str]] = []
-
         self.violations: list[Violation] = []
-
+        self.statement_location: int = 0
+        self.statement_length: int = 0
+        self.node_location: int = 0
         self.config: config.Config = dataclasses.field(
             default_factory=lambda: config.Config(**config.load_default_config()),
         )
-
-        self.statement_location: int = 0
-
-        self.statement_length: int = 0
-
-        self.node_location: int = 0
 
     required_attributes: tuple[str, ...] = ("name", "code", "is_auto_fixable")
 
@@ -82,34 +75,45 @@ class Linter:
         self.config = config
 
     @staticmethod
+    def skip_suppressed_violations(
+        *,
+        checker: Checker,
+        inline_ignores: list[noqa.NoQaDirective],
+    ) -> None:
+        """Skip suppressed violations."""
+        suppressed_violations: list[Violation] = []
+
+        for inline_ignore in inline_ignores:
+
+            for violation in checker.violations:
+
+                if (
+                    violation.statement_location == inline_ignore.location
+                    and (not inline_ignore.rules or checker.code in inline_ignore.rules)
+                ):
+
+                    suppressed_violations.append(violation)
+                    index = inline_ignore.rules.index(checker.code)
+
+                    # We only want to set used to True if all violations have been
+                    # suppressed
+                    inline_ignore.used = len(inline_ignore.rules) == 1
+
+                    if len(inline_ignore.rules) > 1:
+
+                        del inline_ignore.rules[index]
+
+        checker.violations = [
+            v for v in checker.violations if v not in suppressed_violations
+        ]
+
+
+    @staticmethod
     def print_violations(*, checker: Checker, file_name: str, source_code: str) -> None:
         """Print all violations collected by a checker."""
-        violations = copy.copy(checker.violations)
+        for violation in checker.violations:
 
-        for violation in violations:
-
-            if (
-                violation.statement_location,
-                checker.code,
-            ) in checker.noqa_ignore_rules or (
-                violation.statement_location,
-                "*",
-            ) in checker.noqa_ignore_rules:
-
-                noqa_index = checker.noqa_ignore_rules.index(
-                    (violation.statement_location, checker.code),
-                )
-
-                # Remove used noqa directive
-                del checker.noqa_ignore_rules[noqa_index]
-
-                # Suppress violation
-                violation_index = violations.index(violation)
-                del checker.violations[violation_index]
-
-                continue
-
-            line: Line = get_line_details(
+            line: Line = _get_line_details(
                 violation.statement_location,
                 violation.statement_length,
                 violation.node_location,
@@ -117,7 +121,7 @@ class Linter:
             )
 
             sys.stdout.write(
-                f"{file_name}:{line.number}:{line.column_offset}:"
+                f"\n{file_name}:{line.number}:{line.column_offset}:"
                 f" \033]8;;http://127.0.0.1:8000/rules/{checker.name.split(".")[0]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"
                 f" {violation.description}:"
                 f" {Fore.GREEN}\n\n{line.text}\n\n{Style.RESET_ALL}",
@@ -132,8 +136,6 @@ class Linter:
 
             source_code: str = source_file.read()
 
-        source_code = noqa.remove_delimiter_from_sql_comment(source_code)
-
         try:
 
             tree: ast.Node = parser.parse_sql(source_code)
@@ -143,19 +145,22 @@ class Linter:
             sys.stdout.write(f"{file_name}: {Fore.RED}{error!s}{Style.RESET_ALL}")
             sys.exit(1)
 
+        inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores_from_inline_comments(source_code)  # noqa: E501
+
         total_violations: int = 0
 
-        noqa_ignore_rules: list[tuple[int, str]] = noqa.extract(source_code)
-
         for checker in self.checkers:
-
-            checker.noqa_ignore_rules = noqa_ignore_rules
 
             checker.config = self.config
 
             checker.violations = []
 
             checker(tree)
+
+            self.skip_suppressed_violations(
+                checker=checker,
+                inline_ignores=inline_ignores,
+            )
 
             self.print_violations(
                 checker=checker,
@@ -166,11 +171,8 @@ class Linter:
             total_violations += len(checker.violations)
 
         print(stream.RawStream()(tree))
-        for ignore in noqa_ignore_rules:
 
-            sys.stdout.write(f"{file_name}: Unused noqa directive:"
-                            f" (unused: {Fore.YELLOW}{ignore[1]}{Style.RESET_ALL},"
-                            f" location: {Fore.YELLOW}{ignore[0]}{Style.RESET_ALL})\n")
+        noqa.get_unused_ignores(file_name=file_name, inline_ignores=inline_ignores)
 
         return total_violations
 
@@ -212,7 +214,7 @@ def set_locations_for_node(
     return wrapper
 
 
-def get_line_details(
+def _get_line_details(
     statement_location: int,
     statement_length: int,
     column_offset: int,
