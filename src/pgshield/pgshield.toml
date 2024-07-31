@@ -3,28 +3,29 @@ select = []
 ignore = []
 include = []
 exclude = []
-disallowed_schemas = []
-allowed_extensions = ["*"]
-allowed_languages = ["*"]
-partition_strategies = []
+ignore-noqa = false
+disallowed-schemas = []
+allowed-extensions = ["*"]
+allowed-languages = ["*"]
+partition-strategies = []
 
 fix = true
-unsafe_fixes = true
+unsafe-fixes = true
 
-required_columns = { created = "pg_catalog.timestamptz", updated = "pg_catalog.bool" }
+required-columns = { created = "pg_catalog.timestamptz", updated = "pg_catalog.bool" }
 
 # required_columns = { created = {type = "pg_catalog.timestamptz", not_null = true}, updated = "pg_catalog.bool" }
 
-not_null_columns = ["created", "updated", "deleted", "deleted_by"]
+not-null-columns = ["created", "updated", "deleted", "deleted_by"]
 
 # schemas = { partition = "partitions", table = "public" } # improvements to whitelisting of schemas
 # object_type: list of schemas
 
-regex_partition = "[a-zA-Z0-9]+__[a-zA-Z0-9_]+__[a-zA-Z0-9_]+$"
-regex_index = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_idx$"
-regex_constraint_primary_key = "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_pkey$"
-regex_constraint_unique_key = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
-regex_constraint_foreign_key = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_fkey"
-regex_constraint_check = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"
-regex_constraint_exclusion = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_exclusion$"
-regex_sequence = "[a-zA-Z0-9].+_seq$"
+regex-partition = "[a-zA-Z0-9]+__[a-zA-Z0-9_]+__[a-zA-Z0-9_]+$"
+regex-index = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_idx$"
+regex-constraint-primary-key = "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_pkey$"
+regex-constraint-unique-key = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
+regex-constraint-foreign-key = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_fkey"
+regex-constraint-check = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"
+regex-constraint-exclusion = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_exclusion$"
+regex-sequence = "[a-zA-Z0-9].+_seq$"

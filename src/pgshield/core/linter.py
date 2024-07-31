@@ -155,10 +155,12 @@ class Linter:
 
             checker(tree)
 
-            self.skip_suppressed_violations(
-                checker=checker,
-                inline_ignores=inline_ignores,
-            )
+            if self.config.ignore_noqa is False:
+
+                self.skip_suppressed_violations(
+                    checker=checker,
+                    inline_ignores=inline_ignores,
+                )
 
             self.print_violations(
                 checker=checker,

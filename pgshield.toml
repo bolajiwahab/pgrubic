@@ -2,22 +2,23 @@
 # select = ["UNS*"]
 # ignore = ["CV*"]
 # include = ["test.sql", "new.sql"]
-disallowed_schemas = [
-    { name = "partitions", reason = "Deprecated", use_instead = "part" },
-    { name = "public", reason = "Default schema", use_instead = "amlex" },
+ignore-noqa = false
+disallowed-schemas = [
+    { name = "partitions", reason = "Deprecated", use-instead = "part" },
+    { name = "public", reason = "Default schema", use-instead = "amlex" },
 ]
 
-disallowed_data_types = [
-    { name = "point", reason = "Deprecated", use_instead = "text" },
+disallowed-data-types = [
+    { name = "point", reason = "Deprecated", use-instead = "text" },
 ]
 
-required_columns = [
-    { name = "created", data_type = "timestamptz" },
-    { name = "updated", data_type = "timestamptz" },
+required-columns = [
+    { name = "created", data-type = "timestamptz" },
+    { name = "updated", data-type = "timestamptz" },
 ]
 
 # exclude = ["*test.sql"]
-partition_strategies = ["hash", "list", "range"]
-regex_constraint_check = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"
+partition-strategies = ["hash", "list", "range"]
+regex-constraint-check = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"
 extensions = []
 languages = []

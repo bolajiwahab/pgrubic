@@ -1,6 +1,10 @@
+**** important **********
 - config disable-noqa
-- stmt_location should be strong
+- getting stmt_location should be robust
 - merge get line details and set locations
+- fix documentations for unsafe
+- write more fixes
+**********
 
 - maybe we should also check for schema name at alter statements?
 

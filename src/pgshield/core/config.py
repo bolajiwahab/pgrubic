@@ -44,11 +44,11 @@ class Config:
     ignore: list[str]
     include: list[str]
     exclude: list[str]
+    ignore_noqa: bool
     allowed_extensions: list[str]
     allowed_languages: list[str]
     partition_strategies: list[str]
     required_columns: list[RequiredColumns]
-    not_null_columns: list[str]
     disallowed_schemas: list[DisallowedSchema]
     disallowed_data_types: list[DisallowedType]
 
@@ -118,42 +118,42 @@ def parse_config() -> Config:
             ignore=config["ignore"],
             include=config["include"],
             exclude=config["exclude"],
-            allowed_extensions=config["allowed_extensions"],
-            allowed_languages=config["allowed_languages"],
-            partition_strategies=config["partition_strategies"],
-            not_null_columns=config["not_null_columns"],
+            ignore_noqa=config["ignore-noqa"],
+            allowed_extensions=config["allowed-extensions"],
+            allowed_languages=config["allowed-languages"],
+            partition_strategies=config["partition-strategies"],
             fix=config["fix"],
-            unsafe_fixes=config["unsafe_fixes"],
-            regex_partition=config["regex_partition"],
-            regex_index=config["regex_index"],
-            regex_constraint_primary_key=config["regex_constraint_primary_key"],
-            regex_constraint_unique_key=config["regex_constraint_unique_key"],
-            regex_constraint_foreign_key=config["regex_constraint_foreign_key"],
-            regex_constraint_check=config["regex_constraint_check"],
-            regex_constraint_exclusion=config["regex_constraint_exclusion"],
-            regex_sequence=config["regex_sequence"],
+            unsafe_fixes=config["unsafe-fixes"],
+            regex_partition=config["regex-partition"],
+            regex_index=config["regex-index"],
+            regex_constraint_primary_key=config["regex-constraint-primary-key"],
+            regex_constraint_unique_key=config["regex-constraint-unique-key"],
+            regex_constraint_foreign_key=config["regex-constraint-foreign-key"],
+            regex_constraint_check=config["regex-constraint-check"],
+            regex_constraint_exclusion=config["regex-constraint-exclusion"],
+            regex_sequence=config["regex-sequence"],
             required_columns=[
                 RequiredColumns(
                     name=column["name"],
-                    data_type=column["data_type"],
+                    data_type=column["data-type"],
                 )
-                for column in config["required_columns"]
+                for column in config["required-columns"]
             ],
             disallowed_data_types=[
                 DisallowedType(
                     name=data_type["name"],
                     reason=data_type["reason"],
-                    use_instead=data_type["use_instead"],
+                    use_instead=data_type["use-instead"],
                 )
-                for data_type in config["disallowed_data_types"]
+                for data_type in config["disallowed-data-types"]
             ],
             disallowed_schemas=[
                 DisallowedSchema(
                     name=schema["name"],
                     reason=schema["reason"],
-                    use_instead=schema["use_instead"],
+                    use_instead=schema["use-instead"],
                 )
-                for schema in config["disallowed_schemas"]
+                for schema in config["disallowed-schemas"]
             ],
         )
 
