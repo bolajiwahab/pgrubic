@@ -32,7 +32,7 @@ class MissingRequiredColumn(linter.Checker):
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""
-        if node.tableElts:
+        if not node.partbound and node.tableElts:
 
             given_columns, _ = get_columns_from_table_creation(node)
 

@@ -9,7 +9,7 @@ class DropTablespace(linter.Checker):
     """Drop tablespace."""
 
     name: str = "unsafe.drop_tablespace"
-    code: str = "UNS001"
+    code: str = "UN007"
 
     is_auto_fixable: bool = False
 

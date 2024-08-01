@@ -1,6 +1,6 @@
 """Checker for ID column."""
 
-from pglast import ast
+from pglast import ast, enums
 
 from pgshield.core import linter
 
@@ -32,7 +32,17 @@ class IdColumn(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.colname.lower() == "id":
+        if (
+            isinstance(
+                abs(ancestors).node,
+                ast.AlterTableCmd,
+            )
+            and (abs(ancestors).node.subtype == enums.AlterTableType.AT_AddColumn)
+            or isinstance(
+                abs(ancestors).node,
+                ast.CreateStmt,
+            )
+        ) and node.colname.lower() == "id":
 
             self.violations.append(
                 linter.Violation(

@@ -9,7 +9,7 @@ class Cluster(linter.Checker):
     """Cluster."""
 
     name: str = "unsafe.cluster"
-    code: str = "UST005"
+    code: str = "UN025"
 
     is_auto_fixable: bool = False
 

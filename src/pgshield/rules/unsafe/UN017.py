@@ -9,7 +9,7 @@ class IndexMovementToTablespace(linter.Checker):
     """Index movement to tablespace."""
 
     name: str = "unsafe.index_movement_to_tablespace"
-    code: str = "UNI002"
+    code: str = "UN017"
 
     is_auto_fixable: bool = False
 

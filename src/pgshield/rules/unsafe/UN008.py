@@ -9,7 +9,7 @@ class DropDatabase(linter.Checker):
     """Drop database."""
 
     name: str = "unsafe.drop_database"
-    code: str = "UNS002"
+    code: str = "UN008"
 
     is_auto_fixable: bool = False
 

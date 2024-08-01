@@ -9,7 +9,7 @@ class RenameTable(linter.Checker):
     """Rename table."""
 
     name: str = "unsafe.rename_table"
-    code: str = "UST002"
+    code: str = "UN022"
 
     is_auto_fixable: bool = False
 

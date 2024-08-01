@@ -9,8 +9,8 @@ allowed-extensions = ["*"]
 allowed-languages = ["*"]
 partition-strategies = []
 
-fix = true
-unsafe-fixes = true
+fix = false
+unsafe-fixes = false
 
 required-columns = { created = "pg_catalog.timestamptz", updated = "pg_catalog.bool" }
 

@@ -9,7 +9,7 @@ class NonConcurrentDetachPartition(linter.Checker):
     """Detach partition."""
 
     name: str = "unsafe.detach_partition"
-    code: str = "UST007"
+    code: str = "UN027"
 
     is_auto_fixable: bool = False
 

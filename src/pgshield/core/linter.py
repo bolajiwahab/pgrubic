@@ -128,7 +128,7 @@ class Linter:
 
     def run(self, source_path: str) -> int:
         """Run rules on a source file."""
-        file_name: str = pathlib.Path(source_path).name
+        file_name: pathlib.Path = pathlib.Path(source_path)
 
         with pathlib.Path(source_path).open("r", encoding="utf-8") as source_file:
 
@@ -170,7 +170,7 @@ class Linter:
 
             total_violations += len(checker.violations)
 
-        print(stream.RawStream()(tree))
+        # print(stream.RawStream()(tree))
 
         noqa.report_unused_ignores(file_name=file_name, inline_ignores=inline_ignores)
 

@@ -67,7 +67,8 @@ def _get_rules_from_inline_comment(comment: str, location: int) -> list[str]:
 
 
 def _get_statement_locations(
-    locations: list[tuple[int, int]], stop: int,
+    locations: list[tuple[int, int]],
+    stop: int,
 ) -> tuple[int, int]:
     """Get statement start and end locations."""
     for statement_start_location, statement_end_location in locations:
@@ -90,9 +91,7 @@ class NoQaDirective:
     used: bool = False
 
 
-def extract_ignores_from_inline_comments(
-    source_code: str,
-) -> list[NoQaDirective]:
+def extract_ignores_from_inline_comments(source_code: str) -> list[NoQaDirective]:
     """Extract ignores from inline SQL comments."""
     source_code = _remove_delimiter_from_comments(source_code)
 

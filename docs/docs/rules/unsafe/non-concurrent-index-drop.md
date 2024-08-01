@@ -1,4 +1,4 @@
-# non-concurrent-index-drop (UNI004)
+# non-concurrent-index-drop (UN019)
 
 ::: pgshield.rules.unsafe.UN019.NonConcurrentIndexDrop
 

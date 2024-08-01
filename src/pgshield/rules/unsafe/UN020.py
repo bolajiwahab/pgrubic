@@ -9,7 +9,7 @@ class NonConcurrentReindex(linter.Checker):
     """Non concurrent reindex."""
 
     name: str = "unsafe.non_concurrent_reindex"
-    code: str = "UNI005"
+    code: str = "UN020"
 
     is_auto_fixable: bool = False
 

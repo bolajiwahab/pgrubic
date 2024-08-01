@@ -9,7 +9,7 @@ class VacuumFull(linter.Checker):
     """Vacuum full."""
 
     name: str = "unsafe.vacuum_full"
-    code: str = "UST006"
+    code: str = "UN026"
 
     is_auto_fixable: bool = False
 

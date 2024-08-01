@@ -9,7 +9,7 @@ class DropSchema(linter.Checker):
     """Drop schema."""
 
     name: str = "unsafe.drop_schema"
-    code: str = "UNS003"
+    code: str = "UN009"
 
     is_auto_fixable: bool = False
 

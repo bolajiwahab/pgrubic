@@ -9,7 +9,7 @@ class TableMovementToTablespace(linter.Checker):
     """Table movement to tablespace."""
 
     name: str = "unsafe.table_movement_to_tablespace"
-    code: str = "UST003"
+    code: str = "UN023"
 
     is_auto_fixable: bool = False
 

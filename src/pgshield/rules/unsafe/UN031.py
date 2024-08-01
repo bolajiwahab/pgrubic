@@ -9,7 +9,7 @@ class ForbidDeleteWithoutWhereClause(linter.Checker):
     """Forbid delete without where clause."""
 
     name: str = "unsafe.forbid_delete_without_where_clause"
-    code: str = "UNT011"
+    code: str = "UN031"
 
     is_auto_fixable: bool = False
 

@@ -35,7 +35,7 @@ class SpecialCharacterInIdentifier(CheckIdentifier):
         node_location: int,
     ) -> None:
         """Checks for identifiers with special characters."""
-        if not identifier.replace("_", "").isalnum():
+        if identifier and not identifier.replace("_", "").isalnum():
 
             self.violations.append(
                 linter.Violation(

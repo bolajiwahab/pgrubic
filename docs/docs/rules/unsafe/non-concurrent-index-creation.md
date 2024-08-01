@@ -1,4 +1,4 @@
-# non-concurrent-index-creation (UNI001)
+# non-concurrent-index-creation (UN016)
 
 ::: pgshield.rules.unsafe.UN016.NonConcurrentIndexCreation
 

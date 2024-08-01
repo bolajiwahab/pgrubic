@@ -19,7 +19,7 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if ast.AlterTableStmt in ancestors and node.constraints:
+        if isinstance(abs(ancestors).node, ast.AlterTableCmd) and node.constraints:
 
             is_not_null = False
             has_static_default = False
