@@ -1,5 +1,4 @@
 **** important **********
-- config disable-noqa
 - getting stmt_location should be robust
 - merge get line details and set locations
 - fix documentations for unsafe

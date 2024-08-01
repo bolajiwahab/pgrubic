@@ -2,7 +2,7 @@
 # select = ["UNS*"]
 # ignore = ["CV*"]
 # include = ["test.sql", "new.sql"]
-ignore-noqa = false
+ignore-noqa = true
 disallowed-schemas = [
     { name = "partitions", reason = "Deprecated", use-instead = "part" },
     { name = "public", reason = "Default schema", use-instead = "amlex" },

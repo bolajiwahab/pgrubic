@@ -22,20 +22,24 @@ def _remove_delimiter_from_comments(source_code: str, delimiter: str = ";") -> s
     )
 
 
-def _build_start_end_locations(
+def _build_statements_start_end_locations(
     source_code: str,
     delimiter: str = ";",
 ) -> list[tuple[int, int]]:
-    """Build start and end locations."""
+    """Build statements start and end locations."""
     locations: list[tuple[int, int]] = []
 
-    start_location = 0
+    statement_start_location = 0
 
     for statement in source_code.split(delimiter):
 
         statement_length = len(statement)
-        locations.append((start_location, start_location + statement_length))
-        start_location += statement_length + 1
+
+        locations.append(
+            (statement_start_location, statement_start_location + statement_length),
+        )
+
+        statement_start_location += statement_length + 1
 
     return locations
 
@@ -62,15 +66,17 @@ def _get_rules_from_inline_comment(comment: str, location: int) -> list[str]:
     return rules
 
 
-def _get_locations(locations: list[tuple[int, int]], stop: int) -> tuple[int, int]:
-    """Get start location."""
-    for start_location, end_location in locations:
+def _get_statement_locations(
+    locations: list[tuple[int, int]], stop: int,
+) -> tuple[int, int]:
+    """Get statement start and end locations."""
+    for statement_start_location, statement_end_location in locations:
 
-        if start_location <= stop < end_location:
+        if statement_start_location <= stop < statement_end_location:
 
             break
 
-    return start_location, end_location
+    return statement_start_location, statement_end_location
 
 
 @dataclasses.dataclass(kw_only=True)
@@ -90,7 +96,7 @@ def extract_ignores_from_inline_comments(
     """Extract ignores from inline SQL comments."""
     source_code = _remove_delimiter_from_comments(source_code)
 
-    locations = _build_start_end_locations(source_code)
+    locations = _build_statements_start_end_locations(source_code)
 
     inline_ignores: list[NoQaDirective] = []
 
@@ -98,9 +104,12 @@ def extract_ignores_from_inline_comments(
 
         if token.name == "SQL_COMMENT":
 
-            start_location, end_location = _get_locations(locations, token.start)
+            statement_start_location, statement_end_location = _get_statement_locations(
+                locations,
+                token.start,
+            )
 
-            line_number = source_code[:end_location].count("\n") + 1
+            line_number = source_code[:statement_end_location].count("\n") + 1
 
             comment = source_code[token.start : (token.end + 1)]
 
@@ -114,9 +123,9 @@ def extract_ignores_from_inline_comments(
 
                 inline_ignores.append(
                     NoQaDirective(
-                        location=start_location,
+                        location=statement_start_location,
                         line_number=line_number,
-                        column_offset=(token.end - start_location),
+                        column_offset=(statement_end_location - token.start),
                         rules=rules,
                     ),
                 )
@@ -124,7 +133,11 @@ def extract_ignores_from_inline_comments(
     return inline_ignores
 
 
-def report_unused_ignores(*, file_name: str, inline_ignores: list[NoQaDirective]) -> None:
+def report_unused_ignores(
+    *,
+    file_name: str,
+    inline_ignores: list[NoQaDirective],
+) -> None:
     """Get unused ignores."""
     for ignore in inline_ignores:
 
