@@ -2,6 +2,7 @@
 
 import re
 import sys
+import pathlib
 import dataclasses
 
 from pglast import parser
@@ -134,7 +135,7 @@ def extract_ignores_from_inline_comments(source_code: str) -> list[NoQaDirective
 
 def report_unused_ignores(
     *,
-    file_name: str,
+    file_name: pathlib.Path,
     inline_ignores: list[NoQaDirective],
 ) -> None:
     """Get unused ignores."""

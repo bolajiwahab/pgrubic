@@ -25,10 +25,6 @@ class IndexElementsMoreThanThree(linter.Checker):
     ## **Use instead:**
     Keep your index elements at most three.
     """
-
-    name: str = "general.index_elements_more_than_three"
-    code: str = "GN005"
-
     is_auto_fixable: bool = False
 
     def visit_IndexStmt(

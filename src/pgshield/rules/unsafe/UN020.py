@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class NonConcurrentReindex(linter.Checker):
     """Non concurrent reindex."""
-
-    name: str = "unsafe.non_concurrent_reindex"
-    code: str = "UN020"
-
     is_auto_fixable: bool = False
 
     def visit_ReindexStmt(self, ancestors: ast.Node, node: ast.ReindexStmt) -> None:

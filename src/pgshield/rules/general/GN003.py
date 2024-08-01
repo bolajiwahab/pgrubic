@@ -27,10 +27,6 @@ class SqlAsciiEncoding(linter.Checker):
     ## **Use instead:**
     UTF8.
     """
-
-    name: str = "general.sql_ascii_encoding"
-    code: str = "GN003"
-
     is_auto_fixable: bool = False
 
     def visit_CreatedbStmt(

@@ -24,10 +24,6 @@ class InvalidIndexName(linter.Checker):
     ## **Use instead:**
     Name your index according to the set name convention.
     """
-
-    name: str = "naming.invalid_index_name"
-    code: str = "NM001"
-
     is_auto_fixable: bool = False
 
     def visit_IndexStmt(

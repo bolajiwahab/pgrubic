@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class DropTablespace(linter.Checker):
     """Drop tablespace."""
-
-    name: str = "unsafe.drop_tablespace"
-    code: str = "UN007"
-
     is_auto_fixable: bool = False
 
     def visit_DropTableSpaceStmt(

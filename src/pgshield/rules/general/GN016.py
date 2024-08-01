@@ -19,10 +19,6 @@ class ConstantGeneratedColumn(linter.Checker):
     ## **Use instead:**
     Generated column with expression.
     """
-
-    name: str = "general.constant_generated_column"
-    code: str = "GN016"
-
     is_auto_fixable: bool = False
 
     def visit_Constraint(

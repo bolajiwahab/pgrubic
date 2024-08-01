@@ -3,6 +3,12 @@
 - merge get line details and set locations
 - fix documentations for unsafe
 - write more fixes
+- Found 137 errors (96 fixed, 41 remaining)
+- fix is given, we don't print violations that can be fixed/are being fixed
+- Found 41 errors.
+- No fixes available (7 hidden fixes can be enabled with the `--unsafe-fixes` option).
+- Found 41 errors.
+- 10 fixes available (7 hidden fixes can be enabled with the `--unsafe-fixes` option).
 **********
 
 - maybe we should also check for schema name at alter statements?

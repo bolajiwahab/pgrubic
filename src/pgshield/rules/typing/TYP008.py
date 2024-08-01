@@ -22,10 +22,6 @@ class Serial(linter.Checker):
     ## **Use instead:**
     For new applications, identity columns should be used.
     """
-
-    name: str = "typing.prefer_identity_column_over_serial"
-    code: str = "TYP008"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

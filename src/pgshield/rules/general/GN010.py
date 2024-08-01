@@ -22,10 +22,6 @@ class TableColumnConflict(linter.Checker):
     ## **Use instead:**
     Update conflicted name.
     """
-
-    name: str = "general.table_column_conflict"
-    code: str = "GN010"
-
     is_auto_fixable: bool = False
 
     def _register_violation(

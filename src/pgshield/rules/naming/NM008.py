@@ -21,10 +21,6 @@ class ImplicitConstraintName(linter.Checker):
     ## **Use instead:**
     Name your constraint according to the set naming convention.
     """
-
-    name: str = "naming.implicit_constraint_name"
-    code: str = "NM008"
-
     is_auto_fixable: bool = False
 
     def visit_Constraint(

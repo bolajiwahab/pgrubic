@@ -55,10 +55,6 @@ class Char(linter.Checker):
     1. text
     2. text with a constraint that enforces a maximum string length
     """
-
-    name: str = "typing.char"
-    code: str = "TYP005"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

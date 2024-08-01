@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class DropDatabase(linter.Checker):
     """Drop database."""
-
-    name: str = "unsafe.drop_database"
-    code: str = "UN008"
-
     is_auto_fixable: bool = False
 
     def visit_DropdbStmt(

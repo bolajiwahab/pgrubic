@@ -19,10 +19,6 @@ class RemoveRequiredColumn(linter.Checker):
     ## **Use instead:**
     Leave the required column.
     """
-
-    name: str = "general.remove_required_column"
-    code: str = "GN012"
-
     is_auto_fixable: bool = False
 
     def visit_AlterTableCmd(

@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class AddingAutoIncrementColumn(linter.Checker):
     """Forbid adding auto increment column."""
-
-    name: str = "unsafe.forbid_adding_auto_increment_column"
-    code: str = "UN004"
-
     is_auto_fixable: bool = False
 
     def visit_ColumnDef(self, ancestors: ast.Node, node: ast.ColumnDef) -> None:

@@ -20,10 +20,6 @@ class TimestampWithoutTimezoneWithPrecision(linter.Checker):
     ## **Use instead:**
     timestamp (also known as timestamp without time zone) without precision.
     """
-
-    name: str = "typing.timestamp_without_timezone_with_precision"
-    code: str = "TYP003"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

@@ -22,10 +22,6 @@ class ProceduralLanguageWhitelist(linter.Checker):
     ## **Use instead:**
     Procedural languages that are in the whitelist.
     """
-
-    name: str = "security.procedureal_language_whitelist"
-    code: str = "SC002"
-
     is_auto_fixable: bool = False
 
     def visit_CreatePLangStmt(

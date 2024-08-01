@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class NonConcurrentIndexDrop(linter.Checker):
     """Non concurrent index drop."""
-
-    name: str = "unsafe.non_concurrent_index_drop"
-    code: str = "UN019"
-
     is_auto_fixable: bool = False
 
     def visit_DropStmt(

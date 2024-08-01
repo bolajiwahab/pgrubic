@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class DropTable(linter.Checker):
     """Drop table."""
-
-    name: str = "unsafe.drop_table"
-    code: str = "UN021"
-
     is_auto_fixable: bool = False
 
     def visit_DropStmt(

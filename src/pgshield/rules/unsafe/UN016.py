@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class NonConcurrentIndexCreation(linter.Checker):
     """Non concurrent index creation."""
-
-    name: str = "unsafe.non_concurrent_index_creation"
-    code: str = "UN016"
-
     is_auto_fixable: bool = False
 
     def visit_IndexStmt(

@@ -22,10 +22,6 @@ class NullableBooleanField(linter.Checker):
     ## **Use instead:**
     boolean with not null constraint.
     """
-
-    name: str = "typing.nullable_boolean_field"
-    code: str = "TYP018"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

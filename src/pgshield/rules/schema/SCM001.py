@@ -21,10 +21,6 @@ class SchemaUnqualifiedObject(linter.Checker):
     ## **Use instead:**
     Specify schema.
     """
-
-    name: str = "schema.schema_qualification"
-    code: str = "SCM001"
-
     description: str = "Database object should be schema qualified"
 
     is_auto_fixable: bool = False

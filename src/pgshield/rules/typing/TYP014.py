@@ -21,10 +21,6 @@ class Hstore(linter.Checker):
     ## **Use instead:**
     jsonb.
     """
-
-    name: str = "typing.prefer_jsonb_over_hstore"
-    code: str = "TYP014"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class StoredGeneratedColumn(linter.Checker):
     """Stored generated column."""
-
-    name: str = "unsafe.stored_generated_column"
-    code: str = "UN006"
-
     is_auto_fixable: bool = False
 
     def visit_Constraint(

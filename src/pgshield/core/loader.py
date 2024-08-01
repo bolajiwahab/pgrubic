@@ -2,34 +2,39 @@
 
 import typing
 import inspect
-import pathlib
+import functools
 import importlib
+from collections import abc
 
+from pglast import ast
+
+from pgshield import RULES_DIRECTORY
 from pgshield.core import errors, linter
-
-module_path = pathlib.Path("pgshield/rules/")
 
 
 def load_rules() -> list[linter.Checker]:
     """Load rules."""
     rules: list[linter.Checker] = []
 
-    for path in module_path.glob("**/[!_]*.py"):
+    for path in RULES_DIRECTORY.glob("**/[!_]*.py"):
 
         module = importlib.import_module(str(path).replace(".py", "").replace("/", "."))
 
-        for _, obj in inspect.getmembers(
+        for _, rule in inspect.getmembers(
             module,
             lambda x: inspect.isclass(x)
             and x.__module__ == module.__name__,  # noqa: B023
         ):
 
-            # remove private classes
-            if issubclass(obj, linter.Checker) and not obj.__name__.startswith("_"):
+            # skip private classes
+            if issubclass(rule, linter.Checker) and not rule.__name__.startswith("_"):
 
-                rules.append(typing.cast(linter.Checker, obj))
+                # set rule code
+                rule.code = rule.__module__.split(".")[-1]
 
-                _set_locations_for_node(obj)
+                rules.append(typing.cast(linter.Checker, rule))
+
+                _set_locations_for_node(rule)
 
     _check_duplicate_rules(rules)
 
@@ -42,11 +47,10 @@ def _check_duplicate_rules(rules: list[linter.Checker]) -> None:
 
     for rule in rules:
 
-        if rule.name in seen or rule.code in seen:
+        if rule.code in seen:
 
-            raise errors.DuplicateRuleDetectedError((rule.name, rule.code))
+            raise errors.DuplicateRuleDetectedError(rule.code)
 
-        seen.add(rule.name)
         seen.add(rule.code)
 
 
@@ -56,4 +60,42 @@ def _set_locations_for_node(obj: typing.Any) -> None:
 
         if method.__name__.startswith("visit_"):
 
-            setattr(obj, name, linter.set_locations_for_node(method))
+            setattr(obj, name, set_locations_for_node(method))
+
+
+def set_locations_for_node(
+    func: abc.Callable[..., typing.Any],
+) -> abc.Callable[..., typing.Any]:
+    """Set locations for node."""
+    # merge set_locations_for_node and _get_line_details of linter
+
+    @functools.wraps(func)
+    def wrapper(
+        self: linter.Checker,
+        ancestors: ast.Node,
+        node: ast.Node,
+    ) -> typing.Any:
+
+        parents: list[str] = []
+
+        for parent in ancestors:
+
+            if not parent:
+
+                break
+
+            parents.append(parent)
+
+        node_location = getattr(node, "location", 0)
+
+        self.node_location = node_location if node_location else 0
+
+        # The current node's parent is located two indexes from the end of the list.
+
+        self.statement_location = ancestors[len(parents) - 2].stmt_location
+
+        self.statement_length = ancestors[len(parents) - 2].stmt_len
+
+        return func(self, ancestors, node)
+
+    return wrapper

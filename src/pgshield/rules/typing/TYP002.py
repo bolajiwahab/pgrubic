@@ -24,10 +24,6 @@ class TimeWithTimeZone(linter.Checker):
     ## **Use instead:**
     timestamptz (also known as timestamp with time zone).
     """
-
-    name: str = "typing.time_with_timezone"
-    code: str = "TYP002"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

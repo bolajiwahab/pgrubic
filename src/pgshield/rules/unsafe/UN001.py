@@ -38,10 +38,6 @@ class DropColumn(linter.Checker):
     ## **Use instead:**
     timestamptz (also known as timestamp with time zone).
     """
-
-    name: str = "unsafe.forbid_drop_column"
-    code: str = "UN001"
-
     is_auto_fixable: bool = False
 
     def visit_AlterTableCmd(

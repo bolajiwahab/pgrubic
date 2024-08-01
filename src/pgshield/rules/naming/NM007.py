@@ -24,10 +24,6 @@ class InvalidSequenceName(linter.Checker):
     ## **Use instead:**
     Name your sequence according to the set name convention.
     """
-
-    name: str = "naming.invalid_sequence_name"
-    code: str = "NM007"
-
     is_auto_fixable: bool = False
 
     def visit_CreateSeqStmt(

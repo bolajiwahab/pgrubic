@@ -46,10 +46,6 @@ class Varchar(linter.Checker):
     1. text
     2. text with a constraint that enforces a maximum string length
     """
-
-    name: str = "typing.varchar"
-    code: str = "TYP006"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

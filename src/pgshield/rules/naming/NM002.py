@@ -24,10 +24,6 @@ class InvalidPrimaryKeyName(linter.Checker):
     ## **Use instead:**
     Name your primary key constraint according to the set name convention.
     """
-
-    name: str = "naming.invalid_primary_key_name"
-    code: str = "NM002"
-
     is_auto_fixable: bool = False
 
     def visit_Constraint(

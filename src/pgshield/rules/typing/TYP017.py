@@ -23,10 +23,6 @@ class NumericWithPrecision(linter.Checker):
     ## **Use instead:**
     numeric.
     """
-
-    name: str = "typing.prefer_entire_numeric"
-    code: str = "TYP017"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

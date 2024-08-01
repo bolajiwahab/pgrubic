@@ -22,10 +22,6 @@ class ExtensionWhitelist(linter.Checker):
     ## **Use instead:**
     Extensions that are in the whitelist.
     """
-
-    name: str = "security.extension_whitelist"
-    code: str = "SC001"
-
     is_auto_fixable: bool = False
 
     def visit_CreateExtensionStmt(

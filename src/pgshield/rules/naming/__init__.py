@@ -11,8 +11,6 @@ class CheckIdentifier(abc.ABC, linter.Checker):
     """Collect identifier."""
 
     # To be overridden by subclasses
-    name: str = ""
-    code: str = ""
     is_auto_fixable: bool = False
 
     @abc.abstractmethod

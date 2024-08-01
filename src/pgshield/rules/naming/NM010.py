@@ -38,9 +38,6 @@ class NonSnakeCaseIdentifier(CheckIdentifier):
     Stick to using a-z, 0-9 and underscore for names and you never have to worry about
     quoting them.
     """
-
-    name: str = "naming.non_snake_case_identifier"
-    code: str = "NM010"
     is_auto_fixable: bool = False
 
     def _check_identifier(

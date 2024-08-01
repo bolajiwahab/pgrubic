@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class NonConcurrentDetachPartition(linter.Checker):
     """Detach partition."""
-
-    name: str = "unsafe.detach_partition"
-    code: str = "UN027"
-
     is_auto_fixable: bool = False
 
     def visit_PartitionCmd(

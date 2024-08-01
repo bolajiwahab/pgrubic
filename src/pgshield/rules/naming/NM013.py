@@ -30,9 +30,6 @@ class PgPrefixIdentifier(CheckIdentifier):
     ## **Use instead:**
     Remove prefix pg_ from identifier.
     """
-
-    name: str = "naming.pg_prefix_identifier"
-    code: str = "NM013"
     is_auto_fixable: bool = False
 
     def _check_identifier(

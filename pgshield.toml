@@ -1,5 +1,5 @@
 [lint]
-select = ["UN*", "GN*", "TYP*", "CST*"]
+# select = ["UN*", "GN*", "TYP*", "CST*"]
 # select = ["SCM*"]
 # ignore = ["CV*"]
 # include = ["test.sql", "new.sql"]

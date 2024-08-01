@@ -19,10 +19,6 @@ class NullableRequiredColumn(linter.Checker):
     ## **Use instead:**
     Set the required column as **Not Null**.
     """
-
-    name: str = "general.remove_not_null_from_required_column"
-    code: str = "GN013"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

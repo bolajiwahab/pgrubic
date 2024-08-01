@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class Cluster(linter.Checker):
     """Cluster."""
-
-    name: str = "unsafe.cluster"
-    code: str = "UN025"
-
     is_auto_fixable: bool = False
 
     def visit_ClusterStmt(

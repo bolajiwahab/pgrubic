@@ -26,10 +26,6 @@ class TableInheritance(linter.Checker):
     ## **Use instead:**
     Don't use table inheritance. If you think you want to, use foreign keys instead.
     """
-
-    name: str = "general.table_inheritance"
-    code: str = "GN001"
-
     is_auto_fixable: bool = False
 
     def visit_CreateStmt(

@@ -20,10 +20,6 @@ class MissingRequiredColumn(linter.Checker):
     ## **Use instead:**
     Define the required columns.
     """
-
-    name: str = "general.missing_required_column"
-    code: str = "GN011"
-
     is_auto_fixable: bool = True
 
     def visit_CreateStmt(

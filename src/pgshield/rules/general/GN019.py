@@ -24,10 +24,6 @@ class UnloggedTable(linter.Checker):
     ## **Use instead:**
     Use a regular table instead.
     """
-
-    name: str = "general.unlogged_table"
-    code: str = "GN019"
-
     is_auto_fixable: bool = False
 
     description: str = "Prefer regular table to unlogged table"

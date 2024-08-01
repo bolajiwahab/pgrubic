@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class VacuumFull(linter.Checker):
     """Vacuum full."""
-
-    name: str = "unsafe.vacuum_full"
-    code: str = "UN026"
-
     is_auto_fixable: bool = False
 
     def visit_VacuumStmt(self, ancestors: ast.Node, node: ast.VacuumStmt) -> None:

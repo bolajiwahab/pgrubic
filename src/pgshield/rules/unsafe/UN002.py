@@ -38,10 +38,6 @@ class ColumnTypeChange(linter.Checker):
     ## **Use instead:**
     timestamptz (also known as timestamp with time zone).
     """
-
-    name: str = "unsafe.forbid_column_type_change"
-    code: str = "UN002"
-
     is_auto_fixable: bool = False
 
     def visit_AlterTableCmd(

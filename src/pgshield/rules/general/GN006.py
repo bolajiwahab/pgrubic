@@ -22,10 +22,6 @@ class CreateEnum(linter.Checker):
     ## **Use instead:**
     Mapping table.
     """
-
-    name: str = "general.create_enum"
-    code: str = "GN006"
-
     is_auto_fixable: bool = False
 
     def visit_CreateEnumStmt(

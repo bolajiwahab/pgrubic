@@ -24,10 +24,6 @@ class SelectInto(linter.Checker):
     ## **Use instead:**
     CREATE TABLE AS.
     """
-
-    name: str = "general.select_into"
-    code: str = "GN014"
-
     is_auto_fixable: bool = False
 
     def visit_IntoClause(

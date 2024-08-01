@@ -19,10 +19,6 @@ class Smallint(linter.Checker):
     ## **Use instead:**
     bigint.
     """
-
-    name: str = "typing.prefer_bigint_over_smallint"
-    code: str = "TYP011"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

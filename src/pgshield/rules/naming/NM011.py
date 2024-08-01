@@ -30,9 +30,6 @@ class KeywordIdentifier(CheckIdentifier):
     ## **Use instead:**
     Choose a name that is not a keyword.
     """
-
-    name: str = "naming.keyword_identifier"
-    code: str = "NM011"
     is_auto_fixable: bool = False
 
     def _check_identifier(

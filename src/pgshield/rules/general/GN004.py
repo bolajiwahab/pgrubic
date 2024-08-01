@@ -25,10 +25,6 @@ class MissingPrimaryKey(linter.Checker):
     ## **Use instead:**
     Define a primary key.
     """
-
-    name: str = "general.missing_primary_key"
-    code: str = "GN004"
-
     is_auto_fixable: bool = False
 
     def _check_for_table_level_primary_key(

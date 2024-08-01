@@ -31,10 +31,6 @@ class Money(linter.Checker):
     ## **Use instead:**
     numeric
     """
-
-    name: str = "typing.prefer_numeric_over_money"
-    code: str = "TYP007"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

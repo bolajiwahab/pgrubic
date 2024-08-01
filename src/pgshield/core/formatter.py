@@ -33,7 +33,7 @@ class Formatter:
                 statement=source_code,
                 preserve_comments=True,
                 comma_at_eoln=comma_at_eoln,
-            )
+            ),
         )
 
     def diff(self, *, source_path: str, comma_at_eoln: bool = True) -> None:

@@ -25,10 +25,6 @@ class MissingReplaceInFunction(linter.Checker):
     ## **Use instead:**
     CREATE OR REPLACE FUNCTION.
     """
-
-    name: str = "general.missing_replace_for_function"
-    code: str = "GN007"
-
     is_auto_fixable: bool = True
 
     def visit_CreateFunctionStmt(

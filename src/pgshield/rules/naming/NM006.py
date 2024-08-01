@@ -23,10 +23,6 @@ class InvalidExclusionConstraintName(linter.Checker):
     ## **Use instead:**
     Name your exclusion constraint according to the set name convention.
     """
-
-    name: str = "naming.invalid_exclusion_constraint_name"
-    code: str = "NM006"
-
     is_auto_fixable: bool = False
 
     def visit_Constraint(

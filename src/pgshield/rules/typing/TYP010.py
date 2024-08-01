@@ -19,10 +19,6 @@ class Integer(linter.Checker):
     ## **Use instead:**
     bigint.
     """
-
-    name: str = "typing.prefer_bigint_over_int"
-    code: str = "TYP010"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

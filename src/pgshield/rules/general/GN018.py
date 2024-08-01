@@ -23,10 +23,6 @@ class MultiColumnPartitioning(linter.Checker):
     ## **Use instead:**
     Sub-partitioning.
     """
-
-    name: str = "general.multi_column_partitioning"
-    code: str = "GN018"
-
     is_auto_fixable: bool = False
 
     def visit_PartitionSpec(

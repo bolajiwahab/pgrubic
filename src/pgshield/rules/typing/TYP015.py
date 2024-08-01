@@ -18,10 +18,6 @@ class DisallowedDataType(linter.Checker):
     ## **Use instead:**
     Data types that are not in the blacklist.
     """
-
-    name: str = "typing.disallowed_data_type"
-    code: str = "TYP015"
-
     is_auto_fixable: bool = True
 
     def visit_TypeName(

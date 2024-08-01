@@ -25,10 +25,6 @@ class Xml(linter.Checker):
     ## **Use instead:**
     jsonb.
     """
-
-    name: str = "typing.prefer_jsonb_over_xml"
-    code: str = "TYP013"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

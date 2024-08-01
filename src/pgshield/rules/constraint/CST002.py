@@ -26,10 +26,6 @@ class CascadeDelete(linter.Checker):
     ## **Use instead:**
     Restrict
     """
-
-    name: str = "constraint.cascade_delete"
-    code: str = "CST002"
-
     is_auto_fixable: bool = False
 
     def visit_Constraint(

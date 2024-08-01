@@ -18,10 +18,6 @@ class DisallowedSchema(linter.Checker):
     ## **Use instead:**
     Allowed schemas.
     """
-
-    name: str = "schema.disallowed_schema"
-    code: str = "SCM002"
-
     is_auto_fixable: bool = True
 
     def visit_RangeVar(

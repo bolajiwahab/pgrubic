@@ -20,10 +20,6 @@ class CascadeUpdate(linter.Checker):
     ## **Use instead:**
     Restrict
     """
-
-    name: str = "constraint.cascade_update"
-    code: str = "CST001"
-
     is_auto_fixable: bool = False
 
     def visit_Constraint(

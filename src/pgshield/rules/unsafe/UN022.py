@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class RenameTable(linter.Checker):
     """Rename table."""
-
-    name: str = "unsafe.rename_table"
-    code: str = "UN022"
-
     is_auto_fixable: bool = False
 
     def visit_RenameStmt(

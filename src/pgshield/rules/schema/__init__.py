@@ -11,8 +11,6 @@ class Schema(abc.ABC, linter.Checker):
     """Schema details for relations, enums, functions, sequences, views."""
 
     # To be overridden by subclasses
-    name: str = ""
-    code: str = ""
     is_auto_fixable: bool = False
 
     @abc.abstractmethod

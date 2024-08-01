@@ -24,10 +24,6 @@ class InvalidUniqueKeyName(linter.Checker):
     ## **Use instead:**
     Name your unique key constraint according to the set name convention.
     """
-
-    name: str = "naming.invalid_unique_key"
-    code: str = "NM003"
-
     is_auto_fixable: bool = False
 
     def visit_Constraint(

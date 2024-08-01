@@ -22,9 +22,6 @@ class SpecialCharacterInIdentifier(CheckIdentifier):
     ## **Use instead:**
     Remove special characters from the identifier.
     """
-
-    name: str = "naming.special_character_in_identifier"
-    code: str = "NM012"
     is_auto_fixable: bool = False
 
     def _check_identifier(

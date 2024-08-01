@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class NotNullOnExistingColumn(linter.Checker):
     """Not null on existing column."""
-
-    name: str = "unsafe.not_null_on_existing_column"
-    code: str = "UN010"
-
     is_auto_fixable: bool = False
 
     def visit_AlterTableCmd(

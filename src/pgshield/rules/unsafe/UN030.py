@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class ForbidUpdateWithoutWhereClause(linter.Checker):
     """Forbid update without where clause."""
-
-    name: str = "unsafe.forbid_update_without_where_clause"
-    code: str = "UN030"
-
     is_auto_fixable: bool = False
 
     def visit_UpdateStmt(

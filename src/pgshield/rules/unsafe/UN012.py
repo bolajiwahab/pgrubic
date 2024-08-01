@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):
     """Validated foreign key constraint on existing rows."""
-
-    name: str = "unsafe.validated_foreign_key_constraint_on_existing_rows"
-    code: str = "UN012"
-
     is_auto_fixable = True
 
     def visit_Constraint(

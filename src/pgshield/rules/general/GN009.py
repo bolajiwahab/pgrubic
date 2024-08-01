@@ -21,10 +21,6 @@ class DuplicateColumn(linter.Checker):
     ## **Use instead:**
     Remove duplicate columns.
     """
-
-    name: str = "general.duplicate_column"
-    code: str = "GN009"
-
     is_auto_fixable: bool = False
 
     def visit_CreateStmt(

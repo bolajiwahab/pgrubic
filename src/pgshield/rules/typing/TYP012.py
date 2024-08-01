@@ -24,10 +24,6 @@ class Float(linter.Checker):
     1. numeric
     2. decimal
     """
-
-    name: str = "typing.prefer_numeric_over_float"
-    code: str = "TYP012"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

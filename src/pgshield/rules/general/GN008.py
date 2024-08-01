@@ -25,10 +25,6 @@ class MissingReplaceInProcedure(linter.Checker):
     ## **Use instead:**
     CREATE OR REPLACE PROCEDURE.
     """
-
-    name: str = "general.missing_replace_in_procedure"
-    code: str = "GN008"
-
     is_auto_fixable: bool = True
 
     def visit_CreateFunctionStmt(

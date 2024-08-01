@@ -23,10 +23,6 @@ class RemoveConstraint(linter.Checker):
     ## **Use instead:**
     **No suggestions**.
     """
-
-    name: str = "constraint.remove_constraint"
-    code: str = "CST004"
-
     is_auto_fixable: bool = False
 
     def visit_AlterTableCmd(

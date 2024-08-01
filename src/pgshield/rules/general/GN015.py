@@ -25,10 +25,6 @@ class DropCascade(linter.Checker):
     ## **Use instead:**
     Restrict
     """
-
-    name: str = "general.drop_cascade"
-    code: str = "GN015"
-
     is_auto_fixable: bool = False
 
     def visit_DropStmt(

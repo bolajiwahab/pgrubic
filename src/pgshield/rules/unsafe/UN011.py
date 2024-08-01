@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
     """Not null on new column with no static default."""
-
-    name: str = "unsafe.not_null_on_new_column_with_no_static_default"
-    code: str = "UN011"
-
     is_auto_fixable: bool = False
 
     def visit_ColumnDef(

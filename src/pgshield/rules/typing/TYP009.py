@@ -27,10 +27,6 @@ class Json(linter.Checker):
     ## **Use instead:**
     jsonb.
     """
-
-    name: str = "typing.prefer_jsonb_over_json"
-    code: str = "TYP009"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

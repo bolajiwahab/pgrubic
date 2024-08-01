@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class TablesMovementToTablespace(linter.Checker):
     """Tables movement to tablespace."""
-
-    name: str = "unsafe.tables_movement_to_tablespace"
-    code: str = "UN024"
-
     is_auto_fixable: bool = False
 
     def visit_AlterTableMoveAllStmt(

@@ -24,10 +24,6 @@ class InvalidForeignKeyName(linter.Checker):
     ## **Use instead:**
     Name your foreign key constraint according to the set name convention.
     """
-
-    name: str = "naming.invalid_foreign_key_name"
-    code: str = "NM004"
-
     is_auto_fixable: bool = False
 
     def visit_Constraint(

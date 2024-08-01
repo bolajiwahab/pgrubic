@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class TruncateTable(linter.Checker):
     """Truncate table."""
-
-    name: str = "unsafe.truncate_table"
-    code: str = "UN029"
-
     is_auto_fixable: bool = False
 
     def visit_TruncateStmt(

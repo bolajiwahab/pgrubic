@@ -21,10 +21,6 @@ class WronglyTypedRequiredColumn(linter.Checker):
     ## **Use instead:**
     Right data types for the required column.
     """
-
-    name: str = "typing.wrongly_typed_required_column"
-    code: str = "TYP016"
-
     is_auto_fixable = True
 
     def visit_ColumnDef(

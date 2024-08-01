@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class NonConcurrentRefreshMaterializedView(linter.Checker):
     """Non concurrent refresh materialized view."""
-
-    name: str = "unsafe.non_concurrent_refresh_materialized_view"
-    code: str = "UN028"
-
     is_auto_fixable: bool = False
 
     def visit_RefreshMatViewStmt(

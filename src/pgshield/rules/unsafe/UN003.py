@@ -38,10 +38,6 @@ class ColumnRename(linter.Checker):
     ## **Use instead:**
     timestamptz (also known as timestamp with time zone).
     """
-
-    name: str = "unsafe.forbid_column_rename"
-    code: str = "UN003"
-
     is_auto_fixable: bool = False
 
     def visit_RenameStmt(

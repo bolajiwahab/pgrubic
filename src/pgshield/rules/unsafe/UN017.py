@@ -7,10 +7,6 @@ from pgshield.core import linter
 
 class IndexMovementToTablespace(linter.Checker):
     """Index movement to tablespace."""
-
-    name: str = "unsafe.index_movement_to_tablespace"
-    code: str = "UN017"
-
     is_auto_fixable: bool = False
 
     def visit_AlterTableCmd(self, ancestors: ast.Node, node: ast.AlterTableCmd) -> None:

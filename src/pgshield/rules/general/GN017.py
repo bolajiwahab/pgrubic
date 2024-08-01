@@ -20,10 +20,6 @@ class IdColumn(linter.Checker):
     ## **Use instead:**
     Descriptive name.
     """
-
-    name: str = "general.id_column"
-    code: str = "GN017"
-
     is_auto_fixable: bool = False
 
     def visit_ColumnDef(

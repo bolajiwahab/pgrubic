@@ -21,10 +21,6 @@ class CreateRule(linter.Checker):
     ## **Use instead:**
     Don't use rules. If you think you want to, use a trigger instead.
     """
-
-    name: str = "general.create_rule"
-    code: str = "GN002"
-
     is_auto_fixable: bool = False
 
     def visit_RuleStmt(

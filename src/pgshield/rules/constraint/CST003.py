@@ -21,10 +21,6 @@ class IdentityGeneratedByDefault(linter.Checker):
     ## **Use instead:**
     **GENERATED ALWAYS**
     """
-
-    name: str = "constraint.identity_generated_by_default"
-    code: str = "CST003"
-
     is_auto_fixable: bool = False
 
     def visit_Constraint(

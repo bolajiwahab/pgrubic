@@ -38,10 +38,6 @@ class TimestampWithoutTimezone(linter.Checker):
     ## **Use instead:**
     timestamptz (also known as timestamp with time zone).
     """
-
-    name: str = "typing.prefer_timestamp_with_timezone_over_timestamp_without_timezone"
-    code: str = "TYP001"
-
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(

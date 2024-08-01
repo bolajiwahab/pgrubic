@@ -3,11 +3,9 @@
 import sys
 import typing
 import pathlib
-import functools
 import dataclasses
-from collections import abc
 
-from pglast import ast, parser, stream, visitors
+from pglast import ast, parser, visitors
 from colorama import Fore, Style
 from caseconverter import kebabcase
 
@@ -50,7 +48,7 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
             default_factory=lambda: config.Config(**config.load_default_config()),
         )
 
-    required_attributes: tuple[str, ...] = ("name", "code", "is_auto_fixable")
+    required_attributes: tuple[str, ...] = ("is_auto_fixable",)
 
     def __init_subclass__(cls, **kwargs: typing.Any) -> None:
         """Check required attributes."""
@@ -107,7 +105,12 @@ class Linter:
 
 
     @staticmethod
-    def print_violations(*, checker: Checker, file_name: str, source_code: str) -> None:
+    def print_violations(
+        *,
+        checker: Checker,
+        file_name: pathlib.Path,
+        source_code: str,
+    ) -> None:
         """Print all violations collected by a checker."""
         for violation in checker.violations:
 
@@ -120,7 +123,7 @@ class Linter:
 
             sys.stdout.write(
                 f"\n{file_name}:{line.number}:{line.column_offset}:"
-                f" \033]8;;http://127.0.0.1:8000/rules/{checker.name.split(".")[0]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"
+                f" \033]8;;http://127.0.0.1:8000/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"
                 f" {violation.description}:"
                 f" {Fore.GREEN}\n\n{line.text}\n\n{Style.RESET_ALL}",
             )
@@ -175,43 +178,6 @@ class Linter:
         noqa.report_unused_ignores(file_name=file_name, inline_ignores=inline_ignores)
 
         return total_violations
-
-
-def set_locations_for_node(
-    func: abc.Callable[..., typing.Any],
-) -> abc.Callable[..., typing.Any]:
-    """Set locations for node."""
-
-    @functools.wraps(func)
-    def wrapper(
-        self: Checker,
-        ancestors: ast.Node,
-        node: ast.Node,
-    ) -> typing.Any:
-
-        parents: list[str] = []
-
-        for parent in ancestors:
-
-            if not parent:
-
-                break
-
-            parents.append(parent)
-
-        node_location = getattr(node, "location", 0)
-
-        self.node_location = node_location if node_location else 0
-
-        # The current node's parent is located two indexes from the end of the list.
-
-        self.statement_location = ancestors[len(parents) - 2].stmt_location
-
-        self.statement_length = ancestors[len(parents) - 2].stmt_len
-
-        return func(self, ancestors, node)
-
-    return wrapper
 
 
 def _get_line_details(

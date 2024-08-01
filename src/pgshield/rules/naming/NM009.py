@@ -24,10 +24,6 @@ class InvalidPartitionName(linter.Checker):
     ## **Use instead:**
     Name your partition according to the set name convention.
     """
-
-    name: str = "naming.invalid_partition_name"
-    code: str = "NM009"
-
     is_auto_fixable: bool = False
 
     def visit_CreateStmt(

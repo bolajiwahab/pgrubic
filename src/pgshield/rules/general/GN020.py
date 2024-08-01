@@ -22,10 +22,6 @@ class CurrentTime(linter.Checker):
     - CURRENT_DATE if you want a date,
     - LOCALTIME if you want a time
     """
-
-    name: str = "general.current_time"
-    code: str = "GN020"
-
     is_auto_fixable: bool = False
 
     def visit_SQLValueFunction(
