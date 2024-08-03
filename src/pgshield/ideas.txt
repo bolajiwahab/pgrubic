@@ -2,7 +2,7 @@
 - getting stmt_location should be robust
 - merge get line details and set locations
 - fix documentations for unsafe - saturday?
-- write more fixes - tomorrow?
+- write more fixes - tomorrow? unsafe remaining
 - file exception - -- rubic -- noqa: <rule> 
 - Found 137 errors (96 fixed, 41 remaining)
 - fix is given, we don't print violations that can be fixed/are being fixed
