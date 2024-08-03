@@ -1,6 +1,6 @@
 # cascade-update (CST001)
 
-Automatic fix is not available
+Automatic fix is available
 
 ::: pgshield.rules.constraint.CST001.CascadeUpdate
 

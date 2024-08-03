@@ -3,6 +3,8 @@
 # select = ["SCM*"]
 # ignore = ["CV*"]
 # include = ["test.sql", "new.sql"]
+fix = true
+
 ignore-noqa = false
 disallowed-schemas = [
     { name = "partitions", reason = "Deprecated", use-instead = "part" },

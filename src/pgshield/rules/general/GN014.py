@@ -1,6 +1,6 @@
 """Checker for usage of select into to create a new table."""
 
-from pglast import ast
+from pglast import ast, enums
 
 from pgshield.core import linter
 
@@ -24,18 +24,16 @@ class SelectInto(linter.Checker):
     ## **Use instead:**
     CREATE TABLE AS.
     """
-    is_auto_fixable: bool = False
 
-    def visit_IntoClause(
+    is_auto_fixable: bool = True
+
+    def visit_SelectStmt(
         self,
         ancestors: ast.Node,
-        node: ast.IntoClause,
-    ) -> None:
-        """Visit IntoClause."""
-        if not isinstance(
-            abs(ancestors).node,
-            ast.CreateTableAsStmt,
-        ):
+        node: ast.SelectStmt,
+    ) -> ast.CreateTableAsStmt | None:
+        """Visit SelectStmt."""
+        if node.intoClause:
 
             self.violations.append(
                 linter.Violation(
@@ -45,3 +43,18 @@ class SelectInto(linter.Checker):
                     description="Use CREATE TABLE AS instead of SELECT INTO",
                 ),
             )
+
+            if self.config.fix is True:
+
+                into_clause = node.intoClause
+
+                # delete into clause
+                node.intoClause = None
+
+                return ast.CreateTableAsStmt(
+                    query=node,
+                    into=into_clause,
+                    objtype=enums.ObjectType.OBJECT_TABLE,
+                )
+
+        return None

@@ -71,7 +71,7 @@ class Varchar(linter.Checker):
                     names=(
                         {
                             "@": "String",
-                            "sval": "timestamptz",
+                            "sval": "text",
                         },
                     ),
                 )

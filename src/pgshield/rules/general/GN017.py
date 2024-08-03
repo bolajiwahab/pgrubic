@@ -20,7 +20,8 @@ class IdColumn(linter.Checker):
     ## **Use instead:**
     Descriptive name.
     """
-    is_auto_fixable: bool = False
+
+    is_auto_fixable: bool = True
 
     def visit_ColumnDef(
         self,
@@ -29,11 +30,13 @@ class IdColumn(linter.Checker):
     ) -> None:
         """Visit ColumnDef."""
         if (
-            isinstance(
-                abs(ancestors).node,
-                ast.AlterTableCmd,
+            (
+                isinstance(
+                    abs(ancestors).node,
+                    ast.AlterTableCmd,
+                )
+                and (abs(ancestors).node.subtype == enums.AlterTableType.AT_AddColumn)
             )
-            and (abs(ancestors).node.subtype == enums.AlterTableType.AT_AddColumn)
             or isinstance(
                 abs(ancestors).node,
                 ast.CreateStmt,
@@ -49,3 +52,18 @@ class IdColumn(linter.Checker):
                     f" '{node.colname}'",
                 ),
             )
+
+            if self.config.fix is True:
+
+                if isinstance(
+                    abs(ancestors).node,
+                    ast.AlterTableCmd,
+                ):
+
+                    table = ancestors.parent.parent.node.relation.relname
+
+                if isinstance(abs(ancestors).node, ast.CreateStmt):
+
+                    table = ancestors.parent.node.relation.relname
+
+                node.colname = table + "_" + node.colname

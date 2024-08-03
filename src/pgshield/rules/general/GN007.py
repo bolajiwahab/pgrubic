@@ -39,7 +39,7 @@ class MissingReplaceInFunction(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Prefer replace for function",
+                    description="Prefer create or replace for function",
                 ),
             )
 

@@ -24,7 +24,7 @@ class UnloggedTable(linter.Checker):
     ## **Use instead:**
     Use a regular table instead.
     """
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     description: str = "Prefer regular table to unlogged table"
 
@@ -44,6 +44,10 @@ class UnloggedTable(linter.Checker):
                     description=self.description,
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.relation.relpersistence = enums.RELPERSISTENCE_PERMANENT
 
     def visit_AlterTableCmd(
         self,

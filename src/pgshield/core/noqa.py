@@ -111,7 +111,7 @@ def extract_ignores_from_inline_comments(source_code: str) -> list[NoQaDirective
 
             line_number = source_code[:statement_end_location].count("\n") + 1
 
-            comment = source_code[token.start : (token.end + 1)]
+            comment = source_code[token.start:(token.end + 1)]
 
             # Usual comments can contain noqa e.g. --new table -- noqa: UN005
             # Hence we extract last possible noqa.

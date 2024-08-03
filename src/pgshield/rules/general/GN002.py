@@ -34,6 +34,6 @@ class CreateRule(linter.Checker):
                 statement_location=self.statement_location,
                 statement_length=self.statement_length,
                 node_location=self.node_location,
-                description="Prefer trigger over rule",
+                description="Found creation of rule",
             ),
         )

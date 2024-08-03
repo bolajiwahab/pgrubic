@@ -5,7 +5,7 @@ import typing
 import pathlib
 import dataclasses
 
-from pglast import ast, parser, visitors
+from pglast import ast, parser, stream, visitors
 from colorama import Fore, Style
 from caseconverter import kebabcase
 
@@ -173,7 +173,7 @@ class Linter:
 
             total_violations += len(checker.violations)
 
-        # print(stream.RawStream()(tree))
+        print(stream.RawStream()(tree))
 
         noqa.report_unused_ignores(file_name=file_name, inline_ignores=inline_ignores)
 

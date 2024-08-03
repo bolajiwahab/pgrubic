@@ -26,7 +26,7 @@ class CascadeDelete(linter.Checker):
     ## **Use instead:**
     Restrict
     """
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_Constraint(
         self,
@@ -44,6 +44,9 @@ class CascadeDelete(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Prefer no cascade delete",
+                    description="Found cascade delete in foreign key constraint",
                 ),
             )
+
+            if self.config.fix is True:
+                node.fk_del_action = enums.FKCONSTR_ACTION_RESTRICT

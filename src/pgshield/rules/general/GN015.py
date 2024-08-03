@@ -40,6 +40,10 @@ class DropCascade(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Prefer restrict to cascade",
+                    description="Drop cascade found",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.behavior = enums.DropBehavior.DROP_RESTRICT

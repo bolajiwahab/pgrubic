@@ -42,6 +42,6 @@ class IndexElementsMoreThanThree(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description=f"Prefer index elements up to {max_index_elements}",
+                    description=f"Index elements more than {max_index_elements}",
                 ),
             )

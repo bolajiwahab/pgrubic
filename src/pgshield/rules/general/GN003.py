@@ -1,8 +1,6 @@
 """Checker for SQL_ASCII encoding."""
 
-import re
-
-from pglast import ast, stream
+from pglast import ast
 
 from pgshield.core import linter
 
@@ -27,38 +25,25 @@ class SqlAsciiEncoding(linter.Checker):
     ## **Use instead:**
     UTF8.
     """
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
-    def visit_CreatedbStmt(
+    def visit_DefElem(
         self,
         ancestors: ast.Node,
-        node: ast.CreatedbStmt,
+        node: ast.DefElem,
     ) -> None:
-        """Visit CreatedbStmt."""
-        options: dict[str, str] = (
-            {
-                re.sub(r"\s*", "", stream.RawStream()(option), flags=re.UNICODE)
-                .split("=")[0]: re.sub(
-                    r"\s*",
-                    "",
-                    stream.RawStream()(option),
-                    flags=re.UNICODE,
-                )
-                .split("=")[1]
-                .strip("'")
-                for option in node.options
-            }
-            if node.options is not None
-            else {}
-        )
-
-        if options.get("encoding") == "sql_ascii":
+        """Visit DefElem."""
+        if node.defname == "encoding" and node.arg.sval == "sql_ascii":
 
             self.violations.append(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Prefer non sql_ascii encoding",
+                    description="Found SQL_ASCII encoding",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.arg.sval = "utf8"

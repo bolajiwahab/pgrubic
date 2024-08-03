@@ -22,7 +22,7 @@ class CurrentTime(linter.Checker):
     - CURRENT_DATE if you want a date,
     - LOCALTIME if you want a time
     """
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_SQLValueFunction(
         self,
@@ -41,3 +41,7 @@ class CurrentTime(linter.Checker):
                                 " instead of timetz",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.op = enums.SQLValueFunctionOp.SVFOP_CURRENT_TIMESTAMP

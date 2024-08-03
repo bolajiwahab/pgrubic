@@ -42,10 +42,11 @@ CREATE INDEX i0 ON t0((nullif(FALSE, TRUE)));
 -- alter table tbl alter column a set not null;
 -- alter table tbl add column a text not null;
 
--- CREATE TABLE people (
---     height_cm numeric,
---     height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
--- );
+CREATE TABLE people (
+    height_cm numeric,
+    height_cm numeric,
+    height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
+);
 
 -- ALTER TABLE employee
 -- ADD CONSTRAINT "Employee_unq" primary key(email)

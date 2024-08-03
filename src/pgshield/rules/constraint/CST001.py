@@ -20,7 +20,7 @@ class CascadeUpdate(linter.Checker):
     ## **Use instead:**
     Restrict
     """
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_Constraint(
         self,
@@ -38,6 +38,9 @@ class CascadeUpdate(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Prefer no cascade update",
+                    description="Found cascade update in foreign key constraint",
                 ),
             )
+
+            if self.config.fix is True:
+                node.fk_upd_action = enums.FKCONSTR_ACTION_RESTRICT

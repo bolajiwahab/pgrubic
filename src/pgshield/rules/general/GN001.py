@@ -41,6 +41,6 @@ class TableInheritance(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Prefer declarative partitioning to table inheritance",
+                    description="Found table inheritance",
                 ),
             )
