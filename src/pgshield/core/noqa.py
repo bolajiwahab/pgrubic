@@ -49,8 +49,6 @@ def _get_rules_from_inline_comment(comment: str, location: int) -> list[str]:
     """Get rule from inline comment."""
     msg = f"Malformed 'noqa' section in line {location}. Expected 'noqa: <rule>'"
 
-    rules: list[str] = []
-
     # This is an ignore identifier e.g noqa: UN005
     comment_remainder = comment[4:]
 
@@ -62,9 +60,9 @@ def _get_rules_from_inline_comment(comment: str, location: int) -> list[str]:
                 msg,
             )
 
-        rules = comment_remainder[1:].replace(",", "").split()
+        rules: list[str] = comment_remainder[1:].replace(",", "").split()
 
-    return rules
+    return rules if rules else ["*"]
 
 
 def _get_statement_locations(
@@ -88,7 +86,7 @@ class NoQaDirective:
     location: int
     line_number: int
     column_offset: int
-    rules: list[str]
+    rule: str
     used: bool = False
 
 
@@ -111,7 +109,7 @@ def extract_ignores_from_inline_comments(source_code: str) -> list[NoQaDirective
 
             line_number = source_code[:statement_end_location].count("\n") + 1
 
-            comment = source_code[token.start:(token.end + 1)]
+            comment = source_code[token.start : (token.end + 1)]
 
             # Usual comments can contain noqa e.g. --new table -- noqa: UN005
             # Hence we extract last possible noqa.
@@ -121,13 +119,14 @@ def extract_ignores_from_inline_comments(source_code: str) -> list[NoQaDirective
 
                 rules = _get_rules_from_inline_comment(comment, token.start)
 
-                inline_ignores.append(
+                inline_ignores.extend(
                     NoQaDirective(
                         location=statement_start_location,
                         line_number=line_number,
                         column_offset=(statement_end_location - token.start),
-                        rules=rules,
-                    ),
+                        rule=rule,
+                    )
+                    for rule in rules
                 )
 
     return inline_ignores
@@ -143,10 +142,8 @@ def report_unused_ignores(
 
         if not ignore.used:
 
-            for rule in ignore.rules:
-
-                sys.stdout.write(
-                    f"{file_name}:{ignore.line_number}:{ignore.column_offset}:"
-                    f" {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL}"
-                    f" (unused: {Fore.RED}{Style.BRIGHT}{rule}{Style.RESET_ALL})\n",
-                )
+            sys.stdout.write(
+                f"{file_name}:{ignore.line_number}:{ignore.column_offset}:"
+                f" {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL}"
+                f" (unused: {Fore.RED}{Style.BRIGHT}{ignore.rule}{Style.RESET_ALL})\n",
+            )

@@ -79,29 +79,27 @@ class Linter:
         inline_ignores: list[noqa.NoQaDirective],
     ) -> None:
         """Skip suppressed violations."""
-        suppressed_violations: list[Violation] = []
-
         for inline_ignore in inline_ignores:
 
-            for violation in checker.violations:
-
+            suppressed_violations: list[Violation] = [
+                violation
+                for violation in checker.violations
                 if (
                     violation.statement_location == inline_ignore.location
-                    and (not inline_ignore.rules or checker.code in inline_ignore.rules)
-                ):
+                    and (inline_ignore.rule in ("*", checker.code))
+                )
+            ]
 
-                    suppressed_violations.append(violation)
+            if suppressed_violations:
 
-                    # We only want to set used to True if all ignore rules have been used
-                    inline_ignore.used = len(inline_ignore.rules) <= 1
+                inline_ignore.used = True
 
-                    if len(inline_ignore.rules) > 1:
+                checker.violations = [
+                    violation
+                    for violation in checker.violations if violation not in
+                    suppressed_violations
+                ]
 
-                        del inline_ignore.rules[inline_ignore.rules.index(checker.code)]
-
-        checker.violations = [
-            v for v in checker.violations if v not in suppressed_violations
-        ]
 
 
     @staticmethod
