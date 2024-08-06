@@ -32,7 +32,7 @@ class SingleLetterIdentifier(CheckIdentifier):
         """Checks for identifiers prefix with pg_."""
         if identifier and len(identifier) == 1:
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=statement_location,
                     statement_length=statement_length,

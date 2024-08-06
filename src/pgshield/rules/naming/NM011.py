@@ -51,7 +51,7 @@ class KeywordIdentifier(CheckIdentifier):
 
         if identifier in (full_keywords):
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=statement_location,
                     statement_length=statement_length,

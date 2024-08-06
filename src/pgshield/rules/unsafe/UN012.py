@@ -21,7 +21,7 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):
             and not node.skip_validation
         ):
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,

@@ -17,7 +17,7 @@ def _remove_delimiter_from_comments(source_code: str, delimiter: str = ";") -> s
 
     return re.sub(
         comment_pattern,
-        lambda match: match.group(0).replace(delimiter, ""),
+        lambda match: match.group(0).replace(delimiter, " "),
         source_code,
         flags=re.MULTILINE,
     )

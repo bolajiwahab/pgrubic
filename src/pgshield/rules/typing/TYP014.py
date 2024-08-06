@@ -31,7 +31,7 @@ class Hstore(linter.Checker):
         """Visit ColumnDef."""
         if node.typeName.names[-1].sval == "hstore":
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,

@@ -33,7 +33,7 @@ class DuplicateColumn(linter.Checker):
 
         for column in duplicate_columns:
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,

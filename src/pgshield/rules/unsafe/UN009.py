@@ -17,7 +17,7 @@ class DropSchema(linter.Checker):
         """Visit DropStmt."""
         if node.removeType == enums.ObjectType.OBJECT_SCHEMA:
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,

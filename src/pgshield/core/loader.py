@@ -54,13 +54,13 @@ def _check_duplicate_rules(rules: list[linter.Checker]) -> None:
         seen.add(rule.code)
 
 
-def _set_locations_for_node(obj: typing.Any) -> None:
+def _set_locations_for_node(node: typing.Any) -> None:
     """Set locations for node in visitors."""
-    for name, method in inspect.getmembers(obj, inspect.isfunction):
+    for name, method in inspect.getmembers(node, inspect.isfunction):
 
         if method.__name__.startswith("visit_"):
 
-            setattr(obj, name, set_locations_for_node(method))
+            setattr(node, name, set_locations_for_node(method))
 
 
 def set_locations_for_node(
@@ -76,25 +76,13 @@ def set_locations_for_node(
         node: ast.Node,
     ) -> typing.Any:
 
-        parents: list[str] = []
-
-        for parent in ancestors:
-
-            if not parent:
-
-                break
-
-            parents.append(parent)
-
         node_location = getattr(node, "location", 0)
 
         self.node_location = node_location if node_location else 0
 
-        # The current node's parent is located two indexes from the end of the list.
+        self.statement_location = ancestors.find_nearest(ast.RawStmt).node.stmt_location
 
-        self.statement_location = ancestors[len(parents) - 2].stmt_location
-
-        self.statement_length = ancestors[len(parents) - 2].stmt_len
+        self.statement_length = ancestors.find_nearest(ast.RawStmt).node.stmt_len
 
         return func(self, ancestors, node)
 

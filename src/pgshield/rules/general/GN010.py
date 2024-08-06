@@ -32,7 +32,7 @@ class TableColumnConflict(linter.Checker):
         node_location: int,
     ) -> None:
         """Register the violation."""
-        self.violations.append(
+        self.violations.add(
             linter.Violation(
                 statement_location=statement_location,
                 statement_length=statement_length,

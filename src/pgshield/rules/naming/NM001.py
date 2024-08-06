@@ -34,7 +34,7 @@ class InvalidIndexName(linter.Checker):
         """Visit IndexStmt."""
         if not re.match(self.config.regex_index, node.idxname):
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,

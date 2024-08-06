@@ -17,7 +17,7 @@ class TablesMovementToTablespace(linter.Checker):
         """Visit AlterTableMoveAllStmt."""
         if node.objtype == enums.ObjectType.OBJECT_TABLE:
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,

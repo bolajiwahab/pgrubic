@@ -46,7 +46,7 @@ class WronglyTypedRequiredColumn(linter.Checker):
 
                     prettified_type = dml.system_types[full_qualified_type_name][0]
 
-                self.violations.append(
+                self.violations.add(
                     linter.Violation(
                         statement_location=self.statement_location,
                         statement_length=self.statement_length,

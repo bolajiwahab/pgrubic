@@ -36,7 +36,7 @@ class TableInheritance(linter.Checker):
         """Visit CreateStmt."""
         if node.inhRelations and not node.partbound:
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,

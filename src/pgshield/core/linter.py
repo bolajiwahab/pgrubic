@@ -32,15 +32,14 @@ class Violation:
 
 
 class Checker(visitors.Visitor):  # type: ignore[misc]
-    """Define a lint rule, and store all the nodes that violate that lint rule."""
+    """Define a lint rule, and store all the nodes that violate it."""
 
-    name: str
     code: str
     is_auto_fixable: bool
 
     def __init__(self) -> None:
         """Initialize variables."""
-        self.violations: list[Violation] = []
+        self.violations: set[Violation] = set()
         self.statement_location: int = 0
         self.statement_length: int = 0
         self.node_location: int = 0
@@ -81,24 +80,24 @@ class Linter:
         """Skip suppressed violations."""
         for inline_ignore in inline_ignores:
 
-            suppressed_violations: list[Violation] = [
+            suppressed_violations: set[Violation] = {
                 violation
                 for violation in checker.violations
                 if (
                     violation.statement_location == inline_ignore.location
                     and (inline_ignore.rule in ("*", checker.code))
                 )
-            ]
+            }
 
             if suppressed_violations:
 
                 inline_ignore.used = True
 
-                checker.violations = [
+                checker.violations = {
                     violation
                     for violation in checker.violations if violation not in
                     suppressed_violations
-                ]
+                }
 
 
 
@@ -152,7 +151,7 @@ class Linter:
 
             checker.config = self.config
 
-            checker.violations = []
+            checker.violations = set()
 
             checker(tree)
 

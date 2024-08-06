@@ -33,7 +33,7 @@ class MultiColumnPartitioning(linter.Checker):
         """Visit PartitionSpec."""
         if len(node.partParams) > 1:
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,

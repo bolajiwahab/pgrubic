@@ -46,7 +46,7 @@ class NullableBooleanField(linter.Checker):
 
             if not is_not_null:
 
-                self.violations.append(
+                self.violations.add(
                     linter.Violation(
                         statement_location=self.statement_location,
                         statement_length=self.statement_length,

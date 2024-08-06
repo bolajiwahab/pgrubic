@@ -16,7 +16,7 @@ class TableMovementToTablespace(linter.Checker):
             and ancestors[2].stmt.objtype == enums.ObjectType.OBJECT_TABLE
         ):
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,

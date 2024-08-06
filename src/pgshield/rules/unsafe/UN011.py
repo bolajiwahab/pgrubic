@@ -33,7 +33,7 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
 
             if is_not_null and not has_static_default:
 
-                self.violations.append(
+                self.violations.add(
                     linter.Violation(
                         statement_location=self.statement_location,
                         statement_length=self.statement_length,

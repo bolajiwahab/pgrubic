@@ -34,7 +34,7 @@ class IdentityGeneratedByDefault(linter.Checker):
             and node.generated_when == enums.ATTRIBUTE_IDENTITY_BY_DEFAULT
         ):
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,

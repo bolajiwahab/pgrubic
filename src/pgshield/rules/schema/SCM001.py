@@ -43,7 +43,7 @@ class SchemaUnqualifiedObject(linter.Checker):
             and not node.schemaname
         ):
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
@@ -62,7 +62,7 @@ class SchemaUnqualifiedObject(linter.Checker):
 
         if not schema_name:
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
@@ -81,7 +81,7 @@ class SchemaUnqualifiedObject(linter.Checker):
 
         if not schema_name:
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,

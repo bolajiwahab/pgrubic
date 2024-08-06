@@ -30,7 +30,7 @@ class DisallowedDataType(linter.Checker):
 
             if node.names[-1].sval == data_type.name:
 
-                self.violations.append(
+                self.violations.add(
                     linter.Violation(
                         statement_location=self.statement_location,
                         statement_length=self.statement_length,

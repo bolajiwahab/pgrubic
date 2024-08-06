@@ -1,5 +1,5 @@
--- select current_time
--- ;
+select current_time -- noqa: GN020
+;
 
 -- select current_time -- noqa: NM009
 -- ;
@@ -22,7 +22,11 @@
 -- SELECT * INTO films_recent FROM films WHERE date_prod >= '2002-01-01';
 -- SELECT * INTO films_recent2 FROM films2 WHERE date_prod >= '2002-01-01';
 
-CREATE TABLE amlex.f (i text);
+CREATE TABLE amlex.f (i text) -- noqa: NM014, GN004
+;
+
+CREATE TABLE amlex.foo (bar text) -- noqa: NM014, GN004
+;
 
 -- alter table tab add column account_id numeric;
 

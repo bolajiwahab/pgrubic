@@ -37,7 +37,7 @@ class InvalidExclusionConstraintName(linter.Checker):
             and (not re.match(self.config.regex_constraint_exclusion, node.conname))
         ):
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,

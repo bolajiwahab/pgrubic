@@ -72,7 +72,7 @@ class MissingPrimaryKey(linter.Checker):
             and not self._check_for_table_level_primary_key(node)
         ):
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,

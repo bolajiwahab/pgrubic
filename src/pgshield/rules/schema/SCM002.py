@@ -39,7 +39,7 @@ class DisallowedSchema(linter.Checker):
 
                 if node.schemaname == schema.name:
 
-                    self.violations.append(
+                    self.violations.add(
                         linter.Violation(
                             statement_location=self.statement_location,
                             statement_length=self.statement_length,
@@ -66,7 +66,7 @@ class DisallowedSchema(linter.Checker):
 
             if schema_name == schema.name:
 
-                self.violations.append(
+                self.violations.add(
                     linter.Violation(
                         statement_location=self.statement_location,
                         statement_length=self.statement_length,
@@ -93,7 +93,7 @@ class DisallowedSchema(linter.Checker):
 
             if schema_name == schema.name:
 
-                self.violations.append(
+                self.violations.add(
                     linter.Violation(
                         statement_location=self.statement_location,
                         statement_length=self.statement_length,

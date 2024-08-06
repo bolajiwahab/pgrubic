@@ -35,7 +35,7 @@ class ExtensionWhitelist(linter.Checker):
             and "*" not in self.config.allowed_extensions
         ):
 
-            self.violations.append(
+            self.violations.add(
                 linter.Violation(
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
