@@ -15,7 +15,7 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if isinstance(abs(ancestors).node, ast.AlterTableCmd) and node.constraints:
+        if ancestors.find_nearest(ast.AlterTableStmt) and node.constraints:
 
             is_not_null = False
             has_static_default = False

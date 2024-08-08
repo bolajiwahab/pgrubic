@@ -7,36 +7,30 @@ from pgshield.core import linter
 
 class DropColumn(linter.Checker):
     """## **What it does**
-    Checks for usage of timestamp without time zone.
+    Checks for dropping of column.
 
     ## **Why not?**
-    timestamptz (also known as timestamp with time zone) zone records a single moment
-    in time. Despite what the name says it doesn't store a timestamp, just a point
-    in time described as the number of microseconds since January 1st, 2000 in UTC.
-    You can insert values in any timezone and it'll store the point in time that value
-    describes. By default it will display times in your current timezone, but you can
-    use at time zone to display it in other time zones. Because it stores a point in
-    time, it will do the right thing with arithmetic involving timestamps entered in
-    different timezones - including between timestamps from the same location on
-    different sides of a daylight savings time change.
+    Not only that mistakenly dropping a column can cause data loss, applications that rely
+    on the column will break.
 
-    timestamp (also known as timestamp without time zone) doesn't do any of that,
-    it just stores a date and time you give it. You can think of it being a picture of
-    a calendar and a clock rather than a point in time.
-    Without additional information - the timezone - you don't know what time it records.
-    Because of that, arithmetic between timestamps from different locations or between
-    timestamps from summer and winter may give the wrong answer.
+    If any part of the application code, other database procedures, views, or reports use
+    the column, dropping it will cause errors and potentially disrupt business operations.
 
-    So if what you want to store is a point in time, rather than a picture of a clock,
-    use timestamptz (timestamp with time zone).
+    Removing a column from a table may appear to be a reversible action, but it is not.
+    Even when you can recover all the data in the column, you cannot restore the column in
+    a way that makes the table look exactly as it did before.
+
+    In postgres, **DROP COLUMN** form does not physically remove the column, but simply
+    makes it invisible to SQL operations. Subsequent INSERT and UPDATE operations in the
+    table will store a NULL value for the column.
 
     ## **When should you?**
-    If you're dealing with timestamps in an abstract way, or just saving and retrieving
-    them from an app, where you aren't going to be doing arithmetic with them then
-    timestamp might be suitable.
+    After updating clients that rely on the column to stop referencing the column and you
+    really want to discard the data in the column.
 
     ## **Use instead:**
-    timestamptz (also known as timestamp with time zone).
+    You can either keep the column as nullable or drop it once it is no longer being
+    referenced by clients.
     """
     is_auto_fixable: bool = False
 
@@ -53,6 +47,6 @@ class DropColumn(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Forbid drop column",
+                    description="Drop column found",
                 ),
             )

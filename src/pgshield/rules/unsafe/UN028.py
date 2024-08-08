@@ -25,3 +25,7 @@ class NonConcurrentRefreshMaterializedView(linter.Checker):
                     description="Non concurrent refresh materialized view",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.concurrent = True

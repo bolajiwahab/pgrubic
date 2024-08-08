@@ -13,7 +13,8 @@ class TableMovementToTablespace(linter.Checker):
         """Visit AlterTableCmd."""
         if (
             node.subtype == enums.AlterTableType.AT_SetTableSpace
-            and ancestors[2].stmt.objtype == enums.ObjectType.OBJECT_TABLE
+            and ancestors.find_nearest(ast.AlterTableStmt).node.objtype
+            == enums.ObjectType.OBJECT_TABLE
         ):
 
             self.violations.add(

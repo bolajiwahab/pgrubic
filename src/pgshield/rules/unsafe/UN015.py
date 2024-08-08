@@ -16,7 +16,7 @@ class PrimaryKeyConstraintCreatingNewIndex(linter.Checker):
     ) -> None:
         """Visit Constraint."""
         if (
-            ast.AlterTableStmt in ancestors
+            ancestors.find_nearest(ast.AlterTableStmt)
             and node.contype == enums.ConstrType.CONSTR_PRIMARY
             and not node.indexname
         ):

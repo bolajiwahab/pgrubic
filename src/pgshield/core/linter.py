@@ -5,7 +5,7 @@ import typing
 import pathlib
 import dataclasses
 
-from pglast import ast, parser, stream, visitors
+from pglast import ast, parser, stream, visitors, _extract_comments
 from colorama import Fore, Style
 from caseconverter import kebabcase
 
@@ -137,6 +137,7 @@ class Linter:
         try:
 
             tree: ast.Node = parser.parse_sql(source_code)
+            comments = _extract_comments(source_code)
 
         except parser.ParseError as error:
 
@@ -170,7 +171,7 @@ class Linter:
 
             total_violations += len(checker.violations)
 
-        print(stream.RawStream()(tree))
+        print(stream.IndentedStream(comments=comments, semicolon_after_last_statement=True)(tree))
 
         noqa.report_unused_ignores(file_name=file_name, inline_ignores=inline_ignores)
 

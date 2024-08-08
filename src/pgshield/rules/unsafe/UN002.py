@@ -7,36 +7,32 @@ from pgshield.core import linter
 
 class ColumnTypeChange(linter.Checker):
     """## **What it does**
-    Checks for usage of timestamp without time zone.
+    Checks for column type change.
 
     ## **Why not?**
-    timestamptz (also known as timestamp with time zone) zone records a single moment
-    in time. Despite what the name says it doesn't store a timestamp, just a point
-    in time described as the number of microseconds since January 1st, 2000 in UTC.
-    You can insert values in any timezone and it'll store the point in time that value
-    describes. By default it will display times in your current timezone, but you can
-    use at time zone to display it in other time zones. Because it stores a point in
-    time, it will do the right thing with arithmetic involving timestamps entered in
-    different timezones - including between timestamps from the same location on
-    different sides of a daylight savings time change.
+    Changing a column's type requires an **ACCESS EXCLUSIVE** lock on the table,
+    preventing both reads and writes. Generally, such change forces a rewrite of the
+    whole table and indexes with every other transactions being blocked for
+    the duration of the rewrite.
+    As an exception to rewrite, when changing the type of an existing column, if the USING
+    clause does not change the column contents and the old type is either binary coercible
+    to the new type or an unconstrained domain over the new type, a table rewrite is not
+    needed. However, indexes must always be rebuilt unless the system can verify that the
+    new index would be logically equivalent to the existing one.
 
-    timestamp (also known as timestamp without time zone) doesn't do any of that,
-    it just stores a date and time you give it. You can think of it being a picture of
-    a calendar and a clock rather than a point in time.
-    Without additional information - the timezone - you don't know what time it records.
-    Because of that, arithmetic between timestamps from different locations or between
-    timestamps from summer and winter may give the wrong answer.
-
-    So if what you want to store is a point in time, rather than a picture of a clock,
-    use timestamptz (timestamp with time zone).
+    This change might also cause errors and break applications that rely on the
+    column potentially disrupting business operations.
 
     ## **When should you?**
-    If you're dealing with timestamps in an abstract way, or just saving and retrieving
-    them from an app, where you aren't going to be doing arithmetic with them then
-    timestamp might be suitable.
+    If the above exception to table and index rewrite is applicable and the clients have
+    been made aware of the new type.
 
     ## **Use instead:**
-    timestamptz (also known as timestamp with time zone).
+    1. Create a new column with the new type.
+    2. Start writing data to the new column.
+    3. Copy all data from the old column to the new column.
+    4. Migrate clients to the new column.
+    5. Drop the old column.
     """
     is_auto_fixable: bool = False
 

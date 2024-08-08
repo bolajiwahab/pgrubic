@@ -7,7 +7,7 @@ from pgshield.core import linter
 
 class ValidatedCheckConstraintOnExistingRows(linter.Checker):
     """Validated check constraint on existing rows."""
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_Constraint(
         self,
@@ -16,7 +16,7 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):
     ) -> None:
         """Visit Constraint."""
         if (
-            ast.AlterTableStmt in ancestors
+            ancestors.find_nearest(ast.AlterTableStmt)
             and node.contype == enums.ConstrType.CONSTR_CHECK
             and not node.skip_validation
         ):
@@ -29,3 +29,7 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):
                     description="Validated check constraint on existing rows",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.skip_validation = True

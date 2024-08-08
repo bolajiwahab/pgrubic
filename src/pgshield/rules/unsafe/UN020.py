@@ -1,23 +1,23 @@
 """Unsafe index operations."""
 
-from pglast import ast, stream
+from pglast import ast, enums
 
 from pgshield.core import linter
 
 
 class NonConcurrentReindex(linter.Checker):
     """Non concurrent reindex."""
-    is_auto_fixable: bool = False
+
+    is_auto_fixable: bool = True
 
     def visit_ReindexStmt(self, ancestors: ast.Node, node: ast.ReindexStmt) -> None:
         """Visit ReindexStmt."""
-        params = (
-            [stream.RawStream()(param) for param in node.params]
-            if node.params is not None
-            else []
-        )
+        params = [param.defname for param in node.params] if node.params else []
 
-        if params and "concurrently" not in params:
+        if (
+            node.kind != enums.ReindexObjectType.REINDEX_OBJECT_SYSTEM
+            and "concurrently" not in params
+        ):
 
             self.violations.add(
                 linter.Violation(
@@ -27,3 +27,9 @@ class NonConcurrentReindex(linter.Checker):
                     description="Non concurrent reindex",
                 ),
             )
+
+            if self.config.fix is True:
+
+                params.append(ast.DefElem(defname="concurrently"))
+
+                node.params = params

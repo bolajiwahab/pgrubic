@@ -26,3 +26,6 @@ class NonConcurrentDetachPartition(linter.Checker):
                 ),
             )
 
+            if self.config.fix is True:
+
+                node.concurrent = True

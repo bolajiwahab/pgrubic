@@ -7,6 +7,7 @@ from pgshield.core import linter
 
 class AddingAutoIncrementIdentityColumn(linter.Checker):
     """Forbid adding auto increment identity column."""
+
     is_auto_fixable: bool = False
 
     def visit_Constraint(
@@ -16,7 +17,7 @@ class AddingAutoIncrementIdentityColumn(linter.Checker):
     ) -> None:
         """Visit Constraint."""
         if (
-            ast.AlterTableStmt in ancestors
+            ancestors.find_nearest(ast.AlterTableStmt)
             and node.contype == enums.ConstrType.CONSTR_IDENTITY
         ):
 

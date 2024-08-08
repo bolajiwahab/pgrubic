@@ -7,11 +7,12 @@ from pgshield.core import linter
 
 class AddingAutoIncrementColumn(linter.Checker):
     """Forbid adding auto increment column."""
+
     is_auto_fixable: bool = False
 
     def visit_ColumnDef(self, ancestors: ast.Node, node: ast.ColumnDef) -> None:
         """Visit ColumnDef."""
-        if ast.AlterTableStmt in ancestors and (
+        if ancestors.find_nearest(ast.AlterTableStmt) and (
             node.typeName.names[-1].sval in ["smallserial", "serial", "bigserial"]
         ):
 

@@ -7,7 +7,7 @@ from pgshield.core import linter
 
 class NonConcurrentIndexCreation(linter.Checker):
     """Non concurrent index creation."""
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_IndexStmt(
         self,
@@ -25,3 +25,7 @@ class NonConcurrentIndexCreation(linter.Checker):
                     description="Non concurrent index creation",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.concurrent = True

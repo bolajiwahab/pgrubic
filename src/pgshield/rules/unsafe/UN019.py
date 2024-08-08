@@ -7,6 +7,7 @@ from pgshield.core import linter
 
 class NonConcurrentIndexDrop(linter.Checker):
     """Non concurrent index drop."""
+
     is_auto_fixable: bool = False
 
     def visit_DropStmt(
@@ -25,3 +26,7 @@ class NonConcurrentIndexDrop(linter.Checker):
                     description="Non concurrent index drop",
                 ),
             )
+
+            if self.config.fix is True:
+
+                node.concurrent = True

@@ -1,8 +1,13 @@
-select current_time -- noqa: GN020
+select -- noqa: GN020
+current_time 
 ;
 
--- select current_time -- noqa: NM009
--- ;
+vacuum full public.ecdict;
+
+REFRESH MATERIALIZED VIEW order_summary;
+
+select current_time -- noqa: NM009
+;
 
 -- select ; CURRENT_TIME;
 
@@ -22,11 +27,23 @@ select current_time -- noqa: GN020
 -- SELECT * INTO films_recent FROM films WHERE date_prod >= '2002-01-01';
 -- SELECT * INTO films_recent2 FROM films2 WHERE date_prod >= '2002-01-01';
 
-CREATE TABLE amlex.f (i text) -- noqa: NM014, GN004
-;
+-- REINDEX database my_index;
 
-CREATE TABLE amlex.foo (bar text) -- noqa: NM014, GN004
-;
+-- ALTER table percona.foo_id_idx SET TABLESPACE newtblspc;
+
+-- ALTER TABLE public.ecdict ADD COLUMN ecdict_id bigint not null default current_time;
+
+-- ALTER TABLE public.ecdict1 alter COLUMN ecdict_id type serial;
+
+-- ALTER TABLE products ALTER COLUMN product_no SET NOT NULL
+
+-- ALTER TABLE public.ecdict1 alter product_no set not null;
+
+-- CREATE TABLE amlex.f (i text) -- noqa: NM014, GN004
+-- ;
+
+-- CREATE TABLE amlex.foo (bar text) -- noqa: NM014, GN004
+-- ;
 
 -- alter table tab add column account_id numeric;
 
