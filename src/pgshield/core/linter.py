@@ -31,11 +31,22 @@ class Violation:
     description: str
 
 
+@dataclasses.dataclass(kw_only=True, frozen=True)
+class ViolationMetric:
+    """Metric of violations."""
+
+    violations_total: int
+    violations_fixed_total: int
+    violations_fixable_auto_total: int
+    violations_fixable_manual_total: int
+
+
 class Checker(visitors.Visitor):  # type: ignore[misc]
     """Define a lint rule, and store all the nodes that violate it."""
 
     code: str
     is_auto_fixable: bool
+    config: config.Config
 
     def __init__(self) -> None:
         """Initialize variables."""
@@ -43,9 +54,6 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
         self.statement_location: int = 0
         self.statement_length: int = 0
         self.node_location: int = 0
-        self.config: config.Config = dataclasses.field(
-            default_factory=lambda: config.Config(**config.load_default_config()),
-        )
 
     required_attributes: tuple[str, ...] = ("is_auto_fixable",)
 
@@ -100,7 +108,6 @@ class Linter:
                 }
 
 
-
     @staticmethod
     def print_violations(
         *,
@@ -126,7 +133,7 @@ class Linter:
             )
 
 
-    def run(self, source_path: str) -> int:
+    def run(self, source_path: str) -> ViolationMetric:
         """Run rules on a source file."""
         file_name: pathlib.Path = pathlib.Path(source_path)
 
@@ -142,15 +149,20 @@ class Linter:
         except parser.ParseError as error:
 
             sys.stdout.write(f"{file_name}: {Fore.RED}{error!s}{Style.RESET_ALL}")
+
             sys.exit(1)
 
         inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores_from_inline_comments(source_code)  # noqa: E501
 
-        total_violations: int = 0
+        violations_total: int = 0
+
+        violations_fixed_total: int = 0
+
+        violations_fixable_auto_total: int = 0
+
+        violations_fixable_manual_total: int = 0
 
         for checker in self.checkers:
-
-            checker.config = self.config
 
             checker.violations = set()
 
@@ -169,13 +181,30 @@ class Linter:
                 source_code=source_code,
             )
 
-            total_violations += len(checker.violations)
+            if self.config.fix is checker.is_auto_fixable is True:
+
+                violations_fixed_total += len(checker.violations)
+
+            if checker.is_auto_fixable is True:
+
+                violations_fixable_auto_total += len(checker.violations)
+
+            else:
+
+                violations_fixable_manual_total += len(checker.violations)
+
+            violations_total += len(checker.violations)
 
         print(stream.IndentedStream(comments=comments, semicolon_after_last_statement=True)(tree))
 
         noqa.report_unused_ignores(file_name=file_name, inline_ignores=inline_ignores)
 
-        return total_violations
+        return ViolationMetric(
+            violations_total=violations_total,
+            violations_fixed_total=violations_fixed_total,
+            violations_fixable_auto_total=violations_fixable_auto_total,
+            violations_fixable_manual_total=violations_fixable_manual_total,
+        )
 
 
 def _get_line_details(

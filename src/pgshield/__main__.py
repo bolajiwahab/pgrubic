@@ -11,9 +11,11 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
     """CLI."""
     source_paths: abc.Sequence[str] = argv[1:]
 
-    loaded_config: core.Config = core.parse_config()
+    config: core.Config = core.parse_config()
 
-    linter: core.Linter = core.Linter(config=loaded_config)
+    linter: core.Linter = core.Linter(config=config)
+
+    core.Checker.config = config
 
     formatter: core.Formatter = core.Formatter()
 
@@ -23,42 +25,52 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
     for rule in loaded_rules:
 
         if (
-            not loaded_config.select
-            or any(
-                fnmatch.fnmatch(rule.code, pattern) for pattern in loaded_config.select
-            )
-        ) and not any(
-            fnmatch.fnmatch(rule.code, pattern) for pattern in loaded_config.ignore
-        ):
+            not config.select
+            or any(fnmatch.fnmatch(rule.code, pattern) for pattern in config.select)
+        ) and not any(fnmatch.fnmatch(rule.code, pattern) for pattern in config.ignore):
 
             linter.checkers.add(rule())
 
-    total_violations: int = 0
+    violations_total: int = 0
+    violations_fixed_total: int = 0
+    violations_fixable_auto_total: int = 0
+    violations_fixable_manual_total: int = 0
 
     for source_path in source_paths:
 
         # Run lint on only included and not excluded files
         if (
-            not loaded_config.include
-            or any(
-                fnmatch.fnmatch(source_path, pattern)
-                for pattern in loaded_config.include
-            )
+            not config.include
+            or any(fnmatch.fnmatch(source_path, pattern) for pattern in config.include)
         ) and not any(
-            fnmatch.fnmatch(source_path, pattern) for pattern in loaded_config.exclude
+            fnmatch.fnmatch(source_path, pattern) for pattern in config.exclude
         ):
 
             # formatter.diff(source_path=source_path)
 
-            violations: int = linter.run(source_path)
+            violations: core.ViolationMetric = linter.run(source_path)
 
-            total_violations += violations
+            violations_total += violations.violations_total
+            violations_fixed_total += violations.violations_fixed_total
+            violations_fixable_auto_total += violations.violations_fixable_auto_total
+            violations_fixable_manual_total += (
+                violations.violations_fixable_manual_total
+            )
 
-    if total_violations > 0:
+    if violations_total > 0:
 
-        sys.stdout.write(
-            f"Found {total_violations} violations.\n",
-        )
+        if config.fix is True:
+
+            sys.stdout.write(
+                f"Found {violations_total} violations ({violations_fixed_total} fixed,"
+                f" {violations_fixable_manual_total} remaining).\n",
+            )
+
+        else:
+            sys.stdout.write(
+                f"Found {violations_total} violations.\n"
+                f"{violations_fixable_auto_total} fixes available.\n",
+            )
 
         sys.exit(1)
 
