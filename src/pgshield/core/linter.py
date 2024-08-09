@@ -31,14 +31,14 @@ class Violation:
     description: str
 
 
-@dataclasses.dataclass(kw_only=True, frozen=True)
+@dataclasses.dataclass(kw_only=True)
 class ViolationMetric:
     """Metric of violations."""
 
-    violations_total: int
-    violations_fixed_total: int
-    violations_fixable_auto_total: int
-    violations_fixable_manual_total: int
+    violations_total: int = 0
+    violations_fixed_total: int = 0
+    violations_fixable_auto_total: int = 0
+    violations_fixable_manual_total: int = 0
 
 
 class Checker(visitors.Visitor):  # type: ignore[misc]
@@ -154,13 +154,7 @@ class Linter:
 
         inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores_from_inline_comments(source_code)  # noqa: E501
 
-        violations_total: int = 0
-
-        violations_fixed_total: int = 0
-
-        violations_fixable_auto_total: int = 0
-
-        violations_fixable_manual_total: int = 0
+        violations = ViolationMetric()
 
         for checker in self.checkers:
 
@@ -183,28 +177,23 @@ class Linter:
 
             if self.config.fix is checker.is_auto_fixable is True:
 
-                violations_fixed_total += len(checker.violations)
+                violations.violations_fixed_total += len(checker.violations)
 
             if checker.is_auto_fixable is True:
 
-                violations_fixable_auto_total += len(checker.violations)
+                violations.violations_fixable_auto_total += len(checker.violations)
 
             else:
 
-                violations_fixable_manual_total += len(checker.violations)
+                violations.violations_fixable_manual_total += len(checker.violations)
 
-            violations_total += len(checker.violations)
+            violations.violations_total += len(checker.violations)
 
         print(stream.IndentedStream(comments=comments, semicolon_after_last_statement=True)(tree))
 
         noqa.report_unused_ignores(file_name=file_name, inline_ignores=inline_ignores)
 
-        return ViolationMetric(
-            violations_total=violations_total,
-            violations_fixed_total=violations_fixed_total,
-            violations_fixable_auto_total=violations_fixable_auto_total,
-            violations_fixable_manual_total=violations_fixable_manual_total,
-        )
+        return violations
 
 
 def _get_line_details(

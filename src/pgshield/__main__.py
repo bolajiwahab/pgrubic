@@ -31,10 +31,7 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
             linter.checkers.add(rule())
 
-    violations_total: int = 0
-    violations_fixed_total: int = 0
-    violations_fixable_auto_total: int = 0
-    violations_fixable_manual_total: int = 0
+    violations = core.ViolationMetric()
 
     for source_path in source_paths:
 
@@ -48,28 +45,31 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
             # formatter.diff(source_path=source_path)
 
-            violations: core.ViolationMetric = linter.run(source_path)
+            _violations: core.ViolationMetric = linter.run(source_path)
 
-            violations_total += violations.violations_total
-            violations_fixed_total += violations.violations_fixed_total
-            violations_fixable_auto_total += violations.violations_fixable_auto_total
-            violations_fixable_manual_total += (
-                violations.violations_fixable_manual_total
+            violations.violations_total += _violations.violations_total
+            violations.violations_fixed_total += _violations.violations_fixed_total
+            violations.violations_fixable_auto_total += (
+                _violations.violations_fixable_auto_total
+            )
+            violations.violations_fixable_manual_total += (
+                _violations.violations_fixable_manual_total
             )
 
-    if violations_total > 0:
+    if violations.violations_total > 0:
 
         if config.fix is True:
 
             sys.stdout.write(
-                f"Found {violations_total} violations ({violations_fixed_total} fixed,"
-                f" {violations_fixable_manual_total} remaining).\n",
+                f"Found {violations.violations_total} violations"
+                f" ({violations.violations_fixed_total} fixed,"
+                f" {violations.violations_fixable_manual_total} remaining).\n",
             )
 
         else:
             sys.stdout.write(
-                f"Found {violations_total} violations.\n"
-                f"{violations_fixable_auto_total} fixes available.\n",
+                f"Found {violations.violations_total} violations.\n"
+                f"{violations.violations_fixable_auto_total} fixes available.\n",
             )
 
         sys.exit(1)
