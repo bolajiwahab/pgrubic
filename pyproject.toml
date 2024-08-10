@@ -21,38 +21,32 @@ build-backend = "setuptools.build_meta"
 name = "pgshield"
 version = "0.0.1"
 description = "Data migrations for PostgreSQL databases"
-readme = {file = "README.md", content-type = "text/markdown"}
+readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12"
-authors = [
-  {name = "DBA Team", email = "dataengineering-dba@n26.com"},
-]
-maintainers = [
-  {name = "DBA Team", email = "dataengineering-dba@n26.com"},
-]
+authors = [{ name = "DBA Team", email = "dataengineering-dba@n26.com" }]
+maintainers = [{ name = "DBA Team", email = "dataengineering-dba@n26.com" }]
 classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Environment :: Console",
-    "Intended Audience :: Developers :: Data Engineers :: DBAs",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: SQL",
-    "Topic :: Utilities :: Data Migrations",
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers :: Data Engineers :: DBAs",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: SQL",
+  "Topic :: Utilities :: Data Migrations",
 ]
 keywords = [
-    "pgshield",
-    "sql",
-    "postgres",
-    "postgresql",
-    "mysql",
-    "oracle",
-    "tsql",
-    "tds",
+  "pgshield",
+  "sql",
+  "postgres",
+  "postgresql",
+  "mysql",
+  "oracle",
+  "tsql",
+  "tds",
 ]
 dependencies = []
 
 [project.optional-dependencies]
-dev = [
-  "ruff",
-]
+dev = ["ruff"]
 
 [project.urls]
 Homepage = "https://github.com/n26/pgshield"
@@ -91,11 +85,19 @@ allow-star-arg-any = true
 length-sort = true
 known-first-party = ["pgshield"]
 
+[tool.ruff.per-file-ignores]
+"tests/**/*.py" = [
+  "S101", # asserts allowed in tests...
+]
+
 [tool.isort]
 profile = "black"
 length_sort = true
 known_first_party = "pgshield"
 
 [tool.djlint]
-profile="jinja"
-use_gitignore=true
+profile = "jinja"
+use_gitignore = true
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

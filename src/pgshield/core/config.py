@@ -36,7 +36,7 @@ class RequiredColumns:
     data_type: str
 
 
-@dataclasses.dataclass(kw_only=True, frozen=True)
+@dataclasses.dataclass(kw_only=True)
 class Config:
     """Representation of config."""
 
