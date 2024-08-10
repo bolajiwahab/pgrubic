@@ -112,7 +112,7 @@ class Linter:
     def print_violations(
         *,
         checker: Checker,
-        file_name: pathlib.Path,
+        source_path: pathlib.Path,
         source_code: str,
     ) -> None:
         """Print all violations collected by a checker."""
@@ -126,21 +126,15 @@ class Linter:
             )
 
             sys.stdout.write(
-                f"\n{file_name}:{line.number}:{line.column_offset}:"
+                f"\n{source_path}:{line.number}:{line.column_offset}:"
                 f" \033]8;;http://127.0.0.1:8000/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"
                 f" {violation.description}:"
                 f" {Fore.GREEN}\n\n{line.text}\n\n{Style.RESET_ALL}",
             )
 
 
-    def run(self, source_path: str) -> ViolationMetric:
-        """Run rules on a source file."""
-        file_name: pathlib.Path = pathlib.Path(source_path)
-
-        with pathlib.Path(source_path).open("r", encoding="utf-8") as source_file:
-
-            source_code: str = source_file.read()
-
+    def run(self, *, source_path: pathlib.Path, source_code: str) -> ViolationMetric:
+        """Run rules on a source code."""
         try:
 
             tree: ast.Node = parser.parse_sql(source_code)
@@ -148,7 +142,7 @@ class Linter:
 
         except parser.ParseError as error:
 
-            sys.stdout.write(f"{file_name}: {Fore.RED}{error!s}{Style.RESET_ALL}")
+            sys.stdout.write(f"{source_path}: {Fore.RED}{error!s}{Style.RESET_ALL}")
 
             sys.exit(1)
 
@@ -171,7 +165,7 @@ class Linter:
 
             self.print_violations(
                 checker=checker,
-                file_name=file_name,
+                source_path=source_path,
                 source_code=source_code,
             )
 
@@ -191,7 +185,7 @@ class Linter:
 
         print(stream.IndentedStream(comments=comments, semicolon_after_last_statement=True)(tree))
 
-        noqa.report_unused_ignores(file_name=file_name, inline_ignores=inline_ignores)
+        noqa.report_unused_ignores(source_path=source_path, inline_ignores=inline_ignores)
 
         return violations
 

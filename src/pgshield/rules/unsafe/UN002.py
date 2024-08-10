@@ -1,16 +1,16 @@
-"""Checker for timestamp without time zone."""
+"""Checker for column data type change."""
 
 from pglast import ast, enums
 
 from pgshield.core import linter
 
 
-class ColumnTypeChange(linter.Checker):
+class ColumnDataTypeChange(linter.Checker):
     """## **What it does**
-    Checks for column type change.
+    Checks for column data type change.
 
     ## **Why not?**
-    Changing a column's type requires an **ACCESS EXCLUSIVE** lock on the table,
+    Changing a column's data type requires an **ACCESS EXCLUSIVE** lock on the table,
     preventing both reads and writes. Generally, such change forces a rewrite of the
     whole table and indexes with every other transactions being blocked for
     the duration of the rewrite.

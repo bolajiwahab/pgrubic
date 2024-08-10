@@ -35,7 +35,11 @@ class DateColumnWithoutSuffix(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval == "date" and not node.colname.endswith("_date"):
+        if (
+            node.typeName.names[-1].sval == "date"
+            and node.colname
+            and not node.colname.endswith("_date")
+        ):
 
             self.violations.add(
                 linter.Violation(

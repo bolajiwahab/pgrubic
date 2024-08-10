@@ -1,4 +1,4 @@
-"""Checker for timestamp without time zone."""
+"""Checker for column rename."""
 
 from pglast import ast, enums
 

@@ -2,6 +2,7 @@
 
 import sys
 import fnmatch
+import pathlib
 from collections import abc
 
 from pgshield import core
@@ -43,9 +44,16 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
             fnmatch.fnmatch(source_path, pattern) for pattern in config.exclude
         ):
 
+            with pathlib.Path(source_path).open("r", encoding="utf-8") as source_file:
+
+                source_code: str = source_file.read()
+
             # formatter.diff(source_path=source_path)
 
-            _violations: core.ViolationMetric = linter.run(source_path)
+            _violations: core.ViolationMetric = linter.run(
+                source_path=pathlib.Path(source_path),
+                source_code=source_code,
+            )
 
             violations.violations_total += _violations.violations_total
             violations.violations_fixed_total += _violations.violations_fixed_total

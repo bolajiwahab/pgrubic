@@ -1,7 +1,7 @@
 **** important **********
 - merge get line details and set locations -- highest priority
-- fix documentations for unsafe - saturday?
-- file exception - -- rubic -- noqa: <rule> 
+- fix documentations for unsafe - saturday? -- highest priority
+- file exception - -- rubic -- noqa: <rule>  -- to be done later -- low priority
 - Found 137 errors (96 fixed, 41 remaining)
 - fix is given, we don't print violations that can be fixed/are being fixed
 - Found 41 errors.

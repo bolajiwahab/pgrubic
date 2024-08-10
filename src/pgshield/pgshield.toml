@@ -12,12 +12,9 @@ partition-strategies = []
 fix = false
 unsafe-fixes = false
 
-required-columns = { created = "pg_catalog.timestamptz", updated = "pg_catalog.bool" }
+disallowed-data-types = []
 
-# required_columns = { created = {type = "pg_catalog.timestamptz", not_null = true}, updated = "pg_catalog.bool" }
-
-not-null-columns = ["created", "updated", "deleted", "deleted_by"]
-
+required-columns = []
 # schemas = { partition = "partitions", table = "public" } # improvements to whitelisting of schemas
 # object_type: list of schemas
 

@@ -8,7 +8,7 @@ from collections import abc
 
 from pglast import ast
 
-from pgshield import RULES_DIRECTORY
+from pgshield import RULES_DIRECTORY, RULES_BASE_MODULE
 from pgshield.core import errors, linter
 
 
@@ -18,7 +18,11 @@ def load_rules() -> list[linter.Checker]:
 
     for path in RULES_DIRECTORY.glob("**/[!_]*.py"):
 
-        module = importlib.import_module(str(path).replace(".py", "").replace("/", "."))
+        module = importlib.import_module(
+            str(RULES_BASE_MODULE / path.relative_to(RULES_DIRECTORY))
+            .replace(".py", "")
+            .replace("/", "."),
+        )
 
         for _, rule in inspect.getmembers(
             module,

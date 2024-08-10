@@ -5,7 +5,9 @@ import pathlib
 
 PROGRAM_NAME: str = "pgshield"
 
-RULES_DIRECTORY = pathlib.Path(f"{PROGRAM_NAME}/rules/")
+RULES_BASE_MODULE: str = f"{PROGRAM_NAME}/rules/"
+
+RULES_DIRECTORY: pathlib.Path = pathlib.Path(__file__).resolve().parent / "rules/"
 
 CONFIG_FILE: str = f"{PROGRAM_NAME}.toml"
 

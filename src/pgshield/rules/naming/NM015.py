@@ -35,10 +35,15 @@ class TimestampColumnWithoutSuffix(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval in [
-            "timestamptz",
-            "timestamp",
-        ] and not node.colname.endswith("_at"):
+        if (
+            node.typeName.names[-1].sval
+            in [
+                "timestamptz",
+                "timestamp",
+            ]
+            and node.colname
+            and not node.colname.endswith("_at")
+        ):
 
             self.violations.add(
                 linter.Violation(
