@@ -31,7 +31,7 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
             linter.checkers.add(rule())
 
-    violations = core.ViolationMetric()
+    violations: core.ViolationMetric = core.ViolationMetric()
 
     for source_path in source_paths:
 

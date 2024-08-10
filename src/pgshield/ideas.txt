@@ -1,5 +1,5 @@
 **** important **********
-- merge get line details and set locations
+- merge get line details and set locations -- highest priority
 - fix documentations for unsafe - saturday?
 - file exception - -- rubic -- noqa: <rule> 
 - Found 137 errors (96 fixed, 41 remaining)
