@@ -22,6 +22,7 @@ class Serial(linter.Checker):
     ## **Use instead:**
     For new applications, identity columns should be used.
     """
+
     is_auto_fixable: bool = True
 
     def visit_ColumnDef(
@@ -30,7 +31,15 @@ class Serial(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval in ["smallserial", "serial", "bigserial"]:
+        if (
+            (
+                ancestors.find_nearest(ast.AlterTableCmd)
+                and ancestors.find_nearest(ast.AlterTableCmd).node.subtype
+                == enums.AlterTableType.AT_AddColumn
+            )
+            or ancestors.find_nearest(ast.CreateStmt)
+            and node.typeName.names[-1].sval in ["smallserial", "serial", "bigserial"]
+        ):
 
             self.violations.add(
                 linter.Violation(
@@ -41,7 +50,7 @@ class Serial(linter.Checker):
                 ),
             )
 
-            if self.config.fix is True:
+            if self.can_apply_fix:
 
                 node.typeName = ast.TypeName(
                     names=(

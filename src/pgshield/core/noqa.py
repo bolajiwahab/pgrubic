@@ -62,7 +62,7 @@ def _get_rules_from_inline_comment(comment: str, location: int) -> list[str]:
 
         rules: list[str] = comment_remainder[1:].replace(",", "").split()
 
-    return rules if rules else ["*"]
+    return rules if rules else [A_STAR]
 
 
 def _get_statement_locations(
@@ -77,6 +77,9 @@ def _get_statement_locations(
             break
 
     return statement_start_location, statement_end_location
+
+
+A_STAR: str = "*"
 
 
 @dataclasses.dataclass(kw_only=True)

@@ -16,7 +16,7 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):
     ) -> None:
         """Visit Constraint."""
         if (
-            ancestors.find_nearest(ast.AlterTableStmt)
+            ancestors.find_nearest(ast.AlterTableCmd)
             and node.contype == enums.ConstrType.CONSTR_CHECK
             and not node.skip_validation
         ):
@@ -30,6 +30,6 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):
                 ),
             )
 
-            if self.config.fix is True:
+            if self.can_apply_fix:
 
                 node.skip_validation = True

@@ -1,4 +1,4 @@
-"""Unsafe column operations."""
+"""Checker for adding of auto increment identity column."""
 
 from pglast import ast, enums
 
@@ -17,7 +17,9 @@ class AddingAutoIncrementIdentityColumn(linter.Checker):
     ) -> None:
         """Visit Constraint."""
         if (
-            ancestors.find_nearest(ast.AlterTableStmt)
+            ancestors.find_nearest(ast.AlterTableCmd)
+            and ancestors.find_nearest(ast.AlterTableCmd).node.subtype
+            == enums.AlterTableType.AT_AddColumn
             and node.contype == enums.ConstrType.CONSTR_IDENTITY
         ):
 

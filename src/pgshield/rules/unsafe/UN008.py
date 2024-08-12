@@ -1,4 +1,4 @@
-"""Unsafe storage operations."""
+"""Checker for drop database."""
 
 from pglast import ast
 
@@ -20,6 +20,6 @@ class DropDatabase(linter.Checker):
                 statement_location=self.statement_location,
                 statement_length=self.statement_length,
                 node_location=self.node_location,
-                description="Drop database",
+                description="Drop database detected",
             ),
         )

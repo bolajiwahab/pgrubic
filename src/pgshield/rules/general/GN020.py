@@ -42,6 +42,6 @@ class CurrentTime(linter.Checker):
                 ),
             )
 
-            if self.config.fix is True:
+            if self.can_apply_fix:
 
                 node.op = enums.SQLValueFunctionOp.SVFOP_CURRENT_TIMESTAMP

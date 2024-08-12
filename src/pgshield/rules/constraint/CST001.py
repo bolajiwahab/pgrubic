@@ -42,5 +42,5 @@ class CascadeUpdate(linter.Checker):
                 ),
             )
 
-            if self.config.fix is True:
+            if self.can_apply_fix:
                 node.fk_upd_action = enums.FKCONSTR_ACTION_RESTRICT

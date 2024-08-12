@@ -1,4 +1,4 @@
-"""Unsafe storage operations."""
+"""Checker for drop tablespace."""
 
 from pglast import ast
 
@@ -6,7 +6,7 @@ from pgshield.core import linter
 
 
 class DropTablespace(linter.Checker):
-    """Drop tablespace."""
+    """Checks for drop tablespace."""
     is_auto_fixable: bool = False
 
     def visit_DropTableSpaceStmt(
@@ -20,6 +20,6 @@ class DropTablespace(linter.Checker):
                 statement_location=self.statement_location,
                 statement_length=self.statement_length,
                 node_location=self.node_location,
-                description="Drop tablespace",
+                description="Drop tablespace detected",
             ),
         )

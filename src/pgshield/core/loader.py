@@ -9,14 +9,14 @@ from collections import abc
 from pglast import ast
 
 from pgshield import RULES_DIRECTORY, RULES_BASE_MODULE
-from pgshield.core import errors, linter
+from pgshield.core import linter
 
 
 def load_rules() -> list[linter.Checker]:
     """Load rules."""
     rules: list[linter.Checker] = []
 
-    for path in RULES_DIRECTORY.glob("**/[!_]*.py"):
+    for path in sorted(RULES_DIRECTORY.rglob("[!_]*.py")):
 
         module = importlib.import_module(
             str(RULES_BASE_MODULE / path.relative_to(RULES_DIRECTORY))
@@ -40,22 +40,7 @@ def load_rules() -> list[linter.Checker]:
 
                 _set_locations_for_node(rule)
 
-    _check_duplicate_rules(rules)
-
     return rules
-
-
-def _check_duplicate_rules(rules: list[linter.Checker]) -> None:
-    """Check for duplicate rules."""
-    seen: set[str] = set()
-
-    for rule in rules:
-
-        if rule.code in seen:
-
-            raise errors.DuplicateRuleDetectedError(rule.code)
-
-        seen.add(rule.code)
 
 
 def _set_locations_for_node(node: typing.Any) -> None:

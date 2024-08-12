@@ -1,3 +1,6 @@
+**** very important****
+we meed to find a way not to fix suppressed violations -- this is a big blocker for this project
+
 **** important **********
 - merge get line details and set locations -- highest priority
 - fix documentations for unsafe - saturday? -- highest priority

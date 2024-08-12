@@ -50,7 +50,7 @@ class DisallowedSchema(linter.Checker):
                         ),
                     )
 
-                    if self.config.fix is True:
+                    if self.can_apply_fix:
 
                         node.schemaname = schema.use_instead
 
@@ -77,7 +77,7 @@ class DisallowedSchema(linter.Checker):
                     ),
                 )
 
-                if self.config.fix is True:
+                if self.can_apply_fix:
 
                     node.typeName[0].sval = schema.use_instead
 
@@ -104,6 +104,6 @@ class DisallowedSchema(linter.Checker):
                     ),
                 )
 
-                if self.config.fix is True:
+                if self.can_apply_fix:
 
                     node.funcname[0].sval = schema.use_instead

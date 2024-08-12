@@ -47,6 +47,6 @@ class DropColumn(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Drop column found",
+                    description="Drop column detected",
                 ),
             )

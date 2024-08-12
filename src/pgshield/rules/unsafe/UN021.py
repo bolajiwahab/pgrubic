@@ -22,6 +22,6 @@ class DropTable(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Drop table",
+                    description="Drop table found",
                 ),
             )

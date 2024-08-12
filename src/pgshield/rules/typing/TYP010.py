@@ -38,7 +38,7 @@ class Integer(linter.Checker):
                 ),
             )
 
-            if self.config.fix is True:
+            if self.can_apply_fix:
 
                 node.typeName = ast.TypeName(
                     names=(

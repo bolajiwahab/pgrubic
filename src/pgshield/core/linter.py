@@ -39,6 +39,7 @@ class ViolationMetric:
     violations_fixed_total: int = 0
     violations_fixable_auto_total: int = 0
     violations_fixable_manual_total: int = 0
+    violations_fixes: str | None = None
 
 
 class Checker(visitors.Visitor):  # type: ignore[misc]
@@ -47,6 +48,7 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
     code: str
     is_auto_fixable: bool
     config: config.Config
+    inline_ignores: list[noqa.NoQaDirective]
 
     def __init__(self) -> None:
         """Initialize variables."""
@@ -55,11 +57,11 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
         self.statement_length: int = 0
         self.node_location: int = 0
 
-    required_attributes: tuple[str, ...] = ("is_auto_fixable",)
-
     def __init_subclass__(cls, **kwargs: typing.Any) -> None:
         """Check required attributes."""
-        for required in cls.required_attributes:
+        required_attributes: tuple[str, ...] = ("is_auto_fixable",)
+
+        for required in required_attributes:
 
             msg = f"Can't instantiate class {cls.__name__} without '{required}' attribute defined"  # noqa: E501
 
@@ -69,6 +71,21 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
 
     def visit(self, node: ast.Node, ancestors: visitors.Ancestor) -> None:
         """Visit the node."""
+
+    @property
+    def can_apply_fix(self) -> bool:
+        """Check if fix can be applied."""
+        for inline_ignore in self.inline_ignores:
+
+            if (
+                self.statement_location == inline_ignore.location
+                and (inline_ignore.rule in (noqa.A_STAR, self.code))
+                and not self.config.ignore_noqa or not self.config.fix
+            ):
+
+                return False
+
+        return True
 
 
 class Linter:
@@ -93,7 +110,7 @@ class Linter:
                 for violation in checker.violations
                 if (
                     violation.statement_location == inline_ignore.location
-                    and (inline_ignore.rule in ("*", checker.code))
+                    and (inline_ignore.rule in (noqa.A_STAR, checker.code))
                 )
             }
 
@@ -148,7 +165,9 @@ class Linter:
 
         inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores_from_inline_comments(source_code)  # noqa: E501
 
-        violations = ViolationMetric()
+        violations: ViolationMetric = ViolationMetric()
+
+        Checker.inline_ignores = inline_ignores
 
         for checker in self.checkers:
 
@@ -156,7 +175,7 @@ class Linter:
 
             checker(tree)
 
-            if self.config.ignore_noqa is False:
+            if not self.config.ignore_noqa:
 
                 self.skip_suppressed_violations(
                     checker=checker,
@@ -186,6 +205,13 @@ class Linter:
         print(stream.IndentedStream(comments=comments, semicolon_after_last_statement=True)(tree))
 
         noqa.report_unused_ignores(source_path=source_path, inline_ignores=inline_ignores)
+
+        if parser.parse_sql(source_code) != tree:
+
+            violations.violations_fixes = stream.IndentedStream(
+                comments=comments,
+                semicolon_after_last_statement=True,
+            )(tree)
 
         return violations
 

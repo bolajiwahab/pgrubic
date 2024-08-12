@@ -1,4 +1,4 @@
-"""Unsafe column operations."""
+"""Checker for adding of auto increment column."""
 
 from pglast import ast
 
@@ -12,7 +12,7 @@ class AddingAutoIncrementColumn(linter.Checker):
 
     def visit_ColumnDef(self, ancestors: ast.Node, node: ast.ColumnDef) -> None:
         """Visit ColumnDef."""
-        if ancestors.find_nearest(ast.AlterTableStmt) and (
+        if ancestors.find_nearest(ast.AlterTableCmd) and (
             node.typeName.names[-1].sval in ["smallserial", "serial", "bigserial"]
         ):
 

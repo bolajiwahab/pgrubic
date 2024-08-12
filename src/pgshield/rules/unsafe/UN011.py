@@ -1,12 +1,13 @@
-"""Unsafe constraint operations."""
+"""Checker for not null constraint on new column with no static default."""
 
 from pglast import ast, enums
 
 from pgshield.core import linter
 
 
-class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
-    """Not null on new column with no static default."""
+class NotNullConstraintOnNewColumnWithNoStaticDefault(linter.Checker):
+    """Not null constraint on new column with no static default."""
+
     is_auto_fixable: bool = False
 
     def visit_ColumnDef(
@@ -15,7 +16,7 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if ancestors.find_nearest(ast.AlterTableStmt) and node.constraints:
+        if ancestors.find_nearest(ast.AlterTableCmd) and node.constraints:
 
             is_not_null = False
             has_static_default = False
@@ -38,6 +39,6 @@ class NotNullOnNewColumnWithNoStaticDefault(linter.Checker):
                         statement_location=self.statement_location,
                         statement_length=self.statement_length,
                         node_location=self.node_location,
-                        description="Not null on new column with no static default",
+                        description="Not null constraint on new column with no static default",  # noqa: E501
                     ),
                 )
