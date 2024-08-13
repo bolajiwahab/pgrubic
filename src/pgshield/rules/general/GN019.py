@@ -45,7 +45,7 @@ class UnloggedTable(linter.Checker):
                 ),
             )
 
-            if self.can_apply_fix:
+            if self.is_fix_applicable:
 
                 node.relation.relpersistence = enums.RELPERSISTENCE_PERMANENT
 

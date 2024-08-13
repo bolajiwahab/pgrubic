@@ -43,6 +43,6 @@ class IdentityGeneratedByDefault(linter.Checker):
                 ),
             )
 
-            if self.can_apply_fix:
+            if self.is_fix_applicable:
 
                 node.generated_when = enums.ATTRIBUTE_IDENTITY_ALWAYS

@@ -53,7 +53,7 @@ class IdColumn(linter.Checker):
                 ),
             )
 
-            if self.can_apply_fix:
+            if self.is_fix_applicable:
 
                 if isinstance(
                     abs(ancestors).node,

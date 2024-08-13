@@ -1,4 +1,4 @@
-select current_time -- noqa: TYP009
+select current_time -- noqa: GN020
 ;
 
 create table public.ecdict (id bigserial);

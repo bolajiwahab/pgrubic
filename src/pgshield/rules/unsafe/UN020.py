@@ -28,7 +28,7 @@ class NonConcurrentReindex(linter.Checker):
                 ),
             )
 
-            if self.can_apply_fix:
+            if self.is_fix_applicable:
 
                 params.append(ast.DefElem(defname="concurrently"))
 

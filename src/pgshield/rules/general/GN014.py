@@ -44,7 +44,7 @@ class SelectInto(linter.Checker):
                 ),
             )
 
-            if self.can_apply_fix:
+            if self.is_fix_applicable:
 
                 into_clause = node.intoClause
 

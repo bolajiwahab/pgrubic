@@ -46,7 +46,7 @@ class MissingRequiredColumn(linter.Checker):
                         ),
                     )
 
-                    if self.can_apply_fix:
+                    if self.is_fix_applicable:
 
                         node.tableElts = (
                             *node.tableElts,

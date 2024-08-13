@@ -73,14 +73,17 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
         """Visit the node."""
 
     @property
-    def can_apply_fix(self) -> bool:
+    def is_fix_applicable(self) -> bool:
         """Check if fix can be applied."""
         for inline_ignore in self.inline_ignores:
 
             if (
-                self.statement_location == inline_ignore.location
-                and (inline_ignore.rule in (noqa.A_STAR, self.code))
-                and not self.config.ignore_noqa or not self.config.fix
+                (
+                    self.config.fix
+                    and self.statement_location == inline_ignore.location
+                    and (inline_ignore.rule in (noqa.A_STAR, self.code))
+                    and not self.config.ignore_noqa
+                ) or not self.config.fix
             ):
 
                 return False

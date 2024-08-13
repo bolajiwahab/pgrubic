@@ -16,7 +16,7 @@ def load_rules() -> list[linter.Checker]:
     """Load rules."""
     rules: list[linter.Checker] = []
 
-    for path in sorted(RULES_DIRECTORY.rglob("[!_]*.py")):
+    for path in sorted(RULES_DIRECTORY.rglob("[!_]*.py"), key=lambda x: x.name):
 
         module = importlib.import_module(
             str(RULES_BASE_MODULE / path.relative_to(RULES_DIRECTORY))

@@ -42,7 +42,7 @@ class NumericWithPrecision(linter.Checker):
                 ),
             )
 
-            if self.can_apply_fix:
+            if self.is_fix_applicable:
 
                 node.typeName = ast.TypeName(
                     names=(
