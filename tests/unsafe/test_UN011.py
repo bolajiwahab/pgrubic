@@ -4,7 +4,9 @@ from pgshield import core
 from pgshield.rules.unsafe.UN011 import NotNullConstraintOnNewColumnWithNoStaticDefault
 
 
-def test_not_null_constraint_on_new_column_with_no_static_default() -> None:
+def test_not_null_constraint_on_new_column_with_no_static_default(
+    linter: core.Linter,
+) -> None:
     """Test not null constraint on new column with no static default."""
     pass_sql: str = """
     ALTER TABLE public.card ADD COLUMN id bigint NOT NULL DEFAULT 0;
@@ -18,14 +20,7 @@ def test_not_null_constraint_on_new_column_with_no_static_default() -> None:
         NotNullConstraintOnNewColumnWithNoStaticDefault()
     )
 
-    config: core.Config = core.parse_config()
-
-    linter: core.Linter = core.Linter(config=config)
-
-    assert (
-        not_null_constraint_on_new_column_with_no_static_default.is_auto_fixable
-        is False
-    )
+    assert not not_null_constraint_on_new_column_with_no_static_default.is_auto_fixable
 
     assert (
         not_null_constraint_on_new_column_with_no_static_default.code
@@ -37,7 +32,8 @@ def test_not_null_constraint_on_new_column_with_no_static_default() -> None:
     linter.checkers.add(not_null_constraint_on_new_column_with_no_static_default)
 
     violations: core.ViolationMetric = linter.run(
-        source_path="test.sql", source_code=pass_sql,
+        source_path="test.sql",
+        source_code=pass_sql,
     )
 
     assert violations == core.ViolationMetric(
@@ -48,7 +44,8 @@ def test_not_null_constraint_on_new_column_with_no_static_default() -> None:
     )
 
     violations = linter.run(
-        source_path="test.sql", source_code=fail_sql,
+        source_path="test.sql",
+        source_code=fail_sql,
     )
 
     assert violations == core.ViolationMetric(

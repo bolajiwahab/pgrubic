@@ -1,5 +1,7 @@
-**** very important****
-we meed to find a way not to fix suppressed violations -- this is a big blocker for this project
+-- catch operations that cannot be run in a transaction
+-- such as concurrent operations
+-- we simply check if we are in a transaction and have a list of concurrent
+-- operations
 
 **** important **********
 - merge get line details and set locations -- highest priority

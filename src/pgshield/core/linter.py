@@ -75,15 +75,16 @@ class Checker(visitors.Visitor):  # type: ignore[misc]
     @property
     def is_fix_applicable(self) -> bool:
         """Check if fix can be applied."""
+        if not self.config.fix:
+
+            return False
+
         for inline_ignore in self.inline_ignores:
 
             if (
-                (
-                    self.config.fix
-                    and self.statement_location == inline_ignore.location
-                    and (inline_ignore.rule in (noqa.A_STAR, self.code))
-                    and not self.config.ignore_noqa
-                ) or not self.config.fix
+                self.statement_location == inline_ignore.location
+                and inline_ignore.rule in (noqa.A_STAR, self.code)
+                and not self.config.ignore_noqa
             ):
 
                 return False

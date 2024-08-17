@@ -4,17 +4,13 @@ from pgshield import core
 from pgshield.rules.unsafe.UN005 import AddingAutoIncrementIdentityColumn
 
 
-def test_adding_auto_increment_column() -> None:
+def test_adding_auto_increment_column(linter: core.Linter) -> None:
     """Test adding auto increment column."""
     fail_sql: str = """
     ALTER TABLE public.card ADD COLUMN id bigint GENERATED ALWAYS AS IDENTITY;
     """
 
     adding_auto_increment_column: core.Checker = AddingAutoIncrementIdentityColumn()
-
-    config: core.Config = core.parse_config()
-
-    linter: core.Linter = core.Linter(config=config)
 
     assert adding_auto_increment_column.is_auto_fixable is False
 

@@ -4,7 +4,7 @@ from pgshield import core
 from pgshield.rules.unsafe.UN010 import NotNullConstraintOnExistingColumn
 
 
-def test_not_null_constraint_on_existing_column() -> None:
+def test_not_null_constraint_on_existing_column(linter: core.Linter) -> None:
     """Test not null constraint on existing column."""
     fail_sql: str = """
     ALTER TABLE public.card ALTER COLUMN id SET NOT NULL;
@@ -13,10 +13,6 @@ def test_not_null_constraint_on_existing_column() -> None:
     not_null_constraint_on_existing_column: core.Checker = (
         NotNullConstraintOnExistingColumn()
     )
-
-    config: core.Config = core.parse_config()
-
-    linter: core.Linter = core.Linter(config=config)
 
     assert not_null_constraint_on_existing_column.is_auto_fixable is False
 

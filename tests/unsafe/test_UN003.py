@@ -4,17 +4,13 @@ from pgshield import core
 from pgshield.rules.unsafe.UN003 import ColumnRename
 
 
-def test_column_rename() -> None:
+def test_column_rename(linter: core.Linter) -> None:
     """Test column data type change."""
     fail_sql: str = """
     ALTER TABLE public.card RENAME COLUMN id TO card_id;
     """
 
     column_rename: core.Checker = ColumnRename()
-
-    config: core.Config = core.parse_config()
-
-    linter: core.Linter = core.Linter(config=config)
 
     assert column_rename.is_auto_fixable is False
 

@@ -4,17 +4,13 @@ from pgshield import core
 from pgshield.rules.unsafe.UN009 import DropSchema
 
 
-def test_drop_schema() -> None:
+def test_drop_schema(linter: core.Linter) -> None:
     """Test drop schema."""
     fail_sql: str = """
     DROP SCHEMA test;
     """
 
     drop_schema: core.Checker = DropSchema()
-
-    config: core.Config = core.parse_config()
-
-    linter: core.Linter = core.Linter(config=config)
 
     assert drop_schema.is_auto_fixable is False
 

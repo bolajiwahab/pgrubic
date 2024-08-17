@@ -4,17 +4,13 @@ from pgshield import core
 from pgshield.rules.unsafe.UN002 import ColumnDataTypeChange
 
 
-def test_column_data_type_change() -> None:
+def test_column_data_type_change(linter: core.Linter) -> None:
     """Test column data type change."""
     fail_sql: str = """
     ALTER TABLE public.card ALTER COLUMN id TYPE bigint;
     """
 
     column_data_type_change: core.Checker = ColumnDataTypeChange()
-
-    config: core.Config = core.parse_config()
-
-    linter: core.Linter = core.Linter(config=config)
 
     assert column_data_type_change.is_auto_fixable is False
 

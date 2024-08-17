@@ -4,17 +4,13 @@ from pgshield import core
 from pgshield.rules.unsafe.UN008 import DropDatabase
 
 
-def test_drop_database() -> None:
+def test_drop_database(linter: core.Linter) -> None:
     """Test drop database."""
     fail_sql: str = """
     DROP DATABASE test;
     """
 
     drop_database: core.Checker = DropDatabase()
-
-    config: core.Config = core.parse_config()
-
-    linter: core.Linter = core.Linter(config=config)
 
     assert drop_database.is_auto_fixable is False
 

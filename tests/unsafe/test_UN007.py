@@ -4,17 +4,13 @@ from pgshield import core
 from pgshield.rules.unsafe.UN007 import DropTablespace
 
 
-def test_drop_tablespace() -> None:
+def test_drop_tablespace(linter: core.Linter) -> None:
     """Test drop tablespace."""
     fail_sql: str = """
     DROP TABLESPACE test;
     """
 
     drop_tablespace: core.Checker = DropTablespace()
-
-    config: core.Config = core.parse_config()
-
-    linter: core.Linter = core.Linter(config=config)
 
     assert drop_tablespace.is_auto_fixable is False
 
