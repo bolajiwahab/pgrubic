@@ -43,11 +43,11 @@ def test_validated_foreign_key_constraint_on_existing_rows(linter: core.Linter) 
     )
 
     assert violations == core.ViolationMetric(
-        violations_total=1,
-        violations_fixed_total=0,
-        violations_fixable_auto_total=1,
-        violations_fixable_manual_total=0,
-        violations_fixes=None,
+        total=1,
+        fixed_total=0,
+        fixable_auto_total=1,
+        fixable_manual_total=0,
+        fix=None,
     )
 
     assert (
@@ -65,11 +65,11 @@ def test_validated_foreign_key_constraint_on_existing_rows(linter: core.Linter) 
     )
 
     assert violations == core.ViolationMetric(
-        violations_total=0,
-        violations_fixed_total=0,
-        violations_fixable_auto_total=0,
-        violations_fixable_manual_total=0,
-        violations_fixes=None,
+        total=0,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=0,
+        fix=None,
     )
 
     violations = linter.run(
@@ -78,9 +78,9 @@ def test_validated_foreign_key_constraint_on_existing_rows(linter: core.Linter) 
     )
 
     assert violations == core.ViolationMetric(
-        violations_total=1,
-        violations_fixed_total=1,
-        violations_fixable_auto_total=1,
-        violations_fixable_manual_total=0,
-        violations_fixes=fix_sql,
+        total=1,
+        fixed_total=1,
+        fixable_auto_total=1,
+        fixable_manual_total=0,
+        fix=fix_sql,
     )

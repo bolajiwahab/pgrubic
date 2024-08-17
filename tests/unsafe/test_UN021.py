@@ -17,9 +17,9 @@ def test_drop_table() -> None:
     linter.checkers.add(drop_table)
     violations: core.ViolationMetric = linter.run(source_path="test.sql", source_code=sql)
     assert violations == core.ViolationMetric(
-        violations_total=1,
-        violations_fixed_total=0,
-        violations_fixable_auto_total=0,
-        violations_fixable_manual_total=1,
+        total=1,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=1,
     )
     assert next(iter(drop_table.violations)).description == "Drop table found"

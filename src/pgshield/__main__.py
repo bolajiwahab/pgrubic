@@ -55,30 +55,30 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
                 source_code=source_code,
             )
 
-            violations.violations_total += _violations.violations_total
-            violations.violations_fixed_total += _violations.violations_fixed_total
-            violations.violations_fixable_auto_total += (
-                _violations.violations_fixable_auto_total
+            violations.total += _violations.total
+            violations.fixed_total += _violations.fixed_total
+            violations.fixable_auto_total += (
+                _violations.fixable_auto_total
             )
-            violations.violations_fixable_manual_total += (
-                _violations.violations_fixable_manual_total
+            violations.fixable_manual_total += (
+                _violations.fixable_manual_total
             )
-            print(_violations.violations_fixes)
+            print(_violations.fix)
 
-    if violations.violations_total > 0:
+    if violations.total > 0:
 
         if config.fix is True:
 
             sys.stdout.write(
-                f"Found {violations.violations_total} violations"
-                f" ({violations.violations_fixed_total} fixed,"
-                f" {violations.violations_fixable_manual_total} remaining).\n",
+                f"Found {violations.total} violations"
+                f" ({violations.fixed_total} fixed,"
+                f" {violations.fixable_manual_total} remaining).\n",
             )
 
         else:
             sys.stdout.write(
-                f"Found {violations.violations_total} violations.\n"
-                f"{violations.violations_fixable_auto_total} fixes available.\n",
+                f"Found {violations.total} violations.\n"
+                f"{violations.fixable_auto_total} fixes available.\n",
             )
 
         sys.exit(1)

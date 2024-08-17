@@ -28,10 +28,10 @@ def test_not_null_constraint_on_existing_column(linter: core.Linter) -> None:
     )
 
     assert violations == core.ViolationMetric(
-        violations_total=1,
-        violations_fixed_total=0,
-        violations_fixable_auto_total=0,
-        violations_fixable_manual_total=1,
+        total=1,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=1,
     )
 
     assert (

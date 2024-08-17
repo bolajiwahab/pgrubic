@@ -33,13 +33,13 @@ class Violation:
 
 @dataclasses.dataclass(kw_only=True)
 class ViolationMetric:
-    """Metric of violations."""
+    """Violation Metric."""
 
-    violations_total: int = 0
-    violations_fixed_total: int = 0
-    violations_fixable_auto_total: int = 0
-    violations_fixable_manual_total: int = 0
-    violations_fixes: str | None = None
+    total: int = 0
+    fixed_total: int = 0
+    fixable_auto_total: int = 0
+    fixable_manual_total: int = 0
+    fix: str | None = None
 
 
 class Checker(visitors.Visitor):  # type: ignore[misc]
@@ -194,17 +194,17 @@ class Linter:
 
             if self.config.fix is checker.is_auto_fixable is True:
 
-                violations.violations_fixed_total += len(checker.violations)
+                violations.fixed_total += len(checker.violations)
 
             if checker.is_auto_fixable is True:
 
-                violations.violations_fixable_auto_total += len(checker.violations)
+                violations.fixable_auto_total += len(checker.violations)
 
             else:
 
-                violations.violations_fixable_manual_total += len(checker.violations)
+                violations.fixable_manual_total += len(checker.violations)
 
-            violations.violations_total += len(checker.violations)
+            violations.total += len(checker.violations)
 
         print(stream.IndentedStream(comments=comments, semicolon_after_last_statement=True)(tree))
 
@@ -212,7 +212,7 @@ class Linter:
 
         if parser.parse_sql(source_code) != tree:
 
-            violations.violations_fixes = stream.IndentedStream(
+            violations.fix = stream.IndentedStream(
                 comments=comments,
                 semicolon_after_last_statement=True,
             )(tree)

@@ -28,10 +28,10 @@ def test_adding_auto_increment_column(linter: core.Linter) -> None:
     )
 
     assert violations == core.ViolationMetric(
-        violations_total=3,
-        violations_fixed_total=0,
-        violations_fixable_auto_total=0,
-        violations_fixable_manual_total=3,
+        total=3,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=3,
     )
 
     assert (
