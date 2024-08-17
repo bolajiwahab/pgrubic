@@ -1,6 +1,6 @@
 """Checker for unlogged table."""
 
-from pglast import ast, enums
+from pglast import ast, enums, visitors
 
 from pgshield.core import linter
 
@@ -30,7 +30,7 @@ class UnloggedTable(linter.Checker):
 
     def visit_CreateStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""
@@ -51,7 +51,7 @@ class UnloggedTable(linter.Checker):
 
     def visit_AlterTableCmd(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.AlterTableCmd,
     ) -> None:
         """Visit AlterTableCmd."""

@@ -1,6 +1,6 @@
 """Checker for creation of enum."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -26,7 +26,7 @@ class CreateEnum(linter.Checker):
 
     def visit_CreateEnumStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateEnumStmt,
     ) -> None:
         """Visit CreateEnumStmt."""

@@ -1,6 +1,6 @@
 """Checker for disallowed data types."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -22,7 +22,7 @@ class DisallowedDataType(linter.Checker):
 
     def visit_TypeName(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.TypeName,
     ) -> None:
         """Visit TypeName."""

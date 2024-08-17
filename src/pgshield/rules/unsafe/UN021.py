@@ -1,6 +1,6 @@
 """Unsafe table operations."""
 
-from pglast import ast, enums
+from pglast import ast, enums, visitors
 
 from pgshield.core import linter
 
@@ -11,7 +11,7 @@ class DropTable(linter.Checker):
 
     def visit_DropStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.DropStmt,
     ) -> None:
         """Visit DropStmt."""

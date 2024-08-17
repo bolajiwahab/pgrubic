@@ -1,6 +1,6 @@
 """Checker for varchar."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -50,7 +50,7 @@ class Varchar(linter.Checker):
 
     def visit_ColumnDef(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""

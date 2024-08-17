@@ -1,6 +1,6 @@
 """Unsafe table operations."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -10,7 +10,9 @@ class VacuumFull(linter.Checker):
 
     is_auto_fixable: bool = False
 
-    def visit_VacuumStmt(self, ancestors: ast.Node, node: ast.VacuumStmt) -> None:
+    def visit_VacuumStmt(
+        self, ancestors: visitors.Ancestor, node: ast.VacuumStmt,
+    ) -> None:
         """Visit VacuumStmt."""
         options = [option.defname for option in node.options] if node.options else []
 

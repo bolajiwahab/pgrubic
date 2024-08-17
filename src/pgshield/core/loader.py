@@ -6,7 +6,7 @@ import functools
 import importlib
 from collections import abc
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield import RULES_DIRECTORY, RULES_BASE_MODULE
 from pgshield.core import linter
@@ -61,7 +61,7 @@ def set_locations_for_node(
     @functools.wraps(func)
     def wrapper(
         self: linter.Checker,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.Node,
     ) -> typing.Any:
 

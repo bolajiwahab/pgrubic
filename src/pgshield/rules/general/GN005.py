@@ -1,6 +1,6 @@
 """Checker for index elements."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -29,7 +29,7 @@ class IndexElementsMoreThanThree(linter.Checker):
 
     def visit_IndexStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.IndexStmt,
     ) -> None:
         """Visit IndexStmt."""

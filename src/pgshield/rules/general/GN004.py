@@ -1,6 +1,6 @@
 """Checker for missing primary key."""
 
-from pglast import ast, enums
+from pglast import ast, enums, visitors
 
 from pgshield.core import linter
 
@@ -62,7 +62,7 @@ class MissingPrimaryKey(linter.Checker):
 
     def visit_CreateStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""

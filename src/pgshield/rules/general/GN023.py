@@ -1,6 +1,6 @@
 """Checker for DELETE without a WHERE clause."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -23,7 +23,7 @@ class ForbidDeleteWithoutWhereClause(linter.Checker):
 
     def visit_DeleteStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.DeleteStmt,
     ) -> None:
         """Visit DeleteStmt."""

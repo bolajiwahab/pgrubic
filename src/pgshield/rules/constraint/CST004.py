@@ -1,6 +1,6 @@
 """Checker for removal of constraints."""
 
-from pglast import ast, enums
+from pglast import ast, enums, visitors
 
 from pgshield.core import linter
 
@@ -27,7 +27,7 @@ class RemoveConstraint(linter.Checker):
 
     def visit_AlterTableCmd(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.AlterTableCmd,
     ) -> None:
         """Visit AlterTableCmd."""

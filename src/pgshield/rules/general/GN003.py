@@ -1,6 +1,6 @@
 """Checker for SQL_ASCII encoding."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -29,7 +29,7 @@ class SqlAsciiEncoding(linter.Checker):
 
     def visit_DefElem(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.DefElem,
     ) -> None:
         """Visit DefElem."""

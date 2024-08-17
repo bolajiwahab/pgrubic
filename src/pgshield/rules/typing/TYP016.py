@@ -1,6 +1,6 @@
 """Checker for wrongly typed required columns."""
 
-from pglast import ast
+from pglast import ast, visitors
 from pglast.printers import dml
 
 from pgshield import get_full_qualified_type_name
@@ -25,7 +25,7 @@ class WronglyTypedRequiredColumn(linter.Checker):
 
     def visit_ColumnDef(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""

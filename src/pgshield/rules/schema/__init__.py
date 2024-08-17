@@ -2,7 +2,7 @@
 
 import abc
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -27,7 +27,7 @@ class Schema(abc.ABC, linter.Checker):
 
     def visit_RangeVar(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.RangeVar,
     ) -> None:
         """Visit RangeVar."""
@@ -46,7 +46,7 @@ class Schema(abc.ABC, linter.Checker):
 
     def visit_CreateEnumStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateEnumStmt,
     ) -> None:
         """Visit CreateEnumStmt."""
@@ -61,7 +61,7 @@ class Schema(abc.ABC, linter.Checker):
 
     def visit_CreateFunctionStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""

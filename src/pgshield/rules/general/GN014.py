@@ -1,6 +1,6 @@
 """Checker for usage of select into to create a new table."""
 
-from pglast import ast, enums
+from pglast import ast, enums, visitors
 
 from pgshield.core import linter
 
@@ -29,7 +29,7 @@ class SelectInto(linter.Checker):
 
     def visit_SelectStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.SelectStmt,
     ) -> ast.CreateTableAsStmt | None:
         """Visit SelectStmt."""

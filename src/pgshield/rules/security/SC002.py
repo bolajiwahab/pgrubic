@@ -1,6 +1,6 @@
 """Convention for extensions."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -26,7 +26,7 @@ class ProceduralLanguageWhitelist(linter.Checker):
 
     def visit_CreatePLangStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreatePLangStmt,
     ) -> None:
         """Visit CreatePLangStmt."""

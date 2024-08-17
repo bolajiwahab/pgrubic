@@ -1,6 +1,6 @@
 """Checker for table inheritance."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -30,7 +30,7 @@ class TableInheritance(linter.Checker):
 
     def visit_CreateStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""

@@ -133,7 +133,7 @@ import abc
 import typing
 from datetime import datetime
 
-from pglast import ast, enums
+from pglast import ast, enums, visitors
 from dateutil import relativedelta
 
 from pgshield.core import linter
@@ -149,7 +149,7 @@ class GapInRangePartitionBound(linter.Checker):
 
     def visit_PartitionBoundSpec(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.PartitionBoundSpec,
     ) -> None:
         """Visit PartitionBoundSpec."""
@@ -234,7 +234,7 @@ class _PartitionSpec(abc.ABC, linter.Checker):
 
     def visit_PartitionSpec(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.PartitionSpec,
     ) -> None:
         """Visit PartitionSpec."""

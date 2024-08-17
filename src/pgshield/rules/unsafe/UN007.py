@@ -1,6 +1,6 @@
 """Checker for drop tablespace."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -11,7 +11,7 @@ class DropTablespace(linter.Checker):
 
     def visit_DropTableSpaceStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.DropTableSpaceStmt,
     ) -> None:
         """Visit DropTableSpaceStmt."""

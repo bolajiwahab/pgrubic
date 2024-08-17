@@ -1,6 +1,6 @@
 """Unsafe table operations."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -11,7 +11,7 @@ class Cluster(linter.Checker):
 
     def visit_ClusterStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.ClusterStmt,
     ) -> None:
         """Visit ClusterStmt."""

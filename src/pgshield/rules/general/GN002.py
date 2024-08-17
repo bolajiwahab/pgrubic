@@ -1,6 +1,6 @@
 """Checker for rule."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -25,7 +25,7 @@ class CreateRule(linter.Checker):
 
     def visit_RuleStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.RuleStmt,
     ) -> None:
         """Visit RuleStmt."""

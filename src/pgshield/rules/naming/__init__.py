@@ -2,7 +2,7 @@
 
 import abc
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -27,7 +27,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_CreateStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""
@@ -40,7 +40,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_ColumnDef(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
@@ -53,7 +53,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_ViewStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.ViewStmt,
     ) -> None:
         """Visit ViewStmt."""
@@ -66,7 +66,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_IndexStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.IndexStmt,
     ) -> None:
         """Visit IndexStmt."""
@@ -79,7 +79,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_CreateSeqStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateSeqStmt,
     ) -> None:
         """Visit CreateSeqStmt."""
@@ -92,7 +92,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_CreateSchemaStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateSchemaStmt,
     ) -> None:
         """Visit CreateSchemaStmt."""
@@ -105,7 +105,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_CreateFunctionStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""
@@ -118,7 +118,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_Constraint(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
@@ -132,7 +132,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_CreatedbStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreatedbStmt,
     ) -> None:
         """Visit CreatedbStmt."""
@@ -145,7 +145,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_CreateRoleStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateRoleStmt,
     ) -> None:
         """Visit CreateRoleStmt."""
@@ -158,7 +158,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_CreateTableSpaceStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateTableSpaceStmt,
     ) -> None:
         """Visit CreateTableSpaceStmt."""
@@ -171,7 +171,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_CreateTrigStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateTrigStmt,
     ) -> None:
         """Visit CreateTrigStmt."""
@@ -184,7 +184,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_CreateEnumStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateEnumStmt,
     ) -> None:
         """Visit CreateEnumStmt."""
@@ -197,7 +197,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_RuleStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.RuleStmt,
     ) -> None:
         """Visit RuleStmt."""
@@ -210,7 +210,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_IntoClause(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.IntoClause,
     ) -> None:
         """Visit IntoClause."""
@@ -223,7 +223,7 @@ class CheckIdentifier(abc.ABC, linter.Checker):
 
     def visit_CompositeTypeStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CompositeTypeStmt,
     ) -> None:
         """Visit IntoClause."""

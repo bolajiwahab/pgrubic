@@ -1,6 +1,6 @@
 """Unsafe table operations."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -11,7 +11,7 @@ class NonConcurrentDetachPartition(linter.Checker):
 
     def visit_PartitionCmd(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.PartitionCmd,
     ) -> None:
         """Visit PartitionCmd."""

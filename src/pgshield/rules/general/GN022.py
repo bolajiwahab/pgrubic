@@ -1,6 +1,6 @@
 """Checker for UPDATE without a WHERE clause."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -23,7 +23,7 @@ class ForbidUpdateWithoutWhereClause(linter.Checker):
 
     def visit_UpdateStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.UpdateStmt,
     ) -> None:
         """Visit UpdateStmt."""

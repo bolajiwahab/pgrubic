@@ -1,6 +1,6 @@
 """Checker for unlogged table."""
 
-from pglast import ast, enums
+from pglast import ast, enums, visitors
 
 from pgshield.core import linter
 
@@ -26,7 +26,7 @@ class CurrentTime(linter.Checker):
 
     def visit_SQLValueFunction(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.SQLValueFunction,
     ) -> None:
         """Visit SQLValueFunction."""

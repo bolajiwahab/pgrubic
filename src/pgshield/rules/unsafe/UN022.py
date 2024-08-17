@@ -1,6 +1,6 @@
 """Unsafe table operations."""
 
-from pglast import ast, enums
+from pglast import ast, enums, visitors
 
 from pgshield.core import linter
 
@@ -11,7 +11,7 @@ class RenameTable(linter.Checker):
 
     def visit_RenameStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.RenameStmt,
     ) -> None:
         """Visit RenameStmt."""

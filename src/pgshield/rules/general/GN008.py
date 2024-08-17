@@ -1,6 +1,6 @@
 """Checker for missing replace in procedure."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -29,7 +29,7 @@ class MissingReplaceInProcedure(linter.Checker):
 
     def visit_CreateFunctionStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""

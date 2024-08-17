@@ -1,6 +1,6 @@
 """Checker for missing required columns."""
 
-from pglast import ast, enums
+from pglast import ast, enums, visitors
 
 from pgshield.core import linter
 from pgshield.rules.general import get_columns_from_table_creation
@@ -24,7 +24,7 @@ class MissingRequiredColumn(linter.Checker):
 
     def visit_CreateStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""

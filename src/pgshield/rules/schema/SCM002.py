@@ -1,6 +1,6 @@
 """Checker for usage of disallowed schemas."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -22,7 +22,7 @@ class DisallowedSchema(linter.Checker):
 
     def visit_RangeVar(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.RangeVar,
     ) -> None:
         """Visit RangeVar."""
@@ -56,7 +56,7 @@ class DisallowedSchema(linter.Checker):
 
     def visit_CreateEnumStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateEnumStmt,
     ) -> None:
         """Visit CreateEnumStmt."""
@@ -83,7 +83,7 @@ class DisallowedSchema(linter.Checker):
 
     def visit_CreateFunctionStmt(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""

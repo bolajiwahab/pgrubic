@@ -1,6 +1,6 @@
 """Checker for existence of not null constraint on required columns."""
 
-from pglast import ast, enums
+from pglast import ast, enums, visitors
 
 from pgshield.core import linter
 
@@ -23,7 +23,7 @@ class NullableRequiredColumn(linter.Checker):
 
     def visit_ColumnDef(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""

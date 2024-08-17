@@ -2,7 +2,7 @@
 
 import re
 
-from pglast import ast, enums
+from pglast import ast, enums, visitors
 
 from pgshield.core import linter
 
@@ -27,7 +27,7 @@ class InvalidExclusionConstraintName(linter.Checker):
 
     def visit_Constraint(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""

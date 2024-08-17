@@ -1,6 +1,6 @@
 """Checker for adding of auto increment column."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgshield.core import linter
 
@@ -10,7 +10,7 @@ class AddingAutoIncrementColumn(linter.Checker):
 
     is_auto_fixable: bool = False
 
-    def visit_ColumnDef(self, ancestors: ast.Node, node: ast.ColumnDef) -> None:
+    def visit_ColumnDef(self, ancestors: visitors.Ancestor, node: ast.ColumnDef) -> None:
         """Visit ColumnDef."""
         if ancestors.find_nearest(ast.AlterTableCmd) and (
             node.typeName.names[-1].sval in ["smallserial", "serial", "bigserial"]

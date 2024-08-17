@@ -1,6 +1,6 @@
 """Unsafe index operations."""
 
-from pglast import ast, enums
+from pglast import ast, enums, visitors
 
 from pgshield.core import linter
 
@@ -10,7 +10,9 @@ class NonConcurrentReindex(linter.Checker):
 
     is_auto_fixable: bool = True
 
-    def visit_ReindexStmt(self, ancestors: ast.Node, node: ast.ReindexStmt) -> None:
+    def visit_ReindexStmt(
+        self, ancestors: visitors.Ancestor, node: ast.ReindexStmt,
+    ) -> None:
         """Visit ReindexStmt."""
         params = [param.defname for param in node.params] if node.params else []
 

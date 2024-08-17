@@ -1,6 +1,6 @@
 """Checker for not null constraint on new column with no static default."""
 
-from pglast import ast, enums
+from pglast import ast, enums, visitors
 
 from pgshield.core import linter
 
@@ -12,7 +12,7 @@ class NotNullConstraintOnNewColumnWithNoStaticDefault(linter.Checker):
 
     def visit_ColumnDef(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""

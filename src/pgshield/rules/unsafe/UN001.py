@@ -1,6 +1,6 @@
 """Checker for column drop."""
 
-from pglast import ast, enums
+from pglast import ast, enums, visitors
 
 from pgshield.core import linter
 
@@ -36,7 +36,7 @@ class DropColumn(linter.Checker):
 
     def visit_AlterTableCmd(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.AlterTableCmd,
     ) -> None:
         """Visit AlterTableCmd."""

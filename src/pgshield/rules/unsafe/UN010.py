@@ -1,6 +1,6 @@
 """Checker for not null constraint on existing column."""
 
-from pglast import ast, enums
+from pglast import ast, enums, visitors
 
 from pgshield.core import linter
 
@@ -11,7 +11,7 @@ class NotNullConstraintOnExistingColumn(linter.Checker):
 
     def visit_AlterTableCmd(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.AlterTableCmd,
     ) -> None:
         """Visit AlterTableCmd."""

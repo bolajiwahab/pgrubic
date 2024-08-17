@@ -28,7 +28,7 @@ class NullConstraint(linter.Checker):
 
     def visit_Constraint(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.Constraint,
     ) -> visitors.ActionMeta | None:
         """Visit Constraint."""
