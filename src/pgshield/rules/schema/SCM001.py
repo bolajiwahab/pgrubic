@@ -31,14 +31,18 @@ class SchemaUnqualifiedObject(linter.Checker):
         node: ast.RangeVar,
     ) -> None:
         """Visit RangeVar."""
+        # We exclude DML statements here due to the possibility of
+        # Common Table Expressions which are not schema qualified
         if (
-            isinstance(
+            not isinstance(
                 abs(ancestors).node,
-                ast.CreateStmt
-                | ast.CreateSeqStmt
-                | ast.CreateEnumStmt
-                | ast.IntoClause
-                | ast.ViewStmt,
+                ast.SelectStmt
+                | ast.UpdateStmt
+                | ast.InsertStmt
+                | ast.DeleteStmt
+                | ast.Query
+                | ast.WithClause
+                | ast.CommonTableExpr,
             )
             and not node.schemaname
         ):
