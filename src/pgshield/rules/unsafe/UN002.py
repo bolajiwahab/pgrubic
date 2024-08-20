@@ -49,6 +49,6 @@ class ColumnDataTypeChange(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Forbid column type change",
+                    description="Forbid column data type change",
                 ),
             )

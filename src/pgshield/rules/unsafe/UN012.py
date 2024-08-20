@@ -5,8 +5,8 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):
-    """Validated foreign key constraint on existing rows."""
+class ValidatingForeignKeyConstraintOnExistingRows(linter.Checker):
+    """Validating foreign key constraint on existing rows."""
     is_auto_fixable = True
 
     def visit_Constraint(
@@ -26,7 +26,7 @@ class ValidatedForeignKeyConstraintOnExistingRows(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Validated foreign key constraint on existing rows",
+                    description="Validating foreign key constraint on existing rows",
                 ),
             )
 

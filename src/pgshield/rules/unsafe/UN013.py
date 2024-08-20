@@ -5,8 +5,8 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class ValidatedCheckConstraintOnExistingRows(linter.Checker):
-    """Validated check constraint on existing rows."""
+class ValidatingCheckConstraintOnExistingRows(linter.Checker):
+    """Validating check constraint on existing rows."""
     is_auto_fixable: bool = True
 
     def visit_Constraint(
@@ -26,7 +26,7 @@ class ValidatedCheckConstraintOnExistingRows(linter.Checker):
                     statement_location=self.statement_location,
                     statement_length=self.statement_length,
                     node_location=self.node_location,
-                    description="Validated check constraint on existing rows",
+                    description="Validating check constraint on existing rows",
                 ),
             )
 

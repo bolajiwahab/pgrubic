@@ -1,40 +1,191 @@
 """Test adding auto increment column."""
 
+import pytest
+
 from pgshield import core
 from pgshield.rules.unsafe.UN004 import AddingAutoIncrementColumn
 
 
-def test_adding_auto_increment_column(linter: core.Linter) -> None:
-    """Test adding auto increment column."""
-    fail_sql: str = """
-    ALTER TABLE public.card ADD COLUMN id smallserial;
-    ALTER TABLE public.card ADD COLUMN id serial;
-    ALTER TABLE public.card ADD COLUMN id bigserial;
-    """
+@pytest.fixture(scope="module")
+def adding_auto_increment_column() -> core.Checker:
+    """Create an instance of AddingAutoIncrementColumn."""
+    return AddingAutoIncrementColumn()
 
-    adding_auto_increment_column: core.Checker = AddingAutoIncrementColumn()
 
-    assert adding_auto_increment_column.is_auto_fixable is False
+@pytest.fixture()
+def lint_adding_auto_increment_column(
+    linter: core.Linter, adding_auto_increment_column: core.Checker,
+) -> core.Linter:
+    """Lint AddingAutoIncrementColumn."""
+    linter.checkers.add(adding_auto_increment_column)
 
+    return linter
+
+
+def test_adding_auto_increment_column_rule_code(
+    adding_auto_increment_column: core.Checker,
+) -> None:
+    """Test adding auto increment column rule code."""
     assert (
         adding_auto_increment_column.code
         == adding_auto_increment_column.__module__.split(".")[-1]
     )
 
-    linter.checkers.add(adding_auto_increment_column)
 
-    violations: core.ViolationMetric = linter.run(
-        source_path="test.sql", source_code=fail_sql,
+def test_adding_auto_increment_column_auto_fixable(
+    adding_auto_increment_column: core.Checker,
+) -> None:
+    """Test adding auto increment column auto fixable."""
+    assert adding_auto_increment_column.is_auto_fixable is False
+
+
+def test_fail_adding_small_serial_column(
+    lint_adding_auto_increment_column: core.Linter,
+) -> None:
+    """Test fail adding small serial column."""
+    sql_fail: str = """
+    ALTER TABLE public.card ADD COLUMN id smallserial
+    ;
+    """
+
+    violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
+        source_path="test.sql",
+        source_code=sql_fail,
     )
 
     assert violations == core.ViolationMetric(
-        total=3,
+        total=1,
         fixed_total=0,
         fixable_auto_total=0,
-        fixable_manual_total=3,
+        fixable_manual_total=1,
+    )
+
+
+def test_fail_adding_serial_column(
+    lint_adding_auto_increment_column: core.Linter,
+) -> None:
+    """Test fail adding serial column."""
+    sql_fail: str = """
+    ALTER TABLE public.card ADD COLUMN id serial;
+    ;
+    """
+
+    violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
+        source_path="test.sql",
+        source_code=sql_fail,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=1,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=1,
+    )
+
+
+def test_fail_adding_big_serial_column(
+    lint_adding_auto_increment_column: core.Linter,
+) -> None:
+    """Test fail adding big serial column."""
+    sql_fail: str = """
+    ALTER TABLE public.card ADD COLUMN id bigserial
+    ;
+    """
+
+    violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
+        source_path="test.sql",
+        source_code=sql_fail,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=1,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=1,
+    )
+
+def test_fail_adding_auto_increment_column_description(
+    lint_adding_auto_increment_column: core.Linter,
+    adding_auto_increment_column: core.Checker,
+) -> None:
+    """Test fail adding auto increment column description."""
+    sql_fail: str = """
+    ALTER TABLE public.card ADD COLUMN id serial
+    ;
+    """
+
+    _: core.ViolationMetric = lint_adding_auto_increment_column.run(
+        source_path="test.sql",
+        source_code=sql_fail,
     )
 
     assert (
         next(iter(adding_auto_increment_column.violations)).description
         == "Forbid adding auto increment column"
+    )
+
+
+def test_pass_noqa_adding_auto_increment_column(
+    lint_adding_auto_increment_column: core.Linter,
+) -> None:
+    """Test pass noqa adding auto increment column."""
+    sql_pass_noqa: str = """
+    ALTER TABLE public.card ADD COLUMN id serial -- noqa: UN004
+    ;
+    """
+
+    violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
+        source_path="test.sql",
+        source_code=sql_pass_noqa,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=0,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=0,
+    )
+
+
+def test_fail_noqa_adding_auto_increment_column(
+    lint_adding_auto_increment_column: core.Linter,
+) -> None:
+    """Test fail noqa adding auto increment column."""
+    sql_noqa: str = """
+    ALTER TABLE public.card ADD COLUMN id serial -- noqa: UN002
+    ;
+    """
+
+    violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
+        source_path="test.sql",
+        source_code=sql_noqa,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=1,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=1,
+    )
+
+
+def test_pass_general_noqa_adding_auto_increment_column(
+    lint_adding_auto_increment_column: core.Linter,
+) -> None:
+    """Test fail noqa adding auto increment column."""
+    sql_noqa: str = """
+    ALTER TABLE public.card ADD COLUMN id serial -- noqa:
+    ;
+    """
+
+    violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
+        source_path="test.sql",
+        source_code=sql_noqa,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=0,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=0,
     )

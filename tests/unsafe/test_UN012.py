@@ -1,67 +1,67 @@
-"""Test validated foreign key constraint on existing rows."""
+"""Test validating foreign key constraint on existing rows."""
+
+import pytest
 
 from pgshield import core
-from pgshield.rules.unsafe.UN012 import ValidatedForeignKeyConstraintOnExistingRows
+from pgshield.rules.unsafe.UN012 import ValidatingForeignKeyConstraintOnExistingRows
 
 
-def test_validated_foreign_key_constraint_on_existing_rows(linter: core.Linter) -> None:
-    """Test validated foreign key constraint on existing rows."""
-    fail_sql: str = """
+@pytest.fixture(scope="module")
+def validating_foreign_key_constraint_on_existing_rows() -> core.Checker:
+    """Create an instance of ValidatingForeignKeyConstraintOnExistingRows."""
+    return ValidatingForeignKeyConstraintOnExistingRows()
+
+
+@pytest.fixture()
+def lint_validating_foreign_key_constraint_on_existing_rows(
+    linter: core.Linter,
+    validating_foreign_key_constraint_on_existing_rows: core.Checker,
+) -> core.Linter:
+    """Lint ValidatingForeignKeyConstraintOnExistingRows."""
+    validating_foreign_key_constraint_on_existing_rows.config.fix = False
+    linter.checkers.add(validating_foreign_key_constraint_on_existing_rows)
+
+    return linter
+
+
+def test_validating_foreign_key_constraint_on_existing_rows_rule_code(
+    validating_foreign_key_constraint_on_existing_rows: core.Checker,
+) -> None:
+    """Test validating foreign key constraint on existing rows rule code."""
+    assert (
+        validating_foreign_key_constraint_on_existing_rows.code
+        == validating_foreign_key_constraint_on_existing_rows.__module__.split(
+            ".",
+        )[-1]
+    )
+
+
+def test_validating_foreign_key_constraint_on_existing_rows_auto_fixable(
+    validating_foreign_key_constraint_on_existing_rows: core.Checker,
+) -> None:
+    """Test validating foreign key constraint on existing rows auto fixable."""
+    assert (
+        validating_foreign_key_constraint_on_existing_rows.is_auto_fixable
+        is True
+    )
+
+
+def test_pass_validating_foreign_key_constraint_on_existing_rows(
+    lint_validating_foreign_key_constraint_on_existing_rows: core.Linter,
+) -> None:
+    """Test validating foreign key constraint on existing rows."""
+    sql_pass: str = """
     ALTER TABLE public.card
         ADD CONSTRAINT fkey FOREIGN KEY(account_id) REFERENCES public.account(id)
+        NOT VALID
     ;
     """
 
-    fix_sql: str = (
-        "ALTER TABLE public.card ADD CONSTRAINT fkey FOREIGN KEY (account_id) REFERENCES public.account (id) NOT VALID ;"  # noqa: E501
-    )
-
-    pass_sql_with_noqa: str = """
-    ALTER TABLE public.card -- noqa: UN012
-        ADD CONSTRAINT fkey FOREIGN KEY(account_id) REFERENCES public.account(id)
-    ;
-    """
-
-    validated_foreign_key_constraint_on_existing_rows: core.Checker = (
-        ValidatedForeignKeyConstraintOnExistingRows()
-    )
-
-    assert validated_foreign_key_constraint_on_existing_rows.is_auto_fixable is True
-
-    assert (
-        validated_foreign_key_constraint_on_existing_rows.code
-        == validated_foreign_key_constraint_on_existing_rows.__module__.split(".")[-1]
-    )
-
-    linter.checkers.add(validated_foreign_key_constraint_on_existing_rows)
-
-    validated_foreign_key_constraint_on_existing_rows.config.fix = False
-
-    violations: core.ViolationMetric = linter.run(
-        source_path="test.sql",
-        source_code=fail_sql,
-    )
-
-    assert violations == core.ViolationMetric(
-        total=1,
-        fixed_total=0,
-        fixable_auto_total=1,
-        fixable_manual_total=0,
-        fix=None,
-    )
-
-    assert (
-        next(
-            iter(validated_foreign_key_constraint_on_existing_rows.violations),
-        ).description
-        == "Validated foreign key constraint on existing rows"
-    )
-
-    validated_foreign_key_constraint_on_existing_rows.config.fix = True
-
-    violations = linter.run(
-        source_path="test.sql",
-        source_code=pass_sql_with_noqa,
+    violations: core.ViolationMetric = (
+        lint_validating_foreign_key_constraint_on_existing_rows.run(
+            source_path="test.sql",
+            source_code=sql_pass,
+        )
     )
 
     assert violations == core.ViolationMetric(
@@ -69,12 +69,157 @@ def test_validated_foreign_key_constraint_on_existing_rows(linter: core.Linter) 
         fixed_total=0,
         fixable_auto_total=0,
         fixable_manual_total=0,
-        fix=None,
     )
 
-    violations = linter.run(
-        source_path="test.sql",
-        source_code=fail_sql,
+
+def test_fail_validating_foreign_key_constraint_on_existing_rows(
+    lint_validating_foreign_key_constraint_on_existing_rows: core.Linter,
+) -> None:
+    """Test validating foreign key constraint on existing rows."""
+    sql_fail: str = """
+    ALTER TABLE public.card
+        ADD CONSTRAINT fkey FOREIGN KEY(account_id) REFERENCES public.account(id)
+    ;
+    """
+
+    violations: core.ViolationMetric = (
+        lint_validating_foreign_key_constraint_on_existing_rows.run(
+            source_path="test.sql",
+            source_code=sql_fail,
+        )
+    )
+
+    assert violations == core.ViolationMetric(
+        total=1,
+        fixed_total=0,
+        fixable_auto_total=1,
+        fixable_manual_total=0,
+    )
+
+
+def test_fail_validating_foreign_key_constraint_on_existing_rows_description(
+    lint_validating_foreign_key_constraint_on_existing_rows: core.Linter,
+    validating_foreign_key_constraint_on_existing_rows: core.Checker,
+) -> None:
+    """Test validating foreign key constraint on existing rows description."""
+    sql_fail: str = """
+    ALTER TABLE public.card
+        ADD CONSTRAINT fkey FOREIGN KEY(account_id) REFERENCES public.account(id)
+    ;
+    """
+
+    _: core.ViolationMetric = (
+        lint_validating_foreign_key_constraint_on_existing_rows.run(
+            source_path="test.sql",
+            source_code=sql_fail,
+        )
+    )
+
+    assert (
+        next(
+            iter(validating_foreign_key_constraint_on_existing_rows.violations),
+        ).description
+        == "Validating foreign key constraint on existing rows"
+    )
+
+
+def test_pass_noqa_validating_foreign_key_constraint_on_existing_rows(
+    lint_validating_foreign_key_constraint_on_existing_rows: core.Linter,
+) -> None:
+    """Test pass noqa validating foreign key constraint on existing rows."""
+    sql_pass_noqa: str = """
+    ALTER TABLE public.card -- noqa: UN012
+        ADD CONSTRAINT fkey FOREIGN KEY(account_id) REFERENCES public.account(id)
+    ;
+    """
+
+    violations: core.ViolationMetric = (
+        lint_validating_foreign_key_constraint_on_existing_rows.run(
+            source_path="test.sql",
+            source_code=sql_pass_noqa,
+        )
+    )
+
+    assert violations == core.ViolationMetric(
+        total=0,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=0,
+    )
+
+
+def test_fail_noqa_validating_foreign_key_constraint_on_existing_rows(
+    lint_validating_foreign_key_constraint_on_existing_rows: core.Linter,
+) -> None:
+    """Test validating foreign key constraint on existing rows."""
+    sql_noqa: str = """
+    ALTER TABLE public.card -- noqa: UN013
+        ADD CONSTRAINT fkey FOREIGN KEY(account_id) REFERENCES public.account(id)
+    ;
+    """
+
+    violations: core.ViolationMetric = (
+        lint_validating_foreign_key_constraint_on_existing_rows.run(
+            source_path="test.sql",
+            source_code=sql_noqa,
+        )
+    )
+
+    assert violations == core.ViolationMetric(
+        total=1,
+        fixed_total=0,
+        fixable_auto_total=1,
+        fixable_manual_total=0,
+    )
+
+
+def test_pass_general_noqa_validating_foreign_key_constraint_on_existing_rows(
+    lint_validating_foreign_key_constraint_on_existing_rows: core.Linter,
+) -> None:
+    """Test fail noqa validating foreign key constraint on existing rows."""
+    sql_noqa: str = """
+    ALTER TABLE public.card -- noqa:
+        ADD CONSTRAINT fkey FOREIGN KEY(account_id) REFERENCES public.account(id)
+    ;
+    """
+
+    violations: core.ViolationMetric = (
+        lint_validating_foreign_key_constraint_on_existing_rows.run(
+            source_path="test.sql",
+            source_code=sql_noqa,
+        )
+    )
+
+    assert violations == core.ViolationMetric(
+        total=0,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=0,
+    )
+
+
+def test_fail_fix_validating_foreign_key_constraint_on_existing_rows(
+    lint_validating_foreign_key_constraint_on_existing_rows: core.Linter,
+    validating_foreign_key_constraint_on_existing_rows: core.Checker,
+) -> None:
+    """Test fail fix validating foreign key constraint on existing rows."""
+    sql_fail: str = """
+    ALTER TABLE public.card
+        ADD CONSTRAINT fkey FOREIGN KEY(account_id) REFERENCES public.account(id)
+    ;
+    """
+
+    sql_fix: str = (
+        "ALTER TABLE public.card ADD CONSTRAINT fkey FOREIGN KEY (account_id) REFERENCES public.account (id) NOT VALID ;"  # noqa: E501
+    )
+
+    validating_foreign_key_constraint_on_existing_rows.config.fix = True
+
+    violations: core.ViolationMetric = (
+        lint_validating_foreign_key_constraint_on_existing_rows.run(
+            source_path="test.sql",
+            source_code=sql_fail,
+        )
     )
 
     assert violations == core.ViolationMetric(
@@ -82,5 +227,5 @@ def test_validated_foreign_key_constraint_on_existing_rows(linter: core.Linter) 
         fixed_total=1,
         fixable_auto_total=1,
         fixable_manual_total=0,
-        fix=fix_sql,
+        fix=sql_fix,
     )
