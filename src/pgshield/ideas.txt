@@ -1,3 +1,8 @@
+--- important
+- type change involving USINGG, columns must match
+- no nulls inside enums, set the column as nullable instead
+
+not possible currently, if any of the ancestors is a transaction block
 -- catch operations that cannot be run in a transaction
 -- such as concurrent operations
 -- we simply check if we are in a transaction and have a list of concurrent

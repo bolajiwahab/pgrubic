@@ -16,9 +16,11 @@ class AddingAutoIncrementIdentityColumn(linter.Checker):
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
+        alter_table_cmd: visitors.Ancestor = ancestors.find_nearest(ast.AlterTableCmd)
+
         if (
-            ancestors.find_nearest(ast.AlterTableCmd)
-            and ancestors.find_nearest(ast.AlterTableCmd).node.subtype
+            alter_table_cmd
+            and alter_table_cmd.node.subtype
             == enums.AlterTableType.AT_AddColumn
             and node.contype == enums.ConstrType.CONSTR_IDENTITY
         ):

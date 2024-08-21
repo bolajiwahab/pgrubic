@@ -23,4 +23,7 @@
 -- DELETE FROM parts
 --   WHERE part IN (SELECT part FROM included_parts);
 
-create unique index tble_unq on tbl(a);
+-- create unique index tble_unq on tbl(a);
+-- create table amex.tbl (id uuid, account_id uuid);
+alter table amex.tbl alter column user_id type uuid using (id::uuid, account_id::uuid);
+-- <ColumnRef fields=(<String sval='id'>,)>

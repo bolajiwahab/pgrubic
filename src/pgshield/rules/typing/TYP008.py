@@ -31,10 +31,12 @@ class Serial(linter.Checker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
+        alter_table_cmd: visitors.Ancestor = ancestors.find_nearest(ast.AlterTableCmd)
+
         if (
             (
-                ancestors.find_nearest(ast.AlterTableCmd)
-                and ancestors.find_nearest(ast.AlterTableCmd).node.subtype
+                alter_table_cmd
+                and alter_table_cmd.node.subtype
                 == enums.AlterTableType.AT_AddColumn
             )
             or ancestors.find_nearest(ast.CreateStmt)
