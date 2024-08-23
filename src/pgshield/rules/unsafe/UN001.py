@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class DropColumn(linter.Checker):
+class DropColumn(linter.BaseChecker):
     """## **What it does**
     Checks for dropping of column.
 

@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class PrimaryKeyConstraintCreatingNewIndex(linter.Checker):
+class PrimaryKeyConstraintCreatingNewIndex(linter.BaseChecker):
     """Primary key constraint creating new index."""
     is_auto_fixable: bool = False
 

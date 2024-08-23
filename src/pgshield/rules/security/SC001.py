@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class ExtensionWhitelist(linter.Checker):
+class ExtensionWhitelist(linter.BaseChecker):
     """## **What it does**
     Checks that an extension to be created is allowed.
 

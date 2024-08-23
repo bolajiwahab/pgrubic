@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class DropCascade(linter.Checker):
+class DropCascade(linter.BaseChecker):
     """## **What it does**
     Checks for usage of cascade update.
 

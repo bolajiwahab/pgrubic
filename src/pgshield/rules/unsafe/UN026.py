@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class VacuumFull(linter.Checker):
+class VacuumFull(linter.BaseChecker):
     """Vacuum full."""
 
     is_auto_fixable: bool = False

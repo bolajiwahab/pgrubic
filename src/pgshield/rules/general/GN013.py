@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class NullableRequiredColumn(linter.Checker):
+class NullableRequiredColumn(linter.BaseChecker):
     """## **What it does**
     Checks for existence of not null constraint on required columns.
 

@@ -6,7 +6,7 @@ from pgshield.core import linter
 from pgshield.rules.general import get_columns_from_table_creation
 
 
-class MissingRequiredColumn(linter.Checker):
+class MissingRequiredColumn(linter.BaseChecker):
     """## **What it does**
     Checks for required columns.
 

@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class MissingReplaceInProcedure(linter.Checker):
+class MissingReplaceInProcedure(linter.BaseChecker):
     """## **What it does**
     Checks for replace in procedure creation.
 

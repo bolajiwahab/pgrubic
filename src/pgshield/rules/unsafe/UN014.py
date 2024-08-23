@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class UniqueConstraintCreatingNewIndex(linter.Checker):
+class UniqueConstraintCreatingNewIndex(linter.BaseChecker):
     """Unique constraint creating new index."""
     is_auto_fixable: bool = False
 

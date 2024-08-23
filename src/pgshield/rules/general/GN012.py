@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class RemoveRequiredColumn(linter.Checker):
+class RemoveRequiredColumn(linter.BaseChecker):
     """## **What it does**
     Checks for removal of required columns.
 

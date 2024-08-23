@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class TimestampColumnWithoutSuffix(linter.Checker):
+class TimestampColumnWithoutSuffix(linter.BaseChecker):
     """## **What it does**
     Checks that timestamp columns are suffixed with `_at`.
 

@@ -7,7 +7,7 @@ from pglast import ast
 from pgshield.core import linter
 
 
-class SchemaUnqualifiedObject(linter.Checker):
+class SchemaUnqualifiedObject(linter.BaseChecker):
     """## **What it does**
     Checks for objects that are schema-qualifiable but are not schema qualified
     at creation time.

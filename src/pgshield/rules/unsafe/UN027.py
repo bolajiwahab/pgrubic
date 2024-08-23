@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class NonConcurrentDetachPartition(linter.Checker):
+class NonConcurrentDetachPartition(linter.BaseChecker):
     """Detach partition."""
     is_auto_fixable: bool = False
 

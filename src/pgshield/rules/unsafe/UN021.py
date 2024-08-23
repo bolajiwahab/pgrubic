@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class DropTable(linter.Checker):
+class DropTable(linter.BaseChecker):
     """Drop table."""
     is_auto_fixable: bool = False
 

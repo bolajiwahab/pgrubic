@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class ColumnDataTypeChange(linter.Checker):
+class ColumnDataTypeChange(linter.BaseChecker):
     """## **What it does**
     Checks for column data type change.
 

@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class AddingAutoIncrementColumn(linter.Checker):
+class AddingAutoIncrementColumn(linter.BaseChecker):
     """Forbid adding auto increment column."""
 
     is_auto_fixable: bool = False

@@ -7,7 +7,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class InvalidExclusionConstraintName(linter.Checker):
+class InvalidExclusionConstraintName(linter.BaseChecker):
     """## **What it does**
     Checks that the name of the exclusion constraint to be created is valid.
 

@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class NonConcurrentIndexDrop(linter.Checker):
+class NonConcurrentIndexDrop(linter.BaseChecker):
     """Non concurrent index drop."""
 
     is_auto_fixable: bool = False

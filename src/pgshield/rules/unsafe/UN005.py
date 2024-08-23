@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class AddingAutoIncrementIdentityColumn(linter.Checker):
+class AddingAutoIncrementIdentityColumn(linter.BaseChecker):
     """Forbid adding auto increment identity column."""
 
     is_auto_fixable: bool = False

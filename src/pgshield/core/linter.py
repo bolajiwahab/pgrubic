@@ -42,7 +42,7 @@ class ViolationMetric:
     fix: str | None = None
 
 
-class Checker(visitors.Visitor):  # type: ignore[misc]
+class BaseChecker(visitors.Visitor):  # type: ignore[misc]
     """Define a lint rule, and store all the nodes that violate it."""
 
     code: str
@@ -97,13 +97,13 @@ class Linter:
 
     def __init__(self, config: config.Config) -> None:
         """Initialize variables."""
-        self.checkers: set[Checker] = set()
+        self.checkers: set[BaseChecker] = set()
         self.config = config
 
     @staticmethod
     def skip_suppressed_violations(
         *,
-        checker: Checker,
+        checker: BaseChecker,
         inline_ignores: list[noqa.NoQaDirective],
     ) -> None:
         """Skip suppressed violations."""
@@ -132,7 +132,7 @@ class Linter:
     @staticmethod
     def print_violations(
         *,
-        checker: Checker,
+        checker: BaseChecker,
         source_path: pathlib.Path,
         source_code: str,
     ) -> None:
@@ -171,7 +171,7 @@ class Linter:
 
         violations: ViolationMetric = ViolationMetric()
 
-        Checker.inline_ignores = inline_ignores
+        BaseChecker.inline_ignores = inline_ignores
 
         for checker in self.checkers:
 

@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class Float(linter.Checker):
+class Float(linter.BaseChecker):
     """## **What it does**
     Checks for usage of float types.
 

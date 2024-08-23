@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class NonConcurrentIndexCreation(linter.Checker):
+class NonConcurrentIndexCreation(linter.BaseChecker):
     """Non concurrent index creation."""
     is_auto_fixable: bool = True
 

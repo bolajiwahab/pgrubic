@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class DropSchema(linter.Checker):
+class DropSchema(linter.BaseChecker):
     """Drop schema."""
     is_auto_fixable: bool = False
 

@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class TruncateTable(linter.Checker):
+class TruncateTable(linter.BaseChecker):
     """Truncate table."""
     is_auto_fixable: bool = False
 

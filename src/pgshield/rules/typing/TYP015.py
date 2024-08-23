@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class DisallowedDataType(linter.Checker):
+class DisallowedDataType(linter.BaseChecker):
     """## **What it does**
     Checks for usage of disallowed data types.
 

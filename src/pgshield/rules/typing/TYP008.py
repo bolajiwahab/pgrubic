@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class Serial(linter.Checker):
+class Serial(linter.BaseChecker):
     """## **What it does**
     Checks for usage of serial types.
 

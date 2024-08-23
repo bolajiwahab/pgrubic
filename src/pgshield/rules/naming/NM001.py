@@ -7,7 +7,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class InvalidIndexName(linter.Checker):
+class InvalidIndexName(linter.BaseChecker):
     """## **What it does**
     Checks that the name of the index to be created is valid according to naming
     convention.

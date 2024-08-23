@@ -1,29 +1,12 @@
--- -- select current_time -- noqa: GN020
--- -- ;
+-- select * from amex.tbl where b = null;
 
--- -- create table public.ecdict (id bigserial);
+-- CREATE INDEX i0 ON t0((nullif(FALSE, 'NULL')));
 
--- -- -- ALTER TABLE public.ecdict alter COLUMN id type bigserial -- noqa: TYP009;
--- ALTER TABLE amex.card ADD CONSTRAINT fkey FOREIGN KEY (account_id) REFERENCES amex.account (id);
+-- select null * a;
 
--- -- CREATE MATERIALIZED VIEW public.mymatview AS SELECT * FROM public.mytab;
+select b = 'null';
+-- SELECT a = NULL;
 
--- CREATE RECURSIVE VIEW amex.nums_1_100 (n) AS
---     VALUES (1)
--- UNION ALL
---     SELECT n+1 FROM nums_1_100 WHERE n < 100;
+-- ALTER TYPE public.phone_pairing_state ADD VALUE 'NULL';
 
--- WITH RECURSIVE included_parts(sub_part, part) AS (
---     SELECT sub_part, part FROM parts WHERE part = 'our_product'
---   UNION ALL
---     SELECT p.sub_part, p.part
---     FROM included_parts pr, parts p
---     WHERE p.part = pr.sub_part
--- )
--- DELETE FROM parts
---   WHERE part IN (SELECT part FROM included_parts);
-
--- create unique index tble_unq on tbl(a);
--- create table amex.tbl (id uuid, account_id uuid);
-alter table amex.tbl alter column user_id type uuid using (id::uuid, account_id::uuid);
--- <ColumnRef fields=(<String sval='id'>,)>
+-- create table amex.tbl(ay text default 'null');

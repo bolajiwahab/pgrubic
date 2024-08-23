@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class IndexElementsMoreThanThree(linter.Checker):
+class IndexElementsMoreThanThree(linter.BaseChecker):
     """## **What it does**
     Checks for indexes with more than three elements.
 

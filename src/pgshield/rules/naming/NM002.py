@@ -7,7 +7,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class InvalidPrimaryKeyName(linter.Checker):
+class InvalidPrimaryKeyName(linter.BaseChecker):
     """## **What it does**
     Checks that the name of the primary key constraint to be created is valid according to
     naming convention.

@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class ImplicitConstraintName(linter.Checker):
+class ImplicitConstraintName(linter.BaseChecker):
     """## **What it does**
     Checks that constraint is explicitly named and not relying on implicit naming.
 

@@ -2,13 +2,13 @@
 
 from pgshield.core import docs_generator
 from pgshield.core.config import Config, parse_config
-from pgshield.core.linter import Linter, Checker, ViolationMetric
+from pgshield.core.linter import Linter, BaseChecker, ViolationMetric
 from pgshield.core.loader import load_rules
 from pgshield.core.formatter import Formatter
 
 __all__ = [
     "Linter",
-    "Checker",
+    "BaseChecker",
     "ViolationMetric",
     "load_rules",
     "parse_config",

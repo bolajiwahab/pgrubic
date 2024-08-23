@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class DateColumnWithoutSuffix(linter.Checker):
+class DateColumnWithoutSuffix(linter.BaseChecker):
     """## **What it does**
     Checks that date columns are suffixed with `_date`.
 

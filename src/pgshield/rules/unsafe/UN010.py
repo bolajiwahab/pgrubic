@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class NotNullConstraintOnExistingColumn(linter.Checker):
+class NotNullConstraintOnExistingColumn(linter.BaseChecker):
     """Not null constraint on existing column."""
     is_auto_fixable: bool = False
 

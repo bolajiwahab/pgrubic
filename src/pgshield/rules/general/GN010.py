@@ -6,7 +6,7 @@ from pgshield.core import linter
 from pgshield.rules.general import get_columns_from_table_creation
 
 
-class TableColumnConflict(linter.Checker):
+class TableColumnConflict(linter.BaseChecker):
     """## **What it does**
     Checks for duplicate columns.
 

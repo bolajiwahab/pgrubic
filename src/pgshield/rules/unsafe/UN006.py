@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class AddingStoredGeneratedColumn(linter.Checker):
+class AddingStoredGeneratedColumn(linter.BaseChecker):
     """Forbid adding stored generated column."""
     is_auto_fixable: bool = False
 

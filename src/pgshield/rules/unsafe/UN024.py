@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class TablesMovementToTablespace(linter.Checker):
+class TablesMovementToTablespace(linter.BaseChecker):
     """Tables movement to tablespace."""
     is_auto_fixable: bool = False
 

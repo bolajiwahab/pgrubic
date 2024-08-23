@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class DropTablespace(linter.Checker):
+class DropTablespace(linter.BaseChecker):
     """Checks for drop tablespace."""
     is_auto_fixable: bool = False
 

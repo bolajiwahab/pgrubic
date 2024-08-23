@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class MultiColumnPartitioning(linter.Checker):
+class MultiColumnPartitioning(linter.BaseChecker):
     """## **What it does**
     Checks for partitioning with more than one column.
 

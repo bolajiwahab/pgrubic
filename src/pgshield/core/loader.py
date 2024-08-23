@@ -12,9 +12,9 @@ from pgshield import RULES_DIRECTORY, RULES_BASE_MODULE
 from pgshield.core import linter
 
 
-def load_rules() -> list[linter.Checker]:
+def load_rules() -> list[linter.BaseChecker]:
     """Load rules."""
-    rules: list[linter.Checker] = []
+    rules: list[linter.BaseChecker] = []
 
     for path in sorted(RULES_DIRECTORY.rglob("[!_]*.py"), key=lambda x: x.name):
 
@@ -31,12 +31,12 @@ def load_rules() -> list[linter.Checker]:
         ):
 
             # skip private classes
-            if issubclass(rule, linter.Checker) and not rule.__name__.startswith("_"):
+            if issubclass(rule, linter.BaseChecker) and not rule.__name__.startswith("_"):
 
                 # set rule code
                 rule.code = rule.__module__.split(".")[-1]
 
-                rules.append(typing.cast(linter.Checker, rule))
+                rules.append(typing.cast(linter.BaseChecker, rule))
 
                 _set_locations_for_node(rule)
 
@@ -60,7 +60,7 @@ def set_locations_for_node(
 
     @functools.wraps(func)
     def wrapper(
-        self: linter.Checker,
+        self: linter.BaseChecker,
         ancestors: visitors.Ancestor,
         node: ast.Node,
     ) -> typing.Any:

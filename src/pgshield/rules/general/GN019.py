@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class UnloggedTable(linter.Checker):
+class UnloggedTable(linter.BaseChecker):
     """## **What it does**
     Checks for use of unlogged tables.
 

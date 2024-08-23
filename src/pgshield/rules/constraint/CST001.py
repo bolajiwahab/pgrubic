@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class CascadeUpdate(linter.Checker):
+class CascadeUpdate(linter.BaseChecker):
     """## **What it does**
     Checks for usage of cascade update.
 

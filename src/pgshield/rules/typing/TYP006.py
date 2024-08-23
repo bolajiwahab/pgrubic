@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class Varchar(linter.Checker):
+class Varchar(linter.BaseChecker):
     """## **What it does**
     Checks for usage of varchar.
 

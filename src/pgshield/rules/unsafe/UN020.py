@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class NonConcurrentReindex(linter.Checker):
+class NonConcurrentReindex(linter.BaseChecker):
     """Non concurrent reindex."""
 
     is_auto_fixable: bool = True

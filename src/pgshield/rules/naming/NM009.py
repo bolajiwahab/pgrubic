@@ -7,7 +7,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class InvalidPartitionName(linter.Checker):
+class InvalidPartitionName(linter.BaseChecker):
     """## **What it does**
     Checks that the name of the partition to be created is valid according to naming
     convention.

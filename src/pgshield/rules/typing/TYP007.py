@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class Money(linter.Checker):
+class Money(linter.BaseChecker):
     """## **What it does**
     Checks for usage of money.
 

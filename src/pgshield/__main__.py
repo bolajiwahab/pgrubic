@@ -16,11 +16,11 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
     linter: core.Linter = core.Linter(config=config)
 
-    core.Checker.config = config
+    core.BaseChecker.config = config
 
     formatter: core.Formatter = core.Formatter()
 
-    loaded_rules: list[core.Checker] = core.load_rules()
+    loaded_rules: list[core.BaseChecker] = core.load_rules()
 
     # Add only selected and not ignored rules
     for rule in loaded_rules:

@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class Cluster(linter.Checker):
+class Cluster(linter.BaseChecker):
     """Cluster."""
     is_auto_fixable: bool = False
 

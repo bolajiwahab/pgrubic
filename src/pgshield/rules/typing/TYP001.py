@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class TimestampWithoutTimezone(linter.Checker):
+class TimestampWithoutTimezone(linter.BaseChecker):
     """## **What it does**
     Checks for usage of timestamp without time zone.
 

@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class NonConcurrentRefreshMaterializedView(linter.Checker):
+class NonConcurrentRefreshMaterializedView(linter.BaseChecker):
     """Non concurrent refresh materialized view."""
     is_auto_fixable: bool = False
 

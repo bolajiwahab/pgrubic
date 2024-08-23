@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class RenameTable(linter.Checker):
+class RenameTable(linter.BaseChecker):
     """Rename table."""
     is_auto_fixable: bool = False
 

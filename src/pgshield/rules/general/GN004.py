@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class MissingPrimaryKey(linter.Checker):
+class MissingPrimaryKey(linter.BaseChecker):
     """## **What it does**
     Checks for existence of primary keys.
 

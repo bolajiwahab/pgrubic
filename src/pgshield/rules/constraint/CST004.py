@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class RemoveConstraint(linter.Checker):
+class RemoveConstraint(linter.BaseChecker):
     """## **What it does**
     Checks for removal of constraints.
 

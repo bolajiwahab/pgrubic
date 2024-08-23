@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class ProceduralLanguageWhitelist(linter.Checker):
+class ProceduralLanguageWhitelist(linter.BaseChecker):
     """## **What it does**
     Checks that a procedural language to be created is allowed.
 

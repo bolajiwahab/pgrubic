@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class NumericWithPrecision(linter.Checker):
+class NumericWithPrecision(linter.BaseChecker):
     """## **What it does**
     Checks for usage of numeric with precision.
 

@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class Char(linter.Checker):
+class Char(linter.BaseChecker):
     r"""## **What it does**
     Checks for usage of char.
 

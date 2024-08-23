@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class CreateEnum(linter.Checker):
+class CreateEnum(linter.BaseChecker):
     """## **What it does**
     Checks for creation of enum.
 

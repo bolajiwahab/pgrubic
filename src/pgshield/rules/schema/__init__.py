@@ -7,7 +7,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class Schema(abc.ABC, linter.Checker):
+class Schema(abc.ABC, linter.BaseChecker):
     """Schema details for relations, enums, functions, sequences, views."""
 
     # To be overridden by subclasses

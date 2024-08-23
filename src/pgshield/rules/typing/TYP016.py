@@ -7,7 +7,7 @@ from pgshield import get_full_qualified_type_name
 from pgshield.core import linter
 
 
-class WronglyTypedRequiredColumn(linter.Checker):
+class WronglyTypedRequiredColumn(linter.BaseChecker):
     """## **What it does**
     Checks for wrongly typed required columns.
 

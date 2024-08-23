@@ -7,7 +7,7 @@ from pglast import ast, visitors
 from pgshield.core import linter
 
 
-class CheckIdentifier(abc.ABC, linter.Checker):
+class CheckIdentifier(abc.ABC, linter.BaseChecker):
     """Collect identifier."""
 
     # To be overridden by subclasses

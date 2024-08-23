@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgshield.core import linter
 
 
-class ConstantGeneratedColumn(linter.Checker):
+class ConstantGeneratedColumn(linter.BaseChecker):
     """## **What it does**
     Checks for usage of constant generated columns.
 
