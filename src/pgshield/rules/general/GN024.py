@@ -1,6 +1,6 @@
 """Checker for quoted NULL."""
 
-from pglast import ast, enums, visitors
+from pglast import ast, visitors
 
 from pgshield.core import linter
 

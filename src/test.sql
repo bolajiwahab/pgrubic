@@ -4,7 +4,7 @@
 
 -- select null * a;
 
-select b = 'null';
+select * from amex.tbl where b = false;
 -- SELECT a = NULL;
 
 -- ALTER TYPE public.phone_pairing_state ADD VALUE 'NULL';
