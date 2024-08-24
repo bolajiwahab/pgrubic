@@ -37,7 +37,7 @@ class MismatchColumnInDataTypeChange(linter.BaseChecker):
             and alter_table_cmd.node.subtype
             == enums.AlterTableType.AT_AlterColumnType
             and alter_table_cmd.node.name
-            != node.fields[0].sval
+            != node.fields[-1].sval
         ):
 
             self.violations.add(
@@ -46,7 +46,7 @@ class MismatchColumnInDataTypeChange(linter.BaseChecker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description=f"Column '{alter_table_cmd.node.name}' in data type"
-                                f" change does not match column '{node.fields[0].sval}'"
+                                f" change does not match column '{node.fields[-1].sval}'"
                                 " in USING clause",
                 ),
             )

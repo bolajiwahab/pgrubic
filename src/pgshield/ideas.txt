@@ -6,7 +6,7 @@ not possible currently, if any of the ancestors is a transaction block
 -- catch operations that cannot be run in a transaction
 -- such as concurrent operations
 -- we simply check if we are in a transaction and have a list of concurrent
--- operations
+-- operations -- not going to work.
 
 **** important **********
 - merge get line details and set locations -- highest priority
@@ -50,7 +50,7 @@ RULES
 - register indexes 
 But how do we guarantee this is only checked at the end of the whole rules
 
-4. Check for dropping of unique index no possiblre as dont have access to the catalog.
+4. Check for dropping of unique index no possible as dont have access to the catalog.
 5. Check for duplicate indexes - we use memory here?
 
 

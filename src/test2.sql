@@ -1,3 +1,5 @@
+CREATE unique INDEX i0 ON t0((nullif(FALSE, 'NULL')));
+
 -- CREATE DATABASE "Music2"
 --     LOCALE 'sv_SE.iso885915'
 --     ENCODING SQL_ASCII
@@ -7,11 +9,11 @@
 -- CREATE RULE notify_me AS ON UPDATE TO mytable DO ALSO NOTIFY mytable -- noqa: COV003
 -- ;
 
-drop schema partitions;
+-- drop schema partitions;
 
-CREATE MATERIALIZED VIEW "Vista" AS SELECT 'Hello World';
+-- CREATE MATERIALIZED VIEW "Vista" AS SELECT 'Hello World';
 
-CREATE TABLE public."Films_recent"();
+-- CREATE TABLE public."Films_recent"();
 
 -- CREATE TABLE public."Films_recent" AS
 --   SELECT * FROM films WHERE date_prod >= '2002-01-01';
@@ -39,22 +41,22 @@ CREATE TABLE public."Films_recent"();
 -- ADD CONSTRAINT "Employee_unq" primary key(email)
 -- ;
 
-CREATE TABLE distributors (
-    did     bigserial PRIMARY KEY, -- okay what is it -- noqa: COV011, COV006
-    -- cid     time with time zone,
-    -- diid    timestamptz,
-    biid    timestamp,
-    -- bid money
-    Name  "char" not null,
-    Name  varchar(40) not null
-);
+-- CREATE TABLE distributors (
+--     did     bigserial PRIMARY KEY, -- okay what is it -- noqa: COV011, COV006
+--     -- cid     time with time zone,
+--     -- diid    timestamptz,
+--     biid    timestamp,
+--     -- bid money
+--     Name  "char" not null,
+--     Name  varchar(40) not null
+-- );
 
-CREATE TABLE distributors (
-  did bigserial PRIMARY KEY,
-  biid timestamptz,
-  name "char" NOT NULL -- noqa: COV011
-)
-;
+-- CREATE TABLE distributors (
+--   did bigserial PRIMARY KEY,
+--   biid timestamptz,
+--   name "char" NOT NULL -- noqa: COV011
+-- )
+-- ;
 
 -- CREATE TABLE "Measurement_y2006m02" () INHERITS (measurement);
 
