@@ -42,6 +42,8 @@ class TimestampColumnWithoutSuffix(linter.BaseChecker):
                 "timestamp",
             ]
             and node.colname
+            and node.colname
+            not in [column.name for column in self.config.required_columns]
             and not node.colname.endswith("_at")
         ):
 

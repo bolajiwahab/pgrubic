@@ -1,6 +1,6 @@
 -- select * from amex.tbl where b = null;
 
-CREATE INDEX i0 ON t0((nullif(FALSE, 'NULL')));
+-- CREATE INDEX i0 ON t0((nullif(FALSE, 'NULL')));
 
 -- select * from foo where col not in (1,null);
 
@@ -24,11 +24,11 @@ CREATE INDEX i0 ON t0((nullif(FALSE, 'NULL')));
 
 -- select 'okay' = a;
 
-select null = a;
+-- select null = a;
 
 -- select a = NULL;
 
--- create table amex.tbl(ay text null);
+create table amex.tbl(ay text null, created timestamptz, received timestamptz);
 
 -- CREATE TABLE amex.tbl (
 --     id text DEFAULT NULL
