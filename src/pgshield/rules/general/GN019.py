@@ -24,6 +24,7 @@ class UnloggedTable(linter.BaseChecker):
     ## **Use instead:**
     Use a regular table instead.
     """
+
     is_auto_fixable: bool = True
 
     description: str = "Prefer regular table to unlogged table"
@@ -45,9 +46,11 @@ class UnloggedTable(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
+            self._fix_create_unlogged_table(node)
 
-                node.relation.relpersistence = enums.RELPERSISTENCE_PERMANENT
+    def _fix_create_unlogged_table(self, node: ast.CreateStmt) -> None:
+        """Fix violation."""
+        node.relation.relpersistence = enums.RELPERSISTENCE_PERMANENT
 
     def visit_AlterTableCmd(
         self,
@@ -65,3 +68,9 @@ class UnloggedTable(linter.BaseChecker):
                     description=self.description,
                 ),
             )
+
+            self._fix_alter_unlogged_table(node)
+
+    def _fix_alter_unlogged_table(self, node: ast.AlterTableCmd) -> None:
+        """Fix violation."""
+        node.subtype = enums.AlterTableType.AT_SetLogged

@@ -1,6 +1,6 @@
-# null-comparison (GN025)
+# null-comparison (GN024)
 
-Automatic fix is not available
+Automatic fix is available
 
-::: pgshield.rules.general.GN025.NullComparison
+::: pgshield.rules.general.GN024.NullComparison
 

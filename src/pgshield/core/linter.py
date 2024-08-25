@@ -206,7 +206,7 @@ class Linter:
 
             violations.total += len(checker.violations)
 
-        print(stream.IndentedStream(comments=comments, semicolon_after_last_statement=True)(tree))
+        print(stream.IndentedStream(compact_lists_margin=1, comments=comments, semicolon_after_last_statement=True)(tree))
 
         noqa.report_unused_ignores(source_path=source_path, inline_ignores=inline_ignores)
 

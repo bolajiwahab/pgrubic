@@ -1,6 +1,6 @@
 [lint]
 select = []
-ignore = []
+ignore = ["EX*"]
 include = []
 exclude = []
 ignore-noqa = false

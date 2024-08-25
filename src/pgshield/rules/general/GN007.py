@@ -43,6 +43,8 @@ class MissingReplaceInFunction(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
+            self._fix(node)
 
-                node.replace = True
+    def _fix(self, node: ast.CreateFunctionStmt) ->  None:
+        """Fix violation."""
+        node.replace = True

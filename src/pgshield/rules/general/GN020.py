@@ -42,6 +42,8 @@ class CurrentTime(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
+            self._fix(node)
 
-                node.op = enums.SQLValueFunctionOp.SVFOP_CURRENT_TIMESTAMP
+    def _fix(self, node: ast.SQLValueFunction) -> None:
+        """Fix violation."""
+        node.op = enums.SQLValueFunctionOp.SVFOP_CURRENT_TIMESTAMP

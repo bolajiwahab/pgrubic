@@ -48,5 +48,8 @@ class CascadeDelete(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
-                node.fk_del_action = enums.FKCONSTR_ACTION_RESTRICT
+            self._fix(node)
+
+    def _fix(self, node: ast.Constraint) ->  None:
+        """Fix violation."""
+        node.fk_del_action = enums.FKCONSTR_ACTION_RESTRICT

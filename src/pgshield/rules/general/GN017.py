@@ -53,17 +53,19 @@ class IdColumn(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
+            self._fix(ancestors, node)
 
-                if isinstance(
-                    abs(ancestors).node,
-                    ast.AlterTableCmd,
-                ):
+    def _fix(self, ancestors: visitors.Ancestor, node: ast.ColumnDef) ->  None:
+        """Fix violation."""
+        if isinstance(
+            abs(ancestors).node,
+            ast.AlterTableCmd,
+        ):
 
-                    table = ancestors.parent.parent.node.relation.relname
+            table = ancestors.parent.parent.node.relation.relname
 
-                if isinstance(abs(ancestors).node, ast.CreateStmt):
+        if isinstance(abs(ancestors).node, ast.CreateStmt):
 
-                    table = ancestors.parent.node.relation.relname
+            table = ancestors.parent.node.relation.relname
 
-                node.colname = table + "_" + node.colname
+        node.colname = table + "_" + node.colname

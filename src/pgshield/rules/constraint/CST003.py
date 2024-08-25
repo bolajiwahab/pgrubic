@@ -43,6 +43,8 @@ class IdentityGeneratedByDefault(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
+            self._fix(node)
 
-                node.generated_when = enums.ATTRIBUTE_IDENTITY_ALWAYS
+    def _fix(self, node: ast.Constraint) ->  None:
+        """Fix violation."""
+        node.generated_when = enums.ATTRIBUTE_IDENTITY_ALWAYS

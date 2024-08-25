@@ -44,6 +44,8 @@ class DropCascade(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
+            self._fix(node)
 
-                node.behavior = enums.DropBehavior.DROP_RESTRICT
+    def _fix(self, node: ast.DropStmt) ->  None:
+        """Fix violation."""
+        node.behavior = enums.DropBehavior.DROP_RESTRICT

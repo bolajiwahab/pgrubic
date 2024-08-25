@@ -63,7 +63,7 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
             violations.fixable_manual_total += (
                 _violations.fixable_manual_total
             )
-            print(_violations.fix)
+            # print(_violations.fix)
 
     if violations.total > 0:
 

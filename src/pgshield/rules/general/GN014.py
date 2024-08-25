@@ -44,17 +44,19 @@ class SelectInto(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
-
-                into_clause = node.intoClause
-
-                # delete into clause
-                node.intoClause = None
-
-                return ast.CreateTableAsStmt(
-                    query=node,
-                    into=into_clause,
-                    objtype=enums.ObjectType.OBJECT_TABLE,
-                )
+            return self._fix(node)
 
         return None
+
+    def _fix(self, node: ast.SelectStmt) ->  ast.CreateTableAsStmt:
+        """Fix violation."""
+        into_clause = node.intoClause
+
+        # delete into clause
+        node.intoClause = None
+
+        return ast.CreateTableAsStmt(
+            query=node,
+            into=into_clause,
+            objtype=enums.ObjectType.OBJECT_TABLE,
+        )

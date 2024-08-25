@@ -1,4 +1,7 @@
 --- important
+- yoda conditions
+- clean up is_auto_fixable from rules and tests.
+
 - type change involving USINGG, columns must match
 - no nulls inside enums, set the column as nullable instead
 

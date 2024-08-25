@@ -44,6 +44,8 @@ class SqlAsciiEncoding(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
+            self._fix(node)
 
-                node.arg.sval = "utf8"
+    def _fix(self, node: ast.DefElem) ->  None:
+        """Fix violation."""
+        node.arg.sval = "utf8"

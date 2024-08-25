@@ -1,6 +1,6 @@
-# not-in (GN027)
+# not-in (GN026)
 
 Automatic fix is not available
 
-::: pgshield.rules.general.GN027.NotIn
+::: pgshield.rules.general.GN026.NotIn
 

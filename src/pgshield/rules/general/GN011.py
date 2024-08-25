@@ -2,7 +2,7 @@
 
 from pglast import ast, enums, visitors
 
-from pgshield.core import linter
+from pgshield.core import config, linter
 from pgshield.rules.general import get_columns_from_table_creation
 
 
@@ -46,25 +46,27 @@ class MissingRequiredColumn(linter.BaseChecker):
                         ),
                     )
 
-                    if self.is_fix_applicable:
+                    self._fix(node, column)
 
-                        node.tableElts = (
-                            *node.tableElts,
-                            ast.ColumnDef(
-                                colname=column.name,
-                                typeName=ast.TypeName(
-                                    names=(
-                                        {
-                                            "@": "String",
-                                            "sval": column.data_type,
-                                        },
-                                    ),
-                                ),
-                                constraints=(
-                                    *(node.constraints or []),
-                                    ast.Constraint(
-                                        contype=enums.ConstrType.CONSTR_NOTNULL,
-                                    ),
-                                ),
-                            ),
-                        )
+    def _fix(self, node: ast.CreateStmt, column: config.RequiredColumns) ->  None:
+        """Fix violation."""
+        node.tableElts = (
+            *node.tableElts,
+            ast.ColumnDef(
+                colname=column.name,
+                typeName=ast.TypeName(
+                    names=(
+                        {
+                            "@": "String",
+                            "sval": column.data_type,
+                        },
+                    ),
+                ),
+                constraints=(
+                    *(node.constraints or []),
+                    ast.Constraint(
+                        contype=enums.ConstrType.CONSTR_NOTNULL,
+                    ),
+                ),
+            ),
+        )

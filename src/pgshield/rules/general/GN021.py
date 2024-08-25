@@ -43,9 +43,12 @@ class NullConstraint(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
-
-                return visitors.Delete
+            return self._fix()
 
         return None
 
+
+
+    def _fix(self) -> visitors.ActionMeta:
+        """Fix violation."""
+        return visitors.Delete

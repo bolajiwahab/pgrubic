@@ -31,32 +31,45 @@ def load_rules() -> list[linter.BaseChecker]:
         ):
 
             # skip private classes
-            if issubclass(rule, linter.BaseChecker) and not rule.__name__.startswith("_"):
+            if issubclass(rule, linter.BaseChecker) and not rule.__name__.startswith(
+                "_",
+            ):
 
                 # set rule code
                 rule.code = rule.__module__.split(".")[-1]
 
                 rules.append(typing.cast(linter.BaseChecker, rule))
 
-                _set_locations_for_node(rule)
+                _add_set_locations_to_rule(rule)
+
+                _add_apply_fix_to_rule(rule)
 
     return rules
 
 
-def _set_locations_for_node(node: typing.Any) -> None:
-    """Set locations for node in visitors."""
+def _add_set_locations_to_rule(node: typing.Any) -> None:
+    """Add _set_locations to rule."""
     for name, method in inspect.getmembers(node, inspect.isfunction):
 
         if method.__name__.startswith("visit_"):
 
-            setattr(node, name, set_locations_for_node(method))
+            setattr(node, name, _set_locations(method))
 
 
-def set_locations_for_node(
+def _add_apply_fix_to_rule(node: typing.Any) -> None:
+    """Add apply_fix to rule."""
+    for name, method in inspect.getmembers(node, inspect.isfunction):
+
+        if method.__name__.startswith("_fix"):
+
+            setattr(node, name, apply_fix(method))
+
+
+def _set_locations(
     func: abc.Callable[..., typing.Any],
 ) -> abc.Callable[..., typing.Any]:
     """Set locations for node."""
-    # merge set_locations_for_node and _get_line_details of linter
+    # merge _set_locations and _get_line_details of linter
 
     @functools.wraps(func)
     def wrapper(
@@ -74,5 +87,26 @@ def set_locations_for_node(
         self.statement_length = ancestors.find_nearest(ast.RawStmt).node.stmt_len
 
         return func(self, ancestors, node)
+
+    return wrapper
+
+
+def apply_fix(
+    func: abc.Callable[..., typing.Any],
+) -> abc.Callable[..., typing.Any]:
+    """Apply fix only if it is applicable."""
+
+    @functools.wraps(func)
+    def wrapper(
+        self: linter.BaseChecker,
+        *args: typing.Any,
+        **kwargs: typing.Any,
+    ) -> typing.Any:
+
+        if not self.is_fix_applicable:
+
+            return None
+
+        return func(self, *args, **kwargs)
 
     return wrapper
