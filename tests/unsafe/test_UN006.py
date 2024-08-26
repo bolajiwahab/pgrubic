@@ -2,19 +2,21 @@
 
 import pytest
 
-from pgshield import core
-from pgshield.rules.unsafe.UN006 import AddingStoredGeneratedColumn
+from tests import SOURCE_PATH
+from pgrubic import core
+from pgrubic.rules.unsafe.UN006 import AddingStoredGeneratedColumn
 
 
 @pytest.fixture(scope="module")
-def adding_stored_generated_column() -> core.Checker:
+def adding_stored_generated_column() -> core.BaseChecker:
     """Create an instance of AddingStoredGeneratedColumn."""
     return AddingStoredGeneratedColumn()
 
 
-@pytest.fixture()
+@pytest.fixture
 def lint_adding_stored_generated_column(
-    linter: core.Linter, adding_stored_generated_column: core.Checker,
+    linter: core.Linter,
+    adding_stored_generated_column: core.BaseChecker,
 ) -> core.Linter:
     """Lint AddingStoredGeneratedColumn."""
     linter.checkers.add(adding_stored_generated_column)
@@ -23,7 +25,7 @@ def lint_adding_stored_generated_column(
 
 
 def test_adding_stored_generated_column_rule_code(
-    adding_stored_generated_column: core.Checker,
+    adding_stored_generated_column: core.BaseChecker,
 ) -> None:
     """Test adding stored generated column rule code."""
     assert (
@@ -33,7 +35,7 @@ def test_adding_stored_generated_column_rule_code(
 
 
 def test_adding_stored_generated_column_auto_fixable(
-    adding_stored_generated_column: core.Checker,
+    adding_stored_generated_column: core.BaseChecker,
 ) -> None:
     """Test adding stored generated column auto fixable."""
     assert adding_stored_generated_column.is_auto_fixable is False
@@ -50,7 +52,7 @@ def test_fail_adding_stored_generated_column(
     """
 
     violations: core.ViolationMetric = lint_adding_stored_generated_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
@@ -64,7 +66,7 @@ def test_fail_adding_stored_generated_column(
 
 def test_fail_adding_stored_generated_column_description(
     lint_adding_stored_generated_column: core.Linter,
-    adding_stored_generated_column: core.Checker,
+    adding_stored_generated_column: core.BaseChecker,
 ) -> None:
     """Test fail adding stored generated column description."""
     sql_fail: str = """
@@ -74,7 +76,7 @@ def test_fail_adding_stored_generated_column_description(
     """
 
     _: core.ViolationMetric = lint_adding_stored_generated_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
@@ -95,7 +97,7 @@ def test_pass_noqa_adding_stored_generated_column(
     """
 
     violations: core.ViolationMetric = lint_adding_stored_generated_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_pass_noqa,
     )
 
@@ -118,7 +120,7 @@ def test_fail_noqa_adding_stored_generated_column(
     """
 
     violations: core.ViolationMetric = lint_adding_stored_generated_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_noqa,
     )
 
@@ -141,7 +143,7 @@ def test_pass_general_noqa_adding_stored_generated_column(
     """
 
     violations: core.ViolationMetric = lint_adding_stored_generated_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_noqa,
     )
 

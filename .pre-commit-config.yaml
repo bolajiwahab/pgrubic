@@ -59,8 +59,3 @@ repos:
         language: python
         types: [python]
         args: [--strict]
-      - id: djlint-jinja
-        name: Lint Jinja templates
-        entry: djlint --profile=jinja
-        types_or: [jinja]
-        language: python

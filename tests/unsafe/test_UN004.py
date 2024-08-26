@@ -2,19 +2,21 @@
 
 import pytest
 
-from pgshield import core
-from pgshield.rules.unsafe.UN004 import AddingAutoIncrementColumn
+from tests import SOURCE_PATH
+from pgrubic import core
+from pgrubic.rules.unsafe.UN004 import AddingAutoIncrementColumn
 
 
 @pytest.fixture(scope="module")
-def adding_auto_increment_column() -> core.Checker:
+def adding_auto_increment_column() -> core.BaseChecker:
     """Create an instance of AddingAutoIncrementColumn."""
     return AddingAutoIncrementColumn()
 
 
-@pytest.fixture()
+@pytest.fixture
 def lint_adding_auto_increment_column(
-    linter: core.Linter, adding_auto_increment_column: core.Checker,
+    linter: core.Linter,
+    adding_auto_increment_column: core.BaseChecker,
 ) -> core.Linter:
     """Lint AddingAutoIncrementColumn."""
     linter.checkers.add(adding_auto_increment_column)
@@ -23,7 +25,7 @@ def lint_adding_auto_increment_column(
 
 
 def test_adding_auto_increment_column_rule_code(
-    adding_auto_increment_column: core.Checker,
+    adding_auto_increment_column: core.BaseChecker,
 ) -> None:
     """Test adding auto increment column rule code."""
     assert (
@@ -33,7 +35,7 @@ def test_adding_auto_increment_column_rule_code(
 
 
 def test_adding_auto_increment_column_auto_fixable(
-    adding_auto_increment_column: core.Checker,
+    adding_auto_increment_column: core.BaseChecker,
 ) -> None:
     """Test adding auto increment column auto fixable."""
     assert adding_auto_increment_column.is_auto_fixable is False
@@ -49,7 +51,7 @@ def test_fail_adding_small_serial_column(
     """
 
     violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
@@ -71,7 +73,7 @@ def test_fail_adding_serial_column(
     """
 
     violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
@@ -93,7 +95,7 @@ def test_fail_adding_big_serial_column(
     """
 
     violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
@@ -104,9 +106,10 @@ def test_fail_adding_big_serial_column(
         fixable_manual_total=1,
     )
 
+
 def test_fail_adding_auto_increment_column_description(
     lint_adding_auto_increment_column: core.Linter,
-    adding_auto_increment_column: core.Checker,
+    adding_auto_increment_column: core.BaseChecker,
 ) -> None:
     """Test fail adding auto increment column description."""
     sql_fail: str = """
@@ -115,7 +118,7 @@ def test_fail_adding_auto_increment_column_description(
     """
 
     _: core.ViolationMetric = lint_adding_auto_increment_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
@@ -135,7 +138,7 @@ def test_pass_noqa_adding_auto_increment_column(
     """
 
     violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_pass_noqa,
     )
 
@@ -157,7 +160,7 @@ def test_fail_noqa_adding_auto_increment_column(
     """
 
     violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_noqa,
     )
 
@@ -179,7 +182,7 @@ def test_pass_general_noqa_adding_auto_increment_column(
     """
 
     violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_noqa,
     )
 

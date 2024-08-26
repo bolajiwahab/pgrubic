@@ -1,0 +1,32 @@
+"""Unsafe constraint operations."""
+
+from pglast import ast, enums, visitors
+
+from pgrubic.core import linter
+
+
+class PrimaryKeyConstraintCreatingNewIndex(linter.BaseChecker):
+    """Primary key constraint creating new index."""
+
+    is_auto_fixable: bool = False
+
+    def visit_Constraint(
+        self,
+        ancestors: visitors.Ancestor,
+        node: ast.Constraint,
+    ) -> None:
+        """Visit Constraint."""
+        if (
+            ancestors.find_nearest(ast.AlterTableCmd)
+            and node.contype == enums.ConstrType.CONSTR_PRIMARY
+            and not node.indexname
+        ):
+
+            self.violations.add(
+                linter.Violation(
+                    statement_location=self.statement_location,
+                    statement_length=self.statement_length,
+                    node_location=self.node_location,
+                    description="Primary key constraint creating new index",
+                ),
+            )

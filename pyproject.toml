@@ -3,60 +3,55 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.package-data]
-"pgshield" = ["pgshield.toml"]
-
-# [tool.setuptools]
-# packages = ["pgshield"]
-
-# [tool.setuptools.find]
-# where = "src"
-
-# [tool.setuptools.packages.find]
-# where = ["."]
-# exclude = ["src"]
-# include = ["pgshield"]
-# namespaces = true
+"pgrubic" = ["pgrubic.toml"]
 
 [project]
-name = "pgshield"
+name = "pgrubic"
 version = "0.0.1"
-description = "Data migrations for PostgreSQL databases"
+description = "PostgreSQL linter for schema migrations and design best practices"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12"
-authors = [{ name = "DBA Team", email = "dataengineering-dba@n26.com" }]
-maintainers = [{ name = "DBA Team", email = "dataengineering-dba@n26.com" }]
+authors = [{ name = "Bolaji Wahab", email = "bolajiwahab23@gmail.com" }]
+maintainers = [{ name = "Bolaji Wahab", email = "bolajiwahab23@gmail.com" }]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Environment :: Console",
-  "Intended Audience :: Developers :: Data Engineers :: DBAs",
+  "Intended Audience :: Developers :: Engineers :: DBAs",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: SQL",
-  "Topic :: Utilities :: Data Migrations",
+  "Topic :: Utilities :: PostgreSQL Linter",
 ]
-keywords = [
-  "pgshield",
-  "sql",
-  "postgres",
-  "postgresql",
-  "mysql",
-  "oracle",
-  "tsql",
-  "tds",
+keywords = ["pgrubic", "sql", "postgres", "postgresql", "linter"]
+dependencies = [
+  "pglast==6.3",
+  "case-converter==1.1.0",
+  "colorama==0.4.6",
+  "toml==0.10.2",
+  "types-toml==0.10.8",
 ]
-dependencies = []
 
 [project.optional-dependencies]
-dev = ["ruff"]
+dev = [
+  "ruff",
+  "black",
+  "mypy",
+  "isort",
+  "mypy",
+  "pre-commit",
+  "pytest",
+  "coverage",
+  "tox",
+]
 
 [project.urls]
-Homepage = "https://github.com/n26/pgshield"
-Documentation = "https://github.com/n26/pgshield/blob/master/README.md"
-Repository = "https://github.com/n26/pgshield"
-"Issue Tracker" = "https://github.com/n26/pgshield/issues"
-Changelog = "https://github.com/n26/pgshield/blob/master/CHANGELOG.md"
+Homepage = "https://github.com/bolajiwahab/pgrubic"
+Documentation = "https://github.com/bolajiwahab/pgrubic/blob/master/README.md"
+Repository = "https://github.com/bolajiwahab/pgrubic"
+"Issue Tracker" = "https://github.com/bolajiwahab/pgrubic/issues"
+Changelog = "https://github.com/bolajiwahab/pgrubic/blob/master/CHANGELOG.md"
 
 [project.scripts]
-pgshield = "pgshield.__main__:cli"
+pgrubic = "pgrubic.__main__:cli"
 
 [tool.mypy]
 python_version = "3.12"
@@ -83,9 +78,9 @@ allow-star-arg-any = true
 
 [tool.ruff.lint.isort]
 length-sort = true
-known-first-party = ["pgshield"]
+known-first-party = ["pgrubic"]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
   "S101", # asserts allowed in tests...
 ]
@@ -93,11 +88,7 @@ known-first-party = ["pgshield"]
 [tool.isort]
 profile = "black"
 length_sort = true
-known_first_party = "pgshield"
-
-[tool.djlint]
-profile = "jinja"
-use_gitignore = true
+known_first_party = "pgrubic"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

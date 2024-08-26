@@ -2,19 +2,21 @@
 
 import pytest
 
-from pgshield import core
-from pgshield.rules.unsafe.UN008 import DropDatabase
+from tests import SOURCE_PATH
+from pgrubic import core
+from pgrubic.rules.unsafe.UN008 import DropDatabase
 
 
 @pytest.fixture(scope="module")
-def drop_database() -> core.Checker:
+def drop_database() -> core.BaseChecker:
     """Create an instance of DropDatabase."""
     return DropDatabase()
 
 
-@pytest.fixture()
+@pytest.fixture
 def lint_drop_database(
-    linter: core.Linter, drop_database: core.Checker,
+    linter: core.Linter,
+    drop_database: core.BaseChecker,
 ) -> core.Linter:
     """Lint DropDatabase."""
     linter.checkers.add(drop_database)
@@ -22,12 +24,12 @@ def lint_drop_database(
     return linter
 
 
-def test_drop_database_rule_code(drop_database: core.Checker) -> None:
+def test_drop_database_rule_code(drop_database: core.BaseChecker) -> None:
     """Test drop database rule code."""
     assert drop_database.code == drop_database.__module__.split(".")[-1]
 
 
-def test_drop_database_auto_fixable(drop_database: core.Checker) -> None:
+def test_drop_database_auto_fixable(drop_database: core.BaseChecker) -> None:
     """Test drop database auto fixable."""
     assert drop_database.is_auto_fixable is False
 
@@ -40,7 +42,7 @@ def test_fail_drop_database(lint_drop_database: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_database.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
@@ -54,7 +56,7 @@ def test_fail_drop_database(lint_drop_database: core.Linter) -> None:
 
 def test_fail_drop_database_description(
     lint_drop_database: core.Linter,
-    drop_database: core.Checker,
+    drop_database: core.BaseChecker,
 ) -> None:
     """Test fail drop database description."""
     sql_fail: str = """
@@ -63,13 +65,11 @@ def test_fail_drop_database_description(
     """
 
     _: core.ViolationMetric = lint_drop_database.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
-    assert (
-        next(iter(drop_database.violations)).description == "Drop database detected"
-    )
+    assert next(iter(drop_database.violations)).description == "Drop database detected"
 
 
 def test_pass_noqa_drop_database(lint_drop_database: core.Linter) -> None:
@@ -80,7 +80,7 @@ def test_pass_noqa_drop_database(lint_drop_database: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_database.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_pass_noqa,
     )
 
@@ -100,7 +100,7 @@ def test_fail_noqa_drop_database(lint_drop_database: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_database.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_noqa,
     )
 
@@ -122,7 +122,7 @@ def test_pass_general_noqa_drop_database(
     """
 
     violations: core.ViolationMetric = lint_drop_database.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_noqa,
     )
 

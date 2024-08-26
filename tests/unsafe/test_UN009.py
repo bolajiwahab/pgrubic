@@ -2,19 +2,21 @@
 
 import pytest
 
-from pgshield import core
-from pgshield.rules.unsafe.UN009 import DropSchema
+from tests import SOURCE_PATH
+from pgrubic import core
+from pgrubic.rules.unsafe.UN009 import DropSchema
 
 
 @pytest.fixture(scope="module")
-def drop_schema() -> core.Checker:
+def drop_schema() -> core.BaseChecker:
     """Create an instance of DropSchema."""
     return DropSchema()
 
 
-@pytest.fixture()
+@pytest.fixture
 def lint_drop_schema(
-    linter: core.Linter, drop_schema: core.Checker,
+    linter: core.Linter,
+    drop_schema: core.BaseChecker,
 ) -> core.Linter:
     """Lint DropSchema."""
     linter.checkers.add(drop_schema)
@@ -22,12 +24,12 @@ def lint_drop_schema(
     return linter
 
 
-def test_drop_schema_rule_code(drop_schema: core.Checker) -> None:
+def test_drop_schema_rule_code(drop_schema: core.BaseChecker) -> None:
     """Test drop schema rule code."""
     assert drop_schema.code == drop_schema.__module__.split(".")[-1]
 
 
-def test_drop_schema_auto_fixable(drop_schema: core.Checker) -> None:
+def test_drop_schema_auto_fixable(drop_schema: core.BaseChecker) -> None:
     """Test drop schema auto fixable."""
     assert drop_schema.is_auto_fixable is False
 
@@ -40,7 +42,7 @@ def test_fail_drop_schema(lint_drop_schema: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_schema.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
@@ -54,7 +56,7 @@ def test_fail_drop_schema(lint_drop_schema: core.Linter) -> None:
 
 def test_fail_drop_schema_description(
     lint_drop_schema: core.Linter,
-    drop_schema: core.Checker,
+    drop_schema: core.BaseChecker,
 ) -> None:
     """Test fail drop schema description."""
     sql_fail: str = """
@@ -63,13 +65,11 @@ def test_fail_drop_schema_description(
     """
 
     _: core.ViolationMetric = lint_drop_schema.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
-    assert (
-        next(iter(drop_schema.violations)).description == "Drop schema detected"
-    )
+    assert next(iter(drop_schema.violations)).description == "Drop schema detected"
 
 
 def test_pass_noqa_drop_schema(lint_drop_schema: core.Linter) -> None:
@@ -80,7 +80,7 @@ def test_pass_noqa_drop_schema(lint_drop_schema: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_schema.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_pass_noqa,
     )
 
@@ -100,7 +100,7 @@ def test_fail_noqa_drop_schema(lint_drop_schema: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_schema.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_noqa,
     )
 
@@ -122,7 +122,7 @@ def test_pass_general_noqa_drop_schema(
     """
 
     violations: core.ViolationMetric = lint_drop_schema.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_noqa,
     )
 

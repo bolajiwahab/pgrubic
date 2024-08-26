@@ -1,7 +1,8 @@
 """Test drop table."""
 
-from pgshield import core
-from pgshield.rules.unsafe.UN021 import DropTable
+from tests import SOURCE_PATH
+from pgrubic import core
+from pgrubic.rules.unsafe.UN021 import DropTable
 
 
 def test_drop_table() -> None:
@@ -9,13 +10,16 @@ def test_drop_table() -> None:
     sql: str = """
     DROP TABLE public.card;
     """
-    drop_table: core.Checker = DropTable()
+    drop_table: core.BaseChecker = DropTable()
     config: core.Config = core.parse_config()
     linter: core.Linter = core.Linter(config=config)
     assert drop_table.is_auto_fixable is False
     assert drop_table.code == drop_table.__module__.split(".")[-1]
     linter.checkers.add(drop_table)
-    violations: core.ViolationMetric = linter.run(source_path="test.sql", source_code=sql)
+    violations: core.ViolationMetric = linter.run(
+        source_path=SOURCE_PATH,
+        source_code=sql,
+    )
     assert violations == core.ViolationMetric(
         total=1,
         fixed_total=0,

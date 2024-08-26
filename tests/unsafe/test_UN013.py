@@ -2,20 +2,21 @@
 
 import pytest
 
-from pgshield import core
-from pgshield.rules.unsafe.UN013 import ValidatingCheckConstraintOnExistingRows
+from tests import SOURCE_PATH
+from pgrubic import core
+from pgrubic.rules.unsafe.UN013 import ValidatingCheckConstraintOnExistingRows
 
 
 @pytest.fixture(scope="module")
-def validating_check_constraint_on_existing_rows() -> core.Checker:
+def validating_check_constraint_on_existing_rows() -> core.BaseChecker:
     """Create an instance of ValidatingCheckConstraintOnExistingRows."""
     return ValidatingCheckConstraintOnExistingRows()
 
 
-@pytest.fixture()
+@pytest.fixture
 def lint_validating_check_constraint_on_existing_rows(
     linter: core.Linter,
-    validating_check_constraint_on_existing_rows: core.Checker,
+    validating_check_constraint_on_existing_rows: core.BaseChecker,
 ) -> core.Linter:
     """Lint ValidatingCheckConstraintOnExistingRows."""
     validating_check_constraint_on_existing_rows.config.fix = False
@@ -25,7 +26,7 @@ def lint_validating_check_constraint_on_existing_rows(
 
 
 def test_validating_check_constraint_on_existing_rows_rule_code(
-    validating_check_constraint_on_existing_rows: core.Checker,
+    validating_check_constraint_on_existing_rows: core.BaseChecker,
 ) -> None:
     """Test validating check constraint on existing rows rule code."""
     assert (
@@ -37,13 +38,10 @@ def test_validating_check_constraint_on_existing_rows_rule_code(
 
 
 def test_validating_check_constraint_on_existing_rows_auto_fixable(
-    validating_check_constraint_on_existing_rows: core.Checker,
+    validating_check_constraint_on_existing_rows: core.BaseChecker,
 ) -> None:
     """Test validating check constraint on existing rows auto fixable."""
-    assert (
-        validating_check_constraint_on_existing_rows.is_auto_fixable
-        is True
-    )
+    assert validating_check_constraint_on_existing_rows.is_auto_fixable is True
 
 
 def test_pass_validating_check_constraint_on_existing_rows(
@@ -58,7 +56,7 @@ def test_pass_validating_check_constraint_on_existing_rows(
 
     violations: core.ViolationMetric = (
         lint_validating_check_constraint_on_existing_rows.run(
-            source_path="test.sql",
+            source_path=SOURCE_PATH,
             source_code=sql_pass,
         )
     )
@@ -82,7 +80,7 @@ def test_fail_validating_check_constraint_on_existing_rows(
 
     violations: core.ViolationMetric = (
         lint_validating_check_constraint_on_existing_rows.run(
-            source_path="test.sql",
+            source_path=SOURCE_PATH,
             source_code=sql_fail,
         )
     )
@@ -97,7 +95,7 @@ def test_fail_validating_check_constraint_on_existing_rows(
 
 def test_fail_validating_check_constraint_on_existing_rows_description(
     lint_validating_check_constraint_on_existing_rows: core.Linter,
-    validating_check_constraint_on_existing_rows: core.Checker,
+    validating_check_constraint_on_existing_rows: core.BaseChecker,
 ) -> None:
     """Test validating check constraint on existing rows description."""
     sql_fail: str = """
@@ -105,11 +103,9 @@ def test_fail_validating_check_constraint_on_existing_rows_description(
     ;
     """
 
-    _: core.ViolationMetric = (
-        lint_validating_check_constraint_on_existing_rows.run(
-            source_path="test.sql",
-            source_code=sql_fail,
-        )
+    _: core.ViolationMetric = lint_validating_check_constraint_on_existing_rows.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_fail,
     )
 
     assert (
@@ -132,7 +128,7 @@ def test_pass_noqa_validating_check_constraint_on_existing_rows(
 
     violations: core.ViolationMetric = (
         lint_validating_check_constraint_on_existing_rows.run(
-            source_path="test.sql",
+            source_path=SOURCE_PATH,
             source_code=sql_pass_noqa,
         )
     )
@@ -157,7 +153,7 @@ def test_fail_noqa_validating_check_constraint_on_existing_rows(
 
     violations: core.ViolationMetric = (
         lint_validating_check_constraint_on_existing_rows.run(
-            source_path="test.sql",
+            source_path=SOURCE_PATH,
             source_code=sql_noqa,
         )
     )
@@ -182,7 +178,7 @@ def test_pass_general_noqa_validating_check_constraint_on_existing_rows(
 
     violations: core.ViolationMetric = (
         lint_validating_check_constraint_on_existing_rows.run(
-            source_path="test.sql",
+            source_path=SOURCE_PATH,
             source_code=sql_noqa,
         )
     )
@@ -197,7 +193,7 @@ def test_pass_general_noqa_validating_check_constraint_on_existing_rows(
 
 def test_fail_fix_validating_check_constraint_on_existing_rows(
     lint_validating_check_constraint_on_existing_rows: core.Linter,
-    validating_check_constraint_on_existing_rows: core.Checker,
+    validating_check_constraint_on_existing_rows: core.BaseChecker,
 ) -> None:
     """Test fail fix validating check constraint on existing rows."""
     sql_fail: str = """
@@ -214,7 +210,7 @@ def test_fail_fix_validating_check_constraint_on_existing_rows(
 
     violations: core.ViolationMetric = (
         lint_validating_check_constraint_on_existing_rows.run(
-            source_path="test.sql",
+            source_path=SOURCE_PATH,
             source_code=sql_fail,
         )
     )

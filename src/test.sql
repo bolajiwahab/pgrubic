@@ -22,11 +22,12 @@
 
 -- select a = 'null';
 
--- select 'okay' = a;
+select null != a;
 
+select 'okay' = b;
 -- select null = a;
 
--- select a = NULL;
+-- select NULL = 'okay';
 
 -- create table amex.tbl(ay text null, created timestamptz, received timestamptz);
 

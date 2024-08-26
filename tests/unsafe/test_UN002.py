@@ -2,20 +2,21 @@
 
 import pytest
 
-from pgshield import core
-from pgshield.rules.unsafe.UN002 import ColumnDataTypeChange
+from tests import SOURCE_PATH
+from pgrubic import core
+from pgrubic.rules.unsafe.UN002 import ColumnDataTypeChange
 
 
 @pytest.fixture(scope="module")
-def column_data_type_change() -> core.Checker:
+def column_data_type_change() -> core.BaseChecker:
     """Create an instance of ColumnDataTypeChange."""
     return ColumnDataTypeChange()
 
 
-@pytest.fixture()
+@pytest.fixture
 def lint_column_data_type_change(
     linter: core.Linter,
-    column_data_type_change: core.Checker,
+    column_data_type_change: core.BaseChecker,
 ) -> core.Linter:
     """Lint ColumnDataTypeChange."""
     linter.checkers.add(column_data_type_change)
@@ -24,7 +25,7 @@ def lint_column_data_type_change(
 
 
 def test_column_data_type_change_rule_code(
-    column_data_type_change: core.Checker,
+    column_data_type_change: core.BaseChecker,
 ) -> None:
     """Test column data type change rule code."""
     assert (
@@ -34,7 +35,7 @@ def test_column_data_type_change_rule_code(
 
 
 def test_column_data_type_change_auto_fixable(
-    column_data_type_change: core.Checker,
+    column_data_type_change: core.BaseChecker,
 ) -> None:
     """Test column data type change auto fixable."""
     assert column_data_type_change.is_auto_fixable is False
@@ -50,7 +51,7 @@ def test_fail_column_data_type_change(
     """
 
     violations: core.ViolationMetric = lint_column_data_type_change.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
@@ -64,7 +65,7 @@ def test_fail_column_data_type_change(
 
 def test_fail_column_data_type_change_description(
     lint_column_data_type_change: core.Linter,
-    column_data_type_change: core.Checker,
+    column_data_type_change: core.BaseChecker,
 ) -> None:
     """Test fail column data type description."""
     sql_fail: str = """
@@ -73,7 +74,7 @@ def test_fail_column_data_type_change_description(
     """
 
     _: core.ViolationMetric = lint_column_data_type_change.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
@@ -93,7 +94,7 @@ def test_pass_noqa_column_data_type_change(
     """
 
     violations: core.ViolationMetric = lint_column_data_type_change.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_pass_noqa,
     )
 
@@ -115,7 +116,7 @@ def test_fail_noqa_column_data_type_change(
     """
 
     violations: core.ViolationMetric = lint_column_data_type_change.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_noqa,
     )
 
@@ -137,7 +138,7 @@ def test_pass_general_noqa_column_data_type_change(
     """
 
     violations: core.ViolationMetric = lint_column_data_type_change.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_noqa,
     )
 

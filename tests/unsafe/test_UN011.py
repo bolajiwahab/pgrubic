@@ -2,20 +2,21 @@
 
 import pytest
 
-from pgshield import core
-from pgshield.rules.unsafe.UN011 import NotNullConstraintOnNewColumnWithNoStaticDefault
+from tests import SOURCE_PATH
+from pgrubic import core
+from pgrubic.rules.unsafe.UN011 import NotNullConstraintOnNewColumnWithNoStaticDefault
 
 
 @pytest.fixture(scope="module")
-def not_null_constraint_on_new_column_with_no_static_default() -> core.Checker:
+def not_null_constraint_on_new_column_with_no_static_default() -> core.BaseChecker:
     """Create an instance of NotNullConstraintOnNewColumnWithNoStaticDefault."""
     return NotNullConstraintOnNewColumnWithNoStaticDefault()
 
 
-@pytest.fixture()
+@pytest.fixture
 def lint_not_null_constraint_on_new_column_with_no_static_default(
     linter: core.Linter,
-    not_null_constraint_on_new_column_with_no_static_default: core.Checker,
+    not_null_constraint_on_new_column_with_no_static_default: core.BaseChecker,
 ) -> core.Linter:
     """Lint NotNullConstraintOnNewColumnWithNoStaticDefault."""
     linter.checkers.add(not_null_constraint_on_new_column_with_no_static_default)
@@ -24,7 +25,7 @@ def lint_not_null_constraint_on_new_column_with_no_static_default(
 
 
 def test_not_null_constraint_on_new_column_with_no_static_default_rule_code(
-    not_null_constraint_on_new_column_with_no_static_default: core.Checker,
+    not_null_constraint_on_new_column_with_no_static_default: core.BaseChecker,
 ) -> None:
     """Test not null constraint on new column with no static default rule code."""
     assert (
@@ -36,7 +37,7 @@ def test_not_null_constraint_on_new_column_with_no_static_default_rule_code(
 
 
 def test_not_null_constraint_on_new_column_with_no_static_default_auto_fixable(
-    not_null_constraint_on_new_column_with_no_static_default: core.Checker,
+    not_null_constraint_on_new_column_with_no_static_default: core.BaseChecker,
 ) -> None:
     """Test not null constraint on new column with no static default auto fixable."""
     assert (
@@ -56,7 +57,7 @@ def test_pass_not_null_constraint_on_new_column_with_no_static_default(
 
     violations: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            source_path="test.sql",
+            source_path=SOURCE_PATH,
             source_code=sql_pass,
         )
     )
@@ -80,7 +81,7 @@ def test_fail_not_null_constraint_on_new_column_with_no_static_default(
 
     violations: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            source_path="test.sql",
+            source_path=SOURCE_PATH,
             source_code=sql_fail,
         )
     )
@@ -95,7 +96,7 @@ def test_fail_not_null_constraint_on_new_column_with_no_static_default(
 
 def test_fail_not_null_constraint_on_new_column_with_no_static_default_description(
     lint_not_null_constraint_on_new_column_with_no_static_default: core.Linter,
-    not_null_constraint_on_new_column_with_no_static_default: core.Checker,
+    not_null_constraint_on_new_column_with_no_static_default: core.BaseChecker,
 ) -> None:
     """Test not null constraint on new column with no static default description."""
     sql_fail: str = """
@@ -105,7 +106,7 @@ def test_fail_not_null_constraint_on_new_column_with_no_static_default_descripti
 
     _: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            source_path="test.sql",
+            source_path=SOURCE_PATH,
             source_code=sql_fail,
         )
     )
@@ -129,7 +130,7 @@ def test_pass_noqa_not_null_constraint_on_new_column_with_no_static_default(
 
     violations: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            source_path="test.sql",
+            source_path=SOURCE_PATH,
             source_code=sql_pass_noqa,
         )
     )
@@ -153,7 +154,7 @@ def test_fail_noqa_not_null_constraint_on_new_column_with_no_static_default(
 
     violations: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            source_path="test.sql",
+            source_path=SOURCE_PATH,
             source_code=sql_noqa,
         )
     )
@@ -177,7 +178,7 @@ def test_pass_general_noqa_not_null_constraint_on_new_column_with_no_static_defa
 
     violations: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            source_path="test.sql",
+            source_path=SOURCE_PATH,
             source_code=sql_noqa,
         )
     )

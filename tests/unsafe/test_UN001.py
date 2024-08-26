@@ -2,30 +2,31 @@
 
 import pytest
 
-from pgshield import core
-from pgshield.rules.unsafe.UN001 import DropColumn
+from tests import SOURCE_PATH
+from pgrubic import core
+from pgrubic.rules.unsafe.UN001 import DropColumn
 
 
 @pytest.fixture(scope="module")
-def drop_column() -> core.Checker:
+def drop_column() -> core.BaseChecker:
     """Create an instance of DropColumn."""
     return DropColumn()
 
 
-@pytest.fixture()
-def lint_drop_column(linter: core.Linter, drop_column: core.Checker) -> core.Linter:
+@pytest.fixture
+def lint_drop_column(linter: core.Linter, drop_column: core.BaseChecker) -> core.Linter:
     """Lint DropColumn."""
     linter.checkers.add(drop_column)
 
     return linter
 
 
-def test_drop_column_rule_code(drop_column: core.Checker) -> None:
+def test_drop_column_rule_code(drop_column: core.BaseChecker) -> None:
     """Test drop column rule code."""
     assert drop_column.code == drop_column.__module__.split(".")[-1]
 
 
-def test_drop_column_auto_fixable(drop_column: core.Checker) -> None:
+def test_drop_column_auto_fixable(drop_column: core.BaseChecker) -> None:
     """Test drop column auto fixable."""
     assert drop_column.is_auto_fixable is False
 
@@ -38,7 +39,7 @@ def test_fail_drop_column(lint_drop_column: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
@@ -52,7 +53,7 @@ def test_fail_drop_column(lint_drop_column: core.Linter) -> None:
 
 def test_fail_drop_column_description(
     lint_drop_column: core.Linter,
-    drop_column: core.Checker,
+    drop_column: core.BaseChecker,
 ) -> None:
     """Test fail drop column description."""
     sql_fail: str = """
@@ -61,7 +62,7 @@ def test_fail_drop_column_description(
     """
 
     _: core.ViolationMetric = lint_drop_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
@@ -76,7 +77,7 @@ def test_pass_noqa_drop_column(lint_drop_column: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_pass_noqa,
     )
 
@@ -96,7 +97,7 @@ def test_fail_noqa_drop_column(lint_drop_column: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_noqa,
     )
 
@@ -118,7 +119,7 @@ def test_pass_general_noqa_drop_column(
     """
 
     violations: core.ViolationMetric = lint_drop_column.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_noqa,
     )
 

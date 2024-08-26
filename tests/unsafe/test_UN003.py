@@ -2,30 +2,34 @@
 
 import pytest
 
-from pgshield import core
-from pgshield.rules.unsafe.UN003 import ColumnRename
+from tests import SOURCE_PATH
+from pgrubic import core
+from pgrubic.rules.unsafe.UN003 import ColumnRename
 
 
 @pytest.fixture(scope="module")
-def column_rename() -> core.Checker:
+def column_rename() -> core.BaseChecker:
     """Create an instance of ColumnRename."""
     return ColumnRename()
 
 
-@pytest.fixture()
-def lint_column_rename(linter: core.Linter, column_rename: core.Checker) -> core.Linter:
+@pytest.fixture
+def lint_column_rename(
+    linter: core.Linter,
+    column_rename: core.BaseChecker,
+) -> core.Linter:
     """Lint ColumnRename."""
     linter.checkers.add(column_rename)
 
     return linter
 
 
-def test_column_rename_rule_code(column_rename: core.Checker) -> None:
+def test_column_rename_rule_code(column_rename: core.BaseChecker) -> None:
     """Test column rename rule code."""
     assert column_rename.code == column_rename.__module__.split(".")[-1]
 
 
-def test_column_rename_auto_fixable(column_rename: core.Checker) -> None:
+def test_column_rename_auto_fixable(column_rename: core.BaseChecker) -> None:
     """Test column rename auto fixable."""
     assert column_rename.is_auto_fixable is False
 
@@ -38,7 +42,7 @@ def test_fail_column_rename(lint_column_rename: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_column_rename.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
@@ -52,7 +56,7 @@ def test_fail_column_rename(lint_column_rename: core.Linter) -> None:
 
 def test_fail_column_rename_description(
     lint_column_rename: core.Linter,
-    column_rename: core.Checker,
+    column_rename: core.BaseChecker,
 ) -> None:
     """Test fail column rename description."""
     sql_fail: str = """
@@ -61,7 +65,7 @@ def test_fail_column_rename_description(
     """
 
     _: core.ViolationMetric = lint_column_rename.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
 
@@ -76,7 +80,7 @@ def test_pass_noqa_column_rename(lint_column_rename: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_column_rename.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_pass_noqa,
     )
 
@@ -96,7 +100,7 @@ def test_fail_noqa_column_rename(lint_column_rename: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_column_rename.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_noqa,
     )
 
@@ -118,7 +122,7 @@ def test_pass_general_noqa_column_rename(
     """
 
     violations: core.ViolationMetric = lint_column_rename.run(
-        source_path="test.sql",
+        source_path=SOURCE_PATH,
         source_code=sql_noqa,
     )
 

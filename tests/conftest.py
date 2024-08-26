@@ -2,14 +2,14 @@
 
 import pytest
 
-from pgshield import core
+from pgrubic import core
 
 
-@pytest.fixture()
+@pytest.fixture
 def linter() -> core.Linter:
     """Setup linter."""
     config: core.Config = core.parse_config()
 
-    core.Checker.config = config
+    core.BaseChecker.config = config
 
     return core.Linter(config=config)
