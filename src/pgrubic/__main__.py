@@ -24,9 +24,13 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
     for rule in loaded_rules:
 
         if (
-            not config.select
-            or any(fnmatch.fnmatch(rule.code, pattern) for pattern in config.select)
-        ) and not any(fnmatch.fnmatch(rule.code, pattern) for pattern in config.ignore):
+            not config.lint.select
+            or any(
+                fnmatch.fnmatch(rule.code, pattern) for pattern in config.lint.select
+            )
+        ) and not any(
+            fnmatch.fnmatch(rule.code, pattern) for pattern in config.lint.ignore
+        ):
 
             linter.checkers.add(rule())
 
@@ -36,10 +40,12 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
         # Run lint on only included and not excluded files
         if (
-            not config.include
-            or any(fnmatch.fnmatch(source_path, pattern) for pattern in config.include)
+            not config.lint.include
+            or any(
+                fnmatch.fnmatch(source_path, pattern) for pattern in config.lint.include
+            )
         ) and not any(
-            fnmatch.fnmatch(source_path, pattern) for pattern in config.exclude
+            fnmatch.fnmatch(source_path, pattern) for pattern in config.lint.exclude
         ):
 
             with pathlib.Path(source_path).open("r", encoding="utf-8") as source_file:
@@ -58,7 +64,7 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
     if violations.total > 0:
 
-        if config.fix is True:
+        if config.lint.fix is True:
 
             sys.stdout.write(
                 f"Found {violations.total} violations"

@@ -37,8 +37,8 @@ class RequiredColumns:
 
 
 @dataclasses.dataclass(kw_only=True)
-class Config:
-    """Representation of config."""
+class Lint:
+    """Representation of lint config."""
 
     select: list[str]
     ignore: list[str]
@@ -63,6 +63,13 @@ class Config:
     regex_sequence: str
 
 
+@dataclasses.dataclass(kw_only=True)
+class Config:
+    """Representation of config."""
+
+    lint: Lint
+
+
 def load_default_config() -> dict[str, typing.Any]:
     """Load default config."""
     return dict(toml.load(DEFAULT_CONFIG))
@@ -70,11 +77,11 @@ def load_default_config() -> dict[str, typing.Any]:
 
 def load_user_config() -> dict[str, typing.Any]:
     """Load config from from absolute path config file."""
-    absolute_path_config_file = _get_absolute_path_config_file(CONFIG_FILE)
+    config_file_absolute_path = _get_config_file_absolute_path(CONFIG_FILE)
 
-    if absolute_path_config_file:
+    if config_file_absolute_path:
 
-        return dict(toml.load(absolute_path_config_file))
+        return dict(toml.load(config_file_absolute_path))
 
     return {}
 
@@ -86,8 +93,10 @@ def _merge_config() -> dict[str, typing.Any]:
     }
 
 
-def _get_absolute_path_config_file(config_file: str) -> pathlib.Path | None:
-    """Get the absolute path of the config file. We use the first config file we find upwards."""  # noqa: E501
+def _get_config_file_absolute_path(config_file: str) -> pathlib.Path | None:
+    """Get the absolute path of the config file.
+    We use the first config file we find upwards.
+    """
     current_directory = pathlib.Path.cwd()
 
     # Traverse upwards through the directory tree
@@ -109,52 +118,59 @@ def parse_config() -> Config:
     """Parse config."""
     try:
 
-        config = _merge_config().get("lint", {})
+        merged_config = _merge_config()
+        config_lint = merged_config["lint"]
 
-        lint_config = Config(
-            select=config["select"],
-            ignore=config["ignore"],
-            include=config["include"],
-            exclude=config["exclude"],
-            ignore_noqa=config["ignore-noqa"],
-            allowed_extensions=config["allowed-extensions"],
-            allowed_languages=config["allowed-languages"],
-            fix=config["fix"],
-            regex_partition=config["regex-partition"],
-            regex_index=config["regex-index"],
-            regex_constraint_primary_key=config["regex-constraint-primary-key"],
-            regex_constraint_unique_key=config["regex-constraint-unique-key"],
-            regex_constraint_foreign_key=config["regex-constraint-foreign-key"],
-            regex_constraint_check=config["regex-constraint-check"],
-            regex_constraint_exclusion=config["regex-constraint-exclusion"],
-            regex_sequence=config["regex-sequence"],
-            required_columns=[
-                RequiredColumns(
-                    name=column["name"],
-                    data_type=column["data-type"],
-                )
-                for column in config["required-columns"]
-            ],
-            disallowed_data_types=[
-                DisallowedType(
-                    name=data_type["name"],
-                    reason=data_type["reason"],
-                    use_instead=data_type["use-instead"],
-                )
-                for data_type in config["disallowed-data-types"]
-            ],
-            disallowed_schemas=[
-                DisallowedSchema(
-                    name=schema["name"],
-                    reason=schema["reason"],
-                    use_instead=schema["use-instead"],
-                )
-                for schema in config["disallowed-schemas"]
-            ],
+        config = Config(
+            lint=Lint(
+                select=config_lint["select"],
+                ignore=config_lint["ignore"],
+                include=config_lint["include"],
+                exclude=config_lint["exclude"],
+                ignore_noqa=config_lint["ignore-noqa"],
+                allowed_extensions=config_lint["allowed-extensions"],
+                allowed_languages=config_lint["allowed-languages"],
+                fix=config_lint["fix"],
+                regex_partition=config_lint["regex-partition"],
+                regex_index=config_lint["regex-index"],
+                regex_constraint_primary_key=config_lint[
+                    "regex-constraint-primary-key"
+                ],
+                regex_constraint_unique_key=config_lint["regex-constraint-unique-key"],
+                regex_constraint_foreign_key=config_lint[
+                    "regex-constraint-foreign-key"
+                ],
+                regex_constraint_check=config_lint["regex-constraint-check"],
+                regex_constraint_exclusion=config_lint["regex-constraint-exclusion"],
+                regex_sequence=config_lint["regex-sequence"],
+                required_columns=[
+                    RequiredColumns(
+                        name=column["name"],
+                        data_type=column["data-type"],
+                    )
+                    for column in config_lint["required-columns"]
+                ],
+                disallowed_data_types=[
+                    DisallowedType(
+                        name=data_type["name"],
+                        reason=data_type["reason"],
+                        use_instead=data_type["use-instead"],
+                    )
+                    for data_type in config_lint["disallowed-data-types"]
+                ],
+                disallowed_schemas=[
+                    DisallowedSchema(
+                        name=schema["name"],
+                        reason=schema["reason"],
+                        use_instead=schema["use-instead"],
+                    )
+                    for schema in config_lint["disallowed-schemas"]
+                ],
+            ),
         )
 
     except KeyError as error:
 
         raise errors.ConfigMissingKeyError(error.args[0]) from None
 
-    return lint_config
+    return config

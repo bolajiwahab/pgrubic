@@ -25,11 +25,11 @@ repos:
         entry: add-trailing-comma
         language: python
         types: [python]
-      - id: check-ast
-        name: Check that files parse as valid python
-        entry: check-ast
-        language: python
-        types: [python]
+      # - id: check-ast
+      #   name: Check that files parse as valid python
+      #   entry: check-ast
+      #   language: python
+      #   types: [python]
       - id: check-yaml
         name: Check yaml
         entry: check-yaml

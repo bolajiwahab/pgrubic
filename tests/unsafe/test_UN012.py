@@ -19,7 +19,7 @@ def lint_validating_foreign_key_constraint_on_existing_rows(
     validating_foreign_key_constraint_on_existing_rows: core.BaseChecker,
 ) -> core.Linter:
     """Lint ValidatingForeignKeyConstraintOnExistingRows."""
-    validating_foreign_key_constraint_on_existing_rows.config.fix = False
+    validating_foreign_key_constraint_on_existing_rows.config.lint.fix = False
     linter.checkers.add(validating_foreign_key_constraint_on_existing_rows)
 
     return linter
@@ -211,7 +211,7 @@ def test_fail_fix_validating_foreign_key_constraint_on_existing_rows(
         "ALTER TABLE public.card ADD CONSTRAINT fkey FOREIGN KEY (account_id) REFERENCES public.account (id) NOT VALID ;"  # noqa: E501
     )
 
-    validating_foreign_key_constraint_on_existing_rows.config.fix = True
+    validating_foreign_key_constraint_on_existing_rows.config.lint.fix = True
 
     violations: core.ViolationMetric = (
         lint_validating_foreign_key_constraint_on_existing_rows.run(

@@ -75,7 +75,7 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
     @property
     def is_fix_applicable(self) -> bool:
         """Check if fix can be applied."""
-        if not self.config.fix:
+        if not self.config.lint.fix:
 
             return False
 
@@ -84,7 +84,7 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
             if (
                 self.statement_location == inline_ignore.location
                 and inline_ignore.rule in (noqa.A_STAR, self.code)
-                and not self.config.ignore_noqa
+                and not self.config.lint.ignore_noqa
             ):
 
                 return False
@@ -147,7 +147,7 @@ class Linter:
 
             sys.stdout.write(
                 f"\n{source_path}:{line.number}:{line.column_offset}:"
-                f" \033]8;;http://127.0.0.1:8000/rules/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"
+                f" \033]8;;http://127.0.0.1:8000/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"
                 f" {violation.description}:"
                 f" {Fore.GREEN}\n\n{line.text}\n\n{Style.RESET_ALL}",
             )
@@ -179,7 +179,7 @@ class Linter:
 
             checker(tree)
 
-            if not self.config.ignore_noqa:
+            if not self.config.lint.ignore_noqa:
 
                 self.skip_suppressed_violations(
                     checker=checker,
@@ -192,7 +192,7 @@ class Linter:
                 source_code=source_code,
             )
 
-            if self.config.fix is checker.is_auto_fixable is True:
+            if self.config.lint.fix is checker.is_auto_fixable is True:
 
                 violations.fixed_total += len(checker.violations)
 
