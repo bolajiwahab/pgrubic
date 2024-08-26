@@ -50,6 +50,8 @@ class DateColumnWithoutSuffix(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
+            self._fix(node)
 
-                node.colname += "_date"
+    def _fix(self, node: ast.ColumnDef) -> None:
+        """Fix violation."""
+        node.colname += "_date"

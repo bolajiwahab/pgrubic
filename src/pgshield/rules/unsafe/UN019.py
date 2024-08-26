@@ -27,6 +27,8 @@ class NonConcurrentIndexDrop(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
+            self._fix(node)
 
-                node.concurrent = True
+    def _fix(self, node: ast.DropStmt) -> None:
+        """Fix violation."""
+        node.concurrent = True

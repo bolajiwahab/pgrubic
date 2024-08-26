@@ -43,13 +43,15 @@ class Float(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
+            self._fix(node)
 
-                node.typeName = ast.TypeName(
-                    names=(
-                        {
-                            "@": "String",
-                            "sval": "numeric",
-                        },
-                    ),
-                )
+    def _fix(self, node: ast.ColumnDef) -> None:
+        """Fix violation."""
+        node.typeName = ast.TypeName(
+            names=(
+                {
+                    "@": "String",
+                    "sval": "numeric",
+                },
+            ),
+        )

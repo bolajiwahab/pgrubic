@@ -55,11 +55,13 @@ class NullableBooleanField(linter.BaseChecker):
                     ),
                 )
 
-                if self.is_fix_applicable:
+                self._fix(node)
 
-                    node.constraints = (
-                        *(node.constraints or []),
-                        ast.Constraint(
-                            contype=enums.ConstrType.CONSTR_NOTNULL,
-                        ),
-                    )
+    def _fix(self, node: ast.ColumnDef) -> None:
+        """Fix violation."""
+        node.constraints = (
+            *(node.constraints or []),
+            ast.Constraint(
+                contype=enums.ConstrType.CONSTR_NOTNULL,
+            ),
+        )

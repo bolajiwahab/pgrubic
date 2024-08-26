@@ -26,6 +26,8 @@ class NonConcurrentIndexCreation(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
+            self._fix(node)
 
-                node.concurrent = True
+    def _fix(self, node: ast.IndexStmt) -> None:
+        """Fix violation."""
+        node.concurrent = True

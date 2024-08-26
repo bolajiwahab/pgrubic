@@ -30,6 +30,8 @@ class ValidatingCheckConstraintOnExistingRows(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
+            self._fix(node)
 
-                node.skip_validation = True
+    def _fix(self, node: ast.Constraint) -> None:
+        """Fix violation."""
+        node.skip_validation = True

@@ -52,21 +52,23 @@ class Serial(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
+            self._fix(node)
 
-                node.typeName = ast.TypeName(
-                    names=(
-                        {
-                            "@": "String",
-                            "sval": "bigint",
-                        },
-                    ),
-                )
+    def _fix(self, node: ast.ColumnDef) -> None:
+        """Fix violation."""
+        node.typeName = ast.TypeName(
+            names=(
+                {
+                    "@": "String",
+                    "sval": "bigint",
+                },
+            ),
+        )
 
-                node.constraints = (
-                    *(node.constraints or []),
-                    ast.Constraint(
-                        contype=enums.ConstrType.CONSTR_IDENTITY,
-                        generated_when=enums.ATTRIBUTE_IDENTITY_ALWAYS,
-                    ),
-                )
+        node.constraints = (
+            *(node.constraints or []),
+            ast.Constraint(
+                contype=enums.ConstrType.CONSTR_IDENTITY,
+                generated_when=enums.ATTRIBUTE_IDENTITY_ALWAYS,
+            ),
+        )

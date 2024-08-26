@@ -4,7 +4,7 @@ from pglast import ast, visitors
 from pglast.printers import dml
 
 from pgshield import get_full_qualified_type_name
-from pgshield.core import linter
+from pgshield.core import linter, config
 
 
 class WronglyTypedRequiredColumn(linter.BaseChecker):
@@ -57,13 +57,15 @@ class WronglyTypedRequiredColumn(linter.BaseChecker):
                     ),
                 )
 
-                if self.is_fix_applicable:
+                self._fix(node, column)
 
-                    node.typeName = ast.TypeName(
-                        names=(
-                            {
-                                "@": "String",
-                                "sval": column.data_type,
-                            },
-                        ),
-                    )
+    def _fix(self, node: ast.ColumnDef, column: config.RequiredColumns) -> None:
+        """Fix violation."""
+        node.typeName = ast.TypeName(
+            names=(
+                {
+                    "@": "String",
+                    "sval": column.data_type,
+                },
+            ),
+        )

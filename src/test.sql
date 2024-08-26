@@ -28,7 +28,7 @@
 
 -- select a = NULL;
 
-create table amex.tbl(ay text null, created timestamptz, received timestamptz);
+-- create table amex.tbl(ay text null, created timestamptz, received timestamptz);
 
 -- CREATE TABLE amex.tbl (
 --     id text DEFAULT NULL
@@ -41,3 +41,5 @@ create table amex.tbl(ay text null, created timestamptz, received timestamptz);
 -- CREATE FUNCTION dup(int) RETURNS TABLE(f1 int, f2 text)
 --     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$
 --     LANGUAGE SQL;
+
+reindex table tbl;

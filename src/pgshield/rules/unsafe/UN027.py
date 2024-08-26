@@ -26,6 +26,8 @@ class NonConcurrentDetachPartition(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
+            self._fix(node)
 
-                node.concurrent = True
+    def _fix(self, node: ast.PartitionCmd) -> None:
+        """Fix violation."""
+        node.concurrent = True

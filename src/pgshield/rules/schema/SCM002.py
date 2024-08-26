@@ -2,7 +2,7 @@
 
 from pglast import ast, visitors
 
-from pgshield.core import linter
+from pgshield.core import config, linter
 
 
 class DisallowedSchema(linter.BaseChecker):
@@ -18,6 +18,7 @@ class DisallowedSchema(linter.BaseChecker):
     ## **Use instead:**
     Allowed schemas.
     """
+
     is_auto_fixable: bool = True
 
     def visit_RangeVar(
@@ -50,9 +51,15 @@ class DisallowedSchema(linter.BaseChecker):
                         ),
                     )
 
-                    if self.is_fix_applicable:
+                    self._fix_range_var(node, schema)
 
-                        node.schemaname = schema.use_instead
+    def _fix_range_var(
+        self,
+        node: ast.RangeVar,
+        schema: config.DisallowedSchema,
+    ) -> None:
+        """Fix violation."""
+        node.schemaname = schema.use_instead
 
     def visit_CreateEnumStmt(
         self,
@@ -77,9 +84,15 @@ class DisallowedSchema(linter.BaseChecker):
                     ),
                 )
 
-                if self.is_fix_applicable:
+                self._fix_enum(node, schema)
 
-                    node.typeName[0].sval = schema.use_instead
+    def _fix_enum(
+        self,
+        node: ast.CreateEnumStmt,
+        schema: config.DisallowedSchema,
+    ) -> None:
+        """Fix violation."""
+        node.typeName[0].sval = schema.use_instead
 
     def visit_CreateFunctionStmt(
         self,
@@ -104,6 +117,12 @@ class DisallowedSchema(linter.BaseChecker):
                     ),
                 )
 
-                if self.is_fix_applicable:
+                self._fix_function(node, schema)
 
-                    node.funcname[0].sval = schema.use_instead
+    def _fix_function(
+        self,
+        node: ast.CreateFunctionStmt,
+        schema: config.DisallowedSchema,
+    ) -> None:
+        """Fix violation."""
+        node.funcname[0].sval = schema.use_instead

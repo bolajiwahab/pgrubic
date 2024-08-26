@@ -1,5 +1,7 @@
 """Unsafe index operations."""
 
+import typing
+
 from pglast import ast, enums, visitors
 
 from pgshield.core import linter
@@ -11,10 +13,14 @@ class NonConcurrentReindex(linter.BaseChecker):
     is_auto_fixable: bool = True
 
     def visit_ReindexStmt(
-        self, ancestors: visitors.Ancestor, node: ast.ReindexStmt,
+        self,
+        ancestors: visitors.Ancestor,
+        node: ast.ReindexStmt,
     ) -> None:
         """Visit ReindexStmt."""
-        params = [param.defname for param in node.params] if node.params else []
+        params: list[typing.Any] = (
+            [param.defname for param in node.params] if node.params else []
+        )
 
         if (
             node.kind != enums.ReindexObjectType.REINDEX_OBJECT_SYSTEM
@@ -30,8 +36,10 @@ class NonConcurrentReindex(linter.BaseChecker):
                 ),
             )
 
-            if self.is_fix_applicable:
+            self._fix(node, params)
 
-                params.append(ast.DefElem(defname="concurrently"))
+    def _fix(self, node: ast.ReindexStmt, params: list[typing.Any]) -> None:
+        """Fix violation."""
+        params.append(ast.DefElem(defname="concurrently"))
 
-                node.params = params
+        node.params = params

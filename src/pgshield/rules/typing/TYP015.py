@@ -2,7 +2,7 @@
 
 from pglast import ast, visitors
 
-from pgshield.core import linter
+from pgshield.core import linter, config
 
 
 class DisallowedDataType(linter.BaseChecker):
@@ -13,11 +13,13 @@ class DisallowedDataType(linter.BaseChecker):
     If you are using a disallowed type, you're probably doing something wrong.
 
     ## **When should you?**
-    Never. If a data type is intended to be used, it should not be in the blacklist.
+    Never. If a data type is intended to be used, it should not be in the
+    disallowed_data_types.
 
     ## **Use instead:**
-    Data types that are not in the blacklist.
+    Data types that are not in the disallowed_data_types.
     """
+
     is_auto_fixable: bool = True
 
     def visit_TypeName(
@@ -41,11 +43,13 @@ class DisallowedDataType(linter.BaseChecker):
                     ),
                 )
 
-                if self.is_fix_applicable:
+                self._fix(node, data_type)
 
-                    node.names = (
-                        {
-                            "@": "String",
-                            "sval": data_type.use_instead,
-                        },
-                    )
+    def _fix(self, node: ast.TypeName, data_type: config.DisallowedType) -> None:
+        """Fix violation."""
+        node.names = (
+            {
+                "@": "String",
+                "sval": data_type.use_instead,
+            },
+        )
