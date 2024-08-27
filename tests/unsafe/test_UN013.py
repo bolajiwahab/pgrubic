@@ -19,7 +19,7 @@ def lint_validating_check_constraint_on_existing_rows(
     validating_check_constraint_on_existing_rows: core.BaseChecker,
 ) -> core.Linter:
     """Lint ValidatingCheckConstraintOnExistingRows."""
-    validating_check_constraint_on_existing_rows.config.fix = False
+    validating_check_constraint_on_existing_rows.config.lint.fix = False
     linter.checkers.add(validating_check_constraint_on_existing_rows)
 
     return linter

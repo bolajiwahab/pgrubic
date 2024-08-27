@@ -36,7 +36,6 @@ dev = [
   "black",
   "mypy",
   "isort",
-  "mypy",
   "pre-commit",
   "pytest",
   "coverage",
@@ -92,3 +91,19 @@ known_first_party = "pgrubic"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
+
+[tool.tox]
+legacy_tox_ini = """
+    [tox]
+    env_list =
+        py312
+        type
+
+    [testenv]
+    deps = pytest
+    commands = pytest tests
+
+    [testenv:type]
+    deps = mypy
+    commands = mypy
+"""
