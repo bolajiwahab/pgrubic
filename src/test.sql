@@ -42,5 +42,6 @@ select 'okay' = b;
 -- CREATE FUNCTION dup(int) RETURNS TABLE(f1 int, f2 text)
 --     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$
 --     LANGUAGE SQL;
-
-reindex table tbl;
+-- noqa: UN020
+reindex table tbl -- okay
+;

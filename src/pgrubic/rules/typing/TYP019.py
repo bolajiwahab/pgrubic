@@ -40,9 +40,10 @@ class MismatchColumnInDataTypeChange(linter.BaseChecker):
 
             self.violations.add(
                 linter.Violation(
+                    line_number=self.line_number,
+                    column_offset=self.column_offset,
+                    source_text=self.source_text,
                     statement_location=self.statement_location,
-                    statement_length=self.statement_length,
-                    node_location=self.node_location,
                     description=f"Column '{alter_table_cmd.node.name}' in data type"
                     f" change does not match column '{node.fields[-1].sval}'"
                     " in USING clause",

@@ -13,21 +13,13 @@ from pgrubic.core import noqa, config
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
-class Line:
-    """Representation of line of statement."""
-
-    number: int
-    column_offset: int
-    text: str
-
-
-@dataclasses.dataclass(kw_only=True, frozen=True)
 class Violation:
     """Representation of rule violation."""
 
+    line_number: int
+    column_offset: int
+    source_text: str
     statement_location: int
-    statement_length: int
-    node_location: int
     description: str
 
 
@@ -49,13 +41,15 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
     is_auto_fixable: bool
     config: config.Config
     inline_ignores: list[noqa.NoQaDirective]
+    source_code: str
 
     def __init__(self) -> None:
         """Initialize variables."""
         self.violations: set[Violation] = set()
-        self.statement_location: int = 0
-        self.statement_length: int = 0
-        self.node_location: int = 0
+        self.statement_location: int
+        self.line_number: int
+        self.column_offset: int
+        self.source_text: str
 
     def __init_subclass__(cls, **kwargs: typing.Any) -> None:
         """Check required attributes."""
@@ -133,23 +127,15 @@ class Linter:
         *,
         checker: BaseChecker,
         source_path: pathlib.Path,
-        source_code: str,
     ) -> None:
         """Print all violations collected by a checker."""
         for violation in checker.violations:
 
-            line: Line = _get_line_details(
-                violation.statement_location,
-                violation.statement_length,
-                violation.node_location,
-                source_code,
-            )
-
             sys.stdout.write(
-                f"\n{source_path}:{line.number}:{line.column_offset}:"
+                f"\n{source_path}:{violation.line_number}:{violation.column_offset}:"
                 f" \033]8;;http://127.0.0.1:8000/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"
                 f" {violation.description}:"
-                f" {Fore.GREEN}\n\n{line.text}\n\n{Style.RESET_ALL}",
+                f" {Fore.GREEN}\n\n{violation.source_text}\n\n{Style.RESET_ALL}",
             )
 
     def run(self, *, source_path: pathlib.Path, source_code: str) -> ViolationMetric:
@@ -172,6 +158,7 @@ class Linter:
         violations: ViolationMetric = ViolationMetric()
 
         BaseChecker.inline_ignores = inline_ignores
+        BaseChecker.source_code = source_code
 
         for checker in self.checkers:
 
@@ -189,7 +176,6 @@ class Linter:
             self.print_violations(
                 checker=checker,
                 source_path=source_path,
-                source_code=source_code,
             )
 
             if self.config.lint.fix is checker.is_auto_fixable is True:
@@ -212,6 +198,7 @@ class Linter:
                 compact_lists_margin=1,
                 comments=comments,
                 semicolon_after_last_statement=True,
+                comma_at_eoln=True,
             )(tree),
         )
 
@@ -228,27 +215,3 @@ class Linter:
             )(tree)
 
         return violations
-
-
-def _get_line_details(
-    statement_location: int,
-    statement_length: int,
-    column_offset: int,
-    source_code: str,
-) -> Line:
-    """Get line details."""
-    actual_column_offset = (
-        column_offset - statement_location if column_offset != 0 else statement_length
-    )
-
-    statement_location_end = statement_location + statement_length
-
-    number = source_code[:statement_location_end].count("\n") + 1
-
-    line_start = source_code[:statement_location_end].rfind(";\n") + 1
-
-    line_end = source_code.find("\n", statement_location_end)
-
-    text = source_code[line_start:line_end].strip("\n")
-
-    return Line(number=number, column_offset=actual_column_offset, text=text)

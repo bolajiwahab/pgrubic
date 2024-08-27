@@ -24,9 +24,10 @@ class ValidatingCheckConstraintOnExistingRows(linter.BaseChecker):
 
             self.violations.add(
                 linter.Violation(
+                    line_number=self.line_number,
+                    column_offset=self.column_offset,
+                    source_text=self.source_text,
                     statement_location=self.statement_location,
-                    statement_length=self.statement_length,
-                    node_location=self.node_location,
                     description="Validating check constraint on existing rows",
                 ),
             )

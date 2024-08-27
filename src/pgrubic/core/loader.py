@@ -69,7 +69,6 @@ def _set_locations(
     func: abc.Callable[..., typing.Any],
 ) -> abc.Callable[..., typing.Any]:
     """Set locations for node."""
-    # merge _set_locations and _get_line_details of linter
 
     @functools.wraps(func)
     def wrapper(
@@ -79,12 +78,32 @@ def _set_locations(
     ) -> typing.Any:
 
         node_location = getattr(node, "location", 0)
+        # Some nodes have location as None.
+        node_location = node_location if node_location else 0
 
-        self.node_location = node_location if node_location else 0
+        statement_location = ancestors.find_nearest(ast.RawStmt).node.stmt_location
+        statement_length = ancestors.find_nearest(ast.RawStmt).node.stmt_len
 
-        self.statement_location = ancestors.find_nearest(ast.RawStmt).node.stmt_location
+        column_offset = (
+            node_location - statement_location
+            if node_location > 0
+            else statement_length
+        )
 
-        self.statement_length = ancestors.find_nearest(ast.RawStmt).node.stmt_len
+        statement_location_end = statement_location + statement_length
+
+        line_number = self.source_code[:statement_location_end].count("\n") + 1
+
+        line_start = self.source_code[:statement_location_end].rfind(";\n") + 1
+
+        line_end = self.source_code.find("\n", statement_location_end)
+
+        source_text = self.source_code[line_start:line_end].strip("\n")
+
+        self.line_number = line_number
+        self.column_offset = column_offset
+        self.source_text = source_text
+        self.statement_location = statement_location
 
         return func(self, ancestors, node)
 

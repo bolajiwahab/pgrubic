@@ -46,9 +46,10 @@ class InvalidForeignKeyName(linter.BaseChecker):
 
             self.violations.add(
                 linter.Violation(
+                    line_number=self.line_number,
+                    column_offset=self.column_offset,
+                    source_text=self.source_text,
                     statement_location=self.statement_location,
-                    statement_length=self.statement_length,
-                    node_location=self.node_location,
                     description=f"Foreign key constraint"
                     f" '{node.conname}' does not follow naming convention"
                     f" '{self.config.lint.regex_constraint_foreign_key}'",

@@ -18,9 +18,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         self,
         *,
         identifier: str,
+        line_number: int,
+        column_offset: int,
+        source_text: str,
         statement_location: int,
-        statement_length: int,
-        node_location: int,
     ) -> None:
         """Check identifier for violations."""
         ...
@@ -33,9 +34,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         """Visit CreateStmt."""
         self._check_identifier(
             identifier=node.relation.relname,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            source_text=self.source_text,
             statement_location=self.statement_location,
-            statement_length=self.statement_length,
-            node_location=self.node_location,
         )
 
     def visit_ColumnDef(
@@ -46,9 +48,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         """Visit ColumnDef."""
         self._check_identifier(
             identifier=node.colname,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            source_text=self.source_text,
             statement_location=self.statement_location,
-            statement_length=self.statement_length,
-            node_location=self.node_location,
         )
 
     def visit_ViewStmt(
@@ -59,9 +62,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         """Visit ViewStmt."""
         self._check_identifier(
             identifier=node.view.relname,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            source_text=self.source_text,
             statement_location=self.statement_location,
-            statement_length=self.statement_length,
-            node_location=self.node_location,
         )
 
     def visit_IndexStmt(
@@ -72,9 +76,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         """Visit IndexStmt."""
         self._check_identifier(
             identifier=node.idxname,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            source_text=self.source_text,
             statement_location=self.statement_location,
-            statement_length=self.statement_length,
-            node_location=self.node_location,
         )
 
     def visit_CreateSeqStmt(
@@ -85,9 +90,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         """Visit CreateSeqStmt."""
         self._check_identifier(
             identifier=node.sequence.relname,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            source_text=self.source_text,
             statement_location=self.statement_location,
-            statement_length=self.statement_length,
-            node_location=self.node_location,
         )
 
     def visit_CreateSchemaStmt(
@@ -98,9 +104,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         """Visit CreateSchemaStmt."""
         self._check_identifier(
             identifier=node.schemaname,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            source_text=self.source_text,
             statement_location=self.statement_location,
-            statement_length=self.statement_length,
-            node_location=self.node_location,
         )
 
     def visit_CreateFunctionStmt(
@@ -111,9 +118,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         """Visit CreateFunctionStmt."""
         self._check_identifier(
             identifier=node.funcname[-1].sval,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            source_text=self.source_text,
             statement_location=self.statement_location,
-            statement_length=self.statement_length,
-            node_location=self.node_location,
         )
 
     def visit_Constraint(
@@ -125,9 +133,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         if node.conname is not None:
             self._check_identifier(
                 identifier=node.conname,
+                line_number=self.line_number,
+                column_offset=self.column_offset,
+                source_text=self.source_text,
                 statement_location=self.statement_location,
-                statement_length=self.statement_length,
-                node_location=self.node_location,
             )
 
     def visit_CreatedbStmt(
@@ -138,9 +147,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         """Visit CreatedbStmt."""
         self._check_identifier(
             identifier=node.dbname,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            source_text=self.source_text,
             statement_location=self.statement_location,
-            statement_length=self.statement_length,
-            node_location=self.node_location,
         )
 
     def visit_CreateRoleStmt(
@@ -151,9 +161,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         """Visit CreateRoleStmt."""
         self._check_identifier(
             identifier=node.role,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            source_text=self.source_text,
             statement_location=self.statement_location,
-            statement_length=self.statement_length,
-            node_location=self.node_location,
         )
 
     def visit_CreateTableSpaceStmt(
@@ -164,9 +175,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         """Visit CreateTableSpaceStmt."""
         self._check_identifier(
             identifier=node.tablespacename,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            source_text=self.source_text,
             statement_location=self.statement_location,
-            statement_length=self.statement_length,
-            node_location=self.node_location,
         )
 
     def visit_CreateTrigStmt(
@@ -177,9 +189,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         """Visit CreateTrigStmt."""
         self._check_identifier(
             identifier=node.trigname,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            source_text=self.source_text,
             statement_location=self.statement_location,
-            statement_length=self.statement_length,
-            node_location=self.node_location,
         )
 
     def visit_CreateEnumStmt(
@@ -190,9 +203,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         """Visit CreateEnumStmt."""
         self._check_identifier(
             identifier=node.typeName[-1].sval,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            source_text=self.source_text,
             statement_location=self.statement_location,
-            statement_length=self.statement_length,
-            node_location=self.node_location,
         )
 
     def visit_RuleStmt(
@@ -203,9 +217,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         """Visit RuleStmt."""
         self._check_identifier(
             identifier=node.rulename,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            source_text=self.source_text,
             statement_location=self.statement_location,
-            statement_length=self.statement_length,
-            node_location=self.node_location,
         )
 
     def visit_IntoClause(
@@ -216,9 +231,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         """Visit IntoClause."""
         self._check_identifier(
             identifier=node.rel.relname,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            source_text=self.source_text,
             statement_location=self.statement_location,
-            statement_length=self.statement_length,
-            node_location=self.node_location,
         )
 
     def visit_CompositeTypeStmt(
@@ -229,7 +245,8 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         """Visit IntoClause."""
         self._check_identifier(
             identifier=node.typevar.relname,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            source_text=self.source_text,
             statement_location=self.statement_location,
-            statement_length=self.statement_length,
-            node_location=self.node_location,
         )

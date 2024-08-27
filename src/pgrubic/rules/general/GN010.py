@@ -28,16 +28,18 @@ class TableColumnConflict(linter.BaseChecker):
     def _register_violation(
         self,
         table_name: str,
+        line_number: int,
+        column_offset: int,
+        source_text: str,
         statement_location: int,
-        statement_length: int,
-        node_location: int,
     ) -> None:
         """Register the violation."""
         self.violations.add(
             linter.Violation(
+                line_number=line_number,
+                column_offset=column_offset,
+                source_text=source_text,
                 statement_location=statement_location,
-                statement_length=statement_length,
-                node_location=node_location,
                 description=f"Table name '{table_name}' conflicts with the"
                 " name of its columns",
             ),
@@ -55,9 +57,10 @@ class TableColumnConflict(linter.BaseChecker):
 
             self._register_violation(
                 table_name=node.relation.relname,
+                line_number=self.line_number,
+                column_offset=self.column_offset,
+                source_text=self.source_text,
                 statement_location=self.statement_location,
-                statement_length=self.statement_length,
-                node_location=self.node_location,
             )
 
     def visit_AlterTableStmt(
@@ -76,7 +79,8 @@ class TableColumnConflict(linter.BaseChecker):
 
             self._register_violation(
                 table_name=node.relation.relname,
+                line_number=self.line_number,
+                column_offset=self.column_offset,
+                source_text=self.source_text,
                 statement_location=self.statement_location,
-                statement_length=self.statement_length,
-                node_location=self.node_location,
             )

@@ -42,9 +42,10 @@ class DisallowedSchema(linter.BaseChecker):
 
                     self.violations.add(
                         linter.Violation(
+                            line_number=self.line_number,
+                            column_offset=self.column_offset,
+                            source_text=self.source_text,
                             statement_location=self.statement_location,
-                            statement_length=self.statement_length,
-                            node_location=self.node_location,
                             description=f"Schema '{node.schemaname}' is disallowed in"
                             f" config with reason: '{schema.reason}'"
                             f", use '{schema.use_instead}' instead",
@@ -75,9 +76,10 @@ class DisallowedSchema(linter.BaseChecker):
 
                 self.violations.add(
                     linter.Violation(
+                        line_number=self.line_number,
+                        column_offset=self.column_offset,
+                        source_text=self.source_text,
                         statement_location=self.statement_location,
-                        statement_length=self.statement_length,
-                        node_location=self.node_location,
                         description=f"Schema '{schema_name}' is disallowed in"
                         f" config with reason: '{schema.reason}'"
                         f", use '{schema.use_instead}' instead",
@@ -108,9 +110,10 @@ class DisallowedSchema(linter.BaseChecker):
 
                 self.violations.add(
                     linter.Violation(
+                        line_number=self.line_number,
+                        column_offset=self.column_offset,
+                        source_text=self.source_text,
                         statement_location=self.statement_location,
-                        statement_length=self.statement_length,
-                        node_location=self.node_location,
                         description=f"Schema '{schema_name}' is disallowed in"
                         f" config with reason: '{schema.reason}'"
                         f", use '{schema.use_instead}' instead",
