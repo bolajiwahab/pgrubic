@@ -28,18 +28,20 @@ class SpecialCharacterInIdentifier(CheckIdentifier):
     def _check_identifier(
         self,
         identifier: str,
+        line_number: int,
+        column_offset: int,
+        source_text: str,
         statement_location: int,
-        statement_length: int,
-        node_location: int,
     ) -> None:
         """Checks for identifiers with special characters."""
         if identifier and not identifier.replace("_", "").isalnum():
 
             self.violations.add(
                 linter.Violation(
+                    line_number=line_number,
+                    column_offset=column_offset,
+                    source_text=source_text,
                     statement_location=statement_location,
-                    statement_length=statement_length,
-                    node_location=node_location,
                     description=f"Identifier should not contain Special characters '{identifier}'",  # noqa: E501
                 ),
             )

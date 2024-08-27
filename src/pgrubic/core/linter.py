@@ -199,6 +199,7 @@ class Linter:
                 comments=comments,
                 semicolon_after_last_statement=True,
                 comma_at_eoln=True,
+                remove_pg_catalog_from_functions=True,
             )(tree),
         )
 

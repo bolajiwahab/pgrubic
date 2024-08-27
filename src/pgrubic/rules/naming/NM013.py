@@ -36,18 +36,20 @@ class PgPrefixIdentifier(CheckIdentifier):
     def _check_identifier(
         self,
         identifier: str,
+        line_number: int,
+        column_offset: int,
+        source_text: str,
         statement_location: int,
-        statement_length: int,
-        node_location: int,
     ) -> None:
         """Checks for identifiers prefix with pg_."""
         if identifier and identifier.startswith("pg_"):
 
             self.violations.add(
                 linter.Violation(
+                    line_number=line_number,
+                    column_offset=column_offset,
+                    source_text=source_text,
                     statement_location=statement_location,
-                    statement_length=statement_length,
-                    node_location=node_location,
                     description="Identifier should not use prefix 'pg_'",
                 ),
             )
