@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.general.GN010.TableColumnConflict
+::: pgrubic.rules.general.GN010.TableColumnConflict
 

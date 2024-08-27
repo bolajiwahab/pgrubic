@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.general.GN023.ForbidDeleteWithoutWhereClause
+::: pgrubic.rules.general.GN023.ForbidDeleteWithoutWhereClause
 

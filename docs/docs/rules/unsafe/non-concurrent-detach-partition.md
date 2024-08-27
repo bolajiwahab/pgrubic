@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.unsafe.UN027.NonConcurrentDetachPartition
+::: pgrubic.rules.unsafe.UN027.NonConcurrentDetachPartition
 

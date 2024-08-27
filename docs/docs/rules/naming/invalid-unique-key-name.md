@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.naming.NM003.InvalidUniqueKeyName
+::: pgrubic.rules.naming.NM003.InvalidUniqueKeyName
 

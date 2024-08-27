@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.unsafe.UN022.RenameTable
+::: pgrubic.rules.unsafe.UN022.RenameTable
 

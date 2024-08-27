@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.typing.TYP017.NumericWithPrecision
+::: pgrubic.rules.typing.TYP017.NumericWithPrecision
 

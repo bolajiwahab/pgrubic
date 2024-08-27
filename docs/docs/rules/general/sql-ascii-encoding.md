@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.general.GN003.SqlAsciiEncoding
+::: pgrubic.rules.general.GN003.SqlAsciiEncoding
 

@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.general.GN005.IndexElementsMoreThanThree
+::: pgrubic.rules.general.GN005.IndexElementsMoreThanThree
 

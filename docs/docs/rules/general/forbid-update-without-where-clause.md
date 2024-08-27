@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.general.GN022.ForbidUpdateWithoutWhereClause
+::: pgrubic.rules.general.GN022.ForbidUpdateWithoutWhereClause
 

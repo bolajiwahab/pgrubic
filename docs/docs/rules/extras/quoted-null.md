@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.extras.EX001.QuotedNull
+::: pgrubic.rules.extras.EX001.QuotedNull
 

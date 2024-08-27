@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.typing.TYP015.DisallowedDataType
+::: pgrubic.rules.typing.TYP015.DisallowedDataType
 

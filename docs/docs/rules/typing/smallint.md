@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.typing.TYP011.Smallint
+::: pgrubic.rules.typing.TYP011.Smallint
 

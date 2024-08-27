@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.constraint.CST002.CascadeDelete
+::: pgrubic.rules.constraint.CST002.CascadeDelete
 

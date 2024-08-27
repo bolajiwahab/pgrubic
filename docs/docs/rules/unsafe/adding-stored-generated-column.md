@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.unsafe.UN006.AddingStoredGeneratedColumn
+::: pgrubic.rules.unsafe.UN006.AddingStoredGeneratedColumn
 

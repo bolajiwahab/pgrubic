@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.typing.TYP002.TimeWithTimeZone
+::: pgrubic.rules.typing.TYP002.TimeWithTimeZone
 

@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.general.GN002.CreateRule
+::: pgrubic.rules.general.GN002.CreateRule
 

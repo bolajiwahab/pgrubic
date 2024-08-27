@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.typing.TYP009.Json
+::: pgrubic.rules.typing.TYP009.Json
 

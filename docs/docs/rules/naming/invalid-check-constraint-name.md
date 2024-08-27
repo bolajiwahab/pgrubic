@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.naming.NM005.InvalidCheckConstraintName
+::: pgrubic.rules.naming.NM005.InvalidCheckConstraintName
 

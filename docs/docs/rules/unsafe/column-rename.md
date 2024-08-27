@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.unsafe.UN003.ColumnRename
+::: pgrubic.rules.unsafe.UN003.ColumnRename
 

@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.typing.TYP014.Hstore
+::: pgrubic.rules.typing.TYP014.Hstore
 

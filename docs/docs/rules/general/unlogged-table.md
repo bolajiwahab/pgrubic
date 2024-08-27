@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.general.GN019.UnloggedTable
+::: pgrubic.rules.general.GN019.UnloggedTable
 

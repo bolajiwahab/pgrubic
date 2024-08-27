@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.general.GN011.MissingRequiredColumn
+::: pgrubic.rules.general.GN011.MissingRequiredColumn
 

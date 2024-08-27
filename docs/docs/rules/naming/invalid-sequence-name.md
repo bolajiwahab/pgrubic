@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.naming.NM007.InvalidSequenceName
+::: pgrubic.rules.naming.NM007.InvalidSequenceName
 

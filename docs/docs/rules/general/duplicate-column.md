@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.general.GN009.DuplicateColumn
+::: pgrubic.rules.general.GN009.DuplicateColumn
 

@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.unsafe.UN017.IndexMovementToTablespace
+::: pgrubic.rules.unsafe.UN017.IndexMovementToTablespace
 

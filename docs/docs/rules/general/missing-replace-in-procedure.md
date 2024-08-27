@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.general.GN008.MissingReplaceInProcedure
+::: pgrubic.rules.general.GN008.MissingReplaceInProcedure
 

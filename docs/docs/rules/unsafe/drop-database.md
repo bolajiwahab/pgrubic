@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.unsafe.UN008.DropDatabase
+::: pgrubic.rules.unsafe.UN008.DropDatabase
 

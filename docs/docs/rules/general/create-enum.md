@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.general.GN006.CreateEnum
+::: pgrubic.rules.general.GN006.CreateEnum
 

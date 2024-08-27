@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.general.GN015.DropCascade
+::: pgrubic.rules.general.GN015.DropCascade
 

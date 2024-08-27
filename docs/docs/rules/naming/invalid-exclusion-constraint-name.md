@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.naming.NM006.InvalidExclusionConstraintName
+::: pgrubic.rules.naming.NM006.InvalidExclusionConstraintName
 

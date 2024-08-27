@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.unsafe.UN016.NonConcurrentIndexCreation
+::: pgrubic.rules.unsafe.UN016.NonConcurrentIndexCreation
 

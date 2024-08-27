@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.naming.NM014.SingleLetterIdentifier
+::: pgrubic.rules.naming.NM014.SingleLetterIdentifier
 

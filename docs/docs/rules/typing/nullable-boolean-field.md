@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.typing.TYP018.NullableBooleanField
+::: pgrubic.rules.typing.TYP018.NullableBooleanField
 

@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.typing.TYP006.Varchar
+::: pgrubic.rules.typing.TYP006.Varchar
 

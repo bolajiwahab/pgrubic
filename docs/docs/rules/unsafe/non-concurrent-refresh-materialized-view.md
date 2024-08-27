@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.unsafe.UN028.NonConcurrentRefreshMaterializedView
+::: pgrubic.rules.unsafe.UN028.NonConcurrentRefreshMaterializedView
 

@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.unsafe.UN011.NotNullConstraintOnNewColumnWithNoStaticDefault
+::: pgrubic.rules.unsafe.UN011.NotNullConstraintOnNewColumnWithNoStaticDefault
 

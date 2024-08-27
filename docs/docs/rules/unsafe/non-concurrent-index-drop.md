@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.unsafe.UN019.NonConcurrentIndexDrop
+::: pgrubic.rules.unsafe.UN019.NonConcurrentIndexDrop
 

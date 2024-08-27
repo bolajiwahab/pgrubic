@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.naming.NM016.DateColumnWithoutSuffix
+::: pgrubic.rules.naming.NM016.DateColumnWithoutSuffix
 

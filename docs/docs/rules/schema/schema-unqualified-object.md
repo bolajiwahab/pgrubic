@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.schema.SCM001.SchemaUnqualifiedObject
+::: pgrubic.rules.schema.SCM001.SchemaUnqualifiedObject
 

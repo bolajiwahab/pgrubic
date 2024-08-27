@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.general.GN001.TableInheritance
+::: pgrubic.rules.general.GN001.TableInheritance
 

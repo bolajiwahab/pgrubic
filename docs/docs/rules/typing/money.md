@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.typing.TYP007.Money
+::: pgrubic.rules.typing.TYP007.Money
 

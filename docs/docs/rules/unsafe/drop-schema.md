@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.unsafe.UN009.DropSchema
+::: pgrubic.rules.unsafe.UN009.DropSchema
 

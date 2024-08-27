@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.naming.NM008.ImplicitConstraintName
+::: pgrubic.rules.naming.NM008.ImplicitConstraintName
 

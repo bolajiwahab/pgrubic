@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.unsafe.UN005.AddingAutoIncrementIdentityColumn
+::: pgrubic.rules.unsafe.UN005.AddingAutoIncrementIdentityColumn
 

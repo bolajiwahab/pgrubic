@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.typing.TYP004.TimestampWithTimezoneWithPrecision
+::: pgrubic.rules.typing.TYP004.TimestampWithTimezoneWithPrecision
 

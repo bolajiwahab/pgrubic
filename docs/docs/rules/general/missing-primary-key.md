@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.general.GN004.MissingPrimaryKey
+::: pgrubic.rules.general.GN004.MissingPrimaryKey
 

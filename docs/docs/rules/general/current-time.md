@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.general.GN020.CurrentTime
+::: pgrubic.rules.general.GN020.CurrentTime
 

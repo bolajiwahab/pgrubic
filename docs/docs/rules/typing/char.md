@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.typing.TYP005.Char
+::: pgrubic.rules.typing.TYP005.Char
 

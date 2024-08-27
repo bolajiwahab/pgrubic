@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.schema.SCM002.DisallowedSchema
+::: pgrubic.rules.schema.SCM002.DisallowedSchema
 

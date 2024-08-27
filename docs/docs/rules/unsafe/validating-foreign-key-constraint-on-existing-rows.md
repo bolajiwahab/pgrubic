@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.unsafe.UN012.ValidatingForeignKeyConstraintOnExistingRows
+::: pgrubic.rules.unsafe.UN012.ValidatingForeignKeyConstraintOnExistingRows
 

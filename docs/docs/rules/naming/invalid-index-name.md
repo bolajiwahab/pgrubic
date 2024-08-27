@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.naming.NM001.InvalidIndexName
+::: pgrubic.rules.naming.NM001.InvalidIndexName
 

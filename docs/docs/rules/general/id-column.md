@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.general.GN017.IdColumn
+::: pgrubic.rules.general.GN017.IdColumn
 

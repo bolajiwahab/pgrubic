@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.constraint.CST003.IdentityGeneratedByDefault
+::: pgrubic.rules.constraint.CST003.IdentityGeneratedByDefault
 

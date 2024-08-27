@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.unsafe.UN007.DropTablespace
+::: pgrubic.rules.unsafe.UN007.DropTablespace
 

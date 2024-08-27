@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.typing.TYP019.MismatchColumnInDataTypeChange
+::: pgrubic.rules.typing.TYP019.MismatchColumnInDataTypeChange
 

@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.unsafe.UN001.DropColumn
+::: pgrubic.rules.unsafe.UN001.DropColumn
 

@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.general.GN014.SelectInto
+::: pgrubic.rules.general.GN014.SelectInto
 

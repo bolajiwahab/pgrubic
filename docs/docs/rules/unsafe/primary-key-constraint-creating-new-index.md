@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.unsafe.UN015.PrimaryKeyConstraintCreatingNewIndex
+::: pgrubic.rules.unsafe.UN015.PrimaryKeyConstraintCreatingNewIndex
 

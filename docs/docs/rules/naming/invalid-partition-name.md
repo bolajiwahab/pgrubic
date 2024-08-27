@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.naming.NM009.InvalidPartitionName
+::: pgrubic.rules.naming.NM009.InvalidPartitionName
 

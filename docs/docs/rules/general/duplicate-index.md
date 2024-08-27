@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.general.GN025.DuplicateIndex
+::: pgrubic.rules.general.GN025.DuplicateIndex
 

@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.naming.NM004.InvalidForeignKeyName
+::: pgrubic.rules.naming.NM004.InvalidForeignKeyName
 

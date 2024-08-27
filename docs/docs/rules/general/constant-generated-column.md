@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.general.GN016.ConstantGeneratedColumn
+::: pgrubic.rules.general.GN016.ConstantGeneratedColumn
 

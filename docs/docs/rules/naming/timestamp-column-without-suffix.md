@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.naming.NM015.TimestampColumnWithoutSuffix
+::: pgrubic.rules.naming.NM015.TimestampColumnWithoutSuffix
 

@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.unsafe.UN024.TablesMovementToTablespace
+::: pgrubic.rules.unsafe.UN024.TablesMovementToTablespace
 

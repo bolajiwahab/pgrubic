@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.naming.NM013.PgPrefixIdentifier
+::: pgrubic.rules.naming.NM013.PgPrefixIdentifier
 

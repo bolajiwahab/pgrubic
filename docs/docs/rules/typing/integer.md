@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.typing.TYP010.Integer
+::: pgrubic.rules.typing.TYP010.Integer
 

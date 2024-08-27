@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.general.GN012.RemoveRequiredColumn
+::: pgrubic.rules.general.GN012.RemoveRequiredColumn
 

@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.naming.NM010.NonSnakeCaseIdentifier
+::: pgrubic.rules.naming.NM010.NonSnakeCaseIdentifier
 

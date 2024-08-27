@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.typing.TYP012.Float
+::: pgrubic.rules.typing.TYP012.Float
 

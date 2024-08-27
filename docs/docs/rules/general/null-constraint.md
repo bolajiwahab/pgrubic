@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.general.GN021.NullConstraint
+::: pgrubic.rules.general.GN021.NullConstraint
 

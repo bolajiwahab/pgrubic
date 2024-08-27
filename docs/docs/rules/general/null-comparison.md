@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.general.GN024.NullComparison
+::: pgrubic.rules.general.GN024.NullComparison
 

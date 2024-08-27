@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.security.SC002.ProceduralLanguageWhitelist
+::: pgrubic.rules.security.SC002.ProceduralLanguageWhitelist
 

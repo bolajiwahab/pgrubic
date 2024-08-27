@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.general.GN027.YodaCondition
+::: pgrubic.rules.general.GN027.YodaCondition
 

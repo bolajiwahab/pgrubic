@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.constraint.CST004.RemoveConstraint
+::: pgrubic.rules.constraint.CST004.RemoveConstraint
 

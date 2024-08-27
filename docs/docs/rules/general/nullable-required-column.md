@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.general.GN013.NullableRequiredColumn
+::: pgrubic.rules.general.GN013.NullableRequiredColumn
 

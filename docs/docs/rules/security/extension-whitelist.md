@@ -2,5 +2,5 @@
 
 Automatic fix is not available
 
-::: pgshield.rules.security.SC001.ExtensionWhitelist
+::: pgrubic.rules.security.SC001.ExtensionWhitelist
 

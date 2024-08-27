@@ -2,5 +2,5 @@
 
 Automatic fix is available
 
-::: pgshield.rules.unsafe.UN013.ValidatingCheckConstraintOnExistingRows
+::: pgrubic.rules.unsafe.UN013.ValidatingCheckConstraintOnExistingRows
 
