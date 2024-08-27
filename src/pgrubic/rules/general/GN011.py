@@ -33,7 +33,7 @@ class MissingRequiredColumn(linter.BaseChecker):
 
             given_columns, _ = get_columns_from_table_creation(node)
 
-            for column in self.config.required_columns:
+            for column in self.config.lint.required_columns:
 
                 if column.name not in given_columns:
 

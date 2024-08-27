@@ -35,7 +35,9 @@ class InvalidExclusionConstraintName(linter.BaseChecker):
         if (
             node.contype == enums.ConstrType.CONSTR_EXCLUSION
             and node.conname
-            and (not re.match(self.config.regex_constraint_exclusion, node.conname))
+            and (
+                not re.match(self.config.lint.regex_constraint_exclusion, node.conname)
+            )
         ):
 
             self.violations.add(
@@ -45,6 +47,6 @@ class InvalidExclusionConstraintName(linter.BaseChecker):
                     node_location=self.node_location,
                     description=f"Exclusion constraint"
                     f" '{node.conname}' does not follow naming convention"
-                    f" '{self.config.regex_constraint_exclusion}'",
+                    f" '{self.config.lint.regex_constraint_exclusion}'",
                 ),
             )

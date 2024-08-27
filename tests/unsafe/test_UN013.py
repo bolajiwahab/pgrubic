@@ -206,7 +206,7 @@ def test_fail_fix_validating_check_constraint_on_existing_rows(
         "ALTER TABLE public.card ADD CONSTRAINT chk CHECK (account_id > 0) NOT VALID ;"
     )
 
-    validating_check_constraint_on_existing_rows.config.fix = True
+    validating_check_constraint_on_existing_rows.config.lint.fix = True
 
     violations: core.ViolationMetric = (
         lint_validating_check_constraint_on_existing_rows.run(

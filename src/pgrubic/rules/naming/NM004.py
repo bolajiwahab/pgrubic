@@ -36,7 +36,12 @@ class InvalidForeignKeyName(linter.BaseChecker):
         if (
             node.contype == enums.ConstrType.CONSTR_FOREIGN
             and node.conname
-            and (not re.match(self.config.regex_constraint_foreign_key, node.conname))
+            and (
+                not re.match(
+                    self.config.lint.regex_constraint_foreign_key,
+                    node.conname,
+                )
+            )
         ):
 
             self.violations.add(
@@ -46,6 +51,6 @@ class InvalidForeignKeyName(linter.BaseChecker):
                     node_location=self.node_location,
                     description=f"Foreign key constraint"
                     f" '{node.conname}' does not follow naming convention"
-                    f" '{self.config.regex_constraint_foreign_key}'",
+                    f" '{self.config.lint.regex_constraint_foreign_key}'",
                 ),
             )

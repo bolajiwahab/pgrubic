@@ -36,7 +36,9 @@ class InvalidUniqueKeyName(linter.BaseChecker):
         if (
             node.contype == enums.ConstrType.CONSTR_UNIQUE
             and node.conname
-            and (not re.match(self.config.regex_constraint_unique_key, node.conname))
+            and (
+                not re.match(self.config.lint.regex_constraint_unique_key, node.conname)
+            )
         ):
 
             self.violations.add(
@@ -46,6 +48,6 @@ class InvalidUniqueKeyName(linter.BaseChecker):
                     node_location=self.node_location,
                     description=f"Unique key constraint"
                     f" '{node.conname}' does not follow naming convention"
-                    f" '{self.config.regex_constraint_unique_key}'",
+                    f" '{self.config.lint.regex_constraint_unique_key}'",
                 ),
             )

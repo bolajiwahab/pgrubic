@@ -36,7 +36,7 @@ class InvalidCheckConstraintName(linter.BaseChecker):
         if (
             node.contype == enums.ConstrType.CONSTR_CHECK
             and node.conname
-            and (not re.match(self.config.regex_constraint_check, node.conname))
+            and (not re.match(self.config.lint.regex_constraint_check, node.conname))
         ):
 
             self.violations.add(
@@ -46,6 +46,6 @@ class InvalidCheckConstraintName(linter.BaseChecker):
                     node_location=self.node_location,
                     description=f"Check constraint"
                     f" '{node.conname}' does not follow naming convention"
-                    f" '{self.config.regex_constraint_check}'",
+                    f" '{self.config.lint.regex_constraint_check}'",
                 ),
             )

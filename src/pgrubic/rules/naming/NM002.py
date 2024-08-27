@@ -36,7 +36,12 @@ class InvalidPrimaryKeyName(linter.BaseChecker):
         if (
             node.contype == enums.ConstrType.CONSTR_PRIMARY
             and node.conname
-            and (not re.match(self.config.regex_constraint_primary_key, node.conname))
+            and (
+                not re.match(
+                    self.config.lint.regex_constraint_primary_key,
+                    node.conname,
+                )
+            )
         ):
 
             self.violations.add(
@@ -46,6 +51,6 @@ class InvalidPrimaryKeyName(linter.BaseChecker):
                     node_location=self.node_location,
                     description=f"Primary key constraint"
                     f" '{node.conname}' does not follow naming convention"
-                    f" '{self.config.regex_constraint_primary_key}'",
+                    f" '{self.config.lint.regex_constraint_primary_key}'",
                 ),
             )

@@ -32,8 +32,8 @@ class ProceduralLanguageWhitelist(linter.BaseChecker):
     ) -> None:
         """Visit CreatePLangStmt."""
         if (
-            node.plname not in self.config.allowed_languages
-            and "*" not in self.config.allowed_languages
+            node.plname not in self.config.lint.allowed_languages
+            and "*" not in self.config.lint.allowed_languages
         ):
 
             self.violations.add(

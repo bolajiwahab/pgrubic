@@ -28,7 +28,7 @@ class DisallowedDataType(linter.BaseChecker):
         node: ast.TypeName,
     ) -> None:
         """Visit TypeName."""
-        for data_type in self.config.disallowed_data_types:
+        for data_type in self.config.lint.disallowed_data_types:
 
             if node.names[-1].sval == data_type.name:
 

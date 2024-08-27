@@ -34,7 +34,7 @@ class InvalidPartitionName(linter.BaseChecker):
     ) -> None:
         """Visit CreateStmt."""
         if node.partbound is not None and not re.match(
-            self.config.regex_partition,
+            self.config.lint.regex_partition,
             node.relation.relname,
         ):
 
@@ -44,6 +44,6 @@ class InvalidPartitionName(linter.BaseChecker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description=f"Partition '{node.relation.relname}' does not follow"
-                    f" naming convention '{self.config.regex_partition}'",
+                    f" naming convention '{self.config.lint.regex_partition}'",
                 ),
             )

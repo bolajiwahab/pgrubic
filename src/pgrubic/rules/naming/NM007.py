@@ -33,7 +33,7 @@ class InvalidSequenceName(linter.BaseChecker):
         node: ast.CreateSeqStmt,
     ) -> None:
         """Visit CreateSeqStmt."""
-        if not re.match(self.config.regex_sequence, node.sequence.relname):
+        if not re.match(self.config.lint.regex_sequence, node.sequence.relname):
 
             self.violations.add(
                 linter.Violation(
@@ -41,6 +41,6 @@ class InvalidSequenceName(linter.BaseChecker):
                     statement_length=self.statement_length,
                     node_location=self.node_location,
                     description=f"Sequence '{node.sequence.relname}' does not follow"
-                    f" naming convention '{self.config.regex_sequence}'",
+                    f" naming convention '{self.config.lint.regex_sequence}'",
                 ),
             )
