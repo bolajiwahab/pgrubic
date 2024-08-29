@@ -1,26 +1,27 @@
-"""Method to generate docs for rules."""
+"""Genrate documentation for rules."""
 
 import sys
+import shutil
 import pathlib
 
 from caseconverter import kebabcase
 
 from pgrubic.core.loader import load_rules
 
-base_path: pathlib.Path = pathlib.Path(
-    "/Users/bolajiwahab/repos/bolajiwahab/pgrubic/docs/docs/rules",
-)
+rules_path = pathlib.Path.cwd() / "docs/docs/rules"
 
 rules = load_rules()
+
+shutil.rmtree(rules_path)
 
 for rule in rules:
 
     group = rule.__module__.split(".")[-2]
 
-    pathlib.Path(base_path / group).mkdir(parents=True, exist_ok=True)
+    pathlib.Path(rules_path / group).mkdir(parents=True, exist_ok=True)
 
     with pathlib.Path.open(
-        base_path / group / f"{kebabcase(rule.__name__)}.md",
+        rules_path / group / f"{kebabcase(rule.__name__)}.md",
         "w",
     ) as file:
 
@@ -31,4 +32,4 @@ for rule in rules:
         else:
             file.write("Automatic fix is not available\n\n")
 
-        file.write(f"::: {sys.modules[rule.__module__].__name__}.{rule.__name__}\n\n")
+        file.write(f"::: {sys.modules[rule.__module__].__name__}.{rule.__name__}\n")

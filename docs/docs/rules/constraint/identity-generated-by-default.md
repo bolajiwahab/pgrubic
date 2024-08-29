@@ -3,4 +3,3 @@
 Automatic fix is available
 
 ::: pgrubic.rules.constraint.CST003.IdentityGeneratedByDefault
-

@@ -3,4 +3,3 @@
 Automatic fix is available
 
 ::: pgrubic.rules.extras.EX001.QuotedNull
-

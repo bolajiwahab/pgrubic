@@ -3,4 +3,3 @@
 Automatic fix is available
 
 ::: pgrubic.rules.naming.NM015.TimestampColumnWithoutSuffix
-

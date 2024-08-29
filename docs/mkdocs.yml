@@ -1,8 +1,8 @@
-site_name: pgRubric
-site_description: FastAPI framework, high performance, easy to learn, fast to code, ready for production
+site_name: pgRubic
+site_description: PostgreSQL linter for schema migrations and design best practices
 
-repo_url: https://github.com/bolajiwahab/pgshield
-repo_name: pgshield
+repo_url: https://github.com/bolajiwahab/pgrubic
+repo_name: pgrubic
 
 plugins:
 - mkdocstrings:
@@ -31,6 +31,7 @@ plugins:
             - "!^_"
             - "!^__"
             - "!^visit"
+            - "!^is_fix_applicable"
 - search
 # - social
 
@@ -41,7 +42,7 @@ theme:
   features:
     # - navigation.tabs
     - navigation.sections
-    - navigation.indexes 
+    - navigation.indexes
     - navigation.expand
     - toc.integrate
     - navigation.top
@@ -59,14 +60,14 @@ theme:
   palette:
     - scheme: default
       toggle:
-        icon: material/toggle-switch-off-outline 
+        icon: material/toggle-switch-off-outline
         name: Switch to dark mode
       primary: teal
-      accent: purple 
-    - scheme: slate 
+      accent: purple
+    - scheme: slate
       toggle:
         icon: material/toggle-switch
-        name: Switch to light mode    
+        name: Switch to light mode
       primary: teal
       accent: lime
 

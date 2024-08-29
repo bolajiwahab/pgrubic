@@ -32,15 +32,19 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "ruff",
-  "black",
-  "mypy",
-  "isort",
+  "ruff==0.6.2",
+  "black==24.8.0",
+  "mypy==1.11.2",
+  "isort==5.13.2",
   "add-trailing-comma==3.1.0",
-  "pre-commit",
-  "pytest",
-  "coverage",
-  "tox",
+  "pre-commit==3.8.0",
+  "pytest==7.4.3",
+  "coverage==7.6.1",
+  "tox==4.18.0",
+  "mkdocs==1.6.0",
+  "mkdocs-material==9.5.33",
+  "mkdocstrings==0.25.2",
+  "mkdocstrings-python==1.10.8",
 ]
 
 [project.urls]
@@ -96,16 +100,39 @@ pythonpath = ["src"]
 [tool.tox]
 legacy_tox_ini = """
     [tox]
+    min_version = 4.0
     env_list =
         py312
+        isort
+        linting
+        formatting
+        typing
         docbuild
 
     [testenv]
     deps = pytest
     commands = pytest tests
 
+    [testenv:isort]
+    deps = isort
+    commands = isort --check --diff --profile=black src
+
+    [testenv:linting]
+    deps = ruff
+    commands = ruff check src
+
+    [testenv:formatting]
+    deps = black
+    commands = black src
+
+    [testenv:typing]
+    deps = mypy
+    commands = mypy src
+
     [testenv:docbuild]
     commands =
-      python -m pip install
-      python docs/docs_generator.py
+      # We need to build the project in order to generate the docs.
+      # Hence it fails with import errors.
+      pip install -e .
+      python docs/rule_docs_generator.py
 """

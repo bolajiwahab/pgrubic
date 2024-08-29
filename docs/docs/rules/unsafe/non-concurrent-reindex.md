@@ -3,4 +3,3 @@
 Automatic fix is available
 
 ::: pgrubic.rules.unsafe.UN020.NonConcurrentReindex
-

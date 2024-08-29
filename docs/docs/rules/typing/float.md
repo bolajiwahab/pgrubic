@@ -3,4 +3,3 @@
 Automatic fix is available
 
 ::: pgrubic.rules.typing.TYP012.Float
-

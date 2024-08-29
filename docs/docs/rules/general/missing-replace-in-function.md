@@ -3,4 +3,3 @@
 Automatic fix is available
 
 ::: pgrubic.rules.general.GN007.MissingReplaceInFunction
-

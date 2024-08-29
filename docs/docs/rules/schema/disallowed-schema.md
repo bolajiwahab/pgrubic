@@ -3,4 +3,3 @@
 Automatic fix is available
 
 ::: pgrubic.rules.schema.SCM002.DisallowedSchema
-

@@ -35,6 +35,7 @@ repos:
         entry: check-yaml
         language: python
         types: [yaml]
+        args: [--unsafe]
       # Formatters should be run late so that they can re-format any prior changes.
       - id: black
         name: Formatting with black

@@ -3,4 +3,3 @@
 Automatic fix is not available
 
 ::: pgrubic.rules.unsafe.UN014.UniqueConstraintCreatingNewIndex
-

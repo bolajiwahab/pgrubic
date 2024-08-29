@@ -1,6 +1,5 @@
 """Core functionalities."""
 
-from pgrubic.core import docs_generator
 from pgrubic.core.config import Config, parse_config
 from pgrubic.core.linter import Linter, BaseChecker, ViolationMetric
 from pgrubic.core.loader import load_rules
@@ -14,5 +13,4 @@ __all__ = [
     "parse_config",
     "Config",
     "Formatter",
-    "docs_generator",
 ]
