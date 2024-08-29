@@ -3,8 +3,6 @@
 --- important
 -- makefile to generate docs
 
-
-- type change involving USINGG, columns must match
 - no nulls inside enums, set the column as nullable instead
 
 not possible currently, if any of the ancestors is a transaction block

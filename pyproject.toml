@@ -36,6 +36,7 @@ dev = [
   "black",
   "mypy",
   "isort",
+  "add-trailing-comma==3.1.0",
   "pre-commit",
   "pytest",
   "coverage",
