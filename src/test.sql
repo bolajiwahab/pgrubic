@@ -22,9 +22,9 @@
 
 -- select a = 'null';
 
-select null != a;
+-- select null != a;
 
-select 'okay' = b;
+-- select 'okay' = b;
 -- select null = a;
 
 -- select NULL = 'okay';
@@ -43,5 +43,7 @@ select 'okay' = b;
 --     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$
 --     LANGUAGE SQL;
 -- noqa: UN020
-reindex table tbl -- okay
-;
+-- reindex table tbl -- okay
+-- ;
+
+ALTER TABLE public.card ADD CONSTRAINT chk CHECK (account_id > 0);

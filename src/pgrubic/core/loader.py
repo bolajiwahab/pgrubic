@@ -35,28 +35,25 @@ def load_rules() -> list[linter.BaseChecker]:
                 "_",
             ):
 
-                # set rule code
-                rule.code = rule.__module__.split(".")[-1]
-
                 rules.append(typing.cast(linter.BaseChecker, rule))
 
-                _add_set_locations_to_rule(rule)
+                add_set_locations_to_rule(rule)
 
-                _add_apply_fix_to_rule(rule)
+                add_apply_fix_to_rule(rule)
 
     return rules
 
 
-def _add_set_locations_to_rule(node: typing.Any) -> None:
-    """Add _set_locations to rule."""
+def add_set_locations_to_rule(node: typing.Any) -> None:
+    """Add _set_locations_for_node to rule."""
     for name, method in inspect.getmembers(node, inspect.isfunction):
 
         if method.__name__.startswith("visit_"):
 
-            setattr(node, name, _set_locations(method))
+            setattr(node, name, _set_locations_for_node(method))
 
 
-def _add_apply_fix_to_rule(node: typing.Any) -> None:
+def add_apply_fix_to_rule(node: typing.Any) -> None:
     """Add apply_fix to rule."""
     for name, method in inspect.getmembers(node, inspect.isfunction):
 
@@ -65,7 +62,7 @@ def _add_apply_fix_to_rule(node: typing.Any) -> None:
             setattr(node, name, apply_fix(method))
 
 
-def _set_locations(
+def _set_locations_for_node(
     func: abc.Callable[..., typing.Any],
 ) -> abc.Callable[..., typing.Any]:
     """Set locations for node."""

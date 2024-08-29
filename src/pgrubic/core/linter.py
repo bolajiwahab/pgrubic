@@ -37,8 +37,14 @@ class ViolationMetric:
 class BaseChecker(visitors.Visitor):  # type: ignore[misc]
     """Define a lint rule, and store all the nodes that violate it."""
 
+    # Should not be set directly
+    # as it is set in __init_subclass__
     code: str
-    is_auto_fixable: bool
+
+    # Is this rule automatically fixable? Used by documentation
+    is_auto_fixable: bool = False
+
+    # Attributes shared among all subclasses
     config: config.Config
     inline_ignores: list[noqa.NoQaDirective]
     source_code: str
@@ -46,22 +52,14 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
     def __init__(self) -> None:
         """Initialize variables."""
         self.violations: set[Violation] = set()
-        self.statement_location: int
-        self.line_number: int
-        self.column_offset: int
-        self.source_text: str
+        self.statement_location: int = 0
+        self.line_number: int = 0
+        self.column_offset: int = 0
+        self.source_text: str = ""
 
     def __init_subclass__(cls, **kwargs: typing.Any) -> None:
-        """Check required attributes."""
-        required_attributes: tuple[str, ...] = ("is_auto_fixable",)
-
-        for required in required_attributes:
-
-            msg = f"Can't instantiate class {cls.__name__} without '{required}' attribute defined"  # noqa: E501
-
-            if not hasattr(cls, required):
-
-                raise TypeError(msg)
+        """Set code attribute for subclasses."""
+        cls.code = cls.__module__.split(".")[-1]
 
     def visit(self, node: ast.Node, ancestors: visitors.Ancestor) -> None:
         """Visit the node."""
