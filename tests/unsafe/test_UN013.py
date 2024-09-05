@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.UN013 import ValidatingCheckConstraintOnExistingRows
 @pytest.fixture(scope="module")
 def validating_check_constraint_on_existing_rows() -> core.BaseChecker:
     """Create an instance of ValidatingCheckConstraintOnExistingRows."""
+    core.add_apply_fix_to_rule(ValidatingCheckConstraintOnExistingRows)
     return ValidatingCheckConstraintOnExistingRows()
 
 

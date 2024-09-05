@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.UN012 import ValidatingForeignKeyConstraintOnExistingR
 @pytest.fixture(scope="module")
 def validating_foreign_key_constraint_on_existing_rows() -> core.BaseChecker:
     """Create an instance of ValidatingForeignKeyConstraintOnExistingRows."""
+    core.add_apply_fix_to_rule(ValidatingForeignKeyConstraintOnExistingRows)
     return ValidatingForeignKeyConstraintOnExistingRows()
 
 

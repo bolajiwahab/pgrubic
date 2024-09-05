@@ -24,6 +24,6 @@ class NotNullConstraintOnExistingColumn(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Not null constraint on existing column",
+                    description=f"Not null constraint on existing column `{node.name}`",
                 ),
             )

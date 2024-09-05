@@ -80,7 +80,7 @@ def test_fail_not_null_constraint_on_existing_column_description(
 
     assert (
         next(iter(not_null_constraint_on_existing_column.violations)).description
-        == "Not null constraint on existing column"
+        == "Not null constraint on existing column `id`"
     )
 
 

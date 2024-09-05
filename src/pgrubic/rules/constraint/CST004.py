@@ -43,6 +43,6 @@ class RemoveConstraint(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Constraint removal is discouraged",
+                    description=f"Constraint `{node.name}` removal detected",
                 ),
             )

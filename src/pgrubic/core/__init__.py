@@ -2,7 +2,7 @@
 
 from pgrubic.core.config import Config, parse_config
 from pgrubic.core.linter import Linter, BaseChecker, ViolationMetric
-from pgrubic.core.loader import load_rules
+from pgrubic.core.loader import load_rules, add_apply_fix_to_rule
 from pgrubic.core.formatter import Formatter
 
 __all__ = [
@@ -10,6 +10,7 @@ __all__ = [
     "BaseChecker",
     "ViolationMetric",
     "load_rules",
+    "add_apply_fix_to_rule",
     "parse_config",
     "Config",
     "Formatter",
