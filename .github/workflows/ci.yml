@@ -1,0 +1,69 @@
+name: CI
+
+on:
+    push:
+        branches:
+        - master
+    pull_request:
+        branches:
+        - master
+
+jobs:
+    linting:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                jobs: [ 'linting', 'isort', 'formatting', 'typing']
+        name: ${{ matrix.jobs }}
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                    python-version: '3.12'
+            - name: Install dependencies
+              run: pip install tox
+            - name: Run linting
+              run: tox -e ${{ matrix.jobs }}
+
+    tests:
+        runs-on: ubuntu-latest
+        name: tests
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                    python-version: '3.12'
+            - name: Install dependencies
+              run: pip install tox
+            - name: Run the tests
+              run: tox -e tests
+
+    docbuild:
+        runs-on: ubuntu-latest
+        name: docbuild
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                    python-version: '3.12'
+            - name: Install dependencies
+              run: pip install tox
+            - name: Build docs
+              run: tox -e docbuild
+
+    coverage:
+        runs-on: ubuntu-latest
+        name: coverage
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                    python-version: '3.12'
+            - name: Install dependencies
+              run: pip install tox
+            - name: Run coverage
+              run: tox -e coverage-report
