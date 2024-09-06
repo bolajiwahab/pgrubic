@@ -45,6 +45,7 @@ dev = [
   "mkdocs-material==9.5.33",
   "mkdocstrings==0.25.2",
   "mkdocstrings-python==1.10.8",
+  "types-colorama==0.4.15.20240311",
 ]
 
 [project.urls]
@@ -59,7 +60,6 @@ pgrubic = "pgrubic.__main__:cli"
 
 [tool.mypy]
 python_version = "3.12"
-ignore_missing_imports = true
 warn_unused_configs = true
 warn_redundant_casts = true
 warn_unused_ignores = true
@@ -68,6 +68,10 @@ strict_equality = true
 extra_checks = true
 show_error_codes = true
 no_implicit_reexport = true
+
+[[tool.mypy.overrides]]
+module = ["pglast.*", "caseconverter.*"]
+ignore_missing_imports = true
 
 [tool.ruff]
 lint.select = ["ALL"]
@@ -103,6 +107,7 @@ legacy_tox_ini = """
     min_version = 4.0
     env_list =
         py312
+        tests
         isort
         linting
         formatting
@@ -110,8 +115,26 @@ legacy_tox_ini = """
         docbuild
 
     [testenv]
-    deps = pytest
-    commands = pytest tests
+    deps =
+    commands =
+
+    [testenv:tests]
+    deps =
+        pytest
+        coverage
+    setenv =
+        COVERAGE_FILE = .coverage
+    commands =
+        coverage erase
+        coverage run --source=src -m pytest tests
+
+    [testenv:coverage-report]
+    deps =
+        coverage
+    setenv =
+        COVERAGE_FILE = .coverage
+    commands =
+        coverage report --fail-under=100 --show-missing --omit "*test*"
 
     [testenv:isort]
     deps = isort
@@ -119,20 +142,22 @@ legacy_tox_ini = """
 
     [testenv:linting]
     deps = ruff
-    commands = ruff check src
+    commands = ruff check src tests
 
     [testenv:formatting]
     deps = black
-    commands = black src
+    commands = black src tests
 
     [testenv:typing]
-    deps = mypy
-    commands = mypy src
+    deps =
+        mypy
+        pytest
+    commands = mypy src tests
 
     [testenv:docbuild]
     commands =
-      # We need to build the project in order to generate the docs.
-      # Hence it fails with import errors.
-      pip install -e .
-      python docs/rule_docs_generator.py
+        # We need to build the project in order to generate the docs.
+        # Hence it fails with import errors.
+        pip install -e .
+        python docs/rule_docs_generator.py
 """

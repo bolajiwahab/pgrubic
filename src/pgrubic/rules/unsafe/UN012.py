@@ -1,4 +1,4 @@
-"""Unsafe constraint operations."""
+"""Validating foreign key constraint on existing rows."""
 
 from pglast import ast, enums, visitors
 

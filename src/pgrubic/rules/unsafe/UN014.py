@@ -1,4 +1,4 @@
-"""Unsafe constraint operations."""
+"""Unique constraint creating new index."""
 
 from pglast import ast, enums, visitors
 

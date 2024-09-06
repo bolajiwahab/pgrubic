@@ -1,4 +1,4 @@
-"""Unsafe index operations."""
+"""Non concurrent index creation."""
 
 from pglast import ast, visitors
 

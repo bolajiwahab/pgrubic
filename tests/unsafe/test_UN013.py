@@ -145,7 +145,7 @@ def test_pass_noqa_validating_check_constraint_on_existing_rows(
 def test_fail_noqa_validating_check_constraint_on_existing_rows(
     lint_validating_check_constraint_on_existing_rows: core.Linter,
 ) -> None:
-    """Test validating check constraint on existing rows."""
+    """Test fail noqa validating check constraint on existing rows."""
     sql_noqa: str = """
     ALTER TABLE public.card -- noqa: UN014
         ADD CONSTRAINT chk CHECK(account_id > 0)

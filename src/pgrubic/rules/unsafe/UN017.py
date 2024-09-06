@@ -1,4 +1,4 @@
-"""Unsafe index operations."""
+"""Index movement to tablespace."""
 
 from pglast import ast, enums, visitors
 

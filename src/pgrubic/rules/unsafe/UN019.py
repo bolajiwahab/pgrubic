@@ -1,4 +1,4 @@
-"""Unsafe index operations."""
+"""Non concurrent index drop."""
 
 from pglast import ast, enums, visitors
 
