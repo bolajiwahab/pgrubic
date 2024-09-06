@@ -126,7 +126,7 @@ legacy_tox_ini = """
     deps =
         pytest
         coverage
-    # skip_install = true
+    skip_install = false
     setenv =
         COVERAGE_FILE = .coverage
     commands =
@@ -136,7 +136,6 @@ legacy_tox_ini = """
     [testenv:coverage-report]
     deps =
         coverage
-    # skip_install = true
     setenv =
         COVERAGE_FILE = .coverage
     commands =
@@ -144,17 +143,14 @@ legacy_tox_ini = """
 
     [testenv:isort]
     deps = isort
-    # skip_install = true
     commands = isort --check --diff --profile=black src
 
     [testenv:linting]
     deps = ruff
-    # skip_install = true
     commands = ruff check src tests
 
     [testenv:formatting]
     deps = black
-    # skip_install = true
     commands = black src tests
 
     [testenv:typing]
