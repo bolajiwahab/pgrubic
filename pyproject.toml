@@ -126,7 +126,6 @@ legacy_tox_ini = """
     deps =
         pytest
         coverage
-    skip_install = true
     setenv =
         COVERAGE_FILE = .coverage
     commands =
@@ -137,7 +136,6 @@ legacy_tox_ini = """
     depends = tests
     deps =
         coverage
-    skip_install = true
     setenv =
         COVERAGE_FILE = .coverage
     commands =
@@ -162,7 +160,6 @@ legacy_tox_ini = """
     deps =
         mypy
         pytest
-    skip_install = true
     commands = mypy src tests
 
     [testenv:docbuild]
