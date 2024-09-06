@@ -45,13 +45,11 @@ def test_non_concurrent_index_creation_auto_fixable(
     assert non_concurrent_index_creation.is_auto_fixable is True
 
 
-def test_non_concurrent_index_creation(
+def test_pass_concurrent_index_creation(
     lint_non_concurrent_index_creation: core.Linter,
 ) -> None:
-    """Test non concurrent index creation."""
-    sql_pass: str = """
-    CREATE INDEX CONCURRENTLY idx ON public.card(account_id);
-    """
+    """Test pass concurrent index creation."""
+    sql_pass: str = "CREATE INDEX CONCURRENTLY idx ON public.card(account_id);"
 
     violations: core.ViolationMetric = lint_non_concurrent_index_creation.run(
         source_path=SOURCE_PATH,
@@ -70,9 +68,7 @@ def test_fail_non_concurrent_index_creation(
     lint_non_concurrent_index_creation: core.Linter,
 ) -> None:
     """Test non concurrent index creation."""
-    sql_fail: str = """
-    CREATE INDEX idx ON public.card(account_id);
-    """
+    sql_fail: str = "CREATE INDEX idx ON public.card(account_id);"
 
     violations: core.ViolationMetric = lint_non_concurrent_index_creation.run(
         source_path=SOURCE_PATH,
@@ -92,9 +88,7 @@ def test_fail_non_concurrent_index_creation_description(
     non_concurrent_index_creation: core.BaseChecker,
 ) -> None:
     """Test non concurrent index creation description."""
-    sql_fail: str = """
-    CREATE INDEX idx ON public.card(account_id);
-    """
+    sql_fail: str = "CREATE INDEX idx ON public.card(account_id);"
 
     _: core.ViolationMetric = lint_non_concurrent_index_creation.run(
         source_path=SOURCE_PATH,
@@ -180,11 +174,9 @@ def test_fail_fix_non_concurrent_index_creation(
     non_concurrent_index_creation: core.BaseChecker,
 ) -> None:
     """Test fail fix non concurrent index creation."""
-    sql_fail: str = """
-    CREATE INDEX idx ON public.card(account_id);
-    """
+    sql_fail: str = "CREATE INDEX idx ON public.card(account_id);"
 
-    sql_fix: str = """CREATE INDEX CONCURRENTLY idx\n  ON public.card (account_id);"""
+    sql_fix: str = "CREATE INDEX CONCURRENTLY idx\n  ON public.card (account_id);"
 
     non_concurrent_index_creation.config.lint.fix = True
 

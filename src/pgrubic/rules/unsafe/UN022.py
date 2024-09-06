@@ -1,4 +1,4 @@
-"""Unsafe table operations."""
+"""Checker for rename table."""
 
 from pglast import ast, enums, visitors
 
@@ -24,6 +24,6 @@ class RenameTable(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Rename table",
+                    description="Rename table detected",
                 ),
             )

@@ -1,4 +1,4 @@
-"""Unsafe table operations."""
+"""Checker for drop table."""
 
 from pglast import ast, enums, visitors
 

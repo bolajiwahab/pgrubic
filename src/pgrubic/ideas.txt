@@ -1,7 +1,8 @@
 ****** if a violation is fixed, do we still print it?, ruff does not print it.
 
+-- unnecessary indexes movement across tablespaces.
+
 --- important
--- makefile to generate docs
 
 - no nulls inside enums, set the column as nullable instead
 

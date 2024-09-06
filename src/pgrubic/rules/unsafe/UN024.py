@@ -1,4 +1,4 @@
-"""Unsafe table operations."""
+"""Checker for tables movement to tablespace."""
 
 from pglast import ast, enums, visitors
 
@@ -16,7 +16,10 @@ class TablesMovementToTablespace(linter.BaseChecker):
         node: ast.AlterTableMoveAllStmt,
     ) -> None:
         """Visit AlterTableMoveAllStmt."""
-        if node.objtype == enums.ObjectType.OBJECT_TABLE:
+        if (
+            node.objtype == enums.ObjectType.OBJECT_TABLE
+            and node.new_tablespacename != node.orig_tablespacename
+        ):
 
             self.violations.add(
                 linter.Violation(

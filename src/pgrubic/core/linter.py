@@ -41,7 +41,7 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
     # as it is set in __init_subclass__
     code: str
 
-    # Is this rule automatically fixable? Used by documentation
+    # Is this rule automatically fixable?
     is_auto_fixable: bool = False
 
     # Attributes shared among all subclasses

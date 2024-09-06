@@ -1,4 +1,4 @@
-"""Unsafe table operations."""
+"""Checker for non concurrent refresh materialized view."""
 
 from pglast import ast, visitors
 
@@ -8,7 +8,7 @@ from pgrubic.core import linter
 class NonConcurrentRefreshMaterializedView(linter.BaseChecker):
     """Non concurrent refresh materialized view."""
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_RefreshMatViewStmt(
         self,

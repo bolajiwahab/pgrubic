@@ -1,4 +1,4 @@
-"""Unsafe table operations."""
+"""Checker for cluster."""
 
 from pglast import ast, visitors
 
@@ -22,6 +22,6 @@ class Cluster(linter.BaseChecker):
                 column_offset=self.column_offset,
                 source_text=self.source_text,
                 statement_location=self.statement_location,
-                description="Cluster",
+                description="Cluster found",
             ),
         )

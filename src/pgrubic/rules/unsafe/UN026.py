@@ -1,4 +1,4 @@
-"""Unsafe table operations."""
+"""Checker for vacuum full."""
 
 from pglast import ast, visitors
 
@@ -26,6 +26,6 @@ class VacuumFull(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Vacuum full",
+                    description="Vacuum full found",
                 ),
             )

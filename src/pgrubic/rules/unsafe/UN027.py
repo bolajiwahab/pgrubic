@@ -1,4 +1,4 @@
-"""Unsafe table operations."""
+"""Checker for non concurrent detach partition."""
 
 from pglast import ast, visitors
 
@@ -8,7 +8,7 @@ from pgrubic.core import linter
 class NonConcurrentDetachPartition(linter.BaseChecker):
     """Detach partition."""
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_PartitionCmd(
         self,

@@ -1,4 +1,4 @@
-"""Unsafe table operations."""
+"""Checker for table movement to tablespace."""
 
 from pglast import ast, enums, visitors
 

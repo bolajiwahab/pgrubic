@@ -8,7 +8,7 @@ from pgrubic.core import linter
 class NonConcurrentIndexDrop(linter.BaseChecker):
     """Non concurrent index drop."""
 
-    is_auto_fixable: bool = False
+    is_auto_fixable: bool = True
 
     def visit_DropStmt(
         self,

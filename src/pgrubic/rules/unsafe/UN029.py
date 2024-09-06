@@ -1,4 +1,4 @@
-"""Unsafe table operations."""
+"""Checker for truncate table."""
 
 from pglast import ast, visitors
 
@@ -22,6 +22,6 @@ class TruncateTable(linter.BaseChecker):
                 column_offset=self.column_offset,
                 source_text=self.source_text,
                 statement_location=self.statement_location,
-                description="Truncate table is not safe",
+                description="Truncate table detected",
             ),
         )

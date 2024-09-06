@@ -16,7 +16,10 @@ class IndexesMovementToTablespace(linter.BaseChecker):
         node: ast.AlterTableMoveAllStmt,
     ) -> None:
         """Visit AlterTableMoveAllStmt."""
-        if node.objtype == enums.ObjectType.OBJECT_INDEX:
+        if (
+            node.objtype == enums.ObjectType.OBJECT_INDEX
+            and node.new_tablespacename != node.orig_tablespacename
+        ):
 
             self.violations.add(
                 linter.Violation(
