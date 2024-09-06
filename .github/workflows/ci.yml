@@ -22,7 +22,7 @@ jobs:
               with:
                     python-version: '3.12'
             - name: Install dependencies
-              run: pip install ".[dev]"
+              run: pip install tox
             - name: Run linting
               run: tox -e ${{ matrix.jobs }}
 
