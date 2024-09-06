@@ -23,7 +23,7 @@ jobs:
                     python-version: '3.12'
             - name: Install dependencies
               run: pip install tox
-            - name: Run linting
+            - name: Run ${{ matrix.jobs }}
               run: tox -e ${{ matrix.jobs }}
 
     tests:
@@ -37,8 +37,10 @@ jobs:
                     python-version: '3.12'
             - name: Install dependencies
               run: pip install tox
-            - name: Run the tests
+            - name: Run tests
               run: tox -e tests
+            - name: Run coverage
+              run: tox -e coverage-report
 
     docbuild:
         runs-on: ubuntu-latest
@@ -53,17 +55,3 @@ jobs:
               run: pip install tox
             - name: Build docs
               run: tox -e docbuild
-
-    coverage:
-        runs-on: ubuntu-latest
-        name: coverage
-        steps:
-            - uses: actions/checkout@v4
-            - name: Set up Python
-              uses: actions/setup-python@v5
-              with:
-                    python-version: '3.12'
-            - name: Install dependencies
-              run: pip install tox
-            - name: Run coverage
-              run: tox -e coverage-report
