@@ -28,6 +28,7 @@ dependencies = [
   "colorama==0.4.6",
   "toml==0.10.2",
   "types-toml==0.10.8",
+  "types-colorama==0.4.15.20240311",
 ]
 
 [project.optional-dependencies]
@@ -45,7 +46,6 @@ dev = [
   "mkdocs-material==9.5.33",
   "mkdocstrings==0.25.2",
   "mkdocstrings-python==1.10.8",
-  "types-colorama==0.4.15.20240311",
 ]
 
 [project.urls]
