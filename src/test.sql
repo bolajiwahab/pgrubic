@@ -1,11 +1,13 @@
 -- SELECT a = 'NULL';
-select 'null';
+-- select 'null';
 -- create table foo (a integer null, b integer not null);
 
 -- CREATE TYPE mood AS ENUM ('sad', 'ok', 'NULL');
 
--- ALTER TYPE public.phone_pairing_state ADD VALUE 'NULL';
+-- ALTER TYPE phone_pairing_state ADD VALUE 'NULL';
 
+alter table public.mood set schema public;
+-- drop table mood, public.test;
 -- create table amex.tbl(ay text default 'null');
 
 -- select a = 'null';

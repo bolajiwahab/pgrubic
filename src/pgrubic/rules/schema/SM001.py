@@ -1,14 +1,15 @@
 """Checker for objects that are schema-qualifiable but are not schema qualified."""
 
-from pglast import ast
+from pglast import ast, enums
 
 from pgrubic.core import linter
+
+SCHEMA_QUALIFIED_LENGTH = 2
 
 
 class SchemaUnqualifiedObject(linter.BaseChecker):
     """## **What it does**
-    Checks for objects that are schema-qualifiable but are not schema qualified
-    at creation time.
+    Checks for objects that are schema-qualifiable but are not schema qualified.
 
     ## **Why not?**
     Explicitly specifying schema improves code readability and improves clarity.
@@ -19,8 +20,6 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
     ## **Use instead:**
     Specify schema.
     """
-
-    description: str = "Database object should be schema qualified"
 
     is_auto_fixable: bool = False
 
@@ -52,9 +51,75 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description=self.description,
+                    description=f"Database object `{node.relname}`"
+                    " should be schema qualified",
                 ),
             )
+
+    def visit_DropStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.DropStmt,
+    ) -> None:
+        """Visit DropStmt."""
+        for obj in node.objects:
+
+            if (
+                node.removeType
+                in (
+                    enums.ObjectType.OBJECT_TABLE,
+                    enums.ObjectType.OBJECT_VIEW,
+                    enums.ObjectType.OBJECT_MATVIEW,
+                    enums.ObjectType.OBJECT_FOREIGN_TABLE,
+                    enums.ObjectType.OBJECT_SEQUENCE,
+                    enums.ObjectType.OBJECT_INDEX,
+                )
+                and len(obj) < SCHEMA_QUALIFIED_LENGTH
+            ):
+
+                self.violations.add(
+                    linter.Violation(
+                        line_number=self.line_number,
+                        column_offset=self.column_offset,
+                        source_text=self.source_text,
+                        statement_location=self.statement_location,
+                        description=f"Database object `{obj[0].sval}`"
+                        " should be schema qualified",
+                    ),
+                )
+
+            if (
+                node.removeType == enums.ObjectType.OBJECT_TYPE
+                and len(obj.names) < SCHEMA_QUALIFIED_LENGTH
+            ):
+
+                self.violations.add(
+                    linter.Violation(
+                        line_number=self.line_number,
+                        column_offset=self.column_offset,
+                        source_text=self.source_text,
+                        statement_location=self.statement_location,
+                        description=f"Database object `{obj.names[0].sval}`"
+                        " should be schema qualified",
+                    ),
+                )
+
+            if (
+                node.removeType
+                in (enums.ObjectType.OBJECT_FUNCTION, enums.ObjectType.OBJECT_PROCEDURE)
+                and len(obj.objname) < SCHEMA_QUALIFIED_LENGTH
+            ):
+
+                self.violations.add(
+                    linter.Violation(
+                        line_number=self.line_number,
+                        column_offset=self.column_offset,
+                        source_text=self.source_text,
+                        statement_location=self.statement_location,
+                        description=f"Database object `{obj.objname[0].sval}`"
+                        " should be schema qualified",
+                    ),
+                )
 
     def visit_CreateEnumStmt(
         self,
@@ -62,9 +127,7 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         node: ast.CreateEnumStmt,
     ) -> None:
         """Visit CreateEnumStmt."""
-        schema_name: str = node.typeName[0].sval if len(node.typeName) > 1 else None
-
-        if not schema_name:
+        if len(node.typeName) < SCHEMA_QUALIFIED_LENGTH:
 
             self.violations.add(
                 linter.Violation(
@@ -72,7 +135,27 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description=self.description,
+                    description=f"Database object `{node.typeName[0].sval}`"
+                    " should be schema qualified",
+                ),
+            )
+
+    def visit_AlterEnumStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.AlterEnumStmt,
+    ) -> None:
+        """Visit AlterEnumStmt."""
+        if len(node.typeName) < SCHEMA_QUALIFIED_LENGTH:
+
+            self.violations.add(
+                linter.Violation(
+                    line_number=self.line_number,
+                    column_offset=self.column_offset,
+                    source_text=self.source_text,
+                    statement_location=self.statement_location,
+                    description=f"Database object `{node.typeName[0].sval}`"
+                    " should be schema qualified",
                 ),
             )
 
@@ -82,16 +165,32 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""
-        schema_name: str = node.funcname[0].sval if len(node.funcname) > 1 else None
-
-        if not schema_name:
-
+        if len(node.funcname) < SCHEMA_QUALIFIED_LENGTH:
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description=self.description,
+                    description=f"Database object `{node.funcname[0].svall}`"
+                    " should be schema qualified",
+                ),
+            )
+
+    def visit_AlterFunctionStmt(
+        self,
+        ancestors: ast.Node,
+        node: ast.AlterFunctionStmt,
+    ) -> None:
+        """Visit AlterFunctionStmt."""
+        if len(node.func.objname) < SCHEMA_QUALIFIED_LENGTH:
+            self.violations.add(
+                linter.Violation(
+                    line_number=self.line_number,
+                    column_offset=self.column_offset,
+                    source_text=self.source_text,
+                    statement_location=self.statement_location,
+                    description=f"Database object `{node.func.objname[0].sval}`"
+                    " should be schema qualified",
                 ),
             )
