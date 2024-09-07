@@ -1,5 +1,5 @@
-# schema-unqualified-object (SCM001)
+# schema-unqualified-object (SM001)
 
 Automatic fix is not available
 
-::: pgrubic.rules.schema.SCM001.SchemaUnqualifiedObject
+::: pgrubic.rules.schema.SM001.SchemaUnqualifiedObject

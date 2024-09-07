@@ -1,5 +1,5 @@
-# json (TYP009)
+# json (TP009)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TYP009.Json
+::: pgrubic.rules.typing.TP009.Json

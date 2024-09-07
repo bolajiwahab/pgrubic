@@ -1,5 +1,5 @@
-# procedural-language-whitelist (SC002)
+# procedural-language-whitelist (ST002)
 
 Automatic fix is not available
 
-::: pgrubic.rules.security.SC002.ProceduralLanguageWhitelist
+::: pgrubic.rules.security.ST002.ProceduralLanguageWhitelist

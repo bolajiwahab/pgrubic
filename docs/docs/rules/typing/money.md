@@ -1,5 +1,5 @@
-# money (TYP007)
+# money (TP007)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TYP007.Money
+::: pgrubic.rules.typing.TP007.Money

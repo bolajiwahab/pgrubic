@@ -1,5 +1,5 @@
-# cascade-delete (CST002)
+# cascade-delete (CT002)
 
 Automatic fix is available
 
-::: pgrubic.rules.constraint.CST002.CascadeDelete
+::: pgrubic.rules.constraint.CT002.CascadeDelete

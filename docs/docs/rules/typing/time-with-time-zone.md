@@ -1,5 +1,5 @@
-# time-with-time-zone (TYP002)
+# time-with-time-zone (TP002)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TYP002.TimeWithTimeZone
+::: pgrubic.rules.typing.TP002.TimeWithTimeZone

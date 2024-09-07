@@ -1,5 +1,5 @@
-# timestamp-without-timezone-with-precision (TYP003)
+# timestamp-without-timezone-with-precision (TP003)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TYP003.TimestampWithoutTimezoneWithPrecision
+::: pgrubic.rules.typing.TP003.TimestampWithoutTimezoneWithPrecision

@@ -1,5 +1,5 @@
-# disallowed-schema (SCM002)
+# disallowed-schema (SM002)
 
 Automatic fix is available
 
-::: pgrubic.rules.schema.SCM002.DisallowedSchema
+::: pgrubic.rules.schema.SM002.DisallowedSchema

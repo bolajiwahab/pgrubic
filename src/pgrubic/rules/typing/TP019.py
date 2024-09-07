@@ -1,4 +1,4 @@
-"""Checker for nullable boolean field."""
+"""Checker for mismatch column in data type change."""
 
 from pglast import ast, enums, visitors
 

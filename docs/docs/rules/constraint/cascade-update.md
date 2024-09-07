@@ -1,5 +1,5 @@
-# cascade-update (CST001)
+# cascade-update (CT001)
 
 Automatic fix is available
 
-::: pgrubic.rules.constraint.CST001.CascadeUpdate
+::: pgrubic.rules.constraint.CT001.CascadeUpdate

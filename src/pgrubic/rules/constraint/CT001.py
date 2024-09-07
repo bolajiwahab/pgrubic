@@ -40,7 +40,7 @@ class CascadeUpdate(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Found cascade update in foreign key constraint",
+                    description="Cascade update in foreign key constraint",
                 ),
             )
 

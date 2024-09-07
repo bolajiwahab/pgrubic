@@ -1,5 +1,5 @@
-# float (TYP012)
+# float (TP012)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TYP012.Float
+::: pgrubic.rules.typing.TP012.Float

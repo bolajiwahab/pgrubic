@@ -1,6 +1,4 @@
-"""Checker for objects that are schema-qualifiable but are not schema qualified
-at creation time.
-"""
+"""Checker for objects that are schema-qualifiable but are not schema qualified."""
 
 from pglast import ast
 

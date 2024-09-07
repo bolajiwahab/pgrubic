@@ -1,1 +1,1 @@
-"""Tests for unsafe."""
+"""Tests for unsafe migrations."""

@@ -1,5 +1,5 @@
-# integer (TYP010)
+# integer (TP010)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TYP010.Integer
+::: pgrubic.rules.typing.TP010.Integer

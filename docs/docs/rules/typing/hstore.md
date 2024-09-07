@@ -1,5 +1,5 @@
-# hstore (TYP014)
+# hstore (TP014)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TYP014.Hstore
+::: pgrubic.rules.typing.TP014.Hstore

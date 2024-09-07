@@ -1,17 +1,5 @@
--- select * from amex.tbl where b = null;
-
--- CREATE INDEX i0 ON t0((nullif(FALSE, 'NULL')));
-
--- select * from foo where col not in (1,null);
-
--- select null * a;
-
--- begin;
--- -- create index concurrently i0 on t0((nullif(FALSE, 'NULL')));
--- select * from amex.tbl where b = false;
--- end;
-
--- SELECT a = NULL;
+-- SELECT a = 'NULL';
+select 'null';
 -- create table foo (a integer null, b integer not null);
 
 -- CREATE TYPE mood AS ENUM ('sad', 'ok', 'NULL');
@@ -46,4 +34,4 @@
 -- reindex table tbl -- okay
 -- ;
 
-ALTER TABLE public.card ADD CONSTRAINT chk CHECK (account_id > 0);
+-- ALTER TABLE public.card ADD CONSTRAINT chk CHECK (account_id > 0);

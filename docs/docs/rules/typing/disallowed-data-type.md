@@ -1,5 +1,5 @@
-# disallowed-data-type (TYP015)
+# disallowed-data-type (TP015)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TYP015.DisallowedDataType
+::: pgrubic.rules.typing.TP015.DisallowedDataType

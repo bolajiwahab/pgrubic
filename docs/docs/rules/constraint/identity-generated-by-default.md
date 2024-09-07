@@ -1,5 +1,5 @@
-# identity-generated-by-default (CST003)
+# identity-generated-by-default (CT003)
 
 Automatic fix is available
 
-::: pgrubic.rules.constraint.CST003.IdentityGeneratedByDefault
+::: pgrubic.rules.constraint.CT003.IdentityGeneratedByDefault

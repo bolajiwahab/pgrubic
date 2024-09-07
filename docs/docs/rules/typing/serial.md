@@ -1,5 +1,5 @@
-# serial (TYP008)
+# serial (TP008)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TYP008.Serial
+::: pgrubic.rules.typing.TP008.Serial
