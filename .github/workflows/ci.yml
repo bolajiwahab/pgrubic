@@ -44,7 +44,7 @@ jobs:
 
   coverage:
     runs-on: ubuntu-latest
-    name: tests
+    name: coverage
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
