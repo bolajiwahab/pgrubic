@@ -12,7 +12,7 @@ from caseconverter import kebabcase
 from pgrubic.core import noqa, config
 
 
-@dataclasses.dataclass(kw_only=True, frozen=True)
+@dataclasses.dataclass(kw_only=True, frozen=True, slots=True)
 class Violation:
     """Representation of rule violation."""
 
@@ -23,7 +23,7 @@ class Violation:
     description: str
 
 
-@dataclasses.dataclass(kw_only=True)
+@dataclasses.dataclass(kw_only=True, slots=True)
 class ViolationMetric:
     """Violation Metric."""
 

@@ -98,11 +98,129 @@ def test_fail_schema_unqualified_object(
     )
 
 
-def test_fail_drop_object_schema_unqualified_object(
+def test_fail_drop_table_schema_unqualified_object(
     lint_schema_unqualified_object: core.Linter,
 ) -> None:
     """Test fail schema unqualified object."""
     sql_fail: str = "DROP TABLE mood;"
+
+    violations: core.ViolationMetric = lint_schema_unqualified_object.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_fail,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=1,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=1,
+    )
+
+
+def test_fail_drop_type_schema_unqualified_object(
+    lint_schema_unqualified_object: core.Linter,
+) -> None:
+    """Test fail schema unqualified object."""
+    sql_fail: str = "DROP TYPE mood;"
+
+    violations: core.ViolationMetric = lint_schema_unqualified_object.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_fail,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=1,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=1,
+    )
+
+
+def test_fail_drop_procedure_schema_unqualified_object(
+    lint_schema_unqualified_object: core.Linter,
+) -> None:
+    """Test fail schema unqualified object."""
+    sql_fail: str = "DROP PROCEDURE mood;"
+
+    violations: core.ViolationMetric = lint_schema_unqualified_object.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_fail,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=1,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=1,
+    )
+
+
+def test_fail_create_enum_schema_unqualified_object(
+    lint_schema_unqualified_object: core.Linter,
+) -> None:
+    """Test fail create enum schema unqualified object."""
+    sql_fail: str = "CREATE TYPE mood AS ENUM ('sad', 'ok');"
+
+    violations: core.ViolationMetric = lint_schema_unqualified_object.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_fail,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=1,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=1,
+    )
+
+
+def test_fail_alter_enum_schema_unqualified_object(
+    lint_schema_unqualified_object: core.Linter,
+) -> None:
+    """Test fail alter enum schema unqualified object."""
+    sql_fail: str = "ALTER TYPE mood ADD VALUE 'sad';"
+
+    violations: core.ViolationMetric = lint_schema_unqualified_object.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_fail,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=1,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=1,
+    )
+
+
+def test_fail_create_function_schema_unqualified_object(
+    lint_schema_unqualified_object: core.Linter,
+) -> None:
+    """Test fail create function schema unqualified object."""
+    sql_fail: str = """
+    CREATE FUNCTION dup(int) RETURNS TABLE(f1 int, f2 text) LANGUAGE SQL
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$
+    ;
+    """
+
+    violations: core.ViolationMetric = lint_schema_unqualified_object.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_fail,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=1,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=1,
+    )
+
+
+def test_fail_alter_function_schema_unqualified_object(
+    lint_schema_unqualified_object: core.Linter,
+) -> None:
+    """Test fail alter function schema unqualified object."""
+    sql_fail: str = "ALTER FUNCTION check_password(text) SET search_path = admin;"
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
         source_path=SOURCE_PATH,

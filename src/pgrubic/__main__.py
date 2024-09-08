@@ -82,4 +82,5 @@ def cli(argv: abc.Sequence[str] = sys.argv) -> None:
 
 
 if __name__ == "__main__":
+
     cli()

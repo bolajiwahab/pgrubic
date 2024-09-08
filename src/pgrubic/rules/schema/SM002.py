@@ -27,6 +27,7 @@ class DisallowedSchema(linter.BaseChecker):
         node: ast.RangeVar,
     ) -> None:
         """Visit RangeVar."""
+        # We are only interested in object creation
         if isinstance(
             abs(ancestors).node,
             ast.CreateStmt

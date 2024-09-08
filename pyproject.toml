@@ -73,7 +73,7 @@ show_error_codes = true
 no_implicit_reexport = true
 
 [[tool.mypy.overrides]]
-module = ["pglast.*", "caseconverter.*"]
+module = ["pglast.*", "caseconverter.*", "pgrubic.*"]
 ignore_missing_imports = true
 
 [tool.ruff]
@@ -110,11 +110,11 @@ legacy_tox_ini = """
     min_version = 4.0
     env_list =
         py312
-        tests
         isort
         linting
         formatting
         typing
+        tests
         docbuild
 
     [testenv]

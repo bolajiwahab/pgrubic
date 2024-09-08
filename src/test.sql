@@ -6,8 +6,12 @@
 
 -- ALTER TYPE phone_pairing_state ADD VALUE 'NULL';
 
-alter table public.mood set schema public;
--- drop table mood, public.test;
+drop procedure mood;
+-- ALTER FUNCTION check_password(text) SET search_path = admin, pg_temp;
+
+-- alter function public.mood set search_path = public;
+-- alter table public.mood set schema public;
+drop table mood, public.test;
 -- create table amex.tbl(ay text default 'null');
 
 -- select a = 'null';
@@ -29,9 +33,9 @@ alter table public.mood set schema public;
 
 -- alter table amex.tbl alter column ay type uuid using (id::uuid, user_id::uuid);
 
--- CREATE FUNCTION dup(int) RETURNS TABLE(f1 int, f2 text)
---     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$
---     LANGUAGE SQL;
+CREATE FUNCTION dup(int) RETURNS TABLE(f1 int, f2 text)
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$
+    LANGUAGE SQL;
 -- noqa: UN020
 -- reindex table tbl -- okay
 -- ;
