@@ -1,5 +1,5 @@
-# non-concurrent-index-creation (UN016)
+# non-concurrent-index-creation (US016)
 
 Automatic fix is available
 
-::: pgrubic.rules.unsafe.UN016.NonConcurrentIndexCreation
+::: pgrubic.rules.unsafe.US016.NonConcurrentIndexCreation

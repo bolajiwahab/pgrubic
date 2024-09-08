@@ -1,5 +1,5 @@
-# drop-tablespace (UN007)
+# drop-tablespace (US007)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN007.DropTablespace
+::: pgrubic.rules.unsafe.US007.DropTablespace

@@ -1,5 +1,5 @@
-# unique-constraint-creating-new-index (UN014)
+# unique-constraint-creating-new-index (US014)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN014.UniqueConstraintCreatingNewIndex
+::: pgrubic.rules.unsafe.US014.UniqueConstraintCreatingNewIndex

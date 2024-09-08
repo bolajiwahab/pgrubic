@@ -1,5 +1,5 @@
-# rename-table (UN022)
+# rename-table (US022)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN022.RenameTable
+::: pgrubic.rules.unsafe.US022.RenameTable

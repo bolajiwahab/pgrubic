@@ -1,5 +1,5 @@
-# drop-schema (UN009)
+# drop-schema (US009)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN009.DropSchema
+::: pgrubic.rules.unsafe.US009.DropSchema

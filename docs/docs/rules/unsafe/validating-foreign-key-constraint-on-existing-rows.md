@@ -1,5 +1,5 @@
-# validating-foreign-key-constraint-on-existing-rows (UN012)
+# validating-foreign-key-constraint-on-existing-rows (US012)
 
 Automatic fix is available
 
-::: pgrubic.rules.unsafe.UN012.ValidatingForeignKeyConstraintOnExistingRows
+::: pgrubic.rules.unsafe.US012.ValidatingForeignKeyConstraintOnExistingRows

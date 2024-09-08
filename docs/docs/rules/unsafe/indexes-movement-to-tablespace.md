@@ -1,5 +1,5 @@
-# indexes-movement-to-tablespace (UN018)
+# indexes-movement-to-tablespace (US018)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN018.IndexesMovementToTablespace
+::: pgrubic.rules.unsafe.US018.IndexesMovementToTablespace

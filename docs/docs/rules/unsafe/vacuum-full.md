@@ -1,5 +1,5 @@
-# vacuum-full (UN026)
+# vacuum-full (US026)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN026.VacuumFull
+::: pgrubic.rules.unsafe.US026.VacuumFull

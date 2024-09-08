@@ -1,5 +1,5 @@
-# drop-table (UN021)
+# drop-table (US021)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN021.DropTable
+::: pgrubic.rules.unsafe.US021.DropTable

@@ -1,5 +1,5 @@
-# table-movement-to-tablespace (UN023)
+# table-movement-to-tablespace (US023)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN023.TableMovementToTablespace
+::: pgrubic.rules.unsafe.US023.TableMovementToTablespace

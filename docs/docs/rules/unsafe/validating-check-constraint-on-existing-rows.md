@@ -1,5 +1,5 @@
-# validating-check-constraint-on-existing-rows (UN013)
+# validating-check-constraint-on-existing-rows (US013)
 
 Automatic fix is available
 
-::: pgrubic.rules.unsafe.UN013.ValidatingCheckConstraintOnExistingRows
+::: pgrubic.rules.unsafe.US013.ValidatingCheckConstraintOnExistingRows

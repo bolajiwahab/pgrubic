@@ -1,5 +1,5 @@
-# adding-stored-generated-column (UN006)
+# adding-stored-generated-column (US006)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN006.AddingStoredGeneratedColumn
+::: pgrubic.rules.unsafe.US006.AddingStoredGeneratedColumn

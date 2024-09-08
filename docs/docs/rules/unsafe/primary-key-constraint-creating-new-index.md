@@ -1,5 +1,5 @@
-# primary-key-constraint-creating-new-index (UN015)
+# primary-key-constraint-creating-new-index (US015)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN015.PrimaryKeyConstraintCreatingNewIndex
+::: pgrubic.rules.unsafe.US015.PrimaryKeyConstraintCreatingNewIndex

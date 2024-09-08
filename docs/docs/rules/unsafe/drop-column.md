@@ -1,5 +1,5 @@
-# drop-column (UN001)
+# drop-column (US001)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN001.DropColumn
+::: pgrubic.rules.unsafe.US001.DropColumn

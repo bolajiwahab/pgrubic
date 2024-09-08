@@ -1,5 +1,5 @@
-# drop-database (UN008)
+# drop-database (US008)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN008.DropDatabase
+::: pgrubic.rules.unsafe.US008.DropDatabase

@@ -1,5 +1,5 @@
-# non-concurrent-detach-partition (UN027)
+# non-concurrent-detach-partition (US027)
 
 Automatic fix is available
 
-::: pgrubic.rules.unsafe.UN027.NonConcurrentDetachPartition
+::: pgrubic.rules.unsafe.US027.NonConcurrentDetachPartition

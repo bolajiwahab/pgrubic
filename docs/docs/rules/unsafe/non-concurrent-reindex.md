@@ -1,5 +1,5 @@
-# non-concurrent-reindex (UN020)
+# non-concurrent-reindex (US020)
 
 Automatic fix is available
 
-::: pgrubic.rules.unsafe.UN020.NonConcurrentReindex
+::: pgrubic.rules.unsafe.US020.NonConcurrentReindex

@@ -1,5 +1,5 @@
-# adding-auto-increment-identity-column (UN005)
+# adding-auto-increment-identity-column (US005)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN005.AddingAutoIncrementIdentityColumn
+::: pgrubic.rules.unsafe.US005.AddingAutoIncrementIdentityColumn

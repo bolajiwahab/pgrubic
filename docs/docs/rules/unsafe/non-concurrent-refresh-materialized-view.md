@@ -1,5 +1,5 @@
-# non-concurrent-refresh-materialized-view (UN028)
+# non-concurrent-refresh-materialized-view (US028)
 
 Automatic fix is available
 
-::: pgrubic.rules.unsafe.UN028.NonConcurrentRefreshMaterializedView
+::: pgrubic.rules.unsafe.US028.NonConcurrentRefreshMaterializedView

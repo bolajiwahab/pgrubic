@@ -1,5 +1,5 @@
-# non-concurrent-index-drop (UN019)
+# non-concurrent-index-drop (US019)
 
 Automatic fix is available
 
-::: pgrubic.rules.unsafe.UN019.NonConcurrentIndexDrop
+::: pgrubic.rules.unsafe.US019.NonConcurrentIndexDrop

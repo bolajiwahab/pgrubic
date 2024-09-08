@@ -1,5 +1,5 @@
-# index-movement-to-tablespace (UN017)
+# index-movement-to-tablespace (US017)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN017.IndexMovementToTablespace
+::: pgrubic.rules.unsafe.US017.IndexMovementToTablespace

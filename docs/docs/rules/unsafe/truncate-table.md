@@ -1,5 +1,5 @@
-# truncate-table (UN029)
+# truncate-table (US029)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN029.TruncateTable
+::: pgrubic.rules.unsafe.US029.TruncateTable

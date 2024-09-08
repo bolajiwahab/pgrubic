@@ -1,5 +1,5 @@
-# not-null-constraint-on-existing-column (UN010)
+# not-null-constraint-on-existing-column (US010)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN010.NotNullConstraintOnExistingColumn
+::: pgrubic.rules.unsafe.US010.NotNullConstraintOnExistingColumn

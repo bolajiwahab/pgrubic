@@ -1,5 +1,5 @@
-# not-null-constraint-on-new-column-with-no-static-default (UN011)
+# not-null-constraint-on-new-column-with-no-static-default (US011)
 
 Automatic fix is not available
 
-::: pgrubic.rules.unsafe.UN011.NotNullConstraintOnNewColumnWithNoStaticDefault
+::: pgrubic.rules.unsafe.US011.NotNullConstraintOnNewColumnWithNoStaticDefault
