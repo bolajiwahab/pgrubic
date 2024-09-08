@@ -134,6 +134,7 @@ legacy_tox_ini = """
         coverage run --source=src -m pytest tests
 
     [testenv:coverage-report]
+    depends = tests
     deps =
         coverage
     setenv =
