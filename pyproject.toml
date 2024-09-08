@@ -137,11 +137,13 @@ legacy_tox_ini = """
         coverage run --source=src -m pytest tests
 
     [testenv:coverage-report]
-    deps = {[testenv:tests]deps}
+    deps =
+        pytest
+        coverage
     setenv =
         COVERAGE_FILE = .coverage
     commands =
-        {[testenv:tests]commands}
+        coverage run --source=src -m pytest tests
         coverage report --fail-under=100 --show-missing --omit "*test*"
 
     [testenv:isort]
