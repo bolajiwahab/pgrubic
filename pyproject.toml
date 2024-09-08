@@ -74,7 +74,7 @@ show_error_codes = true
 no_implicit_reexport = true
 
 [[tool.mypy.overrides]]
-module = ["pglast.*", "caseconverter.*", "pgrubic.*"]
+module = ["pglast.*", "caseconverter.*"]
 ignore_missing_imports = true
 
 [tool.ruff]
@@ -158,7 +158,6 @@ legacy_tox_ini = """
     commands = black src tests
 
     [testenv:typing]
-    skip_install = false
     deps =
         mypy
         pytest
