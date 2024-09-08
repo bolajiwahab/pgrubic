@@ -108,7 +108,6 @@ pythonpath = ["src"]
 [tool.tox]
 legacy_tox_ini = """
     [tox]
-    skip_install = true
     min_version = 4.0
     env_list =
         py312
@@ -122,6 +121,7 @@ legacy_tox_ini = """
         docbuild
 
     [testenv]
+    skip_install = true
     deps =
     commands =
 
