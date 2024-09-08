@@ -9,7 +9,7 @@ repos:
         name: Trim Trailing Whitespace
         entry: trailing-whitespace-fixer
         language: python
-        types: [file]
+        types: [text]
       - id: end-of-file-fixer
         name: Add a blank line at end of a file
         entry: end-of-file-fixer
