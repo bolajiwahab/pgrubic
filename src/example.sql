@@ -27,9 +27,9 @@ SELECT * FROM my_table; INSERT INTO my_table VALUES (1, 'example');
 --     SELECT n+1 FROM nums_1_100 WHERE n < 100;
 -- CREATE TYPE "pg_Compfoo" AS (f1 bigint, f2 text);
 
-ALTER TABLE child_table 
-ADD CONSTRAINT constraint_name 
-FOREIGN KEY (fk_columns) 
+ALTER TABLE child_table
+ADD CONSTRAINT constraint_name
+FOREIGN KEY (fk_columns)
 REFERENCES parent_table (parent_key_columns);
 -- select a <> null;
 -- create table "Bay" as select * from ayaya;
@@ -61,9 +61,9 @@ REFERENCES parent_table (parent_key_columns);
 
 -- drop index ayaya;
 -- CREATE TYPE public.address_type AS(
---    street text, 
+--    street text,
 --    city text,
---    state text, 
+--    state text,
 --    country text
 -- );
 

@@ -60,13 +60,13 @@ CREATE unique INDEX i0 ON t0((nullif(FALSE, 'NULL')));
 
 -- CREATE TABLE "Measurement_y2006m02" () INHERITS (measurement);
 
-/* 
-hello 
+/*
+hello
 */
 -- ALTER TABLE public.ecdict ADD COLUMN id serial /* hello */ -- noqa: UNS019, UNS021
 -- ;
-/* 
-hello 
+/*
+hello
 */
 
 -- create index abc on bac(ac)

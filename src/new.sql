@@ -71,13 +71,13 @@ CREATE TABLE distributors (
 
 -- CREATE TABLE "Measurement_y2006m02" () INHERITS (measurement);
 
-/* 
-hello 
+/*
+hello
 */
 -- ALTER TABLE public.ecdict ADD COLUMN id serial /* hello */ -- noqa: UNS019, UNS021
 -- ;
-/* 
-hello 
+/*
+hello
 */
 
 -- create index abc on bac(ac)

@@ -42,6 +42,7 @@ dev = [
   "pytest==7.4.3",
   "coverage==7.6.1",
   "tox==4.18.0",
+  "pre-commit==3.8.0",
 ]
 
 doc = [
@@ -112,9 +113,11 @@ legacy_tox_ini = """
         py312
         isort
         linting
+        yamllint
         formatting
         typing
         tests
+        coverage-report
         docbuild
 
     [testenv]
@@ -134,12 +137,11 @@ legacy_tox_ini = """
         coverage run --source=src -m pytest tests
 
     [testenv:coverage-report]
-    depends = tests
-    deps =
-        coverage
+    deps = {[testenv:tests]deps}
     setenv =
         COVERAGE_FILE = .coverage
     commands =
+        {[testenv:tests]commands}
         coverage report --fail-under=100 --show-missing --omit "*test*"
 
     [testenv:isort]
@@ -167,4 +169,14 @@ legacy_tox_ini = """
         # Hence it fails with import errors.
         pip install -e .
         python docs/rule_docs_generator.py
+
+    [testenv:yamllint]
+    deps = yamllint
+    commands = yamllint -c .yamllint .
+
+    [testenv:pre-commit]
+    skip_install = true
+    deps = pre-commit
+    commands =
+      pre-commit {posargs:run --all-files}
 """

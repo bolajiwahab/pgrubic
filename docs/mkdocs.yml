@@ -1,38 +1,35 @@
+---
 site_name: pgRubic
-site_description: PostgreSQL linter for schema migrations and design best practices
+site_description:
+  PostgreSQL linter for schema migrations and design best practices
 
 repo_url: https://github.com/bolajiwahab/pgrubic
 repo_name: pgrubic
 
 plugins:
-- mkdocstrings:
-    handlers:
-      python:
-        paths: [../src]
-        options:
-          # allow_inspection: false
-          show_bases: false
-          show_source: false
-          members: true
-          # show_submodules: true
-          show_labels: false
-          inherited_members: true
-          group_by_category: true
-          # show_if_no_docstring: true
-          # show_root_headings: true
-          # show_root_toc_entry: true
-          # show_signature_annotations: false
-          members:
-            # - code
-            # - name
-          # docstring_options:
-          #   ignore_init_summary: false
-          filters:
-            - "!^_"
-            - "!^__"
-            - "!^visit"
-            - "!^is_fix_applicable"
-- search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [../src]
+          options:
+            # allow_inspection: false
+            show_bases: false
+            show_source: false
+            members: true
+            # show_submodules: true
+            show_labels: false
+            inherited_members: true
+            group_by_category: true
+            # show_if_no_docstring: true
+            # show_root_headings: true
+            # show_root_toc_entry: true
+            # show_signature_annotations: false
+            filters:
+              - "!^_"
+              - "!^__"
+              - "!^visit"
+              - "!^is_fix_applicable"
+  - search
 # - social
 
 theme:

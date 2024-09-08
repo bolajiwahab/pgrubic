@@ -1,3 +1,4 @@
+---
 default_language_version:
   python: python3.12
 
@@ -8,7 +9,7 @@ repos:
         name: Trim Trailing Whitespace
         entry: trailing-whitespace-fixer
         language: python
-        types: [text]
+        types: [file]
       - id: end-of-file-fixer
         name: Add a blank line at end of a file
         entry: end-of-file-fixer
@@ -36,7 +37,8 @@ repos:
         language: python
         types: [yaml]
         args: [--unsafe]
-      # Formatters should be run late so that they can re-format any prior changes.
+      # Formatters should be run late so that they can re-format
+      # any prior changes
       - id: black
         name: Formatting with black
         entry: black
@@ -48,6 +50,11 @@ repos:
         language: python
         types: [python]
         args: [--check, --diff, --profile=black]
+      - id: yamllint
+        name: Lint yaml files
+        entry: yamllint
+        language: python
+        types: [yaml]
       - id: ruff
         name: Lint with ruff
         entry: ruff
