@@ -22,7 +22,7 @@ jobs:
           "typing",
           "docbuild",
           "tests",
-          coverage-report"
+          "coverage-report",
         ]
     name: ${{ matrix.jobs }}
     steps:
