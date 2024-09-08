@@ -108,6 +108,7 @@ pythonpath = ["src"]
 [tool.tox]
 legacy_tox_ini = """
     [tox]
+    skip_install = true
     min_version = 4.0
     env_list =
         py312
@@ -123,13 +124,12 @@ legacy_tox_ini = """
     [testenv]
     deps =
     commands =
-    skip_install = true
 
     [testenv:tests]
+    skip_install = false
     deps =
         pytest
         coverage
-    skip_install = false
     setenv =
         COVERAGE_FILE = .coverage
     commands =
@@ -137,6 +137,7 @@ legacy_tox_ini = """
         coverage run --source=src -m pytest tests
 
     [testenv:coverage-report]
+    skip_install = false
     deps = {[testenv:tests]deps}
     setenv =
         COVERAGE_FILE = .coverage
@@ -157,10 +158,10 @@ legacy_tox_ini = """
     commands = black src tests
 
     [testenv:typing]
+    skip_install = false
     deps =
         mypy
         pytest
-    skip_install = false
     commands = mypy src tests
 
     [testenv:docbuild]
@@ -175,7 +176,6 @@ legacy_tox_ini = """
     commands = yamllint -c .yamllint .
 
     [testenv:pre-commit]
-    skip_install = true
     deps = pre-commit
     commands =
       pre-commit {posargs:run --all-files}
