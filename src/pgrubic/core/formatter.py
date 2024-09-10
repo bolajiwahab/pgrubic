@@ -3,7 +3,46 @@
 import sys
 import pathlib
 
-from pglast import parser, prettify
+from pglast import ast, parser, stream, prettify, printers
+
+
+@printers.node_printer(ast.CreateEnumStmt, override=True)  # type: ignore[misc]
+def create_enum_stmt(node: ast.Node, output: stream.RawStream) -> None:
+    """Printer for CreateEnumStmt."""
+    output.write("CREATE TYPE ")
+    output.print_name(node.typeName)
+    output.write("AS ENUM ")
+    output.write("")
+    with output.expression(need_parens=True):
+        output.newline()
+        output.space(4)
+        output.print_list(node.vals, standalone_items=True)
+        output.newline()
+
+
+@printers.node_printer(ast.AlterEnumStmt, override=True)  # type: ignore[misc]
+def alter_enum_stmt(node: ast.Node, output: stream.RawStream) -> None:
+    """Printer for AlterEnumStmt."""
+    output.write("ALTER TYPE ")
+    output.print_name(node.typeName)
+    output.newline()
+    output.space(4)
+    if node.newVal:
+        if node.oldVal:
+            output.write("RENAME VALUE ")
+            output.write_quoted_string(node.oldVal)
+            output.write("TO ")
+        else:
+            output.write("ADD VALUE ")
+            if node.skipIfNewValExists:
+                output.write("IF NOT EXISTS ")
+        output.write_quoted_string(node.newVal)
+    if node.newValNeighbor:
+        if node.newValIsAfter:
+            output.write(" AFTER ")
+        else:
+            output.write(" BEFORE ")
+        output.write_quoted_string(node.newValNeighbor)
 
 
 class Formatter:

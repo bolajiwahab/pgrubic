@@ -193,13 +193,14 @@ class Linter:
         # To be removed
         sys.stdout.write(
             stream.IndentedStream(
-                compact_lists_margin=1,
                 comments=comments,
                 semicolon_after_last_statement=True,
                 comma_at_eoln=True,
                 remove_pg_catalog_from_functions=True,
             )(tree),
         )
+        # to be removed
+        sys.stdout.write("\n")
 
         noqa.report_unused_ignores(
             source_path=source_path,

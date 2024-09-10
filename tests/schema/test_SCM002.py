@@ -228,9 +228,7 @@ def test_fail_fix_enum_disallowed_schema(
     """Test fail fix enum disallowed schema."""
     sql_fail: str = "CREATE TYPE test.mood AS ENUM ('sad', 'ok');"
 
-    sql_fix: str = (
-        "CREATE TYPE app.mood AS ENUM ('sad'\n                            , 'ok');"
-    )
+    sql_fix: str = "CREATE TYPE app.mood AS ENUM (\n    'sad'\n  , 'ok'\n);"
 
     disallowed_schema.config.lint.fix = True
 

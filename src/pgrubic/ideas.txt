@@ -1,3 +1,5 @@
+-- for custom printers, we may need to allow number of spaces
+
 ****** if a violation is fixed, do we still print it?, ruff does not print it.
 
 -- in SM001, is there a way to merge createenum and alterenum, same goes for function
