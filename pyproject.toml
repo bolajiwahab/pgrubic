@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pgrubic"
-version = "0.0.1"
+version = "1.0.0"
 description = "PostgreSQL linter for schema migrations and design best practices"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12"
@@ -72,6 +72,7 @@ strict_equality = true
 extra_checks = true
 show_error_codes = true
 no_implicit_reexport = true
+disallow_untyped_decorators = false
 
 [[tool.mypy.overrides]]
 module = ["pglast.*", "caseconverter.*"]
@@ -104,6 +105,13 @@ known_first_party = "pgrubic"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+  # "formatter.py",
+  "tests/*"
+]
 
 [tool.tox]
 legacy_tox_ini = """
@@ -143,7 +151,7 @@ legacy_tox_ini = """
         COVERAGE_FILE = .coverage
     commands =
         {[testenv:tests]commands}
-        coverage report --fail-under=100 --show-missing --omit "*test*"
+        coverage report --fail-under=100 --show-missing
 
     [testenv:isort]
     deps = isort
@@ -179,5 +187,10 @@ legacy_tox_ini = """
     [testenv:pre-commit]
     deps = pre-commit
     commands =
-      pre-commit {posargs:run --all-files}
+        pre-commit {posargs:run --all-files}
+
+    [testenv:build-dist]
+    deps = build
+    commands =
+        python -m build --sdist --wheel {posargs: {toxinidir}}
 """

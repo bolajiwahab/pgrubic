@@ -39,8 +39,7 @@ class Serial(linter.BaseChecker):
                 and alter_table_cmd.node.subtype == enums.AlterTableType.AT_AddColumn
             )
             or ancestors.find_nearest(ast.CreateStmt)
-            and node.typeName.names[-1].sval in ["smallserial", "serial", "bigserial"]
-        ):
+        ) and node.typeName.names[-1].sval in ["smallserial", "serial", "bigserial"]:
 
             self.violations.add(
                 linter.Violation(

@@ -241,7 +241,7 @@ def test_fail_fix_create_table_identity_generated_by_default(
     """
 
     sql_fix: str = (
-        "CREATE TABLE color (\n  color_id integer GENERATED ALWAYS AS IDENTITY \n);"
+        "CREATE TABLE color (\n    color_id integer GENERATED ALWAYS AS IDENTITY \n);"
     )
 
     identity_generated_by_default.config.lint.fix = True

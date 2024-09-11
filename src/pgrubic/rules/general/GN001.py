@@ -43,6 +43,6 @@ class TableInheritance(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Found table inheritance",
+                    description="Table inheritance detected",
                 ),
             )

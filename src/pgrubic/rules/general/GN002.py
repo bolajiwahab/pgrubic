@@ -36,6 +36,6 @@ class CreateRule(linter.BaseChecker):
                 column_offset=self.column_offset,
                 source_text=self.source_text,
                 statement_location=self.statement_location,
-                description="Found creation of rule",
+                description="Create rule detected",
             ),
         )

@@ -267,7 +267,7 @@ def test_fail_fix_create_table_cascade_delete(
     """
 
     sql_fix: str = (
-        "CREATE TABLE books (\n  author_id integer REFERENCES authors (author_id) ON DELETE RESTRICT\n);"  # noqa: E501
+        "CREATE TABLE books (\n    author_id integer REFERENCES authors (author_id) ON DELETE RESTRICT\n);"  # noqa: E501
     )
 
     cascade_delete.config.lint.fix = True

@@ -66,4 +66,4 @@ repos:
         entry: mypy
         language: python
         types: [python]
-        args: [--strict]
+        args: [--config-file=./pyproject.toml]

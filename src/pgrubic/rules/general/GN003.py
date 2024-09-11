@@ -34,7 +34,7 @@ class SqlAsciiEncoding(linter.BaseChecker):
         node: ast.DefElem,
     ) -> None:
         """Visit DefElem."""
-        if node.defname == "encoding" and node.arg.sval == "sql_ascii":
+        if node.defname == "encoding" and node.arg.sval.lower() == "sql_ascii":
 
             self.violations.add(
                 linter.Violation(
@@ -42,7 +42,7 @@ class SqlAsciiEncoding(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Found SQL_ASCII encoding",
+                    description="SQL_ASCII encoding detected",
                 ),
             )
 
