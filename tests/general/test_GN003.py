@@ -40,6 +40,25 @@ def test_sql_ascii_encoding_auto_fixable(
     assert sql_ascii_encoding.is_auto_fixable is True
 
 
+def test_pass_encoding(
+    lint_sql_ascii_encoding: core.Linter,
+) -> None:
+    """Test fail sql_ascii encoding."""
+    sql_fail: str = "CREATE DATABASE music ENCODING UTF8 TEMPLATE template0;"
+
+    violations: core.ViolationMetric = lint_sql_ascii_encoding.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_fail,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=0,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=0,
+    )
+
+
 def test_fail_sql_ascii_encoding(
     lint_sql_ascii_encoding: core.Linter,
 ) -> None:
@@ -59,7 +78,7 @@ def test_fail_sql_ascii_encoding(
     )
 
 
-def test_fail_csql_ascii_encoding_description(
+def test_fail_sql_ascii_encoding_description(
     lint_sql_ascii_encoding: core.Linter,
     sql_ascii_encoding: core.BaseChecker,
 ) -> None:

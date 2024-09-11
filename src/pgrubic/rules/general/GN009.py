@@ -40,6 +40,6 @@ class DuplicateColumn(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description=f"Column '{column}' specified more than once",
+                    description=f"Column `{column}` specified more than once",
                 ),
             )

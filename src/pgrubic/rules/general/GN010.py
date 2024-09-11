@@ -8,7 +8,7 @@ from pgrubic.rules.general import get_columns_from_table_creation
 
 class TableColumnConflict(linter.BaseChecker):
     """## **What it does**
-    Checks for duplicate columns.
+    Checks for table column conflict.
 
     ## **Why not?**
     While each column in a table must have a unique name within that table to ensure
@@ -20,7 +20,7 @@ class TableColumnConflict(linter.BaseChecker):
     Alsmost never.
 
     ## **Use instead:**
-    Update conflicted name.
+    Resolve the conflict.
     """
 
     is_auto_fixable: bool = False
@@ -40,8 +40,8 @@ class TableColumnConflict(linter.BaseChecker):
                 column_offset=column_offset,
                 source_text=source_text,
                 statement_location=statement_location,
-                description=f"Table name '{table_name}' conflicts with the"
-                " name of its columns",
+                description=f"Table name `{table_name}` conflicts with the"
+                " name of its column(s)",
             ),
         )
 
