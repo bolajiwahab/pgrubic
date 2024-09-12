@@ -11,6 +11,7 @@ from pgrubic.rules.unsafe.US012 import ValidatingForeignKeyConstraintOnExistingR
 def validating_foreign_key_constraint_on_existing_rows() -> core.BaseChecker:
     """Create an instance of ValidatingForeignKeyConstraintOnExistingRows."""
     core.add_apply_fix_to_rule(ValidatingForeignKeyConstraintOnExistingRows)
+    core.add_set_locations_to_rule(ValidatingForeignKeyConstraintOnExistingRows)
     return ValidatingForeignKeyConstraintOnExistingRows()
 
 

@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US022 import RenameTable
 @pytest.fixture(scope="module")
 def rename_table() -> core.BaseChecker:
     """Create an instance of RenameTable."""
+    core.add_set_locations_to_rule(RenameTable)
     return RenameTable()
 
 

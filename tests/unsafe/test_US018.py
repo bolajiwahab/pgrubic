@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US018 import IndexesMovementToTablespace
 @pytest.fixture(scope="module")
 def indexes_movement_to_tablespace() -> core.BaseChecker:
     """Create an instance of IndexesMovementToTablespace."""
+    core.add_set_locations_to_rule(IndexesMovementToTablespace)
     return IndexesMovementToTablespace()
 
 

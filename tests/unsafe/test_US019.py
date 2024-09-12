@@ -11,6 +11,7 @@ from pgrubic.rules.unsafe.US019 import NonConcurrentIndexDrop
 def non_concurrent_index_drop() -> core.BaseChecker:
     """Create an instance of NonConcurrentIndexDrop."""
     core.add_apply_fix_to_rule(NonConcurrentIndexDrop)
+    core.add_set_locations_to_rule(NonConcurrentIndexDrop)
     return NonConcurrentIndexDrop()
 
 

@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US005 import AddingAutoIncrementIdentityColumn
 @pytest.fixture(scope="module")
 def adding_auto_increment_identity_column() -> core.BaseChecker:
     """Create an instance of AddingAutoIncrementIdentityColumn."""
+    core.add_set_locations_to_rule(AddingAutoIncrementIdentityColumn)
     return AddingAutoIncrementIdentityColumn()
 
 

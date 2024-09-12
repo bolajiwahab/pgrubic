@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US011 import NotNullConstraintOnNewColumnWithNoStaticD
 @pytest.fixture(scope="module")
 def not_null_constraint_on_new_column_with_no_static_default() -> core.BaseChecker:
     """Create an instance of NotNullConstraintOnNewColumnWithNoStaticDefault."""
+    core.add_set_locations_to_rule(NotNullConstraintOnNewColumnWithNoStaticDefault)
     return NotNullConstraintOnNewColumnWithNoStaticDefault()
 
 

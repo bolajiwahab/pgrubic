@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US014 import UniqueConstraintCreatingNewIndex
 @pytest.fixture(scope="module")
 def unique_constraint_creating_new_index() -> core.BaseChecker:
     """Create an instance of UniqueConstraintCreatingNewIndex."""
+    core.add_set_locations_to_rule(UniqueConstraintCreatingNewIndex)
     return UniqueConstraintCreatingNewIndex()
 
 

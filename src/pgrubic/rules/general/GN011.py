@@ -43,8 +43,8 @@ class MissingRequiredColumn(linter.BaseChecker):
                             column_offset=self.column_offset,
                             source_text=self.source_text,
                             statement_location=self.statement_location,
-                            description=f"Column '{column.name}' of type"
-                            f" '{column.data_type}' is marked as required in config",
+                            description=f"Column `{column.name}` of type"
+                            f" `{column.data_type}` is marked as required in config",
                         ),
                     )
 

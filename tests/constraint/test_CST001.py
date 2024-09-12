@@ -11,6 +11,7 @@ from pgrubic.rules.constraint.CT001 import CascadeUpdate
 def cascade_update() -> core.BaseChecker:
     """Create an instance of CascadeUpdate."""
     core.add_apply_fix_to_rule(CascadeUpdate)
+    core.add_set_locations_to_rule(CascadeUpdate)
     return CascadeUpdate()
 
 

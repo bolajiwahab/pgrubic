@@ -5,7 +5,7 @@ from pglast import ast, enums, visitors
 from pgrubic.core import linter
 
 
-class RemoveRequiredColumn(linter.BaseChecker):
+class RequiredColumnRemoval(linter.BaseChecker):
     """## **What it does**
     Checks for removal of required columns.
 
@@ -40,7 +40,7 @@ class RemoveRequiredColumn(linter.BaseChecker):
                             column_offset=self.column_offset,
                             source_text=self.source_text,
                             statement_location=self.statement_location,
-                            description=f"Column {node.name} is marked as required"
+                            description=f"Column `{node.name}` is marked as required"
                             " in config",
                         ),
                     )

@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US015 import PrimaryKeyConstraintCreatingNewIndex
 @pytest.fixture(scope="module")
 def primary_key_constraint_creating_new_index() -> core.BaseChecker:
     """Create an instance of PrimaryKeyConstraintCreatingNewIndex."""
+    core.add_set_locations_to_rule(PrimaryKeyConstraintCreatingNewIndex)
     return PrimaryKeyConstraintCreatingNewIndex()
 
 

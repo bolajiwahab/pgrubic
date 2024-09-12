@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US001 import DropColumn
 @pytest.fixture(scope="module")
 def drop_column() -> core.BaseChecker:
     """Create an instance of DropColumn."""
+    core.add_set_locations_to_rule(DropColumn)
     return DropColumn()
 
 

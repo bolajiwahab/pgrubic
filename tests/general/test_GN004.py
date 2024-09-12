@@ -10,6 +10,7 @@ from pgrubic.rules.general.GN004 import MissingPrimaryKey
 @pytest.fixture(scope="module")
 def missing_primary_key() -> core.BaseChecker:
     """Create an instance of MissingPrimaryKey."""
+    core.add_set_locations_to_rule(MissingPrimaryKey)
     return MissingPrimaryKey()
 
 
@@ -19,7 +20,6 @@ def lint_missing_primary_key(
     missing_primary_key: core.BaseChecker,
 ) -> core.Linter:
     """Lint MissingPrimaryKey."""
-    missing_primary_key.config.lint.fix = False
     linter.checkers.add(missing_primary_key)
 
     return linter

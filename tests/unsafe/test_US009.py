@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US009 import DropSchema
 @pytest.fixture(scope="module")
 def drop_schema() -> core.BaseChecker:
     """Create an instance of DropSchema."""
+    core.add_set_locations_to_rule(DropSchema)
     return DropSchema()
 
 

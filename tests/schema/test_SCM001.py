@@ -10,6 +10,7 @@ from pgrubic.rules.schema.SM001 import SchemaUnqualifiedObject
 @pytest.fixture(scope="module")
 def schema_unqualified_object() -> core.BaseChecker:
     """Create an instance of SchemaUnqualifiedObject."""
+    core.add_set_locations_to_rule(SchemaUnqualifiedObject)
     return SchemaUnqualifiedObject()
 
 

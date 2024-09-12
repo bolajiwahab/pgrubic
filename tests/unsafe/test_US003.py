@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US003 import ColumnRename
 @pytest.fixture(scope="module")
 def column_rename() -> core.BaseChecker:
     """Create an instance of ColumnRename."""
+    core.add_set_locations_to_rule(ColumnRename)
     return ColumnRename()
 
 

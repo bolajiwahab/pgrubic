@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US029 import TruncateTable
 @pytest.fixture(scope="module")
 def truncate_table() -> core.BaseChecker:
     """Create an instance of TruncateTable."""
+    core.add_set_locations_to_rule(TruncateTable)
     return TruncateTable()
 
 

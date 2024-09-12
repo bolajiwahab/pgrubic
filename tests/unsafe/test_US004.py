@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US004 import AddingAutoIncrementColumn
 @pytest.fixture(scope="module")
 def adding_auto_increment_column() -> core.BaseChecker:
     """Create an instance of AddingAutoIncrementColumn."""
+    core.add_set_locations_to_rule(AddingAutoIncrementColumn)
     return AddingAutoIncrementColumn()
 
 

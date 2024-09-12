@@ -10,6 +10,7 @@ from pgrubic.rules.general.GN001 import TableInheritance
 @pytest.fixture(scope="module")
 def table_inheritance() -> core.BaseChecker:
     """Create an instance of TableInheritance."""
+    core.add_set_locations_to_rule(TableInheritance)
     return TableInheritance()
 
 

@@ -11,6 +11,7 @@ from pgrubic.rules.constraint.CT002 import CascadeDelete
 def cascade_delete() -> core.BaseChecker:
     """Create an instance of CascadeDelete."""
     core.add_apply_fix_to_rule(CascadeDelete)
+    core.add_set_locations_to_rule(CascadeDelete)
     return CascadeDelete()
 
 

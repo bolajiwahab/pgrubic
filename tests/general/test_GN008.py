@@ -11,6 +11,7 @@ from pgrubic.rules.general.GN008 import MissingReplaceInProcedure
 def missing_replace_in_procedure() -> core.BaseChecker:
     """Create an instance of MissingReplaceInProcedure."""
     core.add_apply_fix_to_rule(MissingReplaceInProcedure)
+    core.add_set_locations_to_rule(MissingReplaceInProcedure)
     return MissingReplaceInProcedure()
 
 

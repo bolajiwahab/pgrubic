@@ -11,6 +11,7 @@ from pgrubic.rules.unsafe.US028 import NonConcurrentRefreshMaterializedView
 def non_concurrent_refresh_materialized_view() -> core.BaseChecker:
     """Create an instance of NonConcurrentRefreshMaterializedView."""
     core.add_apply_fix_to_rule(NonConcurrentRefreshMaterializedView)
+    core.add_set_locations_to_rule(NonConcurrentRefreshMaterializedView)
     return NonConcurrentRefreshMaterializedView()
 
 

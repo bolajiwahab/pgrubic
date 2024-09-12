@@ -10,6 +10,7 @@ from pgrubic.rules.general.GN009 import DuplicateColumn
 @pytest.fixture(scope="module")
 def duplicate_column() -> core.BaseChecker:
     """Create an instance of DuplicateColumn."""
+    core.add_set_locations_to_rule(DuplicateColumn)
     return DuplicateColumn()
 
 
@@ -19,7 +20,6 @@ def lint_duplicate_column(
     duplicate_column: core.BaseChecker,
 ) -> core.Linter:
     """Lint DuplicateColumn."""
-    duplicate_column.config.lint.fix = False
     linter.checkers.add(duplicate_column)
 
     return linter

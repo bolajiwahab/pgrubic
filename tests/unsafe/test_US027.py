@@ -11,6 +11,7 @@ from pgrubic.rules.unsafe.US027 import NonConcurrentDetachPartition
 def non_concurrent_detach_partition() -> core.BaseChecker:
     """Create an instance of NonConcurrentDetachPartition."""
     core.add_apply_fix_to_rule(NonConcurrentDetachPartition)
+    core.add_set_locations_to_rule(NonConcurrentDetachPartition)
     return NonConcurrentDetachPartition()
 
 

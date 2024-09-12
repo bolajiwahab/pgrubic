@@ -75,7 +75,7 @@ no_implicit_reexport = true
 disallow_untyped_decorators = false
 
 [[tool.mypy.overrides]]
-module = ["pglast.*", "caseconverter.*"]
+module = ["pglast.*", "caseconverter.*", "pgrubic.*"]
 ignore_missing_imports = true
 
 [tool.ruff]

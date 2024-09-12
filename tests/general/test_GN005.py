@@ -10,6 +10,7 @@ from pgrubic.rules.general.GN005 import IndexElementsMoreThanThree
 @pytest.fixture(scope="module")
 def index_elements_more_than_three() -> core.BaseChecker:
     """Create an instance of IndexElementsMoreThanThree."""
+    core.add_set_locations_to_rule(IndexElementsMoreThanThree)
     return IndexElementsMoreThanThree()
 
 
@@ -19,7 +20,6 @@ def lint_index_elements_more_than_three(
     index_elements_more_than_three: core.BaseChecker,
 ) -> core.Linter:
     """Lint IndexElementsMoreThanThree."""
-    index_elements_more_than_three.config.lint.fix = False
     linter.checkers.add(index_elements_more_than_three)
 
     return linter

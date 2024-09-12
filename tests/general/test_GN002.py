@@ -10,6 +10,7 @@ from pgrubic.rules.general.GN002 import CreateRule
 @pytest.fixture(scope="module")
 def create_rule() -> core.BaseChecker:
     """Create an instance of CreateRule."""
+    core.add_set_locations_to_rule(CreateRule)
     return CreateRule()
 
 

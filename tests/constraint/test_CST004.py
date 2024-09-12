@@ -10,6 +10,7 @@ from pgrubic.rules.constraint.CT004 import RemoveConstraint
 @pytest.fixture(scope="module")
 def remove_constraint() -> core.BaseChecker:
     """Create an instance of RemoveConstraint."""
+    core.add_set_locations_to_rule(RemoveConstraint)
     return RemoveConstraint()
 
 

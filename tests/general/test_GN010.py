@@ -10,6 +10,7 @@ from pgrubic.rules.general.GN010 import TableColumnConflict
 @pytest.fixture(scope="module")
 def table_column_conflict() -> core.BaseChecker:
     """Create an instance of TableColumnConflict."""
+    core.add_set_locations_to_rule(TableColumnConflict)
     return TableColumnConflict()
 
 
@@ -19,7 +20,6 @@ def lint_table_column_conflict(
     table_column_conflict: core.BaseChecker,
 ) -> core.Linter:
     """Lint TableColumnConflict."""
-    table_column_conflict.config.lint.fix = False
     linter.checkers.add(table_column_conflict)
 
     return linter

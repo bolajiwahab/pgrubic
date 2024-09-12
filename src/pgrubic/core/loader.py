@@ -45,12 +45,12 @@ def load_rules() -> list[linter.BaseChecker]:
 
 
 def add_set_locations_to_rule(node: typing.Any) -> None:
-    """Add _set_locations_for_node to rule."""
+    """Add _set_locations to rule."""
     for name, method in inspect.getmembers(node, inspect.isfunction):
 
         if method.__name__.startswith("visit_"):
 
-            setattr(node, name, _set_locations_for_node(method))
+            setattr(node, name, _set_locations(method))
 
 
 def add_apply_fix_to_rule(node: typing.Any) -> None:
@@ -62,7 +62,7 @@ def add_apply_fix_to_rule(node: typing.Any) -> None:
             setattr(node, name, apply_fix(method))
 
 
-def _set_locations_for_node(
+def _set_locations(
     func: abc.Callable[..., typing.Any],
 ) -> abc.Callable[..., typing.Any]:
     """Set locations for node."""

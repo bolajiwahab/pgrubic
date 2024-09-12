@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US026 import VacuumFull
 @pytest.fixture(scope="module")
 def vacuum_full() -> core.BaseChecker:
     """Create an instance of VacuumFull."""
+    core.add_set_locations_to_rule(VacuumFull)
     return VacuumFull()
 
 

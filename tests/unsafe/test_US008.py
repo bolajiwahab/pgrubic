@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US008 import DropDatabase
 @pytest.fixture(scope="module")
 def drop_database() -> core.BaseChecker:
     """Create an instance of DropDatabase."""
+    core.add_set_locations_to_rule(DropDatabase)
     return DropDatabase()
 
 

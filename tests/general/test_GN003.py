@@ -11,6 +11,7 @@ from pgrubic.rules.general.GN003 import SqlAsciiEncoding
 def sql_ascii_encoding() -> core.BaseChecker:
     """Create an instance of SqlAsciiEncoding."""
     core.add_apply_fix_to_rule(SqlAsciiEncoding)
+    core.add_set_locations_to_rule(SqlAsciiEncoding)
     return SqlAsciiEncoding()
 
 

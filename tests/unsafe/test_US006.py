@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US006 import AddingStoredGeneratedColumn
 @pytest.fixture(scope="module")
 def adding_stored_generated_column() -> core.BaseChecker:
     """Create an instance of AddingStoredGeneratedColumn."""
+    core.add_set_locations_to_rule(AddingStoredGeneratedColumn)
     return AddingStoredGeneratedColumn()
 
 

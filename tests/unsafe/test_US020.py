@@ -11,6 +11,7 @@ from pgrubic.rules.unsafe.US020 import NonConcurrentReindex
 def non_concurrent_reindex() -> core.BaseChecker:
     """Create an instance of NonConcurrentReindex."""
     core.add_apply_fix_to_rule(NonConcurrentReindex)
+    core.add_set_locations_to_rule(NonConcurrentReindex)
     return NonConcurrentReindex()
 
 

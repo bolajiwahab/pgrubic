@@ -10,6 +10,7 @@ from pgrubic.rules.general.GN006 import CreateEnum
 @pytest.fixture(scope="module")
 def create_enum() -> core.BaseChecker:
     """Create an instance of CreateEnum."""
+    core.add_set_locations_to_rule(CreateEnum)
     return CreateEnum()
 
 
@@ -19,7 +20,6 @@ def lint_create_enum(
     create_enum: core.BaseChecker,
 ) -> core.Linter:
     """Lint CreateEnum."""
-    create_enum.config.lint.fix = False
     linter.checkers.add(create_enum)
 
     return linter

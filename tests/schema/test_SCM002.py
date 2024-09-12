@@ -12,6 +12,7 @@ from pgrubic.rules.schema.SM002 import DisallowedSchema
 def disallowed_schema() -> core.BaseChecker:
     """Create an instance of DisallowedSchema."""
     core.add_apply_fix_to_rule(DisallowedSchema)
+    core.add_set_locations_to_rule(DisallowedSchema)
     return DisallowedSchema()
 
 

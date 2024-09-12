@@ -11,6 +11,7 @@ from pgrubic.rules.constraint.CT003 import IdentityGeneratedByDefault
 def identity_generated_by_default() -> core.BaseChecker:
     """Create an instance of IdentityGeneratedByDefault."""
     core.add_apply_fix_to_rule(IdentityGeneratedByDefault)
+    core.add_set_locations_to_rule(IdentityGeneratedByDefault)
     return IdentityGeneratedByDefault()
 
 

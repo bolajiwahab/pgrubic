@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US002 import ColumnDataTypeChange
 @pytest.fixture(scope="module")
 def column_data_type_change() -> core.BaseChecker:
     """Create an instance of ColumnDataTypeChange."""
+    core.add_set_locations_to_rule(ColumnDataTypeChange)
     return ColumnDataTypeChange()
 
 

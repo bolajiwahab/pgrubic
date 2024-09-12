@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US007 import DropTablespace
 @pytest.fixture(scope="module")
 def drop_tablespace() -> core.BaseChecker:
     """Create an instance of DropTablespace."""
+    core.add_set_locations_to_rule(DropTablespace)
     return DropTablespace()
 
 

@@ -10,6 +10,7 @@ from pgrubic.rules.unsafe.US025 import Cluster
 @pytest.fixture(scope="module")
 def cluster() -> core.BaseChecker:
     """Create an instance of Cluster."""
+    core.add_set_locations_to_rule(Cluster)
     return Cluster()
 
 
