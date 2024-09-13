@@ -8,7 +8,7 @@ from pgrubic.rules.general import get_columns_from_table_creation
 
 class MissingRequiredColumn(linter.BaseChecker):
     """## **What it does**
-    Checks for required columns.
+    Checks for required column.
 
     ## **Why not?**
     If a column has been specified as required and you have not defined it,
@@ -18,7 +18,7 @@ class MissingRequiredColumn(linter.BaseChecker):
     Never.
 
     ## **Use instead:**
-    Define the required columns.
+    Define the required column.
     """
 
     is_auto_fixable: bool = True
@@ -33,9 +33,11 @@ class MissingRequiredColumn(linter.BaseChecker):
 
             given_columns, _ = get_columns_from_table_creation(node)
 
-            for column in self.config.lint.required_columns:
+            for required_column in self.config.lint.required_columns:
 
-                if column.name not in given_columns:
+                if not any(
+                    required_column.name == column.name for column in given_columns
+                ):
 
                     self.violations.add(
                         linter.Violation(
@@ -43,14 +45,14 @@ class MissingRequiredColumn(linter.BaseChecker):
                             column_offset=self.column_offset,
                             source_text=self.source_text,
                             statement_location=self.statement_location,
-                            description=f"Column `{column.name}` of type"
-                            f" `{column.data_type}` is marked as required in config",
+                            description=f"Column `{required_column.name}` of type"
+                            f" `{required_column.data_type}` is marked as required in config",  # noqa: E501
                         ),
                     )
 
-                    self._fix(node, column)
+                    self._fix(node, required_column)
 
-    def _fix(self, node: ast.CreateStmt, column: config.RequiredColumns) -> None:
+    def _fix(self, node: ast.CreateStmt, column: config.Column) -> None:
         """Fix violation."""
         node.tableElts = (
             *node.tableElts,

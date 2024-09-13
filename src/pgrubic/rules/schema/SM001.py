@@ -1,6 +1,6 @@
 """Checker for objects that are schema-qualifiable but are not schema qualified."""
 
-from pglast import ast, enums
+from pglast import ast
 
 from pgrubic.core import linter
 
@@ -59,24 +59,6 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
                 ),
             )
 
-    def _check_to_be_dropped_object_for_schema(
-        self,
-        object_name: tuple[ast.String, ...],
-    ) -> None:
-        """Check to-be-dropped object for schema."""
-        if len(object_name) < SCHEMA_QUALIFIED_LENGTH:
-
-            self.violations.add(
-                linter.Violation(
-                    line_number=self.line_number,
-                    column_offset=self.column_offset,
-                    source_text=self.source_text,
-                    statement_location=self.statement_location,
-                    description=f"Database object `{object_name[0].sval}`"
-                    " should be schema qualified",
-                ),
-            )
-
     def visit_RangeVar(
         self,
         ancestors: ast.Node,
@@ -118,28 +100,23 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         """Visit DropStmt."""
         for obj in node.objects:
 
-            if node.removeType in (
-                enums.ObjectType.OBJECT_TABLE,
-                enums.ObjectType.OBJECT_VIEW,
-                enums.ObjectType.OBJECT_MATVIEW,
-                enums.ObjectType.OBJECT_FOREIGN_TABLE,
-                enums.ObjectType.OBJECT_SEQUENCE,
-                enums.ObjectType.OBJECT_INDEX,
-            ):
-
-                self._check_to_be_dropped_object_for_schema(obj)
-
-            if node.removeType == enums.ObjectType.OBJECT_TYPE:
-
-                self._check_to_be_dropped_object_for_schema(obj.names)
+            object_names = getattr(obj, "names", getattr(obj, "objname", obj))
 
             if (
-                node.removeType
-                in (enums.ObjectType.OBJECT_FUNCTION, enums.ObjectType.OBJECT_PROCEDURE)
-                and len(obj.objname) < SCHEMA_QUALIFIED_LENGTH
+                isinstance(object_names, tuple | list)
+                and len(object_names) < SCHEMA_QUALIFIED_LENGTH
             ):
 
-                self._check_to_be_dropped_object_for_schema(obj.objname)
+                self.violations.add(
+                    linter.Violation(
+                        line_number=self.line_number,
+                        column_offset=self.column_offset,
+                        source_text=self.source_text,
+                        statement_location=self.statement_location,
+                        description=f"Database object `{object_names[-1].sval}`"
+                        " should be schema qualified",
+                    ),
+                )
 
     def visit_CreateEnumStmt(
         self,

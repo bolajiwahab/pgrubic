@@ -52,7 +52,7 @@ class NullableRequiredColumn(linter.BaseChecker):
                             column_offset=self.column_offset,
                             source_text=self.source_text,
                             statement_location=self.statement_location,
-                            description=f"Column '{node.colname}' is marked as required"
+                            description=f"Column `{node.colname}` is marked as required"
                             " in config",
                         ),
                     )

@@ -53,7 +53,7 @@ class TableColumnConflict(linter.BaseChecker):
         """Visit CreateStmt."""
         given_columns, _ = get_columns_from_table_creation(node)
 
-        if node.relation.relname in given_columns:
+        if any(column.name == node.relation.relname for column in given_columns):
 
             self._register_violation(
                 table_name=node.relation.relname,

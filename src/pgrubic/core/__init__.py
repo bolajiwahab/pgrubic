@@ -7,7 +7,7 @@ from pgrubic.core.loader import (
     add_apply_fix_to_rule,
     add_set_locations_to_rule,
 )
-from pgrubic.core.formatter import Formatter
+from pgrubic.core.formatters import ddl, dml
 
 __all__ = [
     "Linter",
@@ -18,5 +18,6 @@ __all__ = [
     "add_set_locations_to_rule",
     "parse_config",
     "Config",
-    "Formatter",
+    "ddl",
+    "dml",
 ]

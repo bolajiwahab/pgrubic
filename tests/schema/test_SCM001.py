@@ -80,6 +80,25 @@ def test_pass_cte_schema_unqualified_object(
     )
 
 
+def test_pass_drop_schema(
+    lint_schema_unqualified_object: core.Linter,
+) -> None:
+    """Test pass drop schema."""
+    sql_fail: str = "DROP SCHEMA test;"
+
+    violations: core.ViolationMetric = lint_schema_unqualified_object.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_fail,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=0,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=0,
+    )
+
+
 def test_fail_schema_unqualified_object(
     lint_schema_unqualified_object: core.Linter,
 ) -> None:

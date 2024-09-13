@@ -29,8 +29,8 @@ class DisallowedType:
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
-class RequiredColumns:
-    """Representation of required columns."""
+class Column:
+    """Representation of column."""
 
     name: str
     data_type: str
@@ -47,7 +47,7 @@ class Lint:
     ignore_noqa: bool
     allowed_extensions: list[str]
     allowed_languages: list[str]
-    required_columns: list[RequiredColumns]
+    required_columns: list[Column]
     disallowed_schemas: list[DisallowedSchema]
     disallowed_data_types: list[DisallowedType]
 
@@ -144,7 +144,7 @@ def parse_config() -> Config:
                 regex_constraint_exclusion=config_lint["regex-constraint-exclusion"],
                 regex_sequence=config_lint["regex-sequence"],
                 required_columns=[
-                    RequiredColumns(
+                    Column(
                         name=column["name"],
                         data_type=column["data-type"],
                     )

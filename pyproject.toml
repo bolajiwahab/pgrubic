@@ -97,6 +97,11 @@ known-first-party = ["pgrubic"]
 "tests/**/*.py" = [
   "S101", # asserts allowed in tests...
 ]
+"*formatters/**/*.py" = [
+  "PLR0915",
+  "PLR0912",
+  "C901",
+]
 
 [tool.isort]
 profile = "black"
