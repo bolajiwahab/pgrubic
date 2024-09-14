@@ -39,6 +39,8 @@ class ConstantGeneratedColumn(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Constant generated column found",
+                    description=f"Generated column"
+                    f" `{ancestors.find_nearest(ast.ColumnDef).node.colname}`"
+                    " with constant detected",
                 ),
             )

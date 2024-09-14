@@ -114,7 +114,7 @@ pythonpath = ["src"]
 [tool.coverage.run]
 source = ["src"]
 omit = [
-  # "formatter.py",
+  "formatter.py", # excluded for now
   "tests/*"
 ]
 

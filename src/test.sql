@@ -18,4 +18,9 @@
 
 -- ALTER TABLE public.test ALTER COLUMN b DROP expression cascade;
 
-drop schema test CASCADE;
+-- drop schema test CASCADE;
+
+CREATE TABLE people (
+    height_cm numeric,
+    height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
+);

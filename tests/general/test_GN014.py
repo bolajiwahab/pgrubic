@@ -4,7 +4,6 @@ import pytest
 
 from tests import SOURCE_PATH
 from pgrubic import core
-from pgrubic.core import config
 from pgrubic.rules.general.GN014 import SelectInto
 
 
@@ -23,12 +22,6 @@ def lint_select_into(
 ) -> core.Linter:
     """Lint SelectInto."""
     select_into.config.lint.fix = False
-    select_into.config.lint.required_columns = [
-        config.Column(
-            name="created_at",
-            data_type="timestamptz",
-        ),
-    ]
     linter.checkers.add(select_into)
 
     return linter
