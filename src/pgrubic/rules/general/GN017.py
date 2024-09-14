@@ -50,7 +50,7 @@ class IdColumn(linter.BaseChecker):
                     source_text=self.source_text,
                     statement_location=self.statement_location,
                     description="Use descriptive name for column instead of"
-                    f" '{node.colname}'",
+                    f" `{node.colname}`",
                 ),
             )
 

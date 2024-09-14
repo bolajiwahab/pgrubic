@@ -7,7 +7,7 @@ from pgrubic.core import linter
 
 class NotIn(linter.BaseChecker):
     """## **What it does**
-    Checks for indexed foreign keys.
+    Checks for usage of NOT IN.
 
     ## **Why not?**
     Don't use NOT IN, or any combination of NOT and IN such as NOT (x IN (select…))

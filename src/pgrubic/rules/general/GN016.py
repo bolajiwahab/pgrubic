@@ -41,6 +41,6 @@ class ConstantGeneratedColumn(linter.BaseChecker):
                     statement_location=self.statement_location,
                     description=f"Generated column"
                     f" `{ancestors.find_nearest(ast.ColumnDef).node.colname}`"
-                    " with constant detected",
+                    " should not be a constant",
                 ),
             )

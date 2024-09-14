@@ -82,7 +82,7 @@ def test_fail_table_column_conflict_description(
     table_column_conflict: core.BaseChecker,
 ) -> None:
     """Test table column conflict description."""
-    sql_fail: str = "CREATE TABLE music (age int, music text);"
+    sql_fail: str = "ALTER TABLE music ADD COLUMN music text;"
 
     _: core.ViolationMetric = lint_table_column_conflict.run(
         source_path=SOURCE_PATH,

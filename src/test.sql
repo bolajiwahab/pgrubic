@@ -20,7 +20,9 @@
 
 -- drop schema test CASCADE;
 
-CREATE TABLE people (
-    height_cm numeric,
-    height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
-);
+-- CREATE TABLE people (
+--     height_cm numeric,
+--     height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
+-- );
+
+CREATE INDEX ON measurement (logdate, city_id);

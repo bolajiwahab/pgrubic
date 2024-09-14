@@ -50,13 +50,13 @@ class NullComparison(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Comparison with NULL detected",
+                    description="Comparison with NULL should be [IS | IS NOT] NULL",
                 ),
             )
 
             return self._fix(node)
 
-        return None
+        return None  # pragma: no cover
 
     def _fix(self, node: ast.A_Expr) -> ast.NullTest:
         """Fix violation."""

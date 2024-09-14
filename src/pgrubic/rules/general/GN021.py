@@ -1,4 +1,4 @@
-"""Checker for unlogged table."""
+"""Checker for null constraint."""
 
 from pglast import ast, enums, visitors
 

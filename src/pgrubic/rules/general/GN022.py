@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgrubic.core import linter
 
 
-class ForbidUpdateWithoutWhereClause(linter.BaseChecker):
+class UpdateWithoutWhereClause(linter.BaseChecker):
     """## **What it does**
     Checks for **UPDATE** without a **WHERE** clause.
 

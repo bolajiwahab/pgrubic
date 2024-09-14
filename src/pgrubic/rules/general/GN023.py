@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgrubic.core import linter
 
 
-class ForbidDeleteWithoutWhereClause(linter.BaseChecker):
+class DeleteWithoutWhereClause(linter.BaseChecker):
     """## **What it does**
     Checks for **DELETE** without a **WHERE** clause.
 

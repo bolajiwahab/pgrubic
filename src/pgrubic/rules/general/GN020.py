@@ -39,7 +39,7 @@ class CurrentTime(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Prefer functions that return timestamps"
+                    description="Prefer functions that return timestamptz"
                     " instead of timetz",
                 ),
             )

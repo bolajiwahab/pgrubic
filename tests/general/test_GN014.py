@@ -41,6 +41,27 @@ def test_select_into_auto_fixable(
     assert select_into.is_auto_fixable is True
 
 
+def test_pass_create_table_as(
+    lint_select_into: core.Linter,
+) -> None:
+    """Test fail select into."""
+    sql_fail: str = (
+        "CREATE TABLE tbl AS SELECT * FROM films WHERE created_at >= '2002-01-01';"
+    )
+
+    violations: core.ViolationMetric = lint_select_into.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_fail,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=0,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=0,
+    )
+
+
 def test_fail_select_into(
     lint_select_into: core.Linter,
 ) -> None:

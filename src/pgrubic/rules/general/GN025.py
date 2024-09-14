@@ -9,7 +9,7 @@ from pgrubic.core import linter
 
 class DuplicateIndex(linter.BaseChecker):
     """## **What it does**
-    Checks for duplicate indexes.
+    Checks for duplicate indexes (exact match).
 
     ## **Why not?**
     Having duplicate indexes can negatively affect performance of database operations in

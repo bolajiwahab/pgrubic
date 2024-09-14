@@ -1,4 +1,6 @@
-CREATE unique INDEX i0 ON t0((nullif(FALSE, 'NULL')));
+CREATE INDEX ON measurement (logdate, city_id);
+
+-- CREATE unique INDEX i0 ON t0((nullif(FALSE, 'NULL')));
 
 -- CREATE DATABASE "Music2"
 --     LOCALE 'sv_SE.iso885915'

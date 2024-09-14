@@ -31,9 +31,13 @@ class YodaCondition(linter.BaseChecker):
         node: ast.A_Expr,
     ) -> None:
         """Visit A_Expr."""
-        if node.kind == enums.A_Expr_Kind.AEXPR_OP and isinstance(
-            node.lexpr,
-            ast.A_Const,
+        if (
+            node.kind == enums.A_Expr_Kind.AEXPR_OP
+            and isinstance(
+                node.lexpr,
+                ast.A_Const,
+            )
+            and not isinstance(node.rexpr, ast.A_Const)
         ):
 
             self.violations.add(

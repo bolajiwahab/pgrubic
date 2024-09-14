@@ -169,3 +169,28 @@ def test_fail_fix_drop_cascade(
         fixable_manual_total=0,
         fix=sql_fix,
     )
+
+
+def test_fail_fix_alter_table_drop_cascade(
+    lint_drop_cascade: core.Linter,
+    drop_cascade: core.BaseChecker,
+) -> None:
+    """Test fail fix drop cascade."""
+    sql_fail: str = "ALTER TABLE films_recent DROP COLUMN films_recent CASCADE;"
+
+    sql_fix: str = "ALTER TABLE films_recent DROP COLUMN films_recent;"
+
+    drop_cascade.config.lint.fix = True
+
+    violations: core.ViolationMetric = lint_drop_cascade.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_fail,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=1,
+        fixed_total=1,
+        fixable_auto_total=1,
+        fixable_manual_total=0,
+        fix=sql_fix,
+    )

@@ -130,7 +130,7 @@ def test_fail_constant_generated_column_description(
         next(
             iter(constant_generated_column.violations),
         ).description
-        == "Generated column `height_in` with constant detected"
+        == "Generated column `height_in` should not be a constant"
     )
 
 
