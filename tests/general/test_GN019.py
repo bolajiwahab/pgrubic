@@ -178,7 +178,7 @@ def test_fail_fix_alter_table_unlogged_table(
     """Test fail fix unlogged table."""
     sql_fail: str = "ALTER TABLE account SET UNLOGGED;"
 
-    sql_fix: str = "ALTER TABLE account SET LOGGED;"
+    sql_fix: str = "ALTER TABLE account\n    SET LOGGED;"
 
     unlogged_table.config.lint.fix = True
 

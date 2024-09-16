@@ -1,26 +1,22 @@
-"""Checker for xml."""
+"""Checker for hstore."""
 
 from pglast import ast, visitors
 
 from pgrubic.core import linter
 
 
-class Xml(linter.BaseChecker):
+class Hstore(linter.BaseChecker):
     """## **What it does**
-    Checks for usage of xml.
+    Checks for usage of hstore.
 
     ## **Why not?**
-    Downsides to using XML include slower processing and querying due to its complexity,
-    higher storage requirements and challenges in efficient indexing, rigidity in
-    adapting to schema changes, and the overall complexity in data handling due to XML's
-    verbose and hierarchical structure. These factors suggest that XML can lead to
-    increased resource usage and development difficulties, making formats like JSON more
-    suitable.
+    Hstore is essentially a key/value store directly in Postgres. With hstore you are a
+    little more limited in terms of the datatypes you have: you essentially just get
+    strings. You also don't get any nesting; in short it's a flat key/value datatype.
 
     ## **When should you?**
-    Despite its drawbacks, XML might be suitable when there is a need for data
-    interchange with systems that require XML format, or when dealing with legacy
-    systems where data is already in XML format.
+    Hstore can work fine for text based key-value lookups, but in general JSONB can
+    still work great here.
 
     ## **Use instead:**
     jsonb.
@@ -34,7 +30,7 @@ class Xml(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval == "xml":
+        if node.typeName.names[-1].sval == "hstore":
 
             self.violations.add(
                 linter.Violation(
@@ -42,7 +38,7 @@ class Xml(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Prefer jsonb over xml",
+                    description="Prefer jsonb over hstore",
                 ),
             )
 

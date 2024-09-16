@@ -1,27 +1,26 @@
-"""Checker for numeric with precision."""
+"""Checker for nullable boolean field."""
 
-from pglast import ast, visitors
+from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
 
 
-class NumericWithPrecision(linter.BaseChecker):
+class NullableBooleanField(linter.BaseChecker):
     """## **What it does**
     Checks for usage of numeric with precision.
 
     ## **Why not?**
-    Because it rounds off the fractional part which can lead to rounding errors slipping
-    in when performing calculations and storing partial results before aggregation.
+    3 possible values is not a boolean. By allowing nulls in a boolean field, you are
+    turning an intended binary representation (true/false) into a ternary representation
+    (true, false, null). Null is neither 'true' nor 'false'.
+    Allowing nulls in a boolean field is an oversight that leads to unnecessarily
+    ambiguous data.
 
     ## **When should you?**
-    When you want to, really. If what you want is a numeric field that will throw an
-    error when you insert too large a value into it, and you don't want to use an
-    explicit check constraint and you always want to store the fractional part in a
-    specific decimal places then numeric(p, s) is a perfectly good type.
-    Just don't use it automatically without thinking about it.
+    Never.
 
     ## **Use instead:**
-    numeric.
+    boolean with not null constraint.
     """
 
     is_auto_fixable: bool = True
@@ -32,27 +31,39 @@ class NumericWithPrecision(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval == "numeric" and node.typeName.typmods:
+        if node.typeName.names[-1].sval == "bool":
 
-            self.violations.add(
-                linter.Violation(
-                    line_number=self.line_number,
-                    column_offset=self.column_offset,
-                    source_text=self.source_text,
-                    statement_location=self.statement_location,
-                    description="Prefer entire numeric",
+            is_not_null = bool(
+                (
+                    [
+                        constraint
+                        for constraint in node.constraints
+                        if constraint.contype == enums.ConstrType.CONSTR_NOTNULL
+                    ]
+                    if node.constraints is not None
+                    else []
                 ),
             )
 
-            self._fix(node)
+            if not is_not_null:
+
+                self.violations.add(
+                    linter.Violation(
+                        line_number=self.line_number,
+                        column_offset=self.column_offset,
+                        source_text=self.source_text,
+                        statement_location=self.statement_location,
+                        description="Boolean field should be not be nullable",
+                    ),
+                )
+
+                self._fix(node)
 
     def _fix(self, node: ast.ColumnDef) -> None:
         """Fix violation."""
-        node.typeName = ast.TypeName(
-            names=(
-                {
-                    "@": "String",
-                    "sval": "numeric",
-                },
+        node.constraints = (
+            *(node.constraints or []),
+            ast.Constraint(
+                contype=enums.ConstrType.CONSTR_NOTNULL,
             ),
         )

@@ -1,5 +1,5 @@
-# wrongly-typed-required-column (TP016)
+# wrongly-typed-required-column (TP015)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TP016.WronglyTypedRequiredColumn
+::: pgrubic.rules.typing.TP015.WronglyTypedRequiredColumn

@@ -300,7 +300,7 @@ def test_fail_fix_alter_table_cascade_update(
     """
 
     sql_fix: str = (
-        "ALTER TABLE books ADD CONSTRAINT distfk FOREIGN KEY (author_id) REFERENCES authors (author_id) ON UPDATE RESTRICT;"  # noqa: E501
+        "ALTER TABLE books\n    ADD CONSTRAINT distfk FOREIGN KEY (author_id) REFERENCES authors (author_id) ON UPDATE RESTRICT;"  # noqa: E501
     )
 
     cascade_update.config.lint.fix = True

@@ -210,7 +210,7 @@ def test_fail_fix_validating_foreign_key_constraint_on_existing_rows(
     """
 
     sql_fix: str = (
-        "ALTER TABLE public.card ADD CONSTRAINT fkey FOREIGN KEY (account_id) REFERENCES public.account (id) NOT VALID ;"  # noqa: E501
+        "ALTER TABLE public.card\n    ADD CONSTRAINT fkey FOREIGN KEY (account_id) REFERENCES public.account (id) NOT VALID ;"  # noqa: E501
     )
 
     validating_foreign_key_constraint_on_existing_rows.config.lint.fix = True

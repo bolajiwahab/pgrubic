@@ -1,28 +1,29 @@
-"""Checker for floating point types."""
+"""Checker for xml."""
 
 from pglast import ast, visitors
 
 from pgrubic.core import linter
 
 
-class Float(linter.BaseChecker):
+class Xml(linter.BaseChecker):
     """## **What it does**
-    Checks for usage of float types.
+    Checks for usage of xml.
 
     ## **Why not?**
-    Floating point types are inexact, variable-precision numeric types.
-    Inexact means that some values cannot be converted exactly to the internal format
-    and are stored as approximations, so that storing and retrieving a value might show
-    slight discrepancies.
-
-    Comparing two floating-point values for equality might not always work as expected.
+    Downsides to using XML include slower processing and querying due to its complexity,
+    higher storage requirements and challenges in efficient indexing, rigidity in
+    adapting to schema changes, and the overall complexity in data handling due to XML's
+    verbose and hierarchical structure. These factors suggest that XML can lead to
+    increased resource usage and development difficulties, making formats like JSON more
+    suitable.
 
     ## **When should you?**
-    When approximates are acceptable, no comparison for equality is needed.
+    Despite its drawbacks, XML might be suitable when there is a need for data
+    interchange with systems that require XML format, or when dealing with legacy
+    systems where data is already in XML format.
 
     ## **Use instead:**
-    1. numeric
-    2. decimal
+    jsonb.
     """
 
     is_auto_fixable: bool = True
@@ -33,7 +34,7 @@ class Float(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval in ["float4", "float8"]:
+        if node.typeName.names[-1].sval == "xml":
 
             self.violations.add(
                 linter.Violation(
@@ -41,7 +42,7 @@ class Float(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Prefer numeric over float",
+                    description="Prefer jsonb over xml",
                 ),
             )
 
@@ -53,7 +54,7 @@ class Float(linter.BaseChecker):
             names=(
                 {
                     "@": "String",
-                    "sval": "numeric",
+                    "sval": "jsonb",
                 },
             ),
         )

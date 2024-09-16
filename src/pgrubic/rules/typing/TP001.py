@@ -20,7 +20,7 @@ class TimestampWithoutTimezone(linter.BaseChecker):
     different timezones - including between timestamps from the same location on
     different sides of a daylight savings time change.
 
-    timestamp (also known as timestamp without time zone) doesn't do any of that,
+    timestamp (also known as timestamp without time zone) does not do any of that,
     it just stores a date and time you give it. You can think of it being a picture of
     a calendar and a clock rather than a point in time.
     Without additional information - the timezone - you don't know what time it records.

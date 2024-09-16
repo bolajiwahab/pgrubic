@@ -198,7 +198,7 @@ def test_fail_fix_alter_table_current_time(
     sql_fail: str = "ALTER TABLE account ALTER COLUMN time SET DEFAULT CURRENT_TIME;"
 
     sql_fix: str = (
-        "ALTER TABLE account ALTER COLUMN time SET DEFAULT CURRENT_TIMESTAMP;"
+        "ALTER TABLE account\n    ALTER COLUMN time SET DEFAULT CURRENT_TIMESTAMP;"
     )
 
     current_time.config.lint.fix = True

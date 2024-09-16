@@ -1,50 +1,35 @@
-"""Checker for varchar."""
+"""Checker for money."""
 
 from pglast import ast, visitors
 
 from pgrubic.core import linter
 
 
-class Varchar(linter.BaseChecker):
+class Money(linter.BaseChecker):
     """## **What it does**
-    Checks for usage of varchar.
+    Checks for usage of money.
 
     ## **Why not?**
-    varchar(n) is a variable width text field that will throw an error if you try and
-    insert a string longer than n characters (not bytes) into it.
+    It's a fixed-point type, implemented as a machine int, so arithmetic with it is fast.
+    But it doesn't handle fractions of a cent (or equivalents in other currencies), it's
+    rounding behaviour is probably not what you want.
 
-    varchar (without the (n)) or text are similar, but without the length limit.
-    If you insert the same string into the three field types they will take up exactly
-    the same amount of space, and you won't be able to measure any difference
-    in performance.
+    It doesn't store a currency with the value, rather assuming that all money columns
+    contain the currency specified by the database's lc_monetary locale setting. If you
+    change the lc_monetary setting for any reason, all money columns will contain the
+    wrong value. That means that if you insert '$10.00' while lc_monetary is set to
+    'en_US.UTF-8' the value you retrieve may be '10,00 Lei' or '¥1,000' if lc_monetary
+    is changed.
 
-    If what you really need is a text field with an length limit then varchar(n) is
-    great, but if you pick an arbitrary length and choose varchar(20) for a surname
-    field you are risking production errors in the future when Hubert Blaine
-    Wolfe­schlegel­stein­hausen­berger­dorff signs up for your service.
-
-    Some databases do not have a type that can hold arbitrary long text, or if they do
-    it's not as convenient or efficient or well-supported as varchar(n).
-    Users from those databases will often use something like varchar(255) when what
-    they really want is text.
-
-    If you need to constrain the value in a field you probably need something more
-    specific than a maximum length - maybe a minimum length too, or a limited set of
-    characters - and a check constraint can do all of those things as well as a maximum
-    string length.
+    Storing a value as a numeric, possibly with the currency being used in an adjacent
+    column, might be better.
 
     ## **When should you?**
-    When you want to, really. If what you want is a text field that will throw an error
-    if you insert too long a string into it, and you don't want to use an explicit check
-    constraint then varchar(n) is a perfectly good type. Just don't use it automatically
-    without thinking about it.
-
-    Also, the varchar type is in the SQL standard, unlike the text type, so it might be
-    the best choice for writing super-portable applications.
+    If you're only working in a single currency, aren't dealing with fractional cents
+    and are only doing addition and subtraction then money might be the right thing.
 
     ## **Use instead:**
-    1. text
-    2. text with a constraint that enforces a maximum string length
+    numeric
     """
 
     is_auto_fixable: bool = True
@@ -55,7 +40,7 @@ class Varchar(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval == "varchar":
+        if node.typeName.names[-1].sval == "money":
 
             self.violations.add(
                 linter.Violation(
@@ -63,7 +48,7 @@ class Varchar(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Prefer text to varchar",
+                    description="Prefer numeric over money",
                 ),
             )
 
@@ -75,7 +60,7 @@ class Varchar(linter.BaseChecker):
             names=(
                 {
                     "@": "String",
-                    "sval": "text",
+                    "sval": "numeric",
                 },
             ),
         )

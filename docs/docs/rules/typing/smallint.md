@@ -1,5 +1,5 @@
-# smallint (TP011)
+# smallint (TP010)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TP011.Smallint
+::: pgrubic.rules.typing.TP010.Smallint

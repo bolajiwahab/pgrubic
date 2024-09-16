@@ -266,7 +266,7 @@ def test_fail_fix_alter_table_wrongly_typed_required_column(
     """Test fail fix wrongly typed required column."""
     sql_fail: str = "ALTER TABLE music ADD COLUMN created_at date;"
 
-    sql_fix: str = "ALTER TABLE music ADD COLUMN created_at timestamptz NOT NULL;"
+    sql_fix: str = "ALTER TABLE music\n    ADD COLUMN created_at timestamptz NOT NULL;"
 
     wrongly_typed_required_column.config.lint.fix = True
 

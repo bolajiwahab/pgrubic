@@ -1,5 +1,5 @@
-# char (TP005)
+# char (TP004)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TP005.Char
+::: pgrubic.rules.typing.TP004.Char

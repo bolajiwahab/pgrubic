@@ -177,7 +177,7 @@ def test_fail_fix_non_concurrent_detach_partition(
     """Test fail fix non concurrent detach partition."""
     sql_fail: str = "ALTER TABLE tbl DETACH PARTITION tbl_y2006m02;"
 
-    sql_fix: str = "ALTER TABLE tbl DETACH PARTITION tbl_y2006m02 CONCURRENTLY;"
+    sql_fix: str = "ALTER TABLE tbl\n    DETACH PARTITION tbl_y2006m02 CONCURRENTLY;"
 
     non_concurrent_detach_partition.config.lint.fix = True
 

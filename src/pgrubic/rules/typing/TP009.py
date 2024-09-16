@@ -1,31 +1,23 @@
-"""Checker for json."""
+"""Checker for integer."""
 
 from pglast import ast, visitors
 
 from pgrubic.core import linter
 
 
-class Json(linter.BaseChecker):
+class Integer(linter.BaseChecker):
     """## **What it does**
-    Checks for usage of json.
+    Checks for usage of integer.
 
     ## **Why not?**
-    From the manual:
-    > The json and jsonb data types accept almost identical sets of values as input.
-    > The major practical difference is one of efficiency. The json data type stores an
-    > exact copy of the input text, which processing functions must reparse on each
-    > execution; while jsonb data is stored in a decomposed binary format that makes it
-    > slightly slower to input due to added conversion overhead, but significantly
-    > faster to process, since no reparsing is needed. jsonb also supports indexing,
-    > which can be a significant advantage.
+    Integer can store values up to 2.147 Billion which can lead to integer overflow once
+    the max value is reached. The fire drill when you run out of integers is not cheap.
 
     ## **When should you?**
-    In general, most applications should prefer to store JSON data as jsonb, unless
-    there are quite specialized needs, such as legacy assumptions about ordering of
-    object keys.
+    Tables that store limited lookup options.
 
     ## **Use instead:**
-    jsonb.
+    bigint.
     """
 
     is_auto_fixable: bool = True
@@ -36,7 +28,7 @@ class Json(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval == "json":
+        if node.typeName.names[-1].sval == "int4":
 
             self.violations.add(
                 linter.Violation(
@@ -44,7 +36,7 @@ class Json(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Prefer jsonb over json",
+                    description="Prefer bigint over int",
                 ),
             )
 
@@ -56,7 +48,7 @@ class Json(linter.BaseChecker):
             names=(
                 {
                     "@": "String",
-                    "sval": "jsonb",
+                    "sval": "bigint",
                 },
             ),
         )

@@ -1,23 +1,28 @@
-"""Checker for smallint."""
+"""Checker for floating point types."""
 
 from pglast import ast, visitors
 
 from pgrubic.core import linter
 
 
-class Smallint(linter.BaseChecker):
+class Float(linter.BaseChecker):
     """## **What it does**
-    Checks for usage of smallint.
+    Checks for usage of float types.
 
     ## **Why not?**
-    Smallint can store values up to 32767 which can lead to integer overflow once
-    the max value is reached. The fire drill when you run out of integers is not cheap.
+    Floating point types are inexact, variable-precision numeric types.
+    Inexact means that some values cannot be converted exactly to the internal format
+    and are stored as approximations, so that storing and retrieving a value might show
+    slight discrepancies.
+
+    Comparing two floating-point values for equality might not always work as expected.
 
     ## **When should you?**
-    Tables that store limited lookup options.
+    When approximates are acceptable, no comparison for equality is needed.
 
     ## **Use instead:**
-    bigint.
+    1. numeric
+    2. decimal
     """
 
     is_auto_fixable: bool = True
@@ -28,7 +33,7 @@ class Smallint(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval == "int2":
+        if node.typeName.names[-1].sval in ["float4", "float8"]:
 
             self.violations.add(
                 linter.Violation(
@@ -36,7 +41,7 @@ class Smallint(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Prefer bigint over smallint",
+                    description="Prefer numeric over float",
                 ),
             )
 
@@ -48,7 +53,7 @@ class Smallint(linter.BaseChecker):
             names=(
                 {
                     "@": "String",
-                    "sval": "bigint",
+                    "sval": "numeric",
                 },
             ),
         )

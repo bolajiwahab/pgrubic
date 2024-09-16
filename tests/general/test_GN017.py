@@ -178,7 +178,7 @@ def test_fail_fix_alter_table_id_column(
     """Test fail fix id column."""
     sql_fail: str = "ALTER TABLE account ADD COLUMN id int;"
 
-    sql_fix: str = "ALTER TABLE account ADD COLUMN account_id integer;"
+    sql_fix: str = "ALTER TABLE account\n    ADD COLUMN account_id integer;"
 
     id_column.config.lint.fix = True
 

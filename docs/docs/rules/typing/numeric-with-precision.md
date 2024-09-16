@@ -1,5 +1,5 @@
-# numeric-with-precision (TP017)
+# numeric-with-precision (TP016)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TP017.NumericWithPrecision
+::: pgrubic.rules.typing.TP016.NumericWithPrecision

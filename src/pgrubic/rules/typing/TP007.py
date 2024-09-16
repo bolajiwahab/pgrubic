@@ -1,35 +1,26 @@
-"""Checker for money."""
+"""Checker for serial types."""
 
-from pglast import ast, visitors
+from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
 
 
-class Money(linter.BaseChecker):
+class Serial(linter.BaseChecker):
     """## **What it does**
-    Checks for usage of money.
+    Checks for usage of serial types.
 
     ## **Why not?**
-    It's a fixed-point type, implemented as a machine int, so arithmetic with it is fast.
-    But it doesn't handle fractions of a cent (or equivalents in other currencies), it's
-    rounding behaviour is probably not what you want.
-
-    It doesn't store a currency with the value, rather assuming that all money columns
-    contain the currency specified by the database's lc_monetary locale setting. If you
-    change the lc_monetary setting for any reason, all money columns will contain the
-    wrong value. That means that if you insert '$10.00' while lc_monetary is set to
-    'en_US.UTF-8' the value you retrieve may be '10,00 Lei' or '¥1,000' if lc_monetary
-    is changed.
-
-    Storing a value as a numeric, possibly with the currency being used in an adjacent
-    column, might be better.
+    The serial types have some weird behaviors that make schema, dependency, and
+    permission management unnecessarily cumbersome.
 
     ## **When should you?**
-    If you're only working in a single currency, aren't dealing with fractional cents
-    and are only doing addition and subtraction then money might be the right thing.
+    - If you need support to PostgreSQL older than version 10.
+    - In certain combinations with table inheritance (but see there)
+    - More generally, if you somehow use the same sequence for multiple tables, although
+      in those cases an explicit declaration might be preferable over the serial types.
 
     ## **Use instead:**
-    numeric
+    For new applications, identity columns should be used.
     """
 
     is_auto_fixable: bool = True
@@ -40,7 +31,15 @@ class Money(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval == "money":
+        alter_table_cmd: visitors.Ancestor = ancestors.find_nearest(ast.AlterTableCmd)
+
+        if (
+            (
+                alter_table_cmd
+                and alter_table_cmd.node.subtype == enums.AlterTableType.AT_AddColumn
+            )
+            or ancestors.find_nearest(ast.CreateStmt)
+        ) and node.typeName.names[-1].sval in ["smallserial", "serial", "bigserial"]:
 
             self.violations.add(
                 linter.Violation(
@@ -48,7 +47,7 @@ class Money(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Prefer numeric over money",
+                    description="Prefer identity column over serial types",
                 ),
             )
 
@@ -60,7 +59,15 @@ class Money(linter.BaseChecker):
             names=(
                 {
                     "@": "String",
-                    "sval": "numeric",
+                    "sval": "bigint",
                 },
+            ),
+        )
+
+        node.constraints = (
+            *(node.constraints or []),
+            ast.Constraint(
+                contype=enums.ConstrType.CONSTR_IDENTITY,
+                generated_when=enums.ATTRIBUTE_IDENTITY_ALWAYS,
             ),
         )

@@ -1,16 +1,16 @@
-"""Checker for integer."""
+"""Checker for smallint."""
 
 from pglast import ast, visitors
 
 from pgrubic.core import linter
 
 
-class Integer(linter.BaseChecker):
+class Smallint(linter.BaseChecker):
     """## **What it does**
-    Checks for usage of integer.
+    Checks for usage of smallint.
 
     ## **Why not?**
-    Integer can store values up to 2.147 Billion which can lead to integer overflow once
+    Smallint can store values up to 32767 which can lead to integer overflow once
     the max value is reached. The fire drill when you run out of integers is not cheap.
 
     ## **When should you?**
@@ -28,7 +28,7 @@ class Integer(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval == "int4":
+        if node.typeName.names[-1].sval == "int2":
 
             self.violations.add(
                 linter.Violation(
@@ -36,7 +36,7 @@ class Integer(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Prefer bigint over int",
+                    description="Prefer bigint over smallint",
                 ),
             )
 

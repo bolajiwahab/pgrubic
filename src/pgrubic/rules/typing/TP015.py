@@ -1,36 +1,51 @@
-"""Checker for disallowed data types."""
+"""Checker for wrongly typed required columns."""
 
 from pglast import ast, visitors
+from pglast.printers import dml
 
+from pgrubic import get_full_qualified_name
 from pgrubic.core import config, linter
 
 
-class DisallowedDataType(linter.BaseChecker):
+class WronglyTypedRequiredColumn(linter.BaseChecker):
     """## **What it does**
-    Checks for usage of disallowed data types.
+    Checks for wrongly typed required columns.
 
     ## **Why not?**
-    If you are using a disallowed type, you're probably doing something wrong.
+    If a column has been specified as required and you have typed it wrongly,
+    you are probably doing something wrong.
 
     ## **When should you?**
-    Never. If a data type is intended to be used, it should not be in the
-    disallowed_data_types.
+    Never.
 
     ## **Use instead:**
-    Data types that are not in the disallowed_data_types.
+    Right data types for the required column.
     """
 
-    is_auto_fixable: bool = True
+    is_auto_fixable = True
 
-    def visit_TypeName(
+    def visit_ColumnDef(
         self,
         ancestors: visitors.Ancestor,
-        node: ast.TypeName,
+        node: ast.ColumnDef,
     ) -> None:
-        """Visit TypeName."""
-        for data_type in self.config.lint.disallowed_data_types:
+        """Visit ColumnDef."""
+        for column in self.config.lint.required_columns:
 
-            if node.names[-1].sval == data_type.name:
+            if (
+                column.name == node.colname
+                and node.typeName.names[-1].sval != column.data_type
+            ):
+
+                full_qualified_type_name = get_full_qualified_name(
+                    node.typeName.names,
+                )
+
+                prettified_type = full_qualified_type_name
+
+                if full_qualified_type_name in dml.system_types:
+
+                    prettified_type = dml.system_types[full_qualified_type_name][0]
 
                 self.violations.add(
                     linter.Violation(
@@ -38,19 +53,21 @@ class DisallowedDataType(linter.BaseChecker):
                         column_offset=self.column_offset,
                         source_text=self.source_text,
                         statement_location=self.statement_location,
-                        description=f"Data type '{node.names[-1].sval}' is disallowed"
-                        f" in config with reason: '{data_type.reason}', use"
-                        f" '{data_type.use_instead}' instead",
+                        description=f"Column '{node.colname}' expected type is"
+                        f" '{column.data_type}', found"
+                        f" '{prettified_type}'",
                     ),
                 )
 
-                self._fix(node, data_type)
+                self._fix(node, column)
 
-    def _fix(self, node: ast.TypeName, data_type: config.DisallowedType) -> None:
+    def _fix(self, node: ast.ColumnDef, column: config.Column) -> None:
         """Fix violation."""
-        node.names = (
-            {
-                "@": "String",
-                "sval": data_type.use_instead,
-            },
+        node.typeName = ast.TypeName(
+            names=(
+                {
+                    "@": "String",
+                    "sval": column.data_type,
+                },
+            ),
         )

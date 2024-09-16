@@ -1,5 +1,5 @@
-# timestamp-with-timezone-with-precision (TP004)
+# timestamp-with-timezone-with-precision (TP003)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TP004.TimestampWithTimezoneWithPrecision
+::: pgrubic.rules.typing.TP003.TimestampWithTimezoneWithPrecision

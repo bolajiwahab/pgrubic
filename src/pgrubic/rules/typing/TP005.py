@@ -1,55 +1,46 @@
-"""Checker for char."""
+"""Checker for varchar."""
 
 from pglast import ast, visitors
 
 from pgrubic.core import linter
 
 
-class Char(linter.BaseChecker):
-    r"""## **What it does**
-    Checks for usage of char.
+class Varchar(linter.BaseChecker):
+    """## **What it does**
+    Checks for usage of varchar.
 
     ## **Why not?**
-    Any string you insert into a char(n) field will be padded with spaces to the
-    declared width. That's probably not what you actually want.
+    varchar(n) is a variable width text field that will throw an error if you try and
+    insert a string longer than n characters (not bytes) into it.
 
-    The manual says:
+    varchar (without the (n)) or text are similar, but without the length limit.
+    If you insert the same string into the three field types they will take up exactly
+    the same amount of space, and you won't be able to measure any difference
+    in performance.
 
-    > Values of type character are physically padded with spaces to the specified
-    > width n, and are stored and displayed that way.
-    > However, trailing spaces are treated as semantically insignificant and disregarded
-    > when comparing two values of type character. In collations where whitespace is
-    > significant, this behavior can produce unexpected results; for example
-    > SELECT 'a '::CHAR(2) collate "C" < E'a\n'::CHAR(2) returns true, even though
-    > C locale would consider a space to be greater than a newline.
-    > Trailing spaces are removed when converting a character value to one of the
-    > other string types. Note that trailing spaces are semantically significant in
-    > character varying and text values, and when using pattern matching, that is LIKE
-    > and regular expressions. That should scare you off it.
+    If what you really need is a text field with an length limit then varchar(n) is
+    great, but if you pick an arbitrary length and choose varchar(20) for a surname
+    field you are risking production errors in the future when Hubert Blaine
+    Wolfe­schlegel­stein­hausen­berger­dorff signs up for your service.
 
-    The space-padding does waste space, but doesn't make operations on it any faster;
-    in fact the reverse, thanks to the need to strip spaces in many contexts.
+    Some databases do not have a type that can hold arbitrary long text, or if they do
+    it's not as convenient or efficient or well-supported as varchar(n).
+    Users from those databases will often use something like varchar(255) when what
+    they really want is text.
 
-    It's important to note that from a storage point of view char(n) is not a
-    fixed-width type. The actual number of bytes varies since characters may take more
-    than one byte, and the stored values are therefore treated as variable-length anyway
-    (even though the space padding is included in the storage).
-
-    Sometimes people respond to "don't use char(n)" with "but my values must always be
-    exactly N characters long" (e.g. country codes, hashes, or identifiers from some
-    other system). It is still a bad idea to use char(n) even in these cases.
-
-    Remember, there is no performance benefit whatsoever to using char(n).
-    In fact the reverse is true. One particular problem that comes up is that if you try
-    and compare a char(n) field against a parameter where the driver has explicitly
-    specified a type of text or varchar, you may be unexpectedly unable to use an index
-    for the comparison. This can be hard to debug since it doesn't show up on
-    manual queries.
+    If you need to constrain the value in a field you probably need something more
+    specific than a maximum length - maybe a minimum length too, or a limited set of
+    characters - and a check constraint can do all of those things as well as a maximum
+    string length.
 
     ## **When should you?**
-    When you're porting very, very old software that uses fixed width fields. Or when
-    you read the snippet from the manual above and think "yes, that makes perfect sense
-    and is a good match for my requirements" rather than gibbering and running away.
+    When you want to, really. If what you want is a text field that will throw an error
+    if you insert too long a string into it, and you don't want to use an explicit check
+    constraint then varchar(n) is a perfectly good type. Just don't use it automatically
+    without thinking about it.
+
+    Also, the varchar type is in the SQL standard, unlike the text type, so it might be
+    the best choice for writing super-portable applications.
 
     ## **Use instead:**
     1. text
@@ -64,7 +55,7 @@ class Char(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval in ["bpchar", "char"]:
+        if node.typeName.names[-1].sval == "varchar":
 
             self.violations.add(
                 linter.Violation(
@@ -72,7 +63,7 @@ class Char(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Prefer text over char",
+                    description="Prefer text to varchar",
                 ),
             )
 

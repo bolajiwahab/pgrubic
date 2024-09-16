@@ -3,18 +3,37 @@
 from pglast import ast, enums, stream, printers
 
 
-def _select_needs_to_be_wrapped_in_parens(node: ast.SelectStmt) -> bool:
-    # Accordingly with https://www.postgresql.org/docs/current/sql-select.html, a SELECT
-    # statement on either sides of UNION/INTERSECT/EXCEPT must be wrapped in parens if it
-    # contains ORDER BY/LIMIT/... or is a nested UNION/INTERSECT/EXCEPT
-    return bool(
-        node.sortClause
-        or node.limitCount
-        or node.limitOffset
-        or node.lockingClause
-        or node.withClause
-        or node.op != enums.SetOperation.SETOP_NONE,
-    )
+@printers.node_printer(ast.BoolExpr, override=True)
+def bool_expr(node: ast.BoolExpr, output: stream.RawStream) -> None:
+    """Printer for BoolExpr."""
+    bet = enums.BoolExprType
+    in_res_target = isinstance(node.ancestors[0], ast.ResTarget)
+    needs = ast.BoolExpr in node.ancestors
+    if node.boolop == bet.AND_EXPR:
+        indent_value = -4 if not in_res_target else None
+        relindent = -5 if needs and not in_res_target else indent_value
+        output.print_list(
+            node.args,
+            "AND",
+            relative_indent=relindent,
+            item_needs_parens=printers.dml._bool_expr_needs_to_be_wrapped_in_parens,  # noqa: SLF001
+        )
+    elif node.boolop == bet.OR_EXPR:
+        relindent = -3 if not in_res_target else None
+        output.print_list(
+            node.args,
+            "OR",
+            relative_indent=relindent,
+            item_needs_parens=printers.dml._bool_expr_needs_to_be_wrapped_in_parens,  # noqa: SLF001
+        )
+    else:
+        output.writes("NOT")
+        with output.expression(
+            printers.dml._bool_expr_needs_to_be_wrapped_in_parens(  # noqa: SLF001
+                node.args[0],
+            ),
+        ):
+            output.print_node(node.args[0])
 
 
 @printers.node_printer(ast.SelectStmt, override=True)
@@ -39,7 +58,9 @@ def select_stmt(node: ast.SelectStmt, output: stream.RawStream) -> None:
             with output.push_indent():
                 if node.larg:
                     with output.expression(
-                        _select_needs_to_be_wrapped_in_parens(node.larg),
+                        printers.dml._select_needs_to_be_wrapped_in_parens(  # noqa: SLF001
+                            node.larg,
+                        ),
                     ):
                         output.print_node(node.larg)
                 output.newline()
@@ -56,7 +77,9 @@ def select_stmt(node: ast.SelectStmt, output: stream.RawStream) -> None:
                 output.newline()
                 if node.rarg:
                     with output.expression(
-                        _select_needs_to_be_wrapped_in_parens(node.rarg),
+                        printers.dml._select_needs_to_be_wrapped_in_parens(  # noqa: SLF001
+                            node.rarg,
+                        ),
                     ):
                         output.print_node(node.rarg)
         else:
@@ -137,3 +160,38 @@ def select_stmt(node: ast.SelectStmt, output: stream.RawStream) -> None:
 
         if node.withClause:
             output.dedent()
+
+
+@printers.node_printer(ast.IntoClause, override=True)
+def into_clause(node: ast.IntoClause, output: stream.RawStream) -> None:
+    """Printer for IntoClause."""
+    output.print_node(node.rel)
+    if node.colNames:
+        output.write(" ")
+        with output.expression(need_parens=True):
+            output.print_name(node.colNames, ",")
+    output.newline()
+    with output.push_indent(2):
+        if node.accessMethod:
+            output.write("USING ")
+            output.print_name(node.accessMethod)
+            output.newline()
+        if node.options:
+            output.write("WITH ")
+            with output.expression(need_parens=True):
+                output.print_list(node.options)
+            output.newline()
+        if node.onCommit != enums.OnCommitAction.ONCOMMIT_NOOP:
+            output.space(2)
+            output.write("ON COMMIT ")
+            if node.onCommit == enums.OnCommitAction.ONCOMMIT_PRESERVE_ROWS:
+                output.write("PRESERVE ROWS")
+            elif node.onCommit == enums.OnCommitAction.ONCOMMIT_DELETE_ROWS:
+                output.write("DELETE ROWS")
+            elif node.onCommit == enums.OnCommitAction.ONCOMMIT_DROP:
+                output.write("DROP")
+            output.newline()
+        if node.tableSpaceName:
+            output.write("TABLESPACE ")
+            output.print_name(node.tableSpaceName)
+            output.newline()

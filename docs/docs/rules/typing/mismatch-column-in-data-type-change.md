@@ -1,5 +1,5 @@
-# mismatch-column-in-data-type-change (TP019)
+# mismatch-column-in-data-type-change (TP018)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TP019.MismatchColumnInDataTypeChange
+::: pgrubic.rules.typing.TP018.MismatchColumnInDataTypeChange

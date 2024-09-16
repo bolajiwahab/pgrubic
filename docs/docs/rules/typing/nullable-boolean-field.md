@@ -1,5 +1,5 @@
-# nullable-boolean-field (TP018)
+# nullable-boolean-field (TP017)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TP018.NullableBooleanField
+::: pgrubic.rules.typing.TP017.NullableBooleanField

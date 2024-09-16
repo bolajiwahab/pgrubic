@@ -177,7 +177,7 @@ def test_fail_fix_non_concurrent_index_creation(
     """Test fail fix non concurrent index creation."""
     sql_fail: str = "CREATE INDEX idx ON public.card(account_id);"
 
-    sql_fix: str = "CREATE INDEX CONCURRENTLY idx\n  ON public.card (account_id);"
+    sql_fix: str = "CREATE INDEX CONCURRENTLY idx\n    ON public.card (account_id);"
 
     non_concurrent_index_creation.config.lint.fix = True
 

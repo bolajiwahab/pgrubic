@@ -1,26 +1,31 @@
-"""Checker for serial types."""
+"""Checker for json."""
 
-from pglast import ast, enums, visitors
+from pglast import ast, visitors
 
 from pgrubic.core import linter
 
 
-class Serial(linter.BaseChecker):
+class Json(linter.BaseChecker):
     """## **What it does**
-    Checks for usage of serial types.
+    Checks for usage of json.
 
     ## **Why not?**
-    The serial types have some weird behaviors that make schema, dependency, and
-    permission management unnecessarily cumbersome.
+    From the manual:
+    > The json and jsonb data types accept almost identical sets of values as input.
+    > The major practical difference is one of efficiency. The json data type stores an
+    > exact copy of the input text, which processing functions must reparse on each
+    > execution; while jsonb data is stored in a decomposed binary format that makes it
+    > slightly slower to input due to added conversion overhead, but significantly
+    > faster to process, since no reparsing is needed. jsonb also supports indexing,
+    > which can be a significant advantage.
 
     ## **When should you?**
-    - If you need support to PostgreSQL older than version 10.
-    - In certain combinations with table inheritance (but see there)
-    - More generally, if you somehow use the same sequence for multiple tables, although
-      in those cases an explicit declaration might be preferable over the serial types.
+    In general, most applications should prefer to store JSON data as jsonb, unless
+    there are quite specialized needs, such as legacy assumptions about ordering of
+    object keys.
 
     ## **Use instead:**
-    For new applications, identity columns should be used.
+    jsonb.
     """
 
     is_auto_fixable: bool = True
@@ -31,15 +36,7 @@ class Serial(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        alter_table_cmd: visitors.Ancestor = ancestors.find_nearest(ast.AlterTableCmd)
-
-        if (
-            (
-                alter_table_cmd
-                and alter_table_cmd.node.subtype == enums.AlterTableType.AT_AddColumn
-            )
-            or ancestors.find_nearest(ast.CreateStmt)
-        ) and node.typeName.names[-1].sval in ["smallserial", "serial", "bigserial"]:
+        if node.typeName.names[-1].sval == "json":
 
             self.violations.add(
                 linter.Violation(
@@ -47,7 +44,7 @@ class Serial(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Prefer identity column over serial types",
+                    description="Prefer jsonb over json",
                 ),
             )
 
@@ -59,15 +56,7 @@ class Serial(linter.BaseChecker):
             names=(
                 {
                     "@": "String",
-                    "sval": "bigint",
+                    "sval": "jsonb",
                 },
-            ),
-        )
-
-        node.constraints = (
-            *(node.constraints or []),
-            ast.Constraint(
-                contype=enums.ConstrType.CONSTR_IDENTITY,
-                generated_when=enums.ATTRIBUTE_IDENTITY_ALWAYS,
             ),
         )

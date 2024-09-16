@@ -1,5 +1,5 @@
-# varchar (TP006)
+# varchar (TP005)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TP006.Varchar
+::: pgrubic.rules.typing.TP005.Varchar

@@ -178,7 +178,7 @@ def test_fail_fix_alter_table_drop_cascade(
     """Test fail fix drop cascade."""
     sql_fail: str = "ALTER TABLE films_recent DROP COLUMN films_recent CASCADE;"
 
-    sql_fix: str = "ALTER TABLE films_recent DROP COLUMN films_recent;"
+    sql_fix: str = "ALTER TABLE films_recent\n    DROP COLUMN films_recent;"
 
     drop_cascade.config.lint.fix = True
 

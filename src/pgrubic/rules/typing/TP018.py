@@ -1,69 +1,51 @@
-"""Checker for nullable boolean field."""
+"""Checker for mismatch column in data type change."""
 
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
 
 
-class NullableBooleanField(linter.BaseChecker):
+class MismatchColumnInDataTypeChange(linter.BaseChecker):
     """## **What it does**
-    Checks for usage of numeric with precision.
+    Checks for mismatch column in data type change.
 
     ## **Why not?**
-    3 possible values is not a boolean. By allowing nulls in a boolean field, you are
-    turning an intended binary representation (true/false) into a ternary representation
-    (true, false, null). Null is neither 'true' nor 'false'.
-    Allowing nulls in a boolean field is an oversight that leads to unnecessarily
-    ambiguous data.
+    For certain column data type changes, a **USING** clause must be provided if there is
+    no implicit or assignment cast from old to new type.
+    Logically, the expression in the USING should reference the original column otherwise
+    it is most likely a mistake.
 
     ## **When should you?**
-    Never.
+    Almost never. When you are sure that the expression in the USING is indeed correct.
 
     ## **Use instead:**
-    boolean with not null constraint.
+    The right column in the USING clause.
     """
 
     is_auto_fixable: bool = True
 
-    def visit_ColumnDef(
+    def visit_ColumnRef(
         self,
         ancestors: visitors.Ancestor,
-        node: ast.ColumnDef,
+        node: ast.ColumnRef,
     ) -> None:
-        """Visit ColumnDef."""
-        if node.typeName.names[-1].sval == "bool":
+        """Visit ColumnRef."""
+        alter_table_cmd: visitors.Ancestor = ancestors.find_nearest(ast.AlterTableCmd)
 
-            is_not_null = bool(
-                (
-                    [
-                        constraint
-                        for constraint in node.constraints
-                        if constraint.contype == enums.ConstrType.CONSTR_NOTNULL
-                    ]
-                    if node.constraints is not None
-                    else []
+        if (
+            alter_table_cmd
+            and alter_table_cmd.node.subtype == enums.AlterTableType.AT_AlterColumnType
+            and alter_table_cmd.node.name != node.fields[-1].sval
+        ):
+
+            self.violations.add(
+                linter.Violation(
+                    line_number=self.line_number,
+                    column_offset=self.column_offset,
+                    source_text=self.source_text,
+                    statement_location=self.statement_location,
+                    description=f"Column '{alter_table_cmd.node.name}' in data type"
+                    f" change does not match column '{node.fields[-1].sval}'"
+                    " in USING clause",
                 ),
             )
-
-            if not is_not_null:
-
-                self.violations.add(
-                    linter.Violation(
-                        line_number=self.line_number,
-                        column_offset=self.column_offset,
-                        source_text=self.source_text,
-                        statement_location=self.statement_location,
-                        description="Boolean field should be not be nullable",
-                    ),
-                )
-
-                self._fix(node)
-
-    def _fix(self, node: ast.ColumnDef) -> None:
-        """Fix violation."""
-        node.constraints = (
-            *(node.constraints or []),
-            ast.Constraint(
-                contype=enums.ConstrType.CONSTR_NOTNULL,
-            ),
-        )

@@ -1,5 +1,5 @@
-# xml (TP013)
+# xml (TP012)
 
 Automatic fix is available
 
-::: pgrubic.rules.typing.TP013.Xml
+::: pgrubic.rules.typing.TP012.Xml

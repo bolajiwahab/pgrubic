@@ -1,13 +1,13 @@
-"""Checker for timestamp without time zone with precision."""
+"""Checker for timestamp with time zone with precision."""
 
 from pglast import ast, visitors
 
 from pgrubic.core import linter
 
 
-class TimestampWithoutTimezoneWithPrecision(linter.BaseChecker):
+class TimestampWithTimezoneWithPrecision(linter.BaseChecker):
     """## **What it does**
-    Checks for usage of timestamp without time zone with precision.
+    Checks for usage of timestamp with time zone with precision.
 
     ## **Why not?**
     Because it rounds off the fractional part rather than truncating it as everyone
@@ -18,7 +18,7 @@ class TimestampWithoutTimezoneWithPrecision(linter.BaseChecker):
     Never.
 
     ## **Use instead:**
-    timestamp (also known as timestamp without time zone) without precision.
+    timestamptz (also known as timestamp with time zone) without precision.
     """
 
     is_auto_fixable: bool = True
@@ -29,7 +29,7 @@ class TimestampWithoutTimezoneWithPrecision(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval == "timestamp" and node.typeName.typmods:
+        if node.typeName.names[-1].sval == "timestamptz" and node.typeName.typmods:
 
             self.violations.add(
                 linter.Violation(
@@ -37,7 +37,7 @@ class TimestampWithoutTimezoneWithPrecision(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Prefer entire timestamp without timezone",
+                    description="Prefer entire timestamp with timezone",
                 ),
             )
 
