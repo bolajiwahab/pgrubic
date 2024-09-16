@@ -72,7 +72,7 @@ class Char(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Prefer text over char",
+                    description="Prefer text to char",
                 ),
             )
 

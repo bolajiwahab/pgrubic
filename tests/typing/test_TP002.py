@@ -1,4 +1,4 @@
-"""Test for usage of timetz without time zone."""
+"""Test for usage of time with time zone."""
 
 import pytest
 
