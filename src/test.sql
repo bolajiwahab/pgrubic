@@ -4,6 +4,11 @@
 -- fetch next 10 row only
 -- FOR UPDATE;
 
+select a, b, c from tbl where tbl.d = 10 or tbl.d = 12 or d = 30;
+
+-- select a, b, c from tbl where tbl.d in(10 , 12, 30);
+
+
 -- drop table test;
 
 -- drop type public.typ cascade;
@@ -84,4 +89,4 @@
 --     PARTITION OF public.outgoing_sms
 --     FOR VALUES FROM ('2019-11-01 00:00:00+00') TO ('2019-12-01 00:00:00+00');
 
-ALTER TABLE music ADD COLUMN created_at timestamp(0);
+-- ALTER TABLE music ADD COLUMN created_at timestamp(0);

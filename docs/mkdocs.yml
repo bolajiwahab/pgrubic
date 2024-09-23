@@ -15,7 +15,7 @@ plugins:
             # allow_inspection: false
             show_bases: false
             show_source: false
-            members: true
+            # members: false
             # show_submodules: true
             show_labels: false
             inherited_members: true
@@ -24,6 +24,9 @@ plugins:
             # show_root_headings: true
             # show_root_toc_entry: true
             # show_signature_annotations: false
+            # members:
+              # - code
+              # - name
             filters:
               - "!^_"
               - "!^__"

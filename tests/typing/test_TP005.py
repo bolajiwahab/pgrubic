@@ -16,7 +16,7 @@ def varchar() -> core.BaseChecker:
 
 
 @pytest.fixture
-def lint_char(
+def lint_varchar(
     linter: core.Linter,
     varchar: core.BaseChecker,
 ) -> core.Linter:
@@ -27,27 +27,27 @@ def lint_char(
     return linter
 
 
-def test_char_rule_code(
+def test_varchar_rule_code(
     varchar: core.BaseChecker,
 ) -> None:
     """Test varchar rule code."""
     assert varchar.code == varchar.__module__.split(".")[-1]
 
 
-def test_char_auto_fixable(
+def test_varchar_auto_fixable(
     varchar: core.BaseChecker,
 ) -> None:
     """Test varchar auto fixable."""
     assert varchar.is_auto_fixable is True
 
 
-def test_pass_create_table_timestamp_with_timezone(
-    lint_char: core.Linter,
+def test_pass_create_table_text(
+    lint_varchar: core.Linter,
 ) -> None:
-    """Test pass varchar."""
+    """Test pass text."""
     sql_fail: str = "CREATE TABLE music (first_name text);"
 
-    violations: core.ViolationMetric = lint_char.run(
+    violations: core.ViolationMetric = lint_varchar.run(
         source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
@@ -60,13 +60,13 @@ def test_pass_create_table_timestamp_with_timezone(
     )
 
 
-def test_pass_alter_table_timestamp_with_timezone(
-    lint_char: core.Linter,
+def test_pass_alter_table_text(
+    lint_varchar: core.Linter,
 ) -> None:
     """Test pass varchar."""
     sql_fail: str = "ALTER TABLE music ADD COLUMN last_name text;"
 
-    violations: core.ViolationMetric = lint_char.run(
+    violations: core.ViolationMetric = lint_varchar.run(
         source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
@@ -79,13 +79,13 @@ def test_pass_alter_table_timestamp_with_timezone(
     )
 
 
-def test_fail_create_table_char(
-    lint_char: core.Linter,
+def test_fail_create_table_varchar(
+    lint_varchar: core.Linter,
 ) -> None:
     """Test fail create table varchar."""
     sql_fail: str = "CREATE TABLE music (first_name varchar(20));"
 
-    violations: core.ViolationMetric = lint_char.run(
+    violations: core.ViolationMetric = lint_varchar.run(
         source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
@@ -98,13 +98,13 @@ def test_fail_create_table_char(
     )
 
 
-def test_fail_alter_table_char(
-    lint_char: core.Linter,
+def test_fail_alter_table_varchar(
+    lint_varchar: core.Linter,
 ) -> None:
     """Test fail alter table varchar."""
     sql_fail: str = "ALTER TABLE music ADD COLUMN last_name varchar;"
 
-    violations: core.ViolationMetric = lint_char.run(
+    violations: core.ViolationMetric = lint_varchar.run(
         source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
@@ -117,14 +117,14 @@ def test_fail_alter_table_char(
     )
 
 
-def test_fail_char_description(
-    lint_char: core.Linter,
+def test_fail_varchar_description(
+    lint_varchar: core.Linter,
     varchar: core.BaseChecker,
 ) -> None:
     """Test varchar description."""
     sql_fail: str = "CREATE TABLE music (middle_name varchar(0));"
 
-    _: core.ViolationMetric = lint_char.run(
+    _: core.ViolationMetric = lint_varchar.run(
         source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
@@ -137,8 +137,8 @@ def test_fail_char_description(
     )
 
 
-def test_pass_noqa_char(
-    lint_char: core.Linter,
+def test_pass_noqa_varchar(
+    lint_varchar: core.Linter,
 ) -> None:
     """Test pass noqa varchar."""
     sql_pass_noqa: str = """
@@ -146,7 +146,7 @@ def test_pass_noqa_char(
     CREATE TABLE music (age int, birth_place varchar)
     """
 
-    violations: core.ViolationMetric = lint_char.run(
+    violations: core.ViolationMetric = lint_varchar.run(
         source_path=SOURCE_PATH,
         source_code=sql_pass_noqa,
     )
@@ -159,8 +159,8 @@ def test_pass_noqa_char(
     )
 
 
-def test_fail_noqa_char(
-    lint_char: core.Linter,
+def test_fail_noqa_varchar(
+    lint_varchar: core.Linter,
 ) -> None:
     """Test fail noqa varchar."""
     sql_fail_noqa: str = """
@@ -168,7 +168,7 @@ def test_fail_noqa_char(
     ALTER TABLE music ADD COLUMN birth_place varchar(10);
     """
 
-    violations: core.ViolationMetric = lint_char.run(
+    violations: core.ViolationMetric = lint_varchar.run(
         source_path=SOURCE_PATH,
         source_code=sql_fail_noqa,
     )
@@ -181,8 +181,8 @@ def test_fail_noqa_char(
     )
 
 
-def test_pass_general_noqa_char(
-    lint_char: core.Linter,
+def test_pass_general_noqa_varchar(
+    lint_varchar: core.Linter,
 ) -> None:
     """Test pass noqa varchar."""
     sql_pass_noqa: str = """
@@ -190,7 +190,7 @@ def test_pass_general_noqa_char(
     CREATE TABLE music (age int, first_name varchar);
     """
 
-    violations: core.ViolationMetric = lint_char.run(
+    violations: core.ViolationMetric = lint_varchar.run(
         source_path=SOURCE_PATH,
         source_code=sql_pass_noqa,
     )
@@ -203,8 +203,8 @@ def test_pass_general_noqa_char(
     )
 
 
-def test_fail_fix_create_table_char(
-    lint_char: core.Linter,
+def test_fail_fix_create_table_varchar(
+    lint_varchar: core.Linter,
     varchar: core.BaseChecker,
 ) -> None:
     """Test fail fix varchar."""
@@ -214,7 +214,7 @@ def test_fail_fix_create_table_char(
 
     varchar.config.lint.fix = True
 
-    violations: core.ViolationMetric = lint_char.run(
+    violations: core.ViolationMetric = lint_varchar.run(
         source_path=SOURCE_PATH,
         source_code=sql_fail,
     )
@@ -228,8 +228,8 @@ def test_fail_fix_create_table_char(
     )
 
 
-def test_fail_fix_alter_table_char(
-    lint_char: core.Linter,
+def test_fail_fix_alter_table_varchar(
+    lint_varchar: core.Linter,
     varchar: core.BaseChecker,
 ) -> None:
     """Test fail fix varchar."""
@@ -239,7 +239,7 @@ def test_fail_fix_alter_table_char(
 
     varchar.config.lint.fix = True
 
-    violations: core.ViolationMetric = lint_char.run(
+    violations: core.ViolationMetric = lint_varchar.run(
         source_path=SOURCE_PATH,
         source_code=sql_fail,
     )

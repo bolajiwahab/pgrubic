@@ -3,7 +3,7 @@
 # select = ["SCM*"]
 # ignore = ["CV*"]
 # include = ["test.sql", "new.sql"]
-fix = false
+fix = true
 
 ignore-noqa = false
 disallowed-schemas = [
