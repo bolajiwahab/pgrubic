@@ -12,10 +12,12 @@ class NumericWithPrecision(linter.BaseChecker):
     ## **Why not?**
     Because it rounds off the fractional part which can lead to rounding errors slipping
     in when performing calculations and storing partial results before aggregation.
+    An example of what could go wrong is
+    [how-to-prevent-postgresql-from-automatically-rounding-numeric-types](https://dba.stackexchange.com/questions/281953/how-to-prevent-postgresql-from-automatically-rounding-numeric-types){:target="_blank"}
 
     ## **When should you?**
     When you want to, really. If what you want is a numeric field that will throw an
-    error when you insert too large a value into it, and you don't want to use an
+    error when you insert too large a value into it, and you do not want to use an
     explicit check constraint and you always want to store the fractional part in a
     specific decimal places then numeric(p, s) is a perfectly good type.
     Just don't use it automatically without thinking about it.
