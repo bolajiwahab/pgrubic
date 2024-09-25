@@ -6,6 +6,9 @@
 
 select a, b, c from tbl where tbl.d = 10 or tbl.d = 12 or d = 30;
 
+CREATE LANGUAGE plsample
+    HANDLER plsample_call_handler;
+
 -- select a, b, c from tbl where tbl.d in(10 , 12, 30);
 
 

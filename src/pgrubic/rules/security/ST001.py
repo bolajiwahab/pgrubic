@@ -1,4 +1,4 @@
-"""Convention for extensions."""
+"""Checker for extension whitelist."""
 
 from pglast import ast, visitors
 
