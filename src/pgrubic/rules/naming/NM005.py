@@ -46,7 +46,7 @@ class InvalidCheckConstraintName(linter.BaseChecker):
                     source_text=self.source_text,
                     statement_location=self.statement_location,
                     description=f"Check constraint"
-                    f" '{node.conname}' does not follow naming convention"
-                    f" '{self.config.lint.regex_constraint_check}'",
+                    f" `{node.conname}` does not follow naming convention"
+                    f" `{self.config.lint.regex_constraint_check}`",
                 ),
             )

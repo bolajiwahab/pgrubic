@@ -6,7 +6,8 @@
 -- unnecessary indexes movement across tablespaces.
 
 --- important
-
+we need per file ignores, imagine they have several create index statements and they want to ignore
+non concurrent, it is better to have the noqa at the top of the file then instead of each statement.
 - no nulls inside enums, set the column as nullable instead
 
 not possible currently, if any of the ancestors is a transaction block

@@ -116,7 +116,7 @@ def test_fail_invalid_index_name_description(
         next(
             iter(invalid_index_name.violations),
         ).description
-        == f"Index 'idx' does not follow naming convention '{invalid_index_name.config.lint.regex_index}'"  # noqa: E501
+        == f"Index `idx` does not follow naming convention `{invalid_index_name.config.lint.regex_index}`"  # noqa: E501
     )
 
 

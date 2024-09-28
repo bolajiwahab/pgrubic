@@ -4,10 +4,16 @@
 -- fetch next 10 row only
 -- FOR UPDATE;
 
-select a, b, c from tbl where tbl.d = 10 or tbl.d = 12 or d = 30;
+-- select a, b, c from tbl where tbl.d = 10 or tbl.d = 12 or d = 30;
 
-CREATE LANGUAGE plsample
-    HANDLER plsample_call_handler;
+-- CREATE LANGUAGE plsample
+--     HANDLER plsample_call_handler;
+
+-- select 1;
+-- noqa:
+ALTER TABLE tbl ADD CONSTRAINT tbl_exclusion EXCLUDE USING gist (tbl_id WITH &&);
+
+ALTER TABLE tbl ADD CONSTRAINT tbl_exclusion EXCLUDE USING gist (tbl_id WITH &&);
 
 -- select a, b, c from tbl where tbl.d in(10 , 12, 30);
 

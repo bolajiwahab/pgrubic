@@ -20,7 +20,7 @@ def lint_invalid_primary_key_name(
     invalid_primary_key_name: core.BaseChecker,
 ) -> core.Linter:
     """Lint invalid primary key name."""
-    invalid_primary_key_name.config.lint.regex_index = (
+    invalid_primary_key_name.config.lint.regex_constraint_primary_key = (
         "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_pkey$"
     )
 

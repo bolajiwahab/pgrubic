@@ -20,7 +20,7 @@ def lint_invalid_foreign_key_name(
     invalid_foreign_key_name: core.BaseChecker,
 ) -> core.Linter:
     """Lint invalid foreign key name."""
-    invalid_foreign_key_name.config.lint.regex_index = (
+    invalid_foreign_key_name.config.lint.regex_constraint_foreign_key = (
         "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_fkey$"
     )
 

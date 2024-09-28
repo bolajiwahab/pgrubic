@@ -41,7 +41,7 @@ class InvalidSequenceName(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description=f"Sequence '{node.sequence.relname}' does not follow"
-                    f" naming convention '{self.config.lint.regex_sequence}'",
+                    description=f"Sequence `{node.sequence.relname}` does not follow"
+                    f" naming convention `{self.config.lint.regex_sequence}`",
                 ),
             )

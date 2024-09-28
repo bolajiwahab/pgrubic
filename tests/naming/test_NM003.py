@@ -20,7 +20,7 @@ def lint_invalid_unique_key_name(
     invalid_unique_key_name: core.BaseChecker,
 ) -> core.Linter:
     """Lint invalid unique key name."""
-    invalid_unique_key_name.config.lint.regex_index = (
+    invalid_unique_key_name.config.lint.regex_constraint_unique_key = (
         "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
     )
 
