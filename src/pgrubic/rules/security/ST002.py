@@ -23,8 +23,6 @@ class ProceduralLanguageWhitelist(linter.BaseChecker):
     Procedural languages that are allowed.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_CreatePLangStmt(
         self,
         ancestors: visitors.Ancestor,

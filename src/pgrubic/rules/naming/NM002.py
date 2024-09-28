@@ -51,7 +51,7 @@ class InvalidPrimaryKeyName(linter.BaseChecker):
                     source_text=self.source_text,
                     statement_location=self.statement_location,
                     description=f"Primary key constraint"
-                    f" '{node.conname}' does not follow naming convention"
-                    f" '{self.config.lint.regex_constraint_primary_key}'",
+                    f" `{node.conname}` does not follow naming convention"
+                    f" `{self.config.lint.regex_constraint_primary_key}`",
                 ),
             )
