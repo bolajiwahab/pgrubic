@@ -42,6 +42,6 @@ class SpecialCharacterInIdentifier(CheckIdentifier):
                     column_offset=column_offset,
                     source_text=source_text,
                     statement_location=statement_location,
-                    description=f"Identifier should not contain Special characters '{identifier}'",  # noqa: E501
+                    description=f"Special characters in identifier `{identifier}`",
                 ),
             )

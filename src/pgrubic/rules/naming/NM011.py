@@ -51,7 +51,7 @@ class KeywordIdentifier(CheckIdentifier):
             .union(keywords.TYPE_FUNC_NAME_KEYWORDS)
         )
 
-        if identifier in (full_keywords):
+        if identifier.lower() in full_keywords:
 
             self.violations.add(
                 linter.Violation(
@@ -59,6 +59,6 @@ class KeywordIdentifier(CheckIdentifier):
                     column_offset=column_offset,
                     source_text=source_text,
                     statement_location=statement_location,
-                    description=f"Identifier '{identifier}' should not use keyword",
+                    description=f"Keyword `{identifier}` used as an identifier",
                 ),
             )

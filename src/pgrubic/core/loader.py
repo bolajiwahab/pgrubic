@@ -83,7 +83,7 @@ def _set_locations(
 
         column_offset = (
             node_location - statement_location
-            if node_location > 0
+            if isinstance(node_location, int) and node_location > 0
             else statement_length
         )
 

@@ -10,10 +10,17 @@
 --     HANDLER plsample_call_handler;
 
 -- select 1;
--- noqa:
-ALTER TABLE tbl ADD CONSTRAINT tbl_exclusion EXCLUDE USING gist (tbl_id WITH &&);
+-- ALTER TABLE tbl ADD CONSTRAINT tbl_exclusion EXCLUDE USING gist (tbl_id WITH &&);
 
-ALTER TABLE tbl ADD CONSTRAINT tbl_exclusion EXCLUDE USING gist (tbl_id WITH &&);
+-- ALTER TABLE tbl ADD CONSTRAINT tbl_exclusion EXCLUDE USING gist (tbl_id WITH &&);
+
+-- CREATE TABLESPACE "TABLESPACE" LOCATION 'directory_path';
+
+SELECT INTO tb$l FROM tbl;
+
+-- CREATE INDEX "INDEX" ON tbl (col);
+
+-- CREATE SEQUENCE "TABLE" START 1;
 
 -- select a, b, c from tbl where tbl.d in(10 , 12, 30);
 
