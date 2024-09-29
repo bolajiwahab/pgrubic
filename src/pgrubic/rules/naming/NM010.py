@@ -58,6 +58,6 @@ class NonSnakeCaseIdentifier(CheckIdentifier):
                     column_offset=column_offset,
                     source_text=source_text,
                     statement_location=statement_location,
-                    description=f"Identifier '{identifier}' should be in snake case",
+                    description=f"Identifier `{identifier}` should be in snake case",
                 ),
             )
