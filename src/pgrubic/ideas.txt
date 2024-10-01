@@ -1,3 +1,6 @@
+-- review documentations, unsafe is missing documentations
+-- backport configuration for configurable rules.
+
 -- for custom printers, we may need to allow number of spaces
 -- *** we need to docbuild and compare it with what we have in the source code ***
 ****** if a violation is fixed, do we still print it?, ruff does not print it.

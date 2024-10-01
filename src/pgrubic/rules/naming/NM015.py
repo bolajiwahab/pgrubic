@@ -1,4 +1,4 @@
-"""Checker for timestamp columns without suffix `_at`."""
+"""Checker for timestamp columns without defined suffix, by default `_at`."""
 
 from pglast import ast, visitors
 
@@ -7,7 +7,7 @@ from pgrubic.core import linter
 
 class TimestampColumnWithoutSuffix(linter.BaseChecker):
     """## **What it does**
-    Checks that timestamp columns are suffixed with `_at`.
+    Checks that timestamp columns are suffixed with the defined suffix, by default `_at`.
 
     ## **Why not?**
     Adding `_at` to a timestamp column name makes it clear that the value represents the
@@ -24,7 +24,10 @@ class TimestampColumnWithoutSuffix(linter.BaseChecker):
     Almost Never.
 
     ## **Use instead:**
-    Add `_at` suffix to the timestamp column name.
+    Add the defined suffix or the default `_at` to to the timestamp column name.
+
+    ## **Configuration**
+    `timestamp-column-suffix`: Specify the suffix for timestamp columns.
     """
 
     is_auto_fixable: bool = True
@@ -44,7 +47,7 @@ class TimestampColumnWithoutSuffix(linter.BaseChecker):
             and node.colname
             and node.colname
             not in [column.name for column in self.config.lint.required_columns]
-            and not node.colname.endswith("_at")
+            and not node.colname.endswith(self.config.lint.timestamp_column_suffix)
         ):
 
             self.violations.add(
@@ -53,7 +56,8 @@ class TimestampColumnWithoutSuffix(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Timestamp column name should be suffixed with '_at'",
+                    description="Timestamp column name should be suffixed with"
+                    f" `{self.config.lint.timestamp_column_suffix}`",
                 ),
             )
 
@@ -61,4 +65,4 @@ class TimestampColumnWithoutSuffix(linter.BaseChecker):
 
     def _fix(self, node: ast.ColumnDef) -> None:
         """Fix violation."""
-        node.colname += "_at"
+        node.colname += self.config.lint.timestamp_column_suffix

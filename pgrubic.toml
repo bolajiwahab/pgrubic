@@ -6,6 +6,7 @@
 fix = false
 
 ignore-noqa = false
+
 disallowed-schemas = [
     { name = "partitions", reason = "Deprecated", use-instead = "part" },
     { name = "public", reason = "Default schema", use-instead = "amlex" },
@@ -21,6 +22,7 @@ required-columns = [
 ]
 
 # exclude = ["*test.sql"]
+# timestamp-column-suffix = "_at"
 regex-partition = "[a-zA-Z0-9]+__[a-zA-Z0-9_]+__[a-zA-Z0-9_]+$"
 regex-index = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_idx$"
 regex-constraint-primary-key = "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_pkey$"

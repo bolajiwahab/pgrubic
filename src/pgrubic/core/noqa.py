@@ -10,6 +10,8 @@ from colorama import Fore, Style
 
 from pgrubic.core import errors
 
+A_STAR: str = "*"
+
 
 def _remove_delimiter_from_comments(source_code: str, delimiter: str = ";") -> str:
     """Remove delimiter from SQL comments."""
@@ -77,9 +79,6 @@ def _get_statement_locations(
             break
 
     return statement_start_location, statement_end_location
-
-
-A_STAR: str = "*"
 
 
 @dataclasses.dataclass(kw_only=True)

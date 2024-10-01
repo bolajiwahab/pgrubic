@@ -50,6 +50,6 @@ class PgPrefixIdentifier(CheckIdentifier):
                     column_offset=column_offset,
                     source_text=source_text,
                     statement_location=statement_location,
-                    description="Identifier should not use prefix 'pg_'",
+                    description="Identifier should not use prefix `pg_`",
                 ),
             )

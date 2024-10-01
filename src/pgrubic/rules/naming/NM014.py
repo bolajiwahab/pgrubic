@@ -1,4 +1,4 @@
-"""Checker for ID column."""
+"""Checker for single letter identifiers."""
 
 from pgrubic.core import linter
 from pgrubic.rules.naming import CheckIdentifier
@@ -39,6 +39,7 @@ class SingleLetterIdentifier(CheckIdentifier):
                     column_offset=column_offset,
                     source_text=source_text,
                     statement_location=statement_location,
-                    description=f"Single letter identifier found: '{identifier}'",
+                    description=f"Single letter identifier `{identifier}`"
+                    " is not descriptive enough",
                 ),
             )

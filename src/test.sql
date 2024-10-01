@@ -14,9 +14,11 @@
 
 -- ALTER TABLE tbl ADD CONSTRAINT tbl_exclusion EXCLUDE USING gist (tbl_id WITH &&);
 
+create table tbl (activated TIMESTAMP);
+
 -- CREATE TABLESPACE "TABLESPACE" LOCATION 'directory_path';
 
-SELECT INTO tb$l FROM tbl;
+-- SELECT INTO tb$l FROM tbl;
 
 -- CREATE INDEX "INDEX" ON tbl (col);
 

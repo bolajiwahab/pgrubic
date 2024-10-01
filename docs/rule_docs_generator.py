@@ -1,4 +1,4 @@
-"""Genrate documentation for rules."""
+"""Generate documentation for rules."""
 
 import sys
 import shutil
@@ -27,7 +27,7 @@ for rule in rules:
 
         file.write(f"# {kebabcase(rule.__name__)} ({rule.code})\n\n")
 
-        if rule.is_auto_fixable is True:
+        if rule.is_auto_fixable:
             file.write("Automatic fix is available\n\n")
         else:
             file.write("Automatic fix is not available\n\n")

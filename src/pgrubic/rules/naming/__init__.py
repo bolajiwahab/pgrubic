@@ -24,7 +24,6 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         statement_location: int,
     ) -> None:
         """Check identifier for violations."""
-        ...
 
     def visit_CreateStmt(
         self,

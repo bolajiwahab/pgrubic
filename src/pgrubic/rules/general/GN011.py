@@ -8,7 +8,7 @@ from pgrubic.rules.general import get_columns_from_table_creation
 
 class MissingRequiredColumn(linter.BaseChecker):
     """## **What it does**
-    Checks for required column.
+    Checks for missing required column.
 
     ## **Why not?**
     If a column has been specified as required and you have not defined it,
@@ -19,6 +19,9 @@ class MissingRequiredColumn(linter.BaseChecker):
 
     ## **Use instead:**
     Define the required column.
+
+    ## **Configuration**
+    `required-columns`: List of required columns along with their data types.
     """
 
     is_auto_fixable: bool = True

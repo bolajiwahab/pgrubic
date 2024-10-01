@@ -1,4 +1,4 @@
-"""Checker for date columns without suffix `_date`."""
+"""Checker for date columns without defined suffix, by default `_date`."""
 
 from pglast import ast, visitors
 
@@ -7,7 +7,7 @@ from pgrubic.core import linter
 
 class DateColumnWithoutSuffix(linter.BaseChecker):
     """## **What it does**
-    Checks that date columns are suffixed with `_date`.
+    Checks that date columns are suffixed with the defined suffix, by default `_date`.
 
     ## **Why not?**
     Adding `_date` to a date column name makes it clear that the value represents the
@@ -24,7 +24,10 @@ class DateColumnWithoutSuffix(linter.BaseChecker):
     Almost Never.
 
     ## **Use instead:**
-    Add `_date` suffix to the date column name.
+    Add the defined suffix or the default `_date` to to the date column name.
+
+    ## **Configuration**
+    `date-column-suffix`: Specify the suffix for date columns.
     """
 
     is_auto_fixable: bool = True
@@ -38,7 +41,7 @@ class DateColumnWithoutSuffix(linter.BaseChecker):
         if (
             node.typeName.names[-1].sval == "date"
             and node.colname
-            and not node.colname.endswith("_date")
+            and not node.colname.endswith(self.config.lint.date_column_suffix)
         ):
 
             self.violations.add(
@@ -47,7 +50,8 @@ class DateColumnWithoutSuffix(linter.BaseChecker):
                     column_offset=self.column_offset,
                     source_text=self.source_text,
                     statement_location=self.statement_location,
-                    description="Date column name should be suffixed with '_date'",
+                    description="Date column name should be suffixed with"
+                    f" `{self.config.lint.date_column_suffix}`",
                 ),
             )
 
@@ -55,4 +59,4 @@ class DateColumnWithoutSuffix(linter.BaseChecker):
 
     def _fix(self, node: ast.ColumnDef) -> None:
         """Fix violation."""
-        node.colname += "_date"
+        node.colname += self.config.lint.date_column_suffix
