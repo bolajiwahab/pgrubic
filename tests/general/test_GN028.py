@@ -1,4 +1,4 @@
-"""Test for wrongly typed required column."""
+"""Test wrongly typed required column."""
 
 import pytest
 

@@ -1,4 +1,4 @@
-"""Test for missing replace in procedure."""
+"""Test missing replace in procedure."""
 
 import pytest
 

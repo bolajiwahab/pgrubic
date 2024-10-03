@@ -1,4 +1,4 @@
-"""Test for usage of varchar."""
+"""Test usage of varchar."""
 
 import pytest
 

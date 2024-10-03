@@ -1,4 +1,4 @@
-"""Test for usage of xml."""
+"""Test usage of xml."""
 
 import pytest
 

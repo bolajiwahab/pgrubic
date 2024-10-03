@@ -1,4 +1,4 @@
-"""Test for missing primary key."""
+"""Test missing primary key."""
 
 import pytest
 

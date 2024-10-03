@@ -1,4 +1,4 @@
-"""Test for procedural language whitelist."""
+"""Test procedural language whitelist."""
 
 import pytest
 

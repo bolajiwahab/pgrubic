@@ -1,4 +1,4 @@
-"""Test for multi column partitioning."""
+"""Test multi column partitioning."""
 
 import pytest
 

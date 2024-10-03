@@ -1,4 +1,4 @@
-"""Test for keyword identifier."""
+"""Test keyword identifier."""
 
 import pytest
 

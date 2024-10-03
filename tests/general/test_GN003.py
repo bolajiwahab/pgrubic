@@ -1,4 +1,4 @@
-"""Test for sql_ascii encoding."""
+"""Test sql_ascii encoding."""
 
 import pytest
 

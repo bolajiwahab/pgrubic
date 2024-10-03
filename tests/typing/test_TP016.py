@@ -1,4 +1,4 @@
-"""Test for usage of numeric with precision."""
+"""Test usage of numeric with precision."""
 
 import pytest
 

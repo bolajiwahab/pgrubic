@@ -1,4 +1,4 @@
-"""Test for usage of pg_float."""
+"""Test usage of pg_float."""
 
 import pytest
 

@@ -1,4 +1,4 @@
-"""Test for yoda condition."""
+"""Test yoda condition."""
 
 import pytest
 

@@ -1,4 +1,4 @@
-"""Test for special character in identifier."""
+"""Test special character in identifier."""
 
 import pytest
 

@@ -1,4 +1,4 @@
-"""Test for index elements more than three."""
+"""Test index elements more than three."""
 
 import pytest
 

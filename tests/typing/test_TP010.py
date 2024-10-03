@@ -1,4 +1,4 @@
-"""Test for usage of smallint."""
+"""Test usage of smallint."""
 
 import pytest
 

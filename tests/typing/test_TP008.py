@@ -1,4 +1,4 @@
-"""Test for usage of json."""
+"""Test usage of json."""
 
 import pytest
 

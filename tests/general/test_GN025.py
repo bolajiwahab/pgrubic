@@ -1,4 +1,4 @@
-"""Test for duplicate index."""
+"""Test duplicate index."""
 
 import pytest
 

@@ -1,4 +1,4 @@
-"""Test for update without where clause."""
+"""Test update without where clause."""
 
 import pytest
 

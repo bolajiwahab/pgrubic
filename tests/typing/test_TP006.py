@@ -1,4 +1,4 @@
-"""Test for usage of money."""
+"""Test usage of money."""
 
 import pytest
 

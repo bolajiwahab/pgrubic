@@ -1,4 +1,4 @@
-"""Test for select into."""
+"""Test select into."""
 
 import pytest
 

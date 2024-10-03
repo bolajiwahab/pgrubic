@@ -1,4 +1,4 @@
-"""Test for delete without where clause."""
+"""Test delete without where clause."""
 
 import pytest
 

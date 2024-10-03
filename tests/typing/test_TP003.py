@@ -1,4 +1,4 @@
-"""Test for usage of timestamp with time zone with precision."""
+"""Test usage of timestamp with time zone with precision."""
 
 import pytest
 

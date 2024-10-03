@@ -1,4 +1,4 @@
-"""Test for extension whitelist."""
+"""Test extension whitelist."""
 
 import pytest
 

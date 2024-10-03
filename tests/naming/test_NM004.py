@@ -1,4 +1,4 @@
-"""Test for invalid foreign key name."""
+"""Test invalid foreign key name."""
 
 import pytest
 

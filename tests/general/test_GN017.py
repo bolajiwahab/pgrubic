@@ -1,4 +1,4 @@
-"""Test for id column."""
+"""Test id column."""
 
 import pytest
 

@@ -1,4 +1,4 @@
-"""Test for constant generated column."""
+"""Test constant generated column."""
 
 import pytest
 

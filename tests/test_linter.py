@@ -1,9 +1,10 @@
-"""Test date column without suffix."""
+"""Test linter."""
 
 import pytest
 
 from tests import SOURCE_PATH
 from pgrubic import core
+from pgrubic.rules.naming.NM014 import SingleLetterIdentifier
 from pgrubic.rules.naming.NM016 import DateColumnWithoutSuffix
 
 
@@ -192,3 +193,80 @@ def test_fail_fix_date_column_without_suffix(
         fixable_manual_total=0,
         fix=sql_fix,
     )
+
+
+def test_fail_non_applicable_fix_date_column_without_suffix(
+    lint_date_column_without_suffix: core.Linter,
+    date_column_without_suffix: core.BaseChecker,
+) -> None:
+    """Test fail fix date column without suffix."""
+    sql_fail: str = """
+    -- noqa: NM016
+    CREATE TABLE tbl (activated date);
+    """
+
+    date_column_without_suffix.config.lint.fix = True
+
+    violations: core.ViolationMetric = lint_date_column_without_suffix.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_fail,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=0,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=0,
+    )
+
+
+@pytest.fixture(scope="module")
+def single_letter_identifier() -> core.BaseChecker:
+    """Create an instance of single letter identifier."""
+    core.add_set_locations_to_rule(SingleLetterIdentifier)
+    return SingleLetterIdentifier()
+
+
+@pytest.fixture
+def lint_single_letter_identifier(
+    linter: core.Linter,
+    single_letter_identifier: core.BaseChecker,
+) -> core.Linter:
+    """Lint single letter identifier."""
+    linter.checkers.add(single_letter_identifier)
+
+    return linter
+
+
+def test_fail_single_letter_identifier(
+    lint_single_letter_identifier: core.Linter,
+) -> None:
+    """Test fail single letter identifier."""
+    sql_fail: str = "CREATE TABLE tbl (a int);"
+
+    violations: core.ViolationMetric = lint_single_letter_identifier.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_fail,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=1,
+        fixed_total=0,
+        fixable_auto_total=0,
+        fixable_manual_total=1,
+    )
+
+
+def test_parse_error(lint_single_letter_identifier: core.Linter) -> None:
+    """Test parse error."""
+    source_code: str = """
+    CREATE TABLE tbl (activated);
+    """
+
+    with pytest.raises(SystemExit) as excinfo:
+        lint_single_letter_identifier.run(
+            source_path=SOURCE_PATH,
+            source_code=source_code,
+        )
+
+    assert excinfo.value.code == 1

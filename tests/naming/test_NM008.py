@@ -1,4 +1,4 @@
-"""Test for implicit constraint name."""
+"""Test implicit constraint name."""
 
 import pytest
 

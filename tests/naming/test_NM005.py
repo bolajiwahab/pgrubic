@@ -1,4 +1,4 @@
-"""Test for invalid check constraint name."""
+"""Test invalid check constraint name."""
 
 import pytest
 

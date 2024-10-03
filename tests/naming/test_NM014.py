@@ -1,4 +1,4 @@
-"""Test for single letter identifier."""
+"""Test single letter identifier."""
 
 import pytest
 

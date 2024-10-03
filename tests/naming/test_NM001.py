@@ -1,4 +1,4 @@
-"""Test for invalid index name."""
+"""Test invalid index name."""
 
 import pytest
 

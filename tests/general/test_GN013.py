@@ -1,4 +1,4 @@
-"""Test for nullable required column."""
+"""Test nullable required column."""
 
 import pytest
 

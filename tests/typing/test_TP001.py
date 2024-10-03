@@ -1,4 +1,4 @@
-"""Test for usage of timestamp without time zone."""
+"""Test usage of timestamp without time zone."""
 
 import pytest
 

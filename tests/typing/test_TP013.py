@@ -1,4 +1,4 @@
-"""Test for usage of hstore."""
+"""Test usage of hstore."""
 
 import pytest
 

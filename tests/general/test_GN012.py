@@ -1,4 +1,4 @@
-"""Test for required column removal."""
+"""Test required column removal."""
 
 import pytest
 

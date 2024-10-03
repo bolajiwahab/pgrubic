@@ -1,4 +1,4 @@
-"""Test for schemaunqualified objects."""
+"""Test schemaunqualified objects."""
 
 import pytest
 

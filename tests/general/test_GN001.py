@@ -1,4 +1,4 @@
-"""Test for table inheritance."""
+"""Test table inheritance."""
 
 import pytest
 

@@ -1,4 +1,4 @@
-"""Test for noqa."""
+"""Test noqa."""
 
 import typing
 

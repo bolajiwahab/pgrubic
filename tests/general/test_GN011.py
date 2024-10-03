@@ -1,4 +1,4 @@
-"""Test for missing required column."""
+"""Test missing required column."""
 
 import pytest
 

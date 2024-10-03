@@ -1,4 +1,4 @@
-"""Test for timestamp column without suffix."""
+"""Test timestamp column without suffix."""
 
 import pytest
 

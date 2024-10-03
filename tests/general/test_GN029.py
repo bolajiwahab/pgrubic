@@ -1,4 +1,4 @@
-"""Test for a_star."""
+"""Test a_star."""
 
 import pytest
 

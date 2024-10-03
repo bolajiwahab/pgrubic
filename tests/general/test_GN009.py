@@ -1,4 +1,4 @@
-"""Test for duplicate column."""
+"""Test duplicate column."""
 
 import pytest
 

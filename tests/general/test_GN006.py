@@ -1,4 +1,4 @@
-"""Test for create enum."""
+"""Test create enum."""
 
 import pytest
 

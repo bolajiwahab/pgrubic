@@ -1,4 +1,4 @@
-"""Test for non snake case identifier."""
+"""Test non snake case identifier."""
 
 import pytest
 

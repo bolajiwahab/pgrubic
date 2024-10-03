@@ -1,4 +1,4 @@
-"""Test for table column conflict."""
+"""Test table column conflict."""
 
 import pytest
 

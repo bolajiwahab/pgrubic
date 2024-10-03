@@ -27,8 +27,6 @@ dependencies = [
   "case-converter==1.1.0",
   "colorama==0.4.6",
   "toml==0.10.2",
-  "types-toml==0.10.8",
-  "types-colorama==0.4.15.20240311",
 ]
 
 [project.optional-dependencies]
@@ -188,7 +186,7 @@ legacy_tox_ini = """
 
     [testenv:yamllint]
     deps = yamllint
-    commands = yamllint -c .yamllint .
+    commands = yamllint src docs tests
 
     [testenv:pre-commit]
     deps = pre-commit

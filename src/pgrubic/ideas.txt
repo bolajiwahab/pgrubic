@@ -1,5 +1,8 @@
 -- review documentations, unsafe is missing documentations
--- backport configuration for configurable rules.
+-- backport configuration for configurable rules -- documentations
+-- test loader with a rule
+-- test linter with a rule
+
 
 -- for custom printers, we may need to allow number of spaces
 -- *** we need to docbuild and compare it with what we have in the source code ***

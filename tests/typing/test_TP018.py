@@ -1,4 +1,4 @@
-"""Test for usage of mismatch column in data type change."""
+"""Test usage of mismatch column in data type change."""
 
 import pytest
 

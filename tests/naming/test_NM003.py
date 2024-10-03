@@ -1,4 +1,4 @@
-"""Test for invalid unique key name."""
+"""Test invalid unique key name."""
 
 import pytest
 

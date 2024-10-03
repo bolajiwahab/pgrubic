@@ -1,4 +1,4 @@
-"""Test for invalid sequence name."""
+"""Test invalid sequence name."""
 
 import pytest
 

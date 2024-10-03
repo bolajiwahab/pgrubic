@@ -1,4 +1,4 @@
-"""Test for null constraint."""
+"""Test null constraint."""
 
 import pytest
 

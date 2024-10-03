@@ -1,4 +1,4 @@
-"""Test for invalid primary key name."""
+"""Test invalid primary key name."""
 
 import pytest
 

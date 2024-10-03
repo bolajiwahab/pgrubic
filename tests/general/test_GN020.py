@@ -1,4 +1,4 @@
-"""Test for current time."""
+"""Test current time."""
 
 import pytest
 

@@ -1,4 +1,4 @@
-"""Test for usage of serial."""
+"""Test usage of serial."""
 
 import pytest
 

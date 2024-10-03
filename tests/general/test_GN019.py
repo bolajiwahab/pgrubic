@@ -1,4 +1,4 @@
-"""Test for unlogged table."""
+"""Test unlogged table."""
 
 import pytest
 

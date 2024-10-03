@@ -1,4 +1,4 @@
-"""Test for invalid partition name."""
+"""Test invalid partition name."""
 
 import pytest
 

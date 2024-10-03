@@ -1,4 +1,4 @@
-"""Test for usage of nullable boolean field."""
+"""Test usage of nullable boolean field."""
 
 import pytest
 

@@ -1,4 +1,4 @@
-"""Test for drop cascade."""
+"""Test drop cascade."""
 
 import pytest
 

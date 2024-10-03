@@ -1,4 +1,4 @@
-"""Test for not in."""
+"""Test not in."""
 
 import pytest
 

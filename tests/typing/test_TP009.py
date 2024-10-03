@@ -1,4 +1,4 @@
-"""Test for usage of integer."""
+"""Test usage of integer."""
 
 import pytest
 

@@ -1,4 +1,4 @@
-"""Test for usage of disallowed data type."""
+"""Test usage of disallowed data type."""
 
 import pytest
 

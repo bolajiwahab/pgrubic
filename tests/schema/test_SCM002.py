@@ -1,4 +1,4 @@
-"""Test for usage of disallowed schemas."""
+"""Test usage of disallowed schemas."""
 
 import pytest
 

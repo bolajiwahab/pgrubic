@@ -1,4 +1,4 @@
-"""Test for usage of char."""
+"""Test usage of char."""
 
 import pytest
 

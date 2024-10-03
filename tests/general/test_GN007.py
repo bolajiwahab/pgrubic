@@ -1,4 +1,4 @@
-"""Test for missing replace in function."""
+"""Test missing replace in function."""
 
 import pytest
 

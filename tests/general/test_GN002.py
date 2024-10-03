@@ -1,4 +1,4 @@
-"""Test for create rule."""
+"""Test create rule."""
 
 import pytest
 

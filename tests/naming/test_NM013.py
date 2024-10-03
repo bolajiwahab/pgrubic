@@ -1,4 +1,4 @@
-"""Test for pg prefix identifier."""
+"""Test pg prefix identifier."""
 
 import pytest
 
