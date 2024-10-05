@@ -169,11 +169,11 @@ legacy_tox_ini = """
 
     [testenv:linting]
     deps = ruff
-    commands = ruff check src tests
+    commands = ruff check src tests docs
 
     [testenv:formatting]
     deps = black
-    commands = black src tests
+    commands = black src tests docs
 
     [testenv:typing]
     deps =
@@ -181,7 +181,7 @@ legacy_tox_ini = """
         pytest
         types-toml
         types-colorama
-    commands = mypy src tests
+    commands = mypy src tests docs
 
     [testenv:docbuild]
     commands =

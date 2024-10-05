@@ -6,11 +6,11 @@ import pathlib
 
 from caseconverter import kebabcase
 
-from pgrubic.core.loader import load_rules
+from pgrubic import core
 
 rules_path = pathlib.Path.cwd() / "docs/docs/rules"
 
-rules = load_rules()
+rules = core.load_rules(config=core.parse_config())
 
 shutil.rmtree(rules_path)
 
