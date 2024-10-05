@@ -192,7 +192,9 @@ legacy_tox_ini = """
 
     [testenv:ensure-docs-up-to-date]
     allowlist_externals = ./tools/ensure_up_to_date_docs.sh
-    commands = ./tools/ensure_up_to_date_docs.sh
+    commands =
+        {[testenv:docbuild]commands}
+        ./tools/ensure_up_to_date_docs.sh
 
     [testenv:yamllint]
     deps = yamllint
