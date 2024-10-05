@@ -7,6 +7,7 @@ from pgrubic.core.loader import (
     add_apply_fix_to_rule,
     add_set_locations_to_rule,
 )
+from pgrubic.core.filters import filter_source_paths
 from pgrubic.core.formatters import ddl, dml
 
 __all__ = [
@@ -17,6 +18,7 @@ __all__ = [
     "add_apply_fix_to_rule",
     "add_set_locations_to_rule",
     "parse_config",
+    "filter_source_paths",
     "Config",
     "ddl",
     "dml",

@@ -51,7 +51,7 @@ class KeywordIdentifier(CheckIdentifier):
             .union(keywords.TYPE_FUNC_NAME_KEYWORDS)
         )
 
-        if identifier.lower() in full_keywords:
+        if identifier and identifier.lower() in full_keywords:
 
             self.violations.add(
                 linter.Violation(

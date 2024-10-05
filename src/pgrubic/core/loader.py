@@ -1,6 +1,7 @@
 """Method to load rules."""
 
 import typing
+import fnmatch
 import inspect
 import functools
 import importlib
@@ -9,10 +10,10 @@ from collections import abc
 from pglast import ast, visitors
 
 from pgrubic import RULES_DIRECTORY, RULES_BASE_MODULE
-from pgrubic.core import linter
+from pgrubic.core import config, linter
 
 
-def load_rules() -> list[linter.BaseChecker]:
+def load_rules(config: config.Config) -> list[linter.BaseChecker]:
     """Load rules."""
     rules: list[linter.BaseChecker] = []
 
@@ -30,9 +31,22 @@ def load_rules() -> list[linter.BaseChecker]:
             and x.__module__ == module.__name__,  # noqa: B023
         ):
 
-            # skip private classes
-            if issubclass(rule, linter.BaseChecker) and not rule.__name__.startswith(
-                "_",
+            if (
+                issubclass(rule, linter.BaseChecker)
+                and not rule.__name__.startswith(
+                    "_",
+                )
+                and (
+                    not config.lint.select
+                    or any(
+                        fnmatch.fnmatch(rule.code, pattern)
+                        for pattern in config.lint.select
+                    )
+                )
+                and not any(
+                    fnmatch.fnmatch(rule.code, pattern)
+                    for pattern in config.lint.ignore
+                )
             ):
 
                 rules.append(typing.cast(linter.BaseChecker, rule))

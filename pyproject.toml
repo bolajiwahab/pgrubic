@@ -117,6 +117,12 @@ omit = [
   "tests/*"
 ]
 
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "if __name__ == .__main__.:",
+]
+
 [tool.tox]
 legacy_tox_ini = """
     [tox]

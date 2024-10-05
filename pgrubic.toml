@@ -1,8 +1,9 @@
 [lint]
 # select = ["UN*", "GN*", "TYP*", "CST*"]
-# select = ["SCM*"]
-# ignore = ["CV*"]
+# select = ["GN*"]
+# ignore = ["SM*"]
 # include = ["test.sql", "new.sql"]
+# exclude = ["*.py"]
 fix = false
 
 ignore-noqa = false
