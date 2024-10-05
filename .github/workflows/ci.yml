@@ -21,6 +21,7 @@ jobs:
           "formatting",
           "typing",
           "docbuild",
+          "ensure-docs-up-to-date",
           "tests",
           "coverage-report",
         ]

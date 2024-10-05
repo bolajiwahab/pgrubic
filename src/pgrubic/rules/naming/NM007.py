@@ -23,6 +23,9 @@ class InvalidSequenceName(linter.BaseChecker):
 
     ## **Use instead:**
     Name your sequence according to the set name convention.
+
+    ## **Configuration**
+    `regex-sequence`: Regex matching the naming convention for sequences.
     """
 
     is_auto_fixable: bool = False

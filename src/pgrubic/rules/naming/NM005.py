@@ -23,6 +23,9 @@ class InvalidCheckConstraintName(linter.BaseChecker):
 
     ## **Use instead:**
     Name your check constraint according to the set name convention.
+
+    ## **Configuration**
+    `regex-constraint-check`: Regex matching the naming convention for check constraints.
     """
 
     is_auto_fixable: bool = False

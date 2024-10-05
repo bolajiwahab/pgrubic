@@ -18,6 +18,9 @@ class NullableRequiredColumn(linter.BaseChecker):
 
     ## **Use instead:**
     Set the required column as **Not Null**.
+
+    ## **Configuration**
+    `required-columns`: List of required columns along with their data types.
     """
 
     is_auto_fixable: bool = True

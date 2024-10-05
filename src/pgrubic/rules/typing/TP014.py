@@ -18,6 +18,9 @@ class DisallowedDataType(linter.BaseChecker):
 
     ## **Use instead:**
     Data types that are not in the disallowed_data_types.
+
+    ## **Configuration**
+    `disallowed_data_types`: List of disallowed data types.
     """
 
     is_auto_fixable: bool = True

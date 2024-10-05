@@ -17,6 +17,9 @@ class DisallowedSchema(linter.BaseChecker):
 
     ## **Use instead:**
     Allowed schemas.
+
+    ## **Configuration**
+    `disallowed-schemas`: List of disallowed schemas.
     """
 
     is_auto_fixable: bool = True

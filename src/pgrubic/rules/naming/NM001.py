@@ -23,6 +23,9 @@ class InvalidIndexName(linter.BaseChecker):
 
     ## **Use instead:**
     Name your index according to the set name convention.
+
+    ## **Configuration**
+    `regex-index`: Regex matching the naming convention for indexes.
     """
 
     is_auto_fixable: bool = False

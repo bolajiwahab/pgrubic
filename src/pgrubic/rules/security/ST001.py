@@ -21,6 +21,9 @@ class ExtensionWhitelist(linter.BaseChecker):
 
     ## **Use instead:**
     Extensions that are allowed.
+
+    ## **Configuration**
+    `allowed-extensions`: List of allowed extensions.
     """
 
     is_auto_fixable: bool = False

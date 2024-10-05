@@ -23,6 +23,9 @@ class InvalidPartitionName(linter.BaseChecker):
 
     ## **Use instead:**
     Name your partition according to the set name convention.
+
+    ## **Configuration**
+    `regex-partition`: Regex matching the naming convention for check partitions.
     """
 
     is_auto_fixable: bool = False

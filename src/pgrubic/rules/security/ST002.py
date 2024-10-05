@@ -21,6 +21,9 @@ class ProceduralLanguageWhitelist(linter.BaseChecker):
 
     ## **Use instead:**
     Procedural languages that are allowed.
+
+    ## **Configuration**
+    `allowed-languages`: List of allowed languages.
     """
 
     def visit_CreatePLangStmt(

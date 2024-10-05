@@ -23,6 +23,10 @@ class InvalidPrimaryKeyName(linter.BaseChecker):
 
     ## **Use instead:**
     Name your primary key constraint according to the set name convention.
+
+    ## **Configuration**
+    `regex-constraint-primary-key`: Regex matching the naming convention for primary key
+    constraints.
     """
 
     is_auto_fixable: bool = False

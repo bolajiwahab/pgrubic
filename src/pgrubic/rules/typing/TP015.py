@@ -20,6 +20,9 @@ class WronglyTypedRequiredColumn(linter.BaseChecker):
 
     ## **Use instead:**
     Right data types for the required column.
+
+    ## **Configuration**
+    `required-columns`: List of required columns along with their data types.
     """
 
     is_auto_fixable = True

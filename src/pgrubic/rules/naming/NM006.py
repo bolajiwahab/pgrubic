@@ -22,6 +22,10 @@ class InvalidExclusionConstraintName(linter.BaseChecker):
 
     ## **Use instead:**
     Name your exclusion constraint according to the set name convention.
+
+    ## **Configuration**
+    `regex-constraint-exclusion`: Regex matching the naming convention for exclusion
+    constraints.
     """
 
     is_auto_fixable: bool = False

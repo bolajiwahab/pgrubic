@@ -23,6 +23,10 @@ class InvalidUniqueKeyName(linter.BaseChecker):
 
     ## **Use instead:**
     Name your unique key constraint according to the set name convention.
+
+    ## **Configuration**
+    `regex-constraint-unique-key`: Regex matching the naming convention for unique key
+    constraints.
     """
 
     is_auto_fixable: bool = False

@@ -23,6 +23,10 @@ class InvalidForeignKeyName(linter.BaseChecker):
 
     ## **Use instead:**
     Name your foreign key constraint according to the set name convention.
+
+    ## **Configuration**
+    `regex-constraint-foreign-key`: Regex matching the naming convention for foreign key
+    constraints.
     """
 
     is_auto_fixable: bool = False
