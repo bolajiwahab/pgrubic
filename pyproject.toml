@@ -169,11 +169,11 @@ legacy_tox_ini = """
 
     [testenv:linting]
     deps = ruff
-    commands = ruff check src tests docs
+    commands = ruff check .
 
     [testenv:formatting]
     deps = black
-    commands = black src tests docs
+    commands = black .
 
     [testenv:typing]
     deps =
@@ -192,7 +192,7 @@ legacy_tox_ini = """
 
     [testenv:yamllint]
     deps = yamllint
-    commands = yamllint src docs tests
+    commands = yamllint .
 
     [testenv:pre-commit]
     deps = pre-commit
