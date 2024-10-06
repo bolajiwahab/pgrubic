@@ -36,5 +36,8 @@ jobs:
         run: pip install tox
       - name: Run ${{ matrix.jobs }}
         run: tox -e ${{ matrix.jobs }}
+  coverage-badge:
+    runs-on: ubuntu-latest
+    steps:
       - name: Coverage Badge
         uses: tj-actions/coverage-badge-py@v2
