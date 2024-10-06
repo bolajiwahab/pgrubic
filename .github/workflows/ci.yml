@@ -23,7 +23,7 @@ jobs:
           "docbuild",
           "ensure-docs-up-to-date",
           "tests",
-          "coverage-report",
+          # "coverage-report",
         ]
     name: ${{ matrix.jobs }}
     steps:
@@ -39,5 +39,14 @@ jobs:
   coverage-badge:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install tox
+      - name: Run coverage
+        run: tox -e coverage
       - name: Coverage Badge
         uses: tj-actions/coverage-badge-py@v2
