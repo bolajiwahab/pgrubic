@@ -62,6 +62,8 @@ jobs:
         uses: py-cov-action/python-coverage-comment-action@v3
         with:
           GITHUB_TOKEN: ${{ github.token }}
+          ANNOTATE_MISSING_LINES: true
+          COMMENT_TEMPLATE: The coverage rate is `{{ coverage.info.percent_covered | pct }}`{{ marker }}
 
       - name: Get Cover
         uses: orgoro/coverage@v3.2
