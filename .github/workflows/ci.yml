@@ -62,7 +62,6 @@ jobs:
         uses: py-cov-action/python-coverage-comment-action@v3
         with:
           GITHUB_TOKEN: ${{ github.token }}
-          ANNOTATE_MISSING_LINES: true
           MAX_FILES_IN_COMMENT: 120
 
       # - name: Get Cover
