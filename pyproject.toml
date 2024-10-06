@@ -163,6 +163,7 @@ legacy_tox_ini = """
     commands =
         {[testenv:tests]commands}
         coverage report --fail-under=100 --show-missing
+        coverage xml
 
     [testenv:isort]
     deps = isort
