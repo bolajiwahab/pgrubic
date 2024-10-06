@@ -1,0 +1,22 @@
+[lint]
+select = []
+ignore = []
+include = []
+exclude = []
+ignore-noqa = false
+disallowed-schemas = []
+allowed-extensions = []
+allowed-languages = []
+fix = false
+disallowed-data-types = []
+required-columns = []
+timestamp-column-suffix = "_at"
+date-column-suffix = "_date"
+regex-partition = "^.+$"
+regex-index = "^.+$"
+regex-constraint-primary-key = "^.+$"
+regex-constraint-unique-key = "^.+$"
+regex-constraint-foreign-key = "^.+$"
+regex-constraint-check = "^.+$"
+regex-constraint-exclusion = "^.+$"
+regex-sequence = "^.+$"

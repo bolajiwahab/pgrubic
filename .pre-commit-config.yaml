@@ -1,3 +1,4 @@
+---
 default_language_version:
   python: python3.12
 
@@ -25,17 +26,19 @@ repos:
         entry: add-trailing-comma
         language: python
         types: [python]
-      - id: check-ast
-        name: Check that files parse as valid python
-        entry: check-ast
-        language: python
-        types: [python]
+      # - id: check-ast
+      #   name: Check that files parse as valid python
+      #   entry: check-ast
+      #   language: python
+      #   types: [python]
       - id: check-yaml
         name: Check yaml
         entry: check-yaml
         language: python
         types: [yaml]
-      # Formatters should be run late so that they can re-format any prior changes.
+        args: [--unsafe]
+      # Formatters should be run late so that they can re-format
+      # any prior changes
       - id: black
         name: Formatting with black
         entry: black
@@ -47,6 +50,16 @@ repos:
         language: python
         types: [python]
         args: [--check, --diff, --profile=black]
+      - id: yamllint
+        name: Lint yaml files
+        entry: yamllint
+        language: python
+        types: [yaml]
+      # - id: psql
+      #   name: Lint psql files
+      #   entry: pgrubic
+      #   language: python
+      #   types: [sql]
       - id: ruff
         name: Lint with ruff
         entry: ruff
@@ -58,9 +71,4 @@ repos:
         entry: mypy
         language: python
         types: [python]
-        args: [--strict]
-      - id: djlint-jinja
-        name: Lint Jinja templates
-        entry: djlint --profile=jinja
-        types_or: [jinja]
-        language: python
+        args: [--config-file=./pyproject.toml]
