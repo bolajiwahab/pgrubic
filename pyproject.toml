@@ -110,6 +110,7 @@ known_first_party = "pgrubic"
 pythonpath = ["src"]
 
 [tool.coverage.run]
+relative_files = true
 source = ["src"]
 omit = [
   "**/formatters/**", # excluded for now
