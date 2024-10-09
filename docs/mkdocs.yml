@@ -1,5 +1,5 @@
 ---
-site_name: pgRubic
+site_name: pgrubic
 site_description:
   PostgreSQL linter for schema migrations and design best practices
 
@@ -37,8 +37,8 @@ plugins:
 
 theme:
   name: material
-  logo: ../assets/logo.png
-  favicon: ../assets/logo.png
+  logo: ../assets/pgrubic.png
+  favicon: ../assets/pgrubic.png
   features:
     # - navigation.tabs
     - navigation.sections
