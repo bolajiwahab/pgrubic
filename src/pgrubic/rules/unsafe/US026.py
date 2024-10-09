@@ -8,8 +8,6 @@ from pgrubic.core import linter
 class VacuumFull(linter.BaseChecker):
     """Vacuum full."""
 
-    is_auto_fixable: bool = False
-
     def visit_VacuumStmt(
         self,
         ancestors: visitors.Ancestor,

@@ -9,6 +9,7 @@ from pglast import ast, parser, stream, visitors, _extract_comments
 from colorama import Fore, Style
 from caseconverter import kebabcase
 
+from pgrubic import DOCUMENTATION_URL
 from pgrubic.core import noqa, config
 
 
@@ -125,7 +126,7 @@ class Linter:
         for violation in checker.violations:
             sys.stdout.write(
                 f"\n{source_path}:{violation.line_number}:{violation.column_offset}:"
-                f" \033]8;;http://127.0.0.1:8000/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"
+                f" \033]8;;{DOCUMENTATION_URL}/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"  # noqa: E501
                 f" {violation.description}:"
                 f" {Fore.GREEN}\n\n{violation.source_text}\n\n{Style.RESET_ALL}",
             )

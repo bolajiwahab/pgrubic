@@ -26,8 +26,6 @@ class ExtensionWhitelist(linter.BaseChecker):
     `allowed-extensions`: List of allowed extensions.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_CreateExtensionStmt(
         self,
         ancestors: visitors.Ancestor,

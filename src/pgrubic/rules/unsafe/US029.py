@@ -8,8 +8,6 @@ from pgrubic.core import linter
 class TruncateTable(linter.BaseChecker):
     """Truncate table."""
 
-    is_auto_fixable: bool = False
-
     def visit_TruncateStmt(
         self,
         ancestors: visitors.Ancestor,

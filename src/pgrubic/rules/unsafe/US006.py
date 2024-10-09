@@ -6,9 +6,7 @@ from pgrubic.core import linter
 
 
 class AddingStoredGeneratedColumn(linter.BaseChecker):
-    """Forbid adding stored generated column."""
-
-    is_auto_fixable: bool = False
+    """Adding stored generated column."""
 
     def visit_Constraint(
         self,

@@ -22,8 +22,6 @@ class ImplicitConstraintName(linter.BaseChecker):
     Name your constraint according to the set naming convention.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_Constraint(
         self,
         ancestors: visitors.Ancestor,

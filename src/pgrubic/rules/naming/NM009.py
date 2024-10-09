@@ -28,8 +28,6 @@ class InvalidPartitionName(linter.BaseChecker):
     `regex-partition`: Regex matching the naming convention for check partitions.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_CreateStmt(
         self,
         ancestors: visitors.Ancestor,

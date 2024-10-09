@@ -20,8 +20,6 @@ class ConstantGeneratedColumn(linter.BaseChecker):
     Generated column with expression.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_Constraint(
         self,
         ancestors: visitors.Ancestor,

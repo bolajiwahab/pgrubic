@@ -20,8 +20,6 @@ class SingleLetterIdentifier(CheckIdentifier):
     Descriptive name.
     """
 
-    is_auto_fixable: bool = False
-
     def _check_identifier(
         self,
         identifier: str,

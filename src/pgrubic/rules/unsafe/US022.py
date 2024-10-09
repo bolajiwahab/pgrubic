@@ -8,8 +8,6 @@ from pgrubic.core import linter
 class RenameTable(linter.BaseChecker):
     """Rename table."""
 
-    is_auto_fixable: bool = False
-
     def visit_RenameStmt(
         self,
         ancestors: visitors.Ancestor,

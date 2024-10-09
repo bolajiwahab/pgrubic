@@ -24,8 +24,6 @@ class RemoveConstraint(linter.BaseChecker):
     **No suggestions**.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_AlterTableCmd(
         self,
         ancestors: visitors.Ancestor,

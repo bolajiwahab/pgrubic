@@ -24,8 +24,6 @@ class MultiColumnPartitioning(linter.BaseChecker):
     Sub-partitioning.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_PartitionSpec(
         self,
         ancestors: visitors.Ancestor,

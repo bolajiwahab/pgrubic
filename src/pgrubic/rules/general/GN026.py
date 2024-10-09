@@ -49,8 +49,6 @@ class NotIn(linter.BaseChecker):
     ```
     """
 
-    is_auto_fixable: bool = False
-
     def visit_A_Expr(
         self,
         ancestors: visitors.Ancestor,

@@ -22,8 +22,6 @@ class MismatchColumnInDataTypeChange(linter.BaseChecker):
     The right column in the USING clause.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_ColumnRef(
         self,
         ancestors: visitors.Ancestor,

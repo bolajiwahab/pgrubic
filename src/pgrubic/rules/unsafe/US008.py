@@ -8,8 +8,6 @@ from pgrubic.core import linter
 class DropDatabase(linter.BaseChecker):
     """Drop database."""
 
-    is_auto_fixable: bool = False
-
     def visit_DropdbStmt(
         self,
         ancestors: visitors.Ancestor,

@@ -26,8 +26,6 @@ class IndexElementsMoreThanThree(linter.BaseChecker):
     Keep your index elements at most three.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_IndexStmt(
         self,
         ancestors: visitors.Ancestor,

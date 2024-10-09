@@ -35,8 +35,6 @@ class ColumnDataTypeChange(linter.BaseChecker):
     5. Drop the old column.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_AlterTableCmd(
         self,
         ancestors: visitors.Ancestor,

@@ -31,8 +31,6 @@ class KeywordIdentifier(CheckIdentifier):
     Choose a name that is not a keyword.
     """
 
-    is_auto_fixable: bool = False
-
     def _check_identifier(
         self,
         identifier: str,

@@ -22,8 +22,6 @@ class DuplicateColumn(linter.BaseChecker):
     Remove duplicate columns.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_CreateStmt(
         self,
         ancestors: visitors.Ancestor,

@@ -21,8 +21,6 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
     Specify schema.
     """
 
-    is_auto_fixable: bool = False
-
     def _check_enum_for_schema(
         self,
         node: ast.CreateEnumStmt | ast.AlterEnumStmt,

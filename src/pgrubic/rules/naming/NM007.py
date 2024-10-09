@@ -28,8 +28,6 @@ class InvalidSequenceName(linter.BaseChecker):
     `regex-sequence`: Regex matching the naming convention for sequences.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_CreateSeqStmt(
         self,
         ancestors: visitors.Ancestor,

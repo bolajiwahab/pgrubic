@@ -8,8 +8,6 @@ from pgrubic.core import linter
 class Cluster(linter.BaseChecker):
     """Cluster."""
 
-    is_auto_fixable: bool = False
-
     def visit_ClusterStmt(
         self,
         ancestors: visitors.Ancestor,

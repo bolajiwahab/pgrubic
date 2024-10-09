@@ -23,8 +23,6 @@ class SpecialCharacterInIdentifier(CheckIdentifier):
     Remove special characters from the identifier.
     """
 
-    is_auto_fixable: bool = False
-
     def _check_identifier(
         self,
         identifier: str,

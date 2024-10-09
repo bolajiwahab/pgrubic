@@ -20,8 +20,6 @@ class UpdateWithoutWhereClause(linter.BaseChecker):
     Add necessary **WHERE** clause.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_UpdateStmt(
         self,
         ancestors: visitors.Ancestor,

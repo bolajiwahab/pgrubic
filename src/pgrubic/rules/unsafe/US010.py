@@ -8,8 +8,6 @@ from pgrubic.core import linter
 class NotNullConstraintOnExistingColumn(linter.BaseChecker):
     """Not null constraint on existing column."""
 
-    is_auto_fixable: bool = False
-
     def visit_AlterTableCmd(
         self,
         ancestors: visitors.Ancestor,

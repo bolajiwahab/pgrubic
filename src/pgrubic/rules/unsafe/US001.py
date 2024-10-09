@@ -33,8 +33,6 @@ class DropColumn(linter.BaseChecker):
     referenced by clients.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_AlterTableCmd(
         self,
         ancestors: visitors.Ancestor,

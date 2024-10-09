@@ -28,8 +28,6 @@ class DuplicateIndex(linter.BaseChecker):
     Remove the duplicate.
     """
 
-    is_auto_fixable: bool = False
-
     seen_indexes: typing.ClassVar[list[typing.Any]] = []
 
     def visit_IndexStmt(

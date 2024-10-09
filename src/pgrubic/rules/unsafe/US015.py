@@ -8,8 +8,6 @@ from pgrubic.core import linter
 class PrimaryKeyConstraintCreatingNewIndex(linter.BaseChecker):
     """Primary key constraint creating new index."""
 
-    is_auto_fixable: bool = False
-
     def visit_Constraint(
         self,
         ancestors: visitors.Ancestor,

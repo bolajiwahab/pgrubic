@@ -23,8 +23,6 @@ class TableColumnConflict(linter.BaseChecker):
     Resolve the conflict.
     """
 
-    is_auto_fixable: bool = False
-
     def _register_violation(
         self,
         table_name: str,

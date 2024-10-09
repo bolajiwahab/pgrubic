@@ -27,8 +27,6 @@ class TableInheritance(linter.BaseChecker):
     Don't use table inheritance. If you think you want to, use foreign keys instead.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_CreateStmt(
         self,
         ancestors: visitors.Ancestor,

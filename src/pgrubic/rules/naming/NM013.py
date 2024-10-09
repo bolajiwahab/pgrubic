@@ -31,8 +31,6 @@ class PgPrefixIdentifier(CheckIdentifier):
     Remove prefix pg_ from identifier.
     """
 
-    is_auto_fixable: bool = False
-
     def _check_identifier(
         self,
         identifier: str,

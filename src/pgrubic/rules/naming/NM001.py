@@ -28,8 +28,6 @@ class InvalidIndexName(linter.BaseChecker):
     `regex-index`: Regex matching the naming convention for indexes.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_IndexStmt(
         self,
         ancestors: visitors.Ancestor,

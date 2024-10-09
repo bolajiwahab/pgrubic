@@ -8,8 +8,6 @@ from pgrubic.core import linter
 class UniqueConstraintCreatingNewIndex(linter.BaseChecker):
     """Unique constraint creating new index."""
 
-    is_auto_fixable: bool = False
-
     def visit_Constraint(
         self,
         ancestors: visitors.Ancestor,

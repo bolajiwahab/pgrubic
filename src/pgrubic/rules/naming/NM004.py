@@ -29,8 +29,6 @@ class InvalidForeignKeyName(linter.BaseChecker):
     constraints.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_Constraint(
         self,
         ancestors: visitors.Ancestor,

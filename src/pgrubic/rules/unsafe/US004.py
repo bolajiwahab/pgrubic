@@ -6,9 +6,7 @@ from pgrubic.core import linter
 
 
 class AddingAutoIncrementColumn(linter.BaseChecker):
-    """Forbid adding auto increment column."""
-
-    is_auto_fixable: bool = False
+    """Adding auto increment column."""
 
     def visit_ColumnDef(
         self,

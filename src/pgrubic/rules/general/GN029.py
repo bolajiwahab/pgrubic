@@ -27,8 +27,6 @@ class AStar(linter.BaseChecker):
     Name Columns Explicitly.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_A_Star(
         self,
         ancestors: visitors.Ancestor,

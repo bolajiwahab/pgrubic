@@ -20,8 +20,6 @@ class DeleteWithoutWhereClause(linter.BaseChecker):
     Add necessary **WHERE** clause.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_DeleteStmt(
         self,
         ancestors: visitors.Ancestor,

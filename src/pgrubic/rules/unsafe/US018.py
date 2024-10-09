@@ -8,8 +8,6 @@ from pgrubic.core import linter
 class IndexesMovementToTablespace(linter.BaseChecker):
     """Indexes movement to tablespace."""
 
-    is_auto_fixable: bool = False
-
     def visit_AlterTableMoveAllStmt(
         self,
         ancestors: visitors.Ancestor,

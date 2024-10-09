@@ -39,8 +39,6 @@ class ColumnRename(linter.BaseChecker):
     timestamptz (also known as timestamp with time zone).
     """
 
-    is_auto_fixable: bool = False
-
     def visit_RenameStmt(
         self,
         ancestors: visitors.Ancestor,

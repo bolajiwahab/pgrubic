@@ -26,8 +26,6 @@ class MissingPrimaryKey(linter.BaseChecker):
     Define a primary key.
     """
 
-    is_auto_fixable: bool = False
-
     def _check_for_table_level_primary_key(
         self,
         node: ast.CreateStmt,

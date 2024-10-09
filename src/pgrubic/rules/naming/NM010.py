@@ -39,8 +39,6 @@ class NonSnakeCaseIdentifier(CheckIdentifier):
     quoting them.
     """
 
-    is_auto_fixable: bool = False
-
     def _check_identifier(
         self,
         identifier: str,

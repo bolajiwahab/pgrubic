@@ -23,8 +23,6 @@ class CreateEnum(linter.BaseChecker):
     Mapping table.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_CreateEnumStmt(
         self,
         ancestors: visitors.Ancestor,

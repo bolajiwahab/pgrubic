@@ -22,8 +22,6 @@ class CreateRule(linter.BaseChecker):
     Don't use rules. If you think you want to, use a trigger instead.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_RuleStmt(
         self,
         ancestors: visitors.Ancestor,

@@ -8,10 +8,7 @@ from pgrubic.core import linter
 
 
 class CheckIdentifier(abc.ABC, linter.BaseChecker):
-    """Collect identifier."""
-
-    # To be overridden by subclasses
-    is_auto_fixable: bool = False
+    """Check identifier."""
 
     @abc.abstractmethod
     def _check_identifier(
