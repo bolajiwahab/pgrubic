@@ -23,9 +23,8 @@ pgrubic *.sql
 test.sql:1:38: TP017: Boolean field should be not be nullable:
 
 ALTER TABLE public.example ADD COLUMN foo boolean DEFAULT false;
-
-pgrubic test.sql
 ```
+
 ```bash
 pgrubic test.sql
 test.sql:1:38: TP017: Boolean field should be not be nullable:
