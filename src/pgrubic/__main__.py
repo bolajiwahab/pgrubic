@@ -7,8 +7,10 @@ from collections import abc
 from pgrubic import core
 
 
-def cli(config: core.Config, argv: abc.Sequence[str] = sys.argv) -> None:
+def cli(argv: abc.Sequence[str] = sys.argv) -> None:
     """CLI."""
+    config: core.Config = core.parse_config()
+
     source_paths: abc.Sequence[str] = argv[1:]
 
     linter: core.Linter = core.Linter(config=config)

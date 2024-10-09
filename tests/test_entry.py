@@ -22,12 +22,12 @@ def test_cli(tmp_path: pathlib.Path, linter: core.Linter) -> None:
 
     args = [PROGRAM_NAME, str(file_fail)]
     with pytest.raises(SystemExit) as excinfo:
-        __main__.cli(config=linter.config, argv=args)
+        __main__.cli(argv=args)
 
     assert excinfo.value.code == 1
 
     linter.config.lint.fix = True
     with pytest.raises(SystemExit) as excinfo:
-        __main__.cli(config=linter.config, argv=args)
+        __main__.cli(argv=args)
 
     assert excinfo.value.code == 1

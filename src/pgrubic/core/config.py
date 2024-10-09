@@ -2,6 +2,7 @@
 
 import typing
 import pathlib
+import functools
 import dataclasses
 
 import toml
@@ -113,6 +114,7 @@ def _get_config_file_absolute_path(config_file: str) -> pathlib.Path | None:
     return None  # pragma: no cover
 
 
+@functools.lru_cache(maxsize=1)
 def parse_config() -> Config:
     """Parse config."""
     merged_config = _merge_config()
