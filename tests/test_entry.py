@@ -2,14 +2,16 @@
 
 import pathlib
 
-import pytest
+from click import testing
 
-from tests import SOURCE_PATH
-from pgrubic import PROGRAM_NAME, core, __main__
+from tests import TEST_FILE
+from pgrubic import core
+from pgrubic.__main__ import cli
 
 
 def test_cli(tmp_path: pathlib.Path, linter: core.Linter) -> None:
     """CLI."""
+    runner = testing.CliRunner()
     linter.config.lint.fix = False
 
     sql_fail: str = "SELECT a = NULL;"
@@ -17,17 +19,15 @@ def test_cli(tmp_path: pathlib.Path, linter: core.Linter) -> None:
     directory = tmp_path / "sub"
     directory.mkdir()
 
-    file_fail = directory / SOURCE_PATH
+    file_fail = directory / TEST_FILE
     file_fail.write_text(sql_fail)
 
-    args = [PROGRAM_NAME, str(file_fail)]
-    with pytest.raises(SystemExit) as excinfo:
-        __main__.cli(argv=args)
+    result = runner.invoke(cli, ["lint", str(file_fail)])
 
-    assert excinfo.value.code == 1
+    assert result.exit_code == 1
 
     linter.config.lint.fix = True
-    with pytest.raises(SystemExit) as excinfo:
-        __main__.cli(argv=args)
 
-    assert excinfo.value.code == 1
+    result = runner.invoke(cli, ["lint", str(file_fail)])
+
+    assert result.exit_code == 1
