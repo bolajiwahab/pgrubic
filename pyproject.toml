@@ -27,6 +27,7 @@ dependencies = [
   "case-converter==1.1.0",
   "colorama==0.4.6",
   "toml==0.10.2",
+  "click==8.1.7",
 ]
 
 [project.optional-dependencies]
@@ -183,6 +184,7 @@ legacy_tox_ini = """
         pytest
         types-toml
         types-colorama
+        types-click
     commands = mypy src tests docs
 
     [testenv:docbuild]

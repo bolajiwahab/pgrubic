@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.naming.NM009 import InvalidPartitionName
 
@@ -53,7 +53,7 @@ def test_pass_valid_partition_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_partition_name.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -75,7 +75,7 @@ def test_fail_invalid_partition_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_partition_name.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -98,7 +98,7 @@ def test_fail_invalid_partition_name_description(
     """
 
     _: core.ViolationMetric = lint_invalid_partition_name.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -121,7 +121,7 @@ def test_pass_noqa_invalid_partition_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_partition_name.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -144,7 +144,7 @@ def test_fail_noqa_invalid_partition_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_partition_name.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -167,7 +167,7 @@ def test_pass_general_noqa_invalid_partition_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_partition_name.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

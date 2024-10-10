@@ -13,9 +13,9 @@ from pgrubic import RULES_DIRECTORY, RULES_BASE_MODULE
 from pgrubic.core import config, linter
 
 
-def load_rules(config: config.Config) -> list[linter.BaseChecker]:
+def load_rules(config: config.Config) -> set[linter.BaseChecker]:
     """Load rules."""
-    rules: list[linter.BaseChecker] = []
+    rules: set[linter.BaseChecker] = set()
 
     for path in sorted(RULES_DIRECTORY.rglob("[!_]*.py"), key=lambda x: x.name):
         module = importlib.import_module(

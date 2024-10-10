@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.unsafe.US028 import NonConcurrentRefreshMaterializedView
 
@@ -92,7 +92,7 @@ def test_fail_non_concurrent_refresh_materialized_view_description(
     sql_fail: str = "REFRESH MATERIALIZED VIEW tbl;"
 
     _: core.ViolationMetric = lint_non_concurrent_refresh_materialized_view.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 

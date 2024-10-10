@@ -2,36 +2,55 @@
 
 import sys
 import pathlib
-from collections import abc
 
-from pgrubic import core
+import click
+
+from pgrubic import PROGRAM_NAME, core
 
 
-def cli(argv: abc.Sequence[str] = sys.argv) -> None:
-    """CLI."""
+@click.group(
+    context_settings={"help_option_names": ["-h", "--help"]},
+    epilog=f"""
+Examples:\n
+   {PROGRAM_NAME} lint .\n
+   {PROGRAM_NAME} lint *.sql\n
+   {PROGRAM_NAME} lint example.sql\n
+   {PROGRAM_NAME} format src/queries\n
+""",
+)
+@click.version_option()
+def cli() -> None:
+    """Pgrubic: PostgreSQL linter for schema migrations and design best practices."""
+
+
+@cli.command()
+@click.option("--fix", is_flag=True, help="Fix lint violations automatically.")
+@click.argument("paths", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
+def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
+    """Lint SQL files."""
     config: core.Config = core.parse_config()
 
-    source_paths: abc.Sequence[str] = argv[1:]
+    config.lint.fix = fix
 
     linter: core.Linter = core.Linter(config=config)
 
     core.BaseChecker.config = config
 
-    rules: list[core.BaseChecker] = core.load_rules(config=config)
+    rules: set[core.BaseChecker] = core.load_rules(config=config)
 
     for rule in rules:
         linter.checkers.add(rule())
 
     violations: core.ViolationMetric = core.ViolationMetric()
 
-    source_paths = core.filter_source_paths(source_paths=source_paths, config=config)
+    files = core.filter_files(paths=paths, config=config)
 
     for source_path in source_paths:
         with pathlib.Path(source_path).open("r", encoding="utf-8") as source_file:
             source_code: str = source_file.read()
 
         _violations: core.ViolationMetric = linter.run(
-            source_path=pathlib.Path(source_path),
+            file=pathlib.Path(file),
             source_code=source_code,
         )
 

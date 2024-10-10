@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.general.GN019 import UnloggedTable
 
@@ -48,7 +48,7 @@ def test_fail_unlogged_table(
     sql_fail: str = "CREATE UNLOGGED TABLE tbl (id int);"
 
     violations: core.ViolationMetric = lint_unlogged_table.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -68,7 +68,7 @@ def test_fail_unlogged_table_description(
     sql_fail: str = "ALTER TABLE tbl SET UNLOGGED;"
 
     _: core.ViolationMetric = lint_unlogged_table.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -90,7 +90,7 @@ def test_pass_noqa_unlogged_table(
     """
 
     violations: core.ViolationMetric = lint_unlogged_table.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -112,7 +112,7 @@ def test_fail_noqa_unlogged_table(
     """
 
     violations: core.ViolationMetric = lint_unlogged_table.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -134,7 +134,7 @@ def test_pass_general_noqa_unlogged_table(
     """
 
     violations: core.ViolationMetric = lint_unlogged_table.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -158,7 +158,7 @@ def test_fail_fix_unlogged_table(
     unlogged_table.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_unlogged_table.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -183,7 +183,7 @@ def test_fail_fix_alter_table_unlogged_table(
     unlogged_table.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_unlogged_table.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 

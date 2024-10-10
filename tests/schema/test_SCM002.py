@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.core import config
 from pgrubic.rules.schema.SM002 import DisallowedSchema
@@ -56,7 +56,7 @@ def test_pass_no_explicit_schema(
     sql_fail: str = "CREATE TABLE card();"
 
     violations: core.ViolationMetric = lint_disallowed_schema.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -75,7 +75,7 @@ def test_pass_explicit_not_disallowed_schema(
     sql_fail: str = "CREATE TABLE public.card();"
 
     violations: core.ViolationMetric = lint_disallowed_schema.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -95,7 +95,7 @@ def test_fail_disallowed_schema_description(
     sql_fail: str = "CREATE TABLE test.card();"
 
     _: core.ViolationMetric = lint_disallowed_schema.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -112,7 +112,7 @@ def test_fail_table_disallowed_schema(
     sql_fail: str = "CREATE TABLE test.card();"
 
     violations: core.ViolationMetric = lint_disallowed_schema.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -136,7 +136,7 @@ def test_fail_fix_table_disallowed_schema(
     disallowed_schema.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_disallowed_schema.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -160,7 +160,7 @@ def test_fail_function_disallowed_schema(
     """
 
     violations: core.ViolationMetric = lint_disallowed_schema.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -188,7 +188,7 @@ def test_fail_fix_function_disallowed_schema(
     disallowed_schema.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_disallowed_schema.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -208,7 +208,7 @@ def test_fail_enum_disallowed_schema(
     sql_fail: str = "CREATE TYPE test.mood AS ENUM ('sad', 'ok');"
 
     violations: core.ViolationMetric = lint_disallowed_schema.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -232,7 +232,7 @@ def test_fail_fix_enum_disallowed_schema(
     disallowed_schema.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_disallowed_schema.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 

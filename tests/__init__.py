@@ -2,4 +2,4 @@
 
 import pathlib
 
-SOURCE_PATH = pathlib.Path("test.sql")
+TEST_FILE: pathlib.Path = pathlib.Path("test.sql")

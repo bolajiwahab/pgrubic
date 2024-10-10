@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.typing.TP005 import Varchar
 
@@ -48,7 +48,7 @@ def test_pass_create_table_text(
     sql_fail: str = "CREATE TABLE music (first_name text);"
 
     violations: core.ViolationMetric = lint_varchar.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -67,7 +67,7 @@ def test_pass_alter_table_text(
     sql_fail: str = "ALTER TABLE music ADD COLUMN last_name text;"
 
     violations: core.ViolationMetric = lint_varchar.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -86,7 +86,7 @@ def test_fail_create_table_varchar(
     sql_fail: str = "CREATE TABLE music (first_name varchar(20));"
 
     violations: core.ViolationMetric = lint_varchar.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -105,7 +105,7 @@ def test_fail_alter_table_varchar(
     sql_fail: str = "ALTER TABLE music ADD COLUMN last_name varchar;"
 
     violations: core.ViolationMetric = lint_varchar.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -125,7 +125,7 @@ def test_fail_varchar_description(
     sql_fail: str = "CREATE TABLE music (middle_name varchar(0));"
 
     _: core.ViolationMetric = lint_varchar.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -147,7 +147,7 @@ def test_pass_noqa_varchar(
     """
 
     violations: core.ViolationMetric = lint_varchar.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -169,7 +169,7 @@ def test_fail_noqa_varchar(
     """
 
     violations: core.ViolationMetric = lint_varchar.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -191,7 +191,7 @@ def test_pass_general_noqa_varchar(
     """
 
     violations: core.ViolationMetric = lint_varchar.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -215,7 +215,7 @@ def test_fail_fix_create_table_varchar(
     varchar.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_varchar.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -240,7 +240,7 @@ def test_fail_fix_alter_table_varchar(
     varchar.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_varchar.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 

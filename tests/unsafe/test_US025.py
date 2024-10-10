@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.unsafe.US025 import Cluster
 
@@ -51,7 +51,7 @@ def test_fail_cluster(
     sql_fail: str = "CLUSTER employees USING employees_ind;"
 
     violations: core.ViolationMetric = lint_cluster.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -71,7 +71,7 @@ def test_fail_cluster_description(
     sql_fail: str = "CLUSTER employees;"
 
     _: core.ViolationMetric = lint_cluster.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -93,7 +93,7 @@ def test_pass_noqa_cluster(
     """
 
     violations: core.ViolationMetric = lint_cluster.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -115,7 +115,7 @@ def test_fail_noqa_cluster(
     """
 
     violations: core.ViolationMetric = lint_cluster.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -137,7 +137,7 @@ def test_pass_general_noqa_cluster(
     """
 
     violations: core.ViolationMetric = lint_cluster.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_noqa,
     )
 

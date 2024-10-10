@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.naming.NM003 import InvalidUniqueKeyName
 
@@ -52,7 +52,7 @@ def test_pass_implicit_unique_key_name_create_table(
     sql_fail: str = "CREATE TABLE tbl (tbl_id bigint UNIQUE);"
 
     violations: core.ViolationMetric = lint_invalid_unique_key_name.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -71,7 +71,7 @@ def test_pass_implicit_unique_key_name_alter_table(
     sql_fail: str = "ALTER TABLE tbl ADD UNIQUE (tbl_id);"
 
     violations: core.ViolationMetric = lint_invalid_unique_key_name.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -92,7 +92,7 @@ def test_pass_valid_unique_key_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_unique_key_name.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -113,7 +113,7 @@ def test_fail_invalid_unique_key_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_unique_key_name.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -135,7 +135,7 @@ def test_fail_invalid_unique_key_name_description(
     """
 
     _: core.ViolationMetric = lint_invalid_unique_key_name.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -157,7 +157,7 @@ def test_pass_noqa_invalid_unique_key_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_unique_key_name.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -179,7 +179,7 @@ def test_fail_noqa_invalid_unique_key_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_unique_key_name.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -201,7 +201,7 @@ def test_pass_general_noqa_invalid_unique_key_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_unique_key_name.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

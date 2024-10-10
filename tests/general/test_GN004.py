@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.general.GN004 import MissingPrimaryKey
 
@@ -46,7 +46,7 @@ def test_pass_inline_primary_key(
     sql_fail: str = "CREATE TABLE music (age int PRIMARY KEY);"
 
     violations: core.ViolationMetric = lint_missing_primary_key.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -67,7 +67,7 @@ def test_pass_standalone_primary_key(
     )
 
     violations: core.ViolationMetric = lint_missing_primary_key.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -86,7 +86,7 @@ def test_fail_missing_primary_key(
     sql_fail: str = "CREATE TABLE music (age int);"
 
     violations: core.ViolationMetric = lint_missing_primary_key.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -106,7 +106,7 @@ def test_fail_missing_primary_key_description(
     sql_fail: str = "CREATE TABLE music (age int);"
 
     _: core.ViolationMetric = lint_missing_primary_key.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -128,7 +128,7 @@ def test_pass_noqa_missing_primary_key(
     """
 
     violations: core.ViolationMetric = lint_missing_primary_key.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -150,7 +150,7 @@ def test_fail_noqa_missing_primary_key(
     """
 
     violations: core.ViolationMetric = lint_missing_primary_key.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -172,7 +172,7 @@ def test_pass_general_noqa_missing_primary_key(
     """
 
     violations: core.ViolationMetric = lint_missing_primary_key.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

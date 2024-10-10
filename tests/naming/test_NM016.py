@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.naming.NM016 import DateColumnWithoutSuffix
 
@@ -52,7 +52,7 @@ def test_pass_non_date_column_without_suffix(
     sql_fail: str = "CREATE TABLE tbl (activated boolean);"
 
     violations: core.ViolationMetric = lint_date_column_without_suffix.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -71,7 +71,7 @@ def test_fail_date_column_without_suffix(
     sql_fail: str = "CREATE TABLE tbl (activated date);"
 
     violations: core.ViolationMetric = lint_date_column_without_suffix.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -91,7 +91,7 @@ def test_fail_date_column_without_suffix_description(
     sql_fail: str = "CREATE TABLE tbl (activated date);"
 
     _: core.ViolationMetric = lint_date_column_without_suffix.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -113,7 +113,7 @@ def test_pass_noqa_date_column_without_suffix(
     """
 
     violations: core.ViolationMetric = lint_date_column_without_suffix.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -135,7 +135,7 @@ def test_fail_noqa_date_column_without_suffix(
     """
 
     violations: core.ViolationMetric = lint_date_column_without_suffix.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -157,7 +157,7 @@ def test_pass_general_noqa_date_column_without_suffix(
     """
 
     violations: core.ViolationMetric = lint_date_column_without_suffix.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -181,7 +181,7 @@ def test_fail_fix_date_column_without_suffix(
     date_column_without_suffix.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_date_column_without_suffix.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 

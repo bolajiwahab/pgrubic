@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.typing.TP017 import NullableBooleanField
 
@@ -48,7 +48,7 @@ def test_pass_create_tablenullable_boolean_field(
     sql_fail: str = "CREATE TABLE transaction (amount boolean NOT NULL);"
 
     violations: core.ViolationMetric = lint_nullable_boolean_field.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -67,7 +67,7 @@ def test_pass_alter_tablenullable_boolean_field(
     sql_fail: str = "ALTER TABLE transaction ADD COLUMN is_active bool NOT NULL;"
 
     violations: core.ViolationMetric = lint_nullable_boolean_field.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -86,7 +86,7 @@ def test_fail_create_table_nullable_boolean_field(
     sql_fail: str = "CREATE TABLE transaction (is_active boolean);"
 
     violations: core.ViolationMetric = lint_nullable_boolean_field.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -105,7 +105,7 @@ def test_fail_alter_table_nullable_boolean_field(
     sql_fail: str = "ALTER TABLE transaction ADD COLUMN is_active boolean;"
 
     violations: core.ViolationMetric = lint_nullable_boolean_field.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -125,7 +125,7 @@ def test_fail_nullable_boolean_field_description(
     sql_fail: str = "CREATE TABLE transaction (is_active boolean);"
 
     _: core.ViolationMetric = lint_nullable_boolean_field.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -147,7 +147,7 @@ def test_pass_noqa_nullable_boolean_field(
     """
 
     violations: core.ViolationMetric = lint_nullable_boolean_field.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -169,7 +169,7 @@ def test_fail_noqa_nullable_boolean_field(
     """
 
     violations: core.ViolationMetric = lint_nullable_boolean_field.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -191,7 +191,7 @@ def test_pass_general_noqa_nullable_boolean_field(
     """
 
     violations: core.ViolationMetric = lint_nullable_boolean_field.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -215,7 +215,7 @@ def test_fail_fix_create_table_nullable_boolean_field(
     nullable_boolean_field.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_nullable_boolean_field.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -240,7 +240,7 @@ def test_fail_fix_alter_table_nullable_boolean_field(
     nullable_boolean_field.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_nullable_boolean_field.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 

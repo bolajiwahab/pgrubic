@@ -5,7 +5,7 @@ import typing
 import pytest
 from colorama import Fore, Style
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic.core import noqa, errors
 
 
@@ -83,9 +83,9 @@ def test_report_unused_ignores(
         source_code,
     )
 
-    noqa.report_unused_ignores(source_path=SOURCE_PATH, inline_ignores=inline_ignores)
+    noqa.report_unused_ignores(file=TEST_FILE, inline_ignores=inline_ignores)
     out, err = capfd.readouterr()
     assert (
         out
-        == f"{SOURCE_PATH}:3:52: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}NM016{Style.RESET_ALL})\n"  # noqa: E501
+        == f"{TEST_FILE}:3:52: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}NM016{Style.RESET_ALL})\n"  # noqa: E501
     )

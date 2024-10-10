@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.core import config
 from pgrubic.rules.general.GN012 import RequiredColumnRemoval
@@ -55,7 +55,7 @@ def test_pass_no_columns_table(
     sql_fail: str = "ALTER TABLE music DROP COLUMN age;"
 
     violations: core.ViolationMetric = lint_required_column_removal.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -74,7 +74,7 @@ def test_fail_required_column_removal(
     sql_fail: str = "ALTER TABLE music DROP COLUMN created_at;"
 
     violations: core.ViolationMetric = lint_required_column_removal.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -94,7 +94,7 @@ def test_fail_required_column_removal_description(
     sql_fail: str = "ALTER TABLE music DROP COLUMN created_at"
 
     _: core.ViolationMetric = lint_required_column_removal.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -116,7 +116,7 @@ def test_pass_noqa_required_column_removal(
     """
 
     violations: core.ViolationMetric = lint_required_column_removal.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -138,7 +138,7 @@ def test_fail_noqa_required_column_removal(
     """
 
     violations: core.ViolationMetric = lint_required_column_removal.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -160,7 +160,7 @@ def test_pass_general_noqa_required_column_removal(
     """
 
     violations: core.ViolationMetric = lint_required_column_removal.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

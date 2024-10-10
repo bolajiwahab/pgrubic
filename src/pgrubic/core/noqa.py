@@ -128,14 +128,14 @@ def extract_ignores_from_inline_comments(source_code: str) -> list[NoQaDirective
 
 def report_unused_ignores(
     *,
-    source_path: pathlib.Path,
+    file: pathlib.Path,
     inline_ignores: list[NoQaDirective],
 ) -> None:
     """Get unused ignores."""
     for ignore in inline_ignores:
         if not ignore.used:
             sys.stdout.write(
-                f"{source_path}:{ignore.line_number}:{ignore.column_offset}:"
+                f"{file}:{ignore.line_number}:{ignore.column_offset}:"
                 f" {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL}"
                 f" (unused: {Fore.RED}{Style.BRIGHT}{ignore.rule}{Style.RESET_ALL})\n",
             )

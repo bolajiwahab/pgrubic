@@ -1,34 +1,40 @@
 """Filters."""
 
 import fnmatch
-from collections import abc
+import pathlib
 
 from pgrubic.core import config
 
 
-def filter_source_paths(
+def filter_files(
     *,
-    source_paths: abc.Sequence[str],
+    paths: tuple[pathlib.Path, ...],
     config: config.Config,
-) -> list[str]:
-    """Filters source paths based on config.include and config.exclude."""
-    return [
-        source_path
-        for source_path in source_paths
-        if is_source_path_included(source_path, config)
-    ]
+) -> tuple[pathlib.Path, ...]:
+    """Filters files base on config.lint.include and config.lint.exclude."""
+    files: list[pathlib.Path] = []
+
+    for path in paths:
+
+        if path.is_dir():
+
+            files.extend(path.glob("**/*.sql"))
+
+        else:
+
+            files.append(path)
+
+    return tuple(
+        file for file in files if is_file_included(file=str(file), config=config)
+    )
 
 
-def is_source_path_included(source_path: str, config: config.Config) -> bool:
+def is_file_included(*, file: str, config: config.Config) -> bool:
     """Check if a file should be included or excluded based on global config."""
     return bool(
         (
             not config.lint.include
-            or any(
-                fnmatch.fnmatch(source_path, pattern) for pattern in config.lint.include
-            )
+            or any(fnmatch.fnmatch(file, pattern) for pattern in config.lint.include)
         )
-        and not any(
-            fnmatch.fnmatch(source_path, pattern) for pattern in config.lint.exclude
-        ),
+        and not any(fnmatch.fnmatch(file, pattern) for pattern in config.lint.exclude),
     )

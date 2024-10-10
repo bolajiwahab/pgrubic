@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.general.GN027 import YodaCondition
 
@@ -48,7 +48,7 @@ def test_pass_non_yoda_condition(
     sql_pass: str = "SELECT * FROM measurement WHERE city_id = 10;"
 
     violations: core.ViolationMetric = lint_yoda_condition.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -67,7 +67,7 @@ def test_pass_non_yoda_condition_constant_on_left_and_right(
     sql_pass: str = "SELECT * FROM measurement WHERE 10 = 10;"
 
     violations: core.ViolationMetric = lint_yoda_condition.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -86,7 +86,7 @@ def test_fail_yoda_condition(
     sql_fail: str = "SELECT * FROM measurement WHERE 10 = city_id;"
 
     violations: core.ViolationMetric = lint_yoda_condition.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -106,7 +106,7 @@ def test_fail_yoda_condition_description(
     sql_fail: str = "SELECT * FROM measurement WHERE 10 = city_id;"
 
     _: core.ViolationMetric = lint_yoda_condition.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -128,7 +128,7 @@ def test_pass_noqa_yoda_condition(
     """
 
     violations: core.ViolationMetric = lint_yoda_condition.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -150,7 +150,7 @@ def test_fail_noqa_yoda_condition(
     """
 
     violations: core.ViolationMetric = lint_yoda_condition.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -172,7 +172,7 @@ def test_pass_general_noqa_yoda_condition(
     """
 
     violations: core.ViolationMetric = lint_yoda_condition.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -196,7 +196,7 @@ def test_fail_fix_yoda_condition(
     yoda_condition.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_yoda_condition.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 

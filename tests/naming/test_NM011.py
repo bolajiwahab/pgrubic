@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.naming.NM011 import KeywordIdentifier
 
@@ -46,7 +46,7 @@ def test_fail_keyword_identifier(
     sql_fail: str = """CREATE SEQUENCE "TABLE" START 1;"""
 
     violations: core.ViolationMetric = lint_keyword_identifier.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -66,7 +66,7 @@ def test_fail_keyword_identifier_description(
     sql_fail: str = """CREATE TABLESPACE "TABLESPACE" LOCATION 'directory_path';"""
 
     _: core.ViolationMetric = lint_keyword_identifier.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -88,7 +88,7 @@ def test_pass_noqa_keyword_identifier(
     """
 
     violations: core.ViolationMetric = lint_keyword_identifier.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -110,7 +110,7 @@ def test_fail_noqa_keyword_identifier(
     """
 
     violations: core.ViolationMetric = lint_keyword_identifier.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -132,7 +132,7 @@ def test_pass_general_noqa_keyword_identifier(
     """
 
     violations: core.ViolationMetric = lint_keyword_identifier.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

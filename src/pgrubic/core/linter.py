@@ -120,18 +120,18 @@ class Linter:
     def print_violations(
         *,
         checker: BaseChecker,
-        source_path: pathlib.Path,
+        file: pathlib.Path,
     ) -> None:
         """Print all violations collected by a checker."""
         for violation in checker.violations:
             sys.stdout.write(
-                f"\n{source_path}:{violation.line_number}:{violation.column_offset}:"
+                f"\n{file}:{violation.line_number}:{violation.column_offset}:"
                 f" \033]8;;{DOCUMENTATION_URL}/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"  # noqa: E501
                 f" {violation.description}:"
                 f" {Fore.GREEN}\n\n{violation.source_text}\n\n{Style.RESET_ALL}",
             )
 
-    def run(self, *, source_path: pathlib.Path, source_code: str) -> ViolationMetric:
+    def run(self, *, file: pathlib.Path, source_code: str) -> ViolationMetric:
         """Run rules on a source code."""
         try:
             tree: ast.Node = parser.parse_sql(source_code)
@@ -164,7 +164,7 @@ class Linter:
 
             self.print_violations(
                 checker=checker,
-                source_path=source_path,
+                file=file,
             )
 
             if self.config.lint.fix is checker.is_auto_fixable is True:
@@ -191,7 +191,7 @@ class Linter:
         sys.stdout.write("\n")
 
         noqa.report_unused_ignores(
-            source_path=source_path,
+            file=file,
             inline_ignores=inline_ignores,
         )
 

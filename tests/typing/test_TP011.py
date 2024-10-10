@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.typing.TP011 import Float
 
@@ -48,7 +48,7 @@ def test_pass_create_table_numeric(
     sql_fail: str = "CREATE TABLE tbl (retry_count numeric);"
 
     violations: core.ViolationMetric = lint_float.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -69,7 +69,7 @@ def test_pass_alter_table_bigint(
     """
 
     violations: core.ViolationMetric = lint_float.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -88,7 +88,7 @@ def test_fail_create_table_float(
     sql_fail: str = "CREATE TABLE tbl (retry_count float);"
 
     violations: core.ViolationMetric = lint_float.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -107,7 +107,7 @@ def test_fail_alter_table_float(
     sql_fail: str = "ALTER TABLE tbl ADD COLUMN retry_count float;"
 
     violations: core.ViolationMetric = lint_float.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -127,7 +127,7 @@ def test_fail_float_description(
     sql_fail: str = "CREATE TABLE tbl (retry_count float);"
 
     _: core.ViolationMetric = lint_float.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -149,7 +149,7 @@ def test_pass_noqa_float(
     """
 
     violations: core.ViolationMetric = lint_float.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -171,7 +171,7 @@ def test_fail_noqa_float(
     """
 
     violations: core.ViolationMetric = lint_float.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -193,7 +193,7 @@ def test_pass_general_noqa_float(
     """
 
     violations: core.ViolationMetric = lint_float.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -217,7 +217,7 @@ def test_fail_fix_create_table_float(
     pg_float.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_float.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -242,7 +242,7 @@ def test_fail_fix_alter_table_float(
     pg_float.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_float.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 

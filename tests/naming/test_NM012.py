@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.naming.NM012 import SpecialCharacterInIdentifier
 
@@ -49,7 +49,7 @@ def test_fail_special_character_in_identifier(
     sql_fail: str = "SELECT INTO tbl$ FROM tbl;"
 
     violations: core.ViolationMetric = lint_special_character_in_identifier.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -69,7 +69,7 @@ def test_fail_special_character_in_identifier_description(
     sql_fail: str = "CREATE RULE notify$_me AS ON UPDATE TO tbl DO ALSO NOTIFY mytable;"
 
     _: core.ViolationMetric = lint_special_character_in_identifier.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -91,7 +91,7 @@ def test_pass_noqa_special_character_in_identifier(
     """
 
     violations: core.ViolationMetric = lint_special_character_in_identifier.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -116,7 +116,7 @@ def test_fail_noqa_special_character_in_identifier(
     """
 
     violations: core.ViolationMetric = lint_special_character_in_identifier.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -138,7 +138,7 @@ def test_pass_general_noqa_special_character_in_identifier(
     """
 
     violations: core.ViolationMetric = lint_special_character_in_identifier.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

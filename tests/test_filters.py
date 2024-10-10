@@ -1,5 +1,7 @@
 """Test filters."""
 
+import pathlib
+
 from pgrubic import core
 
 
@@ -14,25 +16,25 @@ def test_filter_source_paths(linter: core.Linter) -> None:
         "test.sql",
     ]
 
-    source_paths = [
-        "test.sql",
-        "test.py",
-        "test.txt",
-        "tables.sql",
-        "views.sql",
-        "functions.sql",
-        "triggers.sql",
-        "rules.sql",
-        "procedures.sql",
-        "types.sql",
-        "alters.sql",
-    ]
+    paths: tuple[pathlib.Path, ...] = (
+        pathlib.Path("test.sql"),
+        pathlib.Path("test.py"),
+        pathlib.Path("test.txt"),
+        pathlib.Path("tables.sql"),
+        pathlib.Path("views.sql"),
+        pathlib.Path("functions.sql"),
+        pathlib.Path("triggers.sql"),
+        pathlib.Path("rules.sql"),
+        pathlib.Path("procedures.sql"),
+        pathlib.Path("types.sql"),
+        pathlib.Path("alters.sql"),
+    )
 
     source_paths_filtered_length = 9
 
-    source_paths = core.filter_source_paths(
-        source_paths=source_paths,
+    paths = core.filter_files(
+        paths=paths,
         config=linter.config,
     )
 
-    assert len(source_paths) == source_paths_filtered_length
+    assert len(paths) == source_paths_filtered_length

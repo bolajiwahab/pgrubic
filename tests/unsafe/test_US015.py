@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.unsafe.US015 import PrimaryKeyConstraintCreatingNewIndex
 
@@ -98,7 +98,7 @@ def test_fail_primary_key_constraint_creating_new_index_description(
     """
 
     _: core.ViolationMetric = lint_primary_key_constraint_creating_new_index.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 

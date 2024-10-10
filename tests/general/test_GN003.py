@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.general.GN003 import SqlAsciiEncoding
 
@@ -48,7 +48,7 @@ def test_pass_encoding(
     sql_fail: str = "CREATE DATABASE music ENCODING UTF8 TEMPLATE template0;"
 
     violations: core.ViolationMetric = lint_sql_ascii_encoding.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -67,7 +67,7 @@ def test_fail_sql_ascii_encoding(
     sql_fail: str = "CREATE DATABASE music ENCODING SQL_ASCII TEMPLATE template0;"
 
     violations: core.ViolationMetric = lint_sql_ascii_encoding.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -87,7 +87,7 @@ def test_fail_sql_ascii_encoding_description(
     sql_fail: str = "CREATE DATABASE music ENCODING SQL_ASCII TEMPLATE template0;"
 
     _: core.ViolationMetric = lint_sql_ascii_encoding.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -109,7 +109,7 @@ def test_pass_noqa_sql_ascii_encoding(
     """
 
     violations: core.ViolationMetric = lint_sql_ascii_encoding.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -131,7 +131,7 @@ def test_fail_noqa_sql_ascii_encoding(
     """
 
     violations: core.ViolationMetric = lint_sql_ascii_encoding.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -153,7 +153,7 @@ def test_pass_general_noqa_sql_ascii_encoding(
     """
 
     violations: core.ViolationMetric = lint_sql_ascii_encoding.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -179,7 +179,7 @@ def test_fail_fix_sql_ascii_encoding(
     sql_ascii_encoding.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_sql_ascii_encoding.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
