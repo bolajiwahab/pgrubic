@@ -213,9 +213,7 @@ def test_fail_fix_create_table_timestamp_with_timezone_with_precision(
     """Test fail fix timestamp with timezone with precision."""
     sql_fail: str = "CREATE TABLE music (age int, created_at timestamptz(0));"
 
-    sql_fix: str = (
-        "CREATE TABLE music (\n    age integer\n  , created_at timestamptz\n);"
-    )
+    sql_fix: str = "CREATE TABLE music (\n    age integer\n  , created_at timestamptz\n);"
 
     timestamp_with_timezone_with_precision.config.lint.fix = True
 

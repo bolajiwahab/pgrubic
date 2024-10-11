@@ -34,7 +34,6 @@ class Float(linter.BaseChecker):
     ) -> None:
         """Visit ColumnDef."""
         if node.typeName.names[-1].sval in ["float4", "float8"]:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

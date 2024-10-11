@@ -36,7 +36,6 @@ class UnloggedTable(linter.BaseChecker):
     ) -> None:
         """Visit CreateStmt."""
         if node.relation.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,
@@ -60,7 +59,6 @@ class UnloggedTable(linter.BaseChecker):
     ) -> None:
         """Visit AlterTableCmd."""
         if node.subtype == enums.AlterTableType.AT_SetUnLogged:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

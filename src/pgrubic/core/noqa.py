@@ -35,7 +35,6 @@ def _build_statements_start_end_locations(
     statement_start_location = 0
 
     for statement in source_code.split(delimiter):
-
         statement_length = len(statement)
 
         locations.append(
@@ -55,9 +54,7 @@ def _get_rules_from_inline_comment(comment: str, location: int) -> list[str]:
     comment_remainder = comment[4:]
 
     if comment_remainder:
-
         if not comment_remainder.startswith(":"):
-
             raise errors.SQLParseError(
                 msg,
             )
@@ -73,9 +70,7 @@ def _get_statement_locations(
 ) -> tuple[int, int]:
     """Get statement start and end locations."""
     for statement_start_location, statement_end_location in locations:
-
         if statement_start_location <= stop < statement_end_location:
-
             break
 
     return statement_start_location, statement_end_location
@@ -101,9 +96,7 @@ def extract_ignores_from_inline_comments(source_code: str) -> list[NoQaDirective
     inline_ignores: list[NoQaDirective] = []
 
     for token in parser.scan(source_code):
-
         if token.name == "SQL_COMMENT":
-
             statement_start_location, statement_end_location = _get_statement_locations(
                 locations,
                 token.start,
@@ -118,7 +111,6 @@ def extract_ignores_from_inline_comments(source_code: str) -> list[NoQaDirective
             comment = [c.strip() for c in comment.split("--")][-1]
 
             if comment.startswith("noqa"):
-
                 rules = _get_rules_from_inline_comment(comment, token.start)
 
                 inline_ignores.extend(
@@ -141,9 +133,7 @@ def report_unused_ignores(
 ) -> None:
     """Get unused ignores."""
     for ignore in inline_ignores:
-
         if not ignore.used:
-
             sys.stdout.write(
                 f"{source_path}:{ignore.line_number}:{ignore.column_offset}:"
                 f" {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL}"

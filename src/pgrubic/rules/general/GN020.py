@@ -32,7 +32,6 @@ class CurrentTime(linter.BaseChecker):
     ) -> None:
         """Visit SQLValueFunction."""
         if node.op == enums.SQLValueFunctionOp.SVFOP_CURRENT_TIME:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

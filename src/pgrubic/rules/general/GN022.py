@@ -29,7 +29,6 @@ class UpdateWithoutWhereClause(linter.BaseChecker):
     ) -> None:
         """Visit UpdateStmt."""
         if not node.whereClause:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

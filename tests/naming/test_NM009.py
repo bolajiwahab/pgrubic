@@ -33,9 +33,7 @@ def test_invalid_partition_name_rule_code(
     invalid_partition_name: core.BaseChecker,
 ) -> None:
     """Test invalid partition name rule code."""
-    assert (
-        invalid_partition_name.code == invalid_partition_name.__module__.split(".")[-1]
-    )
+    assert invalid_partition_name.code == invalid_partition_name.__module__.split(".")[-1]
 
 
 def test_invalid_partition_name_auto_fixable(

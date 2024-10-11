@@ -40,7 +40,6 @@ class InvalidPartitionName(linter.BaseChecker):
             self.config.lint.regex_partition,
             node.relation.relname,
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

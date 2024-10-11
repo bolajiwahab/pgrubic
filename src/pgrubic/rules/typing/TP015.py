@@ -34,12 +34,10 @@ class WronglyTypedRequiredColumn(linter.BaseChecker):
     ) -> None:
         """Visit ColumnDef."""
         for column in self.config.lint.required_columns:
-
             if (
                 column.name == node.colname
                 and node.typeName.names[-1].sval != column.data_type
             ):
-
                 full_qualified_type_name = get_full_qualified_name(
                     node.typeName.names,
                 )
@@ -47,7 +45,6 @@ class WronglyTypedRequiredColumn(linter.BaseChecker):
                 prettified_type = full_qualified_type_name
 
                 if full_qualified_type_name in dml.system_types:
-
                     prettified_type = dml.system_types[full_qualified_type_name][0]
 
                 self.violations.add(

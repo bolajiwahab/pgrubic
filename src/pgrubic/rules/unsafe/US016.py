@@ -17,7 +17,6 @@ class NonConcurrentIndexCreation(linter.BaseChecker):
     ) -> None:
         """Visit IndexStmt."""
         if not node.concurrent:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

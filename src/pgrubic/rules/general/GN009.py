@@ -33,7 +33,6 @@ class DuplicateColumn(linter.BaseChecker):
         _, duplicate_columns = get_columns_from_table_creation(node)
 
         for column in duplicate_columns:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

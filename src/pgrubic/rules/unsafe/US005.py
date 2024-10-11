@@ -23,7 +23,6 @@ class AddingAutoIncrementIdentityColumn(linter.BaseChecker):
             and alter_table_cmd.node.subtype == enums.AlterTableType.AT_AddColumn
             and node.contype == enums.ConstrType.CONSTR_IDENTITY
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

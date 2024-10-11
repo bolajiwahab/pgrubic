@@ -21,7 +21,6 @@ class ValidatingCheckConstraintOnExistingRows(linter.BaseChecker):
             and node.contype == enums.ConstrType.CONSTR_CHECK
             and not node.skip_validation
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

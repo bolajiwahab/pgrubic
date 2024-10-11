@@ -41,7 +41,6 @@ class Money(linter.BaseChecker):
     ) -> None:
         """Visit ColumnDef."""
         if node.typeName.names[-1].sval == "money":
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

@@ -33,7 +33,6 @@ class MultiColumnPartitioning(linter.BaseChecker):
     ) -> None:
         """Visit PartitionSpec."""
         if len(node.partParams) > 1:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

@@ -39,11 +39,8 @@ class InvalidExclusionConstraintName(linter.BaseChecker):
         if (
             node.contype == enums.ConstrType.CONSTR_EXCLUSION
             and node.conname
-            and (
-                not re.match(self.config.lint.regex_constraint_exclusion, node.conname)
-            )
+            and (not re.match(self.config.lint.regex_constraint_exclusion, node.conname))
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

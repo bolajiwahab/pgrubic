@@ -32,9 +32,7 @@ class NullableRequiredColumn(linter.BaseChecker):
     ) -> None:
         """Visit ColumnDef."""
         for column in self.config.lint.required_columns:
-
             if node.colname == column.name:
-
                 is_not_null = bool(
                     (
                         [
@@ -48,7 +46,6 @@ class NullableRequiredColumn(linter.BaseChecker):
                 )
 
                 if not is_not_null:
-
                     self.violations.add(
                         linter.Violation(
                             line_number=self.line_number,

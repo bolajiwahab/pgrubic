@@ -33,7 +33,6 @@ class CascadeUpdate(linter.BaseChecker):
             node.contype == enums.ConstrType.CONSTR_FOREIGN
             and node.fk_upd_action == enums.FKCONSTR_ACTION_CASCADE
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

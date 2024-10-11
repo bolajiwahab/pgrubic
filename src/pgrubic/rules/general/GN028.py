@@ -32,12 +32,10 @@ class WronglyTypedRequiredColumn(linter.BaseChecker):
     ) -> None:
         """Visit ColumnDef."""
         for column in self.config.lint.required_columns:
-
             if (
                 node.colname == column.name
                 and node.typeName.names[-1].sval != column.data_type
             ):
-
                 self.violations.add(
                     linter.Violation(
                         line_number=self.line_number,

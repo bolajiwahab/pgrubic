@@ -43,7 +43,6 @@ class DateColumnWithoutSuffix(linter.BaseChecker):
             and node.colname
             and not node.colname.endswith(self.config.lint.date_column_suffix)
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

@@ -31,9 +31,7 @@ def test_numeric_with_precision_rule_code(
     numeric_with_precision: core.BaseChecker,
 ) -> None:
     """Test numeric with precision rule code."""
-    assert (
-        numeric_with_precision.code == numeric_with_precision.__module__.split(".")[-1]
-    )
+    assert numeric_with_precision.code == numeric_with_precision.__module__.split(".")[-1]
 
 
 def test_numeric_with_precision_auto_fixable(

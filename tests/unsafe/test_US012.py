@@ -108,11 +108,9 @@ def test_fail_validating_foreign_key_constraint_on_existing_rows_description(
     ;
     """
 
-    _: core.ViolationMetric = (
-        lint_validating_foreign_key_constraint_on_existing_rows.run(
-            source_path=SOURCE_PATH,
-            source_code=sql_fail,
-        )
+    _: core.ViolationMetric = lint_validating_foreign_key_constraint_on_existing_rows.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_fail,
     )
 
     assert (
@@ -209,9 +207,7 @@ def test_fail_fix_validating_foreign_key_constraint_on_existing_rows(
     ;
     """
 
-    sql_fix: str = (
-        "ALTER TABLE public.card\n    ADD CONSTRAINT fkey FOREIGN KEY (account_id) REFERENCES public.account (id) NOT VALID ;"  # noqa: E501
-    )
+    sql_fix: str = "ALTER TABLE public.card\n    ADD CONSTRAINT fkey FOREIGN KEY (account_id) REFERENCES public.account (id) NOT VALID ;"  # noqa: E501
 
     validating_foreign_key_constraint_on_existing_rows.config.lint.fix = True
 

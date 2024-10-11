@@ -52,7 +52,6 @@ class KeywordIdentifier(CheckIdentifier):
         )
 
         if identifier and identifier.lower() in full_keywords:
-
             self.violations.add(
                 linter.Violation(
                     line_number=line_number,

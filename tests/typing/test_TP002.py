@@ -210,9 +210,7 @@ def test_fail_fix_create_table_time_with_timezone(
     """Test fail fix time with timezone."""
     sql_fail: str = "CREATE TABLE music (age int, created_at timetz);"
 
-    sql_fix: str = (
-        "CREATE TABLE music (\n    age integer\n  , created_at timestamptz\n);"
-    )
+    sql_fix: str = "CREATE TABLE music (\n    age integer\n  , created_at timestamptz\n);"
 
     time_with_timezone.config.lint.fix = True
 

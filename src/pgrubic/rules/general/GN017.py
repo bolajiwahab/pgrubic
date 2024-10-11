@@ -42,7 +42,6 @@ class IdColumn(linter.BaseChecker):
                 ast.CreateStmt,
             )
         ) and node.colname.lower() == "id":
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,
@@ -62,11 +61,9 @@ class IdColumn(linter.BaseChecker):
             abs(ancestors).node,
             ast.AlterTableCmd,
         ):
-
             table = ancestors.parent.parent.node.relation.relname
 
         if isinstance(abs(ancestors).node, ast.CreateStmt):
-
             table = ancestors.parent.node.relation.relname
 
         node.colname = table + "_" + node.colname

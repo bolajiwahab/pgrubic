@@ -19,7 +19,6 @@ class VacuumFull(linter.BaseChecker):
         options = [option.defname for option in node.options] if node.options else []
 
         if "full" in options:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

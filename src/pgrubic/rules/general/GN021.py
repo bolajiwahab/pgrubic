@@ -34,7 +34,6 @@ class NullConstraint(linter.BaseChecker):
     ) -> visitors.ActionMeta | None:
         """Visit Constraint."""
         if node.contype == enums.ConstrType.CONSTR_NULL:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

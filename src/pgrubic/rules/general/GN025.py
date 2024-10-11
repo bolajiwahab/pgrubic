@@ -46,7 +46,6 @@ class DuplicateIndex(linter.BaseChecker):
         )
 
         if index_definition in self.seen_indexes:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

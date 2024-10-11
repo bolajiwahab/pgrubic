@@ -40,7 +40,6 @@ class Serial(linter.BaseChecker):
             )
             or ancestors.find_nearest(ast.CreateStmt)
         ) and node.typeName.names[-1].sval in ["smallserial", "serial", "bigserial"]:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

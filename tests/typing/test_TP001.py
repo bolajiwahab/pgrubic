@@ -213,9 +213,7 @@ def test_fail_fix_create_table_timestamp_without_timezone(
     """Test fail fix timestamp without timezone."""
     sql_fail: str = "CREATE TABLE music (age int, created_at timestamp);"
 
-    sql_fix: str = (
-        "CREATE TABLE music (\n    age integer\n  , created_at timestamptz\n);"
-    )
+    sql_fix: str = "CREATE TABLE music (\n    age integer\n  , created_at timestamptz\n);"
 
     timestamp_without_timezone.config.lint.fix = True
 

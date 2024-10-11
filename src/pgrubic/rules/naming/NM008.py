@@ -37,7 +37,6 @@ class ImplicitConstraintName(linter.BaseChecker):
             enums.ConstrType.CONSTR_EXCLUSION,
             enums.ConstrType.CONSTR_FOREIGN,
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

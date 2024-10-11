@@ -50,9 +50,7 @@ def test_pass_implicit_foreign_key_name_create_table(
     lint_invalid_foreign_key_name: core.Linter,
 ) -> None:
     """Test pass implicit foreign key name."""
-    sql_fail: str = (
-        "CREATE TABLE author (author_id bigint REFERENCES bookstore(author));"
-    )
+    sql_fail: str = "CREATE TABLE author (author_id bigint REFERENCES bookstore(author));"
 
     violations: core.ViolationMetric = lint_invalid_foreign_key_name.run(
         source_path=SOURCE_PATH,

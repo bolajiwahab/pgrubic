@@ -54,11 +54,9 @@ def test_pass_primary_key_constraint_creating_new_index(
     ;
     """
 
-    violations: core.ViolationMetric = (
-        lint_primary_key_constraint_creating_new_index.run(
-            source_path=SOURCE_PATH,
-            source_code=sql_pass,
-        )
+    violations: core.ViolationMetric = lint_primary_key_constraint_creating_new_index.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_pass,
     )
 
     assert violations == core.ViolationMetric(
@@ -77,11 +75,9 @@ def test_fail_primary_key_constraint_creating_new_index(
     ALTER TABLE public.card ADD CONSTRAINT unq PRIMARY KEY(account_id);
     """
 
-    violations: core.ViolationMetric = (
-        lint_primary_key_constraint_creating_new_index.run(
-            source_path=SOURCE_PATH,
-            source_code=sql_fail,
-        )
+    violations: core.ViolationMetric = lint_primary_key_constraint_creating_new_index.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_fail,
     )
 
     assert violations == core.ViolationMetric(
@@ -123,11 +119,9 @@ def test_pass_noqa_primary_key_constraint_creating_new_index(
     ALTER TABLE public.card ADD CONSTRAINT unq PRIMARY KEY(account_id);
     """
 
-    violations: core.ViolationMetric = (
-        lint_primary_key_constraint_creating_new_index.run(
-            source_path=SOURCE_PATH,
-            source_code=sql_pass_noqa,
-        )
+    violations: core.ViolationMetric = lint_primary_key_constraint_creating_new_index.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_pass_noqa,
     )
 
     assert violations == core.ViolationMetric(
@@ -147,11 +141,9 @@ def test_fail_noqa_primary_key_constraint_creating_new_index(
     ALTER TABLE public.card ADD CONSTRAINT unq PRIMARY KEY(account_id);
     """
 
-    violations: core.ViolationMetric = (
-        lint_primary_key_constraint_creating_new_index.run(
-            source_path=SOURCE_PATH,
-            source_code=sql_noqa,
-        )
+    violations: core.ViolationMetric = lint_primary_key_constraint_creating_new_index.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_noqa,
     )
 
     assert violations == core.ViolationMetric(
@@ -171,11 +163,9 @@ def test_pass_general_noqa_primary_key_constraint_creating_new_index(
     ALTER TABLE public.card ADD CONSTRAINT unq PRIMARY KEY(account_id);
     """
 
-    violations: core.ViolationMetric = (
-        lint_primary_key_constraint_creating_new_index.run(
-            source_path=SOURCE_PATH,
-            source_code=sql_noqa,
-        )
+    violations: core.ViolationMetric = lint_primary_key_constraint_creating_new_index.run(
+        source_path=SOURCE_PATH,
+        source_code=sql_noqa,
     )
 
     assert violations == core.ViolationMetric(

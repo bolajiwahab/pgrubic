@@ -43,7 +43,6 @@ class NullComparison(linter.BaseChecker):
                 for expr in (node.rexpr, node.lexpr)
             )
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

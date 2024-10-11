@@ -36,7 +36,6 @@ class RemoveConstraint(linter.BaseChecker):
             enums.AlterTableType.AT_DropConstraint,
             enums.AlterTableType.AT_DropNotNull,
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

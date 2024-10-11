@@ -37,7 +37,6 @@ class InvalidIndexName(linter.BaseChecker):
     ) -> None:
         """Visit IndexStmt."""
         if node.idxname and not re.match(self.config.lint.regex_index, node.idxname):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

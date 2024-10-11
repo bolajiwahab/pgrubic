@@ -267,9 +267,7 @@ def test_fail_fix_create_table_cascade_delete(
     );
     """
 
-    sql_fix: str = (
-        "CREATE TABLE books (\n    author_id integer REFERENCES authors (author_id) ON DELETE RESTRICT\n);"  # noqa: E501
-    )
+    sql_fix: str = "CREATE TABLE books (\n    author_id integer REFERENCES authors (author_id) ON DELETE RESTRICT\n);"  # noqa: E501
 
     cascade_delete.config.lint.fix = True
 
@@ -299,9 +297,7 @@ def test_fail_fix_alter_table_cascade_delete(
     ;
     """
 
-    sql_fix: str = (
-        "ALTER TABLE books\n    ADD CONSTRAINT distfk FOREIGN KEY (author_id) REFERENCES authors (author_id) ON DELETE RESTRICT;"  # noqa: E501
-    )
+    sql_fix: str = "ALTER TABLE books\n    ADD CONSTRAINT distfk FOREIGN KEY (author_id) REFERENCES authors (author_id) ON DELETE RESTRICT;"  # noqa: E501
 
     cascade_delete.config.lint.fix = True
 

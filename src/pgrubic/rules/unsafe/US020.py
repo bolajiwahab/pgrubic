@@ -26,7 +26,6 @@ class NonConcurrentReindex(linter.BaseChecker):
             node.kind != enums.ReindexObjectType.REINDEX_OBJECT_SYSTEM
             and "concurrently" not in params
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

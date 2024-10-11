@@ -13,7 +13,6 @@ def get_columns_from_table_creation(
     duplicate_columns: set[str] = set()
 
     if node.tableElts:
-
         given_columns = [
             config.Column(
                 name=column.colname,

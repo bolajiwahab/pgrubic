@@ -43,9 +43,7 @@ def test_fail_pg_prefix_identifier(
     lint_pg_prefix_identifier: core.Linter,
 ) -> None:
     """Test fail pg prefix identifier."""
-    sql_fail: str = (
-        "CREATE TABLE tbl (id int, CONSTRAINT pg_tbl_pkey PRIMARY KEY (id));"
-    )
+    sql_fail: str = "CREATE TABLE tbl (id int, CONSTRAINT pg_tbl_pkey PRIMARY KEY (id));"
 
     violations: core.ViolationMetric = lint_pg_prefix_identifier.run(
         source_path=SOURCE_PATH,

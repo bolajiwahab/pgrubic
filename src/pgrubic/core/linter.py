@@ -68,17 +68,14 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
     def is_fix_applicable(self) -> bool:
         """Check if fix can be applied."""
         if not self.config.lint.fix:
-
             return False
 
         for inline_ignore in self.inline_ignores:
-
             if (
                 self.statement_location == inline_ignore.location
                 and inline_ignore.rule in (noqa.A_STAR, self.code)
                 and not self.config.lint.ignore_noqa
             ):
-
                 return False
 
         return True
@@ -100,7 +97,6 @@ class Linter:
     ) -> None:
         """Skip suppressed violations."""
         for inline_ignore in inline_ignores:
-
             suppressed_violations: set[Violation] = {
                 violation
                 for violation in checker.violations
@@ -111,7 +107,6 @@ class Linter:
             }
 
             if suppressed_violations:
-
                 inline_ignore.used = True
 
                 checker.violations = {
@@ -128,7 +123,6 @@ class Linter:
     ) -> None:
         """Print all violations collected by a checker."""
         for violation in checker.violations:
-
             sys.stdout.write(
                 f"\n{source_path}:{violation.line_number}:{violation.column_offset}:"
                 f" \033]8;;http://127.0.0.1:8000/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"
@@ -139,12 +133,10 @@ class Linter:
     def run(self, *, source_path: pathlib.Path, source_code: str) -> ViolationMetric:
         """Run rules on a source code."""
         try:
-
             tree: ast.Node = parser.parse_sql(source_code)
             comments = _extract_comments(source_code)
 
         except parser.ParseError as error:
-
             sys.stdout.write(f"{source_path}: {Fore.RED}{error!s}{Style.RESET_ALL}")
 
             sys.exit(1)
@@ -159,13 +151,11 @@ class Linter:
         BaseChecker.source_code = source_code
 
         for checker in self.checkers:
-
             checker.violations = set()
 
             checker(tree)
 
             if not self.config.lint.ignore_noqa:
-
                 self.skip_suppressed_violations(
                     checker=checker,
                     inline_ignores=inline_ignores,
@@ -177,15 +167,12 @@ class Linter:
             )
 
             if self.config.lint.fix is checker.is_auto_fixable is True:
-
                 violations.fixed_total += len(checker.violations)
 
             if checker.is_auto_fixable is True:
-
                 violations.fixable_auto_total += len(checker.violations)
 
             else:
-
                 violations.fixable_manual_total += len(checker.violations)
 
             violations.total += len(checker.violations)
@@ -208,7 +195,6 @@ class Linter:
         )
 
         if parser.parse_sql(source_code) != tree:
-
             violations.fix = stream.IndentedStream(
                 comments=comments,
                 semicolon_after_last_statement=True,

@@ -32,7 +32,6 @@ class ConstantGeneratedColumn(linter.BaseChecker):
             node.raw_expr,
             ast.A_Const,
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

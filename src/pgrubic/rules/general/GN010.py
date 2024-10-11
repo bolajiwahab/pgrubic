@@ -54,7 +54,6 @@ class TableColumnConflict(linter.BaseChecker):
         given_columns, _ = get_columns_from_table_creation(node)
 
         if any(column.name == node.relation.relname for column in given_columns):
-
             self._register_violation(
                 table_name=node.relation.relname,
                 line_number=self.line_number,
@@ -76,7 +75,6 @@ class TableColumnConflict(linter.BaseChecker):
         ]
 
         if node.relation.relname in given_columns:
-
             self._register_violation(
                 table_name=node.relation.relname,
                 line_number=self.line_number,
