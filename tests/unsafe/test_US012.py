@@ -109,7 +109,7 @@ def test_fail_validating_foreign_key_constraint_on_existing_rows_description(
     """
 
     _: core.ViolationMetric = lint_validating_foreign_key_constraint_on_existing_rows.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 

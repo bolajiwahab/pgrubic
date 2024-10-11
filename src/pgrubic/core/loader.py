@@ -44,7 +44,7 @@ def load_rules(config: config.Config) -> set[linter.BaseChecker]:
                     fnmatch.fnmatch(rule.code, pattern) for pattern in config.lint.ignore
                 )
             ):
-                rules.append(typing.cast(linter.BaseChecker, rule))
+                rules.add(typing.cast(linter.BaseChecker, rule))
 
                 add_set_locations_to_rule(rule)
 

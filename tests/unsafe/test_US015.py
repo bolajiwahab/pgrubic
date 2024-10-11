@@ -55,7 +55,7 @@ def test_pass_primary_key_constraint_creating_new_index(
     """
 
     violations: core.ViolationMetric = lint_primary_key_constraint_creating_new_index.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -76,7 +76,7 @@ def test_fail_primary_key_constraint_creating_new_index(
     """
 
     violations: core.ViolationMetric = lint_primary_key_constraint_creating_new_index.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -120,7 +120,7 @@ def test_pass_noqa_primary_key_constraint_creating_new_index(
     """
 
     violations: core.ViolationMetric = lint_primary_key_constraint_creating_new_index.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -142,7 +142,7 @@ def test_fail_noqa_primary_key_constraint_creating_new_index(
     """
 
     violations: core.ViolationMetric = lint_primary_key_constraint_creating_new_index.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -164,7 +164,7 @@ def test_pass_general_noqa_primary_key_constraint_creating_new_index(
     """
 
     violations: core.ViolationMetric = lint_primary_key_constraint_creating_new_index.run(
-        source_path=SOURCE_PATH,
+        file=TEST_FILE,
         source_code=sql_noqa,
     )
 

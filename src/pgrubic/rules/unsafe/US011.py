@@ -16,7 +16,7 @@ class NotNullConstraintOnNewColumnWithVolatileDefault(linter.BaseChecker):
         """Visit ColumnDef."""
         if ancestors.find_nearest(ast.AlterTableCmd) and node.constraints:
             is_not_null = False
-            has_non_volatile_default = False
+            has_static_default = False
 
             for constraint in node.constraints:
                 if constraint.contype == enums.ConstrType.CONSTR_NOTNULL:
@@ -26,7 +26,7 @@ class NotNullConstraintOnNewColumnWithVolatileDefault(linter.BaseChecker):
                     constraint.raw_expr,
                     ast.A_Const,
                 ):
-                    has_non_volatile_default = True
+                    has_static_default = True
 
             if is_not_null and not has_static_default:
                 self.violations.add(

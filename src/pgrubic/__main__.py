@@ -45,8 +45,8 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
 
     files = core.filter_files(paths=paths, config=config)
 
-    for source_path in source_paths:
-        with pathlib.Path(source_path).open("r", encoding="utf-8") as source_file:
+    for file in files:
+        with file.open("r", encoding="utf-8") as source_file:
             source_code: str = source_file.read()
 
         _violations: core.ViolationMetric = linter.run(
@@ -67,16 +67,17 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
                 f" {violations.fixable_manual_total} remaining).\n",
             )
 
+            if violations.fixable_manual_total > 0:
+                sys.exit(1)
+
         else:
             sys.stdout.write(
                 f"Found {violations.total} violations.\n"
                 f"{violations.fixable_auto_total} fixes available.\n",
             )
 
-        sys.exit(1)
+            sys.exit(1)
 
 
 if __name__ == "__main__":
-    config: core.Config = core.parse_config()
-
-    cli(config=config)
+    cli()
