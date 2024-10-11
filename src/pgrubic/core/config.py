@@ -81,7 +81,6 @@ def _load_user_config() -> dict[str, typing.Any]:
     config_file_absolute_path = _get_config_file_absolute_path(CONFIG_FILE)
 
     if config_file_absolute_path:
-
         return dict(toml.load(config_file_absolute_path))
 
     return {}  # pragma: no cover
@@ -102,7 +101,6 @@ def _get_config_file_absolute_path(config_file: str) -> pathlib.Path | None:
 
     # Traverse upwards through the directory tree
     while current_directory != current_directory.parent:
-
         # Check if the configuration file exists
         config_absolute_path = current_directory / config_file
 

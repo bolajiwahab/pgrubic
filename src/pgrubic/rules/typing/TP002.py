@@ -34,7 +34,6 @@ class TimeWithTimeZone(linter.BaseChecker):
     ) -> None:
         """Visit ColumnDef."""
         if node.typeName.names[-1].sval == "timetz":
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

@@ -18,7 +18,6 @@ def load_rules(config: config.Config) -> list[linter.BaseChecker]:
     rules: list[linter.BaseChecker] = []
 
     for path in sorted(RULES_DIRECTORY.rglob("[!_]*.py"), key=lambda x: x.name):
-
         module = importlib.import_module(
             str(RULES_BASE_MODULE / path.relative_to(RULES_DIRECTORY))
             .replace(".py", "")
@@ -27,10 +26,8 @@ def load_rules(config: config.Config) -> list[linter.BaseChecker]:
 
         for _, rule in inspect.getmembers(
             module,
-            lambda x: inspect.isclass(x)
-            and x.__module__ == module.__name__,  # noqa: B023
+            lambda x: inspect.isclass(x) and x.__module__ == module.__name__,  # noqa: B023
         ):
-
             if (
                 issubclass(rule, linter.BaseChecker)
                 and not rule.__name__.startswith(
@@ -44,11 +41,9 @@ def load_rules(config: config.Config) -> list[linter.BaseChecker]:
                     )
                 )
                 and not any(
-                    fnmatch.fnmatch(rule.code, pattern)
-                    for pattern in config.lint.ignore
+                    fnmatch.fnmatch(rule.code, pattern) for pattern in config.lint.ignore
                 )
             ):
-
                 rules.append(typing.cast(linter.BaseChecker, rule))
 
                 add_set_locations_to_rule(rule)
@@ -61,18 +56,14 @@ def load_rules(config: config.Config) -> list[linter.BaseChecker]:
 def add_set_locations_to_rule(node: typing.Any) -> None:
     """Add _set_locations to rule."""
     for name, method in inspect.getmembers(node, inspect.isfunction):
-
         if method.__name__.startswith("visit_"):
-
             setattr(node, name, _set_locations(method))
 
 
 def add_apply_fix_to_rule(node: typing.Any) -> None:
     """Add apply_fix to rule."""
     for name, method in inspect.getmembers(node, inspect.isfunction):
-
         if method.__name__.startswith("_fix"):
-
             setattr(node, name, apply_fix(method))
 
 
@@ -87,7 +78,6 @@ def _set_locations(
         ancestors: visitors.Ancestor,
         node: ast.Node,
     ) -> typing.Any:
-
         node_location = getattr(node, "location", 0)
         # Some nodes have location as None.
         node_location = node_location if node_location else 0
@@ -132,9 +122,7 @@ def apply_fix(
         *args: typing.Any,
         **kwargs: typing.Any,
     ) -> typing.Any:
-
         if not self.is_fix_applicable:
-
             return None
 
         return func(self, *args, **kwargs)

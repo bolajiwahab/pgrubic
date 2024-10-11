@@ -49,7 +49,6 @@ class TimestampColumnWithoutSuffix(linter.BaseChecker):
             not in [column.name for column in self.config.lint.required_columns]
             and not node.colname.endswith(self.config.lint.timestamp_column_suffix)
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

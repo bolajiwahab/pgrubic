@@ -55,11 +55,9 @@ class DropCascade(linter.BaseChecker):
     ) -> None:
         """Visit DropStmt."""
         for obj in node.objects:
-
             object_names = getattr(obj, "names", getattr(obj, "objname", obj))
 
             if node.behavior == enums.DropBehavior.DROP_CASCADE:
-
                 self._register_violation(
                     object_name=get_full_qualified_name(object_names),
                     line_number=self.line_number,
@@ -88,7 +86,6 @@ class DropCascade(linter.BaseChecker):
             )
             and node.behavior == enums.DropBehavior.DROP_CASCADE
         ):
-
             self._register_violation(
                 object_name=node.name,
                 line_number=self.line_number,

@@ -17,7 +17,6 @@ class NonConcurrentRefreshMaterializedView(linter.BaseChecker):
     ) -> None:
         """Visit RefreshMatViewStmt."""
         if not node.concurrent:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

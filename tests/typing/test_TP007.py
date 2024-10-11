@@ -212,9 +212,7 @@ def test_fail_fix_create_table_serial(
     """Test fail fix serial."""
     sql_fail: str = "CREATE TABLE tbl (user_id int, tbl_id serial);"
 
-    sql_fix: str = (
-        "CREATE TABLE tbl (\n    user_id integer\n  , tbl_id bigint GENERATED ALWAYS AS IDENTITY \n);"  # noqa: E501
-    )
+    sql_fix: str = "CREATE TABLE tbl (\n    user_id integer\n  , tbl_id bigint GENERATED ALWAYS AS IDENTITY \n);"  # noqa: E501
 
     serial.config.lint.fix = True
 

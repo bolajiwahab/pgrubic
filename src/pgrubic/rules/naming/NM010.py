@@ -55,7 +55,6 @@ class NonSnakeCaseIdentifier(CheckIdentifier):
             and identifier.replace("_", "").isalnum()
             and not stream.is_simple_name(identifier)
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=line_number,

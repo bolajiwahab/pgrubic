@@ -35,7 +35,6 @@ class NumericWithPrecision(linter.BaseChecker):
     ) -> None:
         """Visit ColumnDef."""
         if node.typeName.names[-1].sval == "numeric" and node.typeName.typmods:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

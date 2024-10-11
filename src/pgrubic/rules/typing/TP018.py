@@ -37,7 +37,6 @@ class MismatchColumnInDataTypeChange(linter.BaseChecker):
             and alter_table_cmd.node.subtype == enums.AlterTableType.AT_AlterColumnType
             and alter_table_cmd.node.name != node.fields[-1].sval
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

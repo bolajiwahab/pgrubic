@@ -39,11 +39,8 @@ class DisallowedSchema(linter.BaseChecker):
             | ast.CreateSeqStmt
             | ast.IntoClause,
         ):
-
             for schema in self.config.lint.disallowed_schemas:
-
                 if node.schemaname == schema.name:
-
                     self.violations.add(
                         linter.Violation(
                             line_number=self.line_number,
@@ -75,9 +72,7 @@ class DisallowedSchema(linter.BaseChecker):
         schema_name: str = node.typeName[0].sval if len(node.typeName) > 1 else None
 
         for schema in self.config.lint.disallowed_schemas:
-
             if schema_name == schema.name:
-
                 self.violations.add(
                     linter.Violation(
                         line_number=self.line_number,
@@ -109,9 +104,7 @@ class DisallowedSchema(linter.BaseChecker):
         schema_name: str = node.funcname[0].sval if len(node.funcname) > 1 else None
 
         for schema in self.config.lint.disallowed_schemas:
-
             if schema_name == schema.name:
-
                 self.violations.add(
                     linter.Violation(
                         line_number=self.line_number,

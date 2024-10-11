@@ -29,7 +29,6 @@ class DeleteWithoutWhereClause(linter.BaseChecker):
     ) -> None:
         """Visit DeleteStmt."""
         if not node.whereClause:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

@@ -32,9 +32,7 @@ class DisallowedDataType(linter.BaseChecker):
     ) -> None:
         """Visit TypeName."""
         for data_type in self.config.lint.disallowed_data_types:
-
             if node.names[-1].sval == data_type.name:
-
                 self.violations.add(
                     linter.Violation(
                         line_number=self.line_number,

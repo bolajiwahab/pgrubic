@@ -15,7 +15,6 @@ rules = core.load_rules(config=core.parse_config())
 shutil.rmtree(rules_path)
 
 for rule in rules:
-
     group = rule.__module__.split(".")[-2]
 
     pathlib.Path(rules_path / group).mkdir(parents=True, exist_ok=True)
@@ -24,7 +23,6 @@ for rule in rules:
         rules_path / group / f"{kebabcase(rule.__name__)}.md",
         "w",
     ) as file:
-
         file.write(f"# {kebabcase(rule.__name__)} ({rule.code})\n\n")
 
         if rule.is_auto_fixable:

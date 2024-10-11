@@ -39,10 +39,11 @@ repos:
         args: [--unsafe]
       # Formatters should be run late so that they can re-format
       # any prior changes
-      - id: black
-        name: Formatting with black
-        entry: black
+      - id: ruff
+        name: Formatting with ruff
+        entry: ruff
         language: python
+        args: [format]
         types: [python]
       - id: isort
         name: Ensure imports are grouped and sorted

@@ -20,7 +20,6 @@ class AddingStoredGeneratedColumn(linter.BaseChecker):
             ancestors.find_nearest(ast.AlterTableCmd)
             and node.contype == enums.ConstrType.CONSTR_GENERATED
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

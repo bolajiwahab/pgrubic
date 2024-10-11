@@ -34,8 +34,7 @@ def test_invalid_unique_key_name_rule_code(
 ) -> None:
     """Test invalid unique key name rule code."""
     assert (
-        invalid_unique_key_name.code
-        == invalid_unique_key_name.__module__.split(".")[-1]
+        invalid_unique_key_name.code == invalid_unique_key_name.__module__.split(".")[-1]
     )
 
 

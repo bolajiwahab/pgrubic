@@ -32,11 +32,8 @@ class RequiredColumnRemoval(linter.BaseChecker):
     ) -> None:
         """Visit AlterTableCmd."""
         if node.subtype == enums.AlterTableType.AT_DropColumn:
-
             for column in self.config.lint.required_columns:
-
                 if node.name == column.name:
-
                     self.violations.add(
                         linter.Violation(
                             line_number=self.line_number,

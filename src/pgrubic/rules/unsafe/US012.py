@@ -21,7 +21,6 @@ class ValidatingForeignKeyConstraintOnExistingRows(linter.BaseChecker):
             and node.contype == enums.ConstrType.CONSTR_FOREIGN
             and not node.skip_validation
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

@@ -21,7 +21,6 @@ class IndexMovementToTablespace(linter.BaseChecker):
             and ancestors.find_nearest(ast.AlterTableStmt).node.objtype
             == enums.ObjectType.OBJECT_INDEX
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

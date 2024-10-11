@@ -30,8 +30,7 @@ def test_column_data_type_change_rule_code(
 ) -> None:
     """Test column data type change rule code."""
     assert (
-        column_data_type_change.code
-        == column_data_type_change.__module__.split(".")[-1]
+        column_data_type_change.code == column_data_type_change.__module__.split(".")[-1]
     )
 
 

@@ -39,7 +39,6 @@ class YodaCondition(linter.BaseChecker):
             )
             and not isinstance(node.rexpr, ast.A_Const)
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

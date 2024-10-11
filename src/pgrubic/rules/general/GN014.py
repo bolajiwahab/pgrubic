@@ -34,7 +34,6 @@ class SelectInto(linter.BaseChecker):
     ) -> ast.CreateTableAsStmt | None:
         """Visit SelectStmt."""
         if node.intoClause:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

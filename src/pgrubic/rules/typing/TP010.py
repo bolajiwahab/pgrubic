@@ -29,7 +29,6 @@ class Smallint(linter.BaseChecker):
     ) -> None:
         """Visit ColumnDef."""
         if node.typeName.names[-1].sval == "int2":
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

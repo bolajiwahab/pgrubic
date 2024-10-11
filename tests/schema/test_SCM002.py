@@ -183,9 +183,7 @@ def test_fail_fix_function_disallowed_schema(
     ;
     """
 
-    sql_fix: str = (
-        "CREATE FUNCTION app.dup(integer)\nRETURNS TABLE (f1 integer)\nLANGUAGE sql\nAS $$ SELECT $1 $$;"  # noqa: E501
-    )
+    sql_fix: str = "CREATE FUNCTION app.dup(integer)\nRETURNS TABLE (f1 integer)\nLANGUAGE sql\nAS $$ SELECT $1 $$;"  # noqa: E501
 
     disallowed_schema.config.lint.fix = True
 

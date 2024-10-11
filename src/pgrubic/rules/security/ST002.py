@@ -36,7 +36,6 @@ class ProceduralLanguageWhitelist(linter.BaseChecker):
             node.plname not in self.config.lint.allowed_languages
             and "*" not in self.config.lint.allowed_languages
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

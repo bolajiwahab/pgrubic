@@ -32,7 +32,6 @@ class NullableBooleanField(linter.BaseChecker):
     ) -> None:
         """Visit ColumnDef."""
         if node.typeName.names[-1].sval == "bool":
-
             is_not_null = bool(
                 (
                     [
@@ -46,7 +45,6 @@ class NullableBooleanField(linter.BaseChecker):
             )
 
             if not is_not_null:
-
                 self.violations.add(
                     linter.Violation(
                         line_number=self.line_number,

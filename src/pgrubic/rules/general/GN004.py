@@ -72,7 +72,6 @@ class MissingPrimaryKey(linter.BaseChecker):
             and not self._check_for_column_level_primary_key(node)
             and not self._check_for_table_level_primary_key(node)
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

@@ -58,7 +58,6 @@ class NotIn(linter.BaseChecker):
     ) -> None:
         """Visit A_Expr."""
         if node.kind == enums.A_Expr_Kind.AEXPR_IN and node.name[-1].sval == "<>":
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

@@ -33,15 +33,12 @@ class MissingRequiredColumn(linter.BaseChecker):
     ) -> None:
         """Visit CreateStmt."""
         if not node.partbound and node.tableElts:
-
             given_columns, _ = get_columns_from_table_creation(node)
 
             for required_column in self.config.lint.required_columns:
-
                 if not any(
                     required_column.name == column.name for column in given_columns
                 ):
-
                     self.violations.add(
                         linter.Violation(
                             line_number=self.line_number,

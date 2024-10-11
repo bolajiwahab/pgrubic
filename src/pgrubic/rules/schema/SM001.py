@@ -29,7 +29,6 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
     ) -> None:
         """Check enum for schema."""
         if len(node.typeName) < SCHEMA_QUALIFIED_LENGTH:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,
@@ -47,7 +46,6 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
     ) -> None:
         """Check function for schema."""
         if len(function_name) < SCHEMA_QUALIFIED_LENGTH:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,
@@ -80,7 +78,6 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
             )
             and not node.schemaname
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,
@@ -99,14 +96,12 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
     ) -> None:
         """Visit DropStmt."""
         for obj in node.objects:
-
             object_names = getattr(obj, "names", getattr(obj, "objname", obj))
 
             if (
                 isinstance(object_names, tuple | list)
                 and len(object_names) < SCHEMA_QUALIFIED_LENGTH
             ):
-
                 self.violations.add(
                     linter.Violation(
                         line_number=self.line_number,

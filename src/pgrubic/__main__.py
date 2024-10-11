@@ -18,7 +18,6 @@ def cli(config: core.Config, argv: abc.Sequence[str] = sys.argv) -> None:
     rules: list[core.BaseChecker] = core.load_rules(config=config)
 
     for rule in rules:
-
         linter.checkers.add(rule())
 
     violations: core.ViolationMetric = core.ViolationMetric()
@@ -26,9 +25,7 @@ def cli(config: core.Config, argv: abc.Sequence[str] = sys.argv) -> None:
     source_paths = core.filter_source_paths(source_paths=source_paths, config=config)
 
     for source_path in source_paths:
-
         with pathlib.Path(source_path).open("r", encoding="utf-8") as source_file:
-
             source_code: str = source_file.read()
 
         _violations: core.ViolationMetric = linter.run(
@@ -42,9 +39,7 @@ def cli(config: core.Config, argv: abc.Sequence[str] = sys.argv) -> None:
         violations.fixable_manual_total += _violations.fixable_manual_total
 
     if violations.total > 0:
-
         if config.lint.fix is True:
-
             sys.stdout.write(
                 f"Found {violations.total} violations"
                 f" ({violations.fixed_total} fixed,"
@@ -61,7 +56,6 @@ def cli(config: core.Config, argv: abc.Sequence[str] = sys.argv) -> None:
 
 
 if __name__ == "__main__":
-
     config: core.Config = core.parse_config()
 
     cli(config=config)

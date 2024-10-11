@@ -41,7 +41,6 @@ class InvalidCheckConstraintName(linter.BaseChecker):
             and node.conname
             and (not re.match(self.config.lint.regex_constraint_check, node.conname))
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

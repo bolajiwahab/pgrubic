@@ -31,9 +31,7 @@ def test_nullable_boolean_field_rule_code(
     nullable_boolean_field: core.BaseChecker,
 ) -> None:
     """Test nullable boolean field rule code."""
-    assert (
-        nullable_boolean_field.code == nullable_boolean_field.__module__.split(".")[-1]
-    )
+    assert nullable_boolean_field.code == nullable_boolean_field.__module__.split(".")[-1]
 
 
 def test_nullable_boolean_field_auto_fixable(
@@ -212,9 +210,7 @@ def test_fail_fix_create_table_nullable_boolean_field(
     """Test fail fix nullable boolean field."""
     sql_fail: str = "CREATE TABLE transaction (user_id int, is_active boolean);"
 
-    sql_fix: str = (
-        "CREATE TABLE transaction (\n    user_id integer\n  , is_active boolean NOT NULL\n);"  # noqa: E501
-    )
+    sql_fix: str = "CREATE TABLE transaction (\n    user_id integer\n  , is_active boolean NOT NULL\n);"  # noqa: E501
 
     nullable_boolean_field.config.lint.fix = True
 

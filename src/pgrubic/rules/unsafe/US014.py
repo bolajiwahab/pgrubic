@@ -21,7 +21,6 @@ class UniqueConstraintCreatingNewIndex(linter.BaseChecker):
             and node.contype == enums.ConstrType.CONSTR_UNIQUE
             and not node.indexname
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

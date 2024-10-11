@@ -16,8 +16,8 @@ def test_extract_star_ignore_from_inline_comments() -> None:
     CREATE TABLE tbl (activated date);
     """
 
-    inline_ignores: list[noqa.NoQaDirective] = (
-        noqa.extract_ignores_from_inline_comments(source_code)
+    inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores_from_inline_comments(
+        source_code,
     )
 
     assert inline_ignores[0].rule == noqa.A_STAR
@@ -30,8 +30,8 @@ def test_extract_ignores_from_inline_comments() -> None:
     CREATE TABLE tbl (activated date);
     """
 
-    inline_ignores: list[noqa.NoQaDirective] = (
-        noqa.extract_ignores_from_inline_comments(source_code)
+    inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores_from_inline_comments(
+        source_code,
     )
 
     assert inline_ignores[0].rule == "NM016"
@@ -45,8 +45,8 @@ def test_extract_ignores_from_inline_comments_length() -> None:
     CREATE TABLE tbl (activated date);
     """
 
-    inline_ignores: list[noqa.NoQaDirective] = (
-        noqa.extract_ignores_from_inline_comments(source_code)
+    inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores_from_inline_comments(
+        source_code,
     )
 
     expected_ignores_length: int = 2
@@ -79,8 +79,8 @@ def test_report_unused_ignores(
     CREATE TABLE tbl (activated date);
     """
 
-    inline_ignores: list[noqa.NoQaDirective] = (
-        noqa.extract_ignores_from_inline_comments(source_code)
+    inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores_from_inline_comments(
+        source_code,
     )
 
     noqa.report_unused_ignores(source_path=SOURCE_PATH, inline_ignores=inline_ignores)

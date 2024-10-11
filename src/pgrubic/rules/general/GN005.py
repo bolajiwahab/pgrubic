@@ -37,7 +37,6 @@ class IndexElementsMoreThanThree(linter.BaseChecker):
         max_index_elements = 3
 
         if len(node.indexParams) > max_index_elements:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

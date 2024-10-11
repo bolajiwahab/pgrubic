@@ -42,8 +42,7 @@ def test_not_null_constraint_on_new_column_with_no_static_default_auto_fixable(
 ) -> None:
     """Test not null constraint on new column with no static default auto fixable."""
     assert (
-        not_null_constraint_on_new_column_with_no_static_default.is_auto_fixable
-        is False
+        not_null_constraint_on_new_column_with_no_static_default.is_auto_fixable is False
     )
 
 

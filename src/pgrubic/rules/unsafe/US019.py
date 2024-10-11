@@ -17,7 +17,6 @@ class NonConcurrentIndexDrop(linter.BaseChecker):
     ) -> None:
         """Visit DropStmt."""
         if node.removeType == enums.ObjectType.OBJECT_INDEX and not node.concurrent:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

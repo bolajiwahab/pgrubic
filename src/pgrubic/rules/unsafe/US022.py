@@ -17,7 +17,6 @@ class RenameTable(linter.BaseChecker):
     ) -> None:
         """Visit RenameStmt."""
         if node.renameType == enums.ObjectType.OBJECT_TABLE:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

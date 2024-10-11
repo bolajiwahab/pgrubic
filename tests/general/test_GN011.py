@@ -39,8 +39,7 @@ def test_missing_required_column_rule_code(
 ) -> None:
     """Test missing required column rule code."""
     assert (
-        missing_required_column.code
-        == missing_required_column.__module__.split(".")[-1]
+        missing_required_column.code == missing_required_column.__module__.split(".")[-1]
     )
 
 

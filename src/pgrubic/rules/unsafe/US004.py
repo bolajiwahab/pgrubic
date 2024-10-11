@@ -19,7 +19,6 @@ class AddingAutoIncrementColumn(linter.BaseChecker):
         if ancestors.find_nearest(ast.AlterTableCmd) and (
             node.typeName.names[-1].sval in ["smallserial", "serial", "bigserial"]
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

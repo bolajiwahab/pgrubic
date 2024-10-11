@@ -44,7 +44,6 @@ class ColumnDataTypeChange(linter.BaseChecker):
     ) -> None:
         """Visit AlterTableCmd."""
         if node.subtype == enums.AlterTableType.AT_AlterColumnType:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

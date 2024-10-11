@@ -17,7 +17,6 @@ class NotNullConstraintOnExistingColumn(linter.BaseChecker):
     ) -> None:
         """Visit AlterTableCmd."""
         if node.subtype == enums.AlterTableType.AT_SetNotNull:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

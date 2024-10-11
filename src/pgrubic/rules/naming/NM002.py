@@ -47,7 +47,6 @@ class InvalidPrimaryKeyName(linter.BaseChecker):
                 )
             )
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

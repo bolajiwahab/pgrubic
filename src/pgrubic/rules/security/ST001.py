@@ -38,7 +38,6 @@ class ExtensionWhitelist(linter.BaseChecker):
             node.extname not in self.config.lint.allowed_extensions
             and "*" not in self.config.lint.allowed_extensions
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

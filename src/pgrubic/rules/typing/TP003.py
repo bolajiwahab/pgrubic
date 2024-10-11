@@ -30,7 +30,6 @@ class TimestampWithTimezoneWithPrecision(linter.BaseChecker):
     ) -> None:
         """Visit ColumnDef."""
         if node.typeName.names[-1].sval == "timestamptz" and node.typeName.typmods:
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

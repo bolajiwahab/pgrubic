@@ -48,7 +48,6 @@ class TimestampWithoutTimezone(linter.BaseChecker):
     ) -> None:
         """Visit ColumnDef."""
         if node.typeName.names[-1].sval == "timestamp":
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

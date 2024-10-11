@@ -37,7 +37,6 @@ class InvalidSequenceName(linter.BaseChecker):
     ) -> None:
         """Visit CreateSeqStmt."""
         if not re.match(self.config.lint.regex_sequence, node.sequence.relname):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

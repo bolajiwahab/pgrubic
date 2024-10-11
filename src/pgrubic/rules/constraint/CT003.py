@@ -34,7 +34,6 @@ class IdentityGeneratedByDefault(linter.BaseChecker):
             node.contype == enums.ConstrType.CONSTR_IDENTITY
             and node.generated_when == enums.ATTRIBUTE_IDENTITY_BY_DEFAULT
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,

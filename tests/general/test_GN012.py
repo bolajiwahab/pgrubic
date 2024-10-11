@@ -37,8 +37,7 @@ def test_required_column_removal_rule_code(
 ) -> None:
     """Test required column removal rule code."""
     assert (
-        required_column_removal.code
-        == required_column_removal.__module__.split(".")[-1]
+        required_column_removal.code == required_column_removal.__module__.split(".")[-1]
     )
 
 

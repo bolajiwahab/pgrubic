@@ -20,7 +20,6 @@ class TablesMovementToTablespace(linter.BaseChecker):
             node.objtype == enums.ObjectType.OBJECT_TABLE
             and node.new_tablespacename != node.orig_tablespacename
         ):
-
             self.violations.add(
                 linter.Violation(
                     line_number=self.line_number,
