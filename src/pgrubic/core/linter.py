@@ -149,7 +149,7 @@ class Linter:
             comments = _extract_comments(source_code)
 
         except parser.ParseError as error:
-            sys.stdout.write(f"{file}: {Fore.RED}{error!s}{Style.RESET_ALL}")
+            sys.stderr.write(f"{file}: {Fore.RED}{error!s}{Style.RESET_ALL}")
 
             sys.exit(1)
 
