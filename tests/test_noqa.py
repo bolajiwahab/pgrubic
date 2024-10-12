@@ -2,7 +2,6 @@
 
 import typing
 
-import pytest
 from colorama import Fore, Style
 
 from tests import TEST_FILE
