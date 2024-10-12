@@ -46,7 +46,7 @@ def test_pass_no_table_column_conflict(
     sql_fail: str = "CREATE TABLE music (age int, age text);"
 
     violations: core.ViolationMetric = lint_table_column_conflict.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -65,7 +65,7 @@ def test_fail_table_column_conflict(
     sql_fail: str = "CREATE TABLE music (age int, music text);"
 
     violations: core.ViolationMetric = lint_table_column_conflict.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -85,7 +85,7 @@ def test_fail_table_column_conflict_description(
     sql_fail: str = "ALTER TABLE music ADD COLUMN music text;"
 
     _: core.ViolationMetric = lint_table_column_conflict.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -107,7 +107,7 @@ def test_pass_noqa_table_column_conflict(
     """
 
     violations: core.ViolationMetric = lint_table_column_conflict.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -129,7 +129,7 @@ def test_fail_noqa_table_column_conflict(
     """
 
     violations: core.ViolationMetric = lint_table_column_conflict.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -151,7 +151,7 @@ def test_pass_general_noqa_table_column_conflict(
     """
 
     violations: core.ViolationMetric = lint_table_column_conflict.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

@@ -48,7 +48,7 @@ def test_pass_null_comparisonstamp(
     sql_pass: str = "SELECT a IS NULL;"
 
     violations: core.ViolationMetric = lint_null_comparison.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -67,7 +67,7 @@ def test_fail_null_comparison(
     sql_fail: str = "SELECT a = NULL;"
 
     violations: core.ViolationMetric = lint_null_comparison.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -87,7 +87,7 @@ def test_fail_null_comparison_description(
     sql_fail: str = "SELECT a != NULL;"
 
     _: core.ViolationMetric = lint_null_comparison.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -109,7 +109,7 @@ def test_pass_noqa_null_comparison(
     """
 
     violations: core.ViolationMetric = lint_null_comparison.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -131,7 +131,7 @@ def test_fail_noqa_null_comparison(
     """
 
     violations: core.ViolationMetric = lint_null_comparison.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -153,7 +153,7 @@ def test_pass_general_noqa_null_comparison(
     """
 
     violations: core.ViolationMetric = lint_null_comparison.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -177,7 +177,7 @@ def test_fail_fix_is_null_null_comparison(
     null_comparison.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_null_comparison.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -202,7 +202,7 @@ def test_fail_fix_is_not_null_null_comparison(
     null_comparison.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_null_comparison.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

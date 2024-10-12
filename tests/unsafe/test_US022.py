@@ -51,7 +51,7 @@ def test_fail_rename_table(
     sql_fail: str = "ALTER TABLE public.card RENAME TO card_old;"
 
     violations: core.ViolationMetric = lint_rename_table.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -71,7 +71,7 @@ def test_fail_rename_table_description(
     sql_fail: str = "ALTER TABLE public.card RENAME TO card_old;"
 
     _: core.ViolationMetric = lint_rename_table.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -93,7 +93,7 @@ def test_pass_noqa_rename_table(
     """
 
     violations: core.ViolationMetric = lint_rename_table.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -115,7 +115,7 @@ def test_fail_noqa_rename_table(
     """
 
     violations: core.ViolationMetric = lint_rename_table.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -137,7 +137,7 @@ def test_pass_general_noqa_rename_table(
     """
 
     violations: core.ViolationMetric = lint_rename_table.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 

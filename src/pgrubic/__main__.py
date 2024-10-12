@@ -43,14 +43,14 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
 
     violations: core.ViolationMetric = core.ViolationMetric()
 
-    files = core.filter_files(paths=paths, config=config)
+    source_files = core.filter_files(paths=paths, config=config)
 
-    for file in files:
-        with file.open("r", encoding="utf-8") as source_file:
-            source_code: str = source_file.read()
+    for source_file in source_files:
+        with source_file.open("r", encoding="utf-8") as sf:
+            source_code: str = sf.read()
 
         _violations: core.ViolationMetric = linter.run(
-            file=str(file),
+            source_file=str(source_file),
             source_code=source_code,
         )
 

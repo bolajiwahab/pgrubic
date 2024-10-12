@@ -86,7 +86,7 @@ def _get_statement_locations(
 class NoQaDirective:
     """Representation of a noqa directive."""
 
-    file: str | None = None
+    source_file: str | None = None
     location: int
     line_number: int
     column_offset: int
@@ -131,8 +131,8 @@ def _extract_statement_ignores(source_code: str) -> list[NoQaDirective]:
     return inline_ignores
 
 
-def _extract_file_ignore(file: str, source_code: str) -> list[NoQaDirective]:
-    """Extract file ignore from the start of a file."""
+def _extract_file_ignore(source_file: str, source_code: str) -> list[NoQaDirective]:
+    """Extract ignore from the start of a source file."""
     file_ignores: list[NoQaDirective] = []
 
     for token in parser.scan(source_code):
@@ -151,7 +151,7 @@ def _extract_file_ignore(file: str, source_code: str) -> list[NoQaDirective]:
 
                 file_ignores.extend(
                     NoQaDirective(
-                        file=file,
+                        source_file=source_file,
                         location=token.start,
                         line_number=1,
                         column_offset=0,
@@ -163,24 +163,24 @@ def _extract_file_ignore(file: str, source_code: str) -> list[NoQaDirective]:
     return file_ignores
 
 
-def extract_ignores(*, file: str, source_code: str) -> list[NoQaDirective]:
+def extract_ignores(*, source_file: str, source_code: str) -> list[NoQaDirective]:
     """Extract ignores from source code."""
     return _extract_statement_ignores(source_code) + _extract_file_ignore(
-        file=file,
+        source_file=source_file,
         source_code=source_code,
     )
 
 
 def report_unused_ignores(
     *,
-    file: str,
+    source_file: str,
     inline_ignores: list[NoQaDirective],
 ) -> None:
     """Get unused ignores."""
     for ignore in inline_ignores:
         if not ignore.used:
             sys.stdout.write(
-                f"{file}:{ignore.line_number}:{ignore.column_offset}:"
+                f"{source_file}:{ignore.line_number}:{ignore.column_offset}:"
                 f" {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL}"
                 f" (unused: {Fore.RED}{Style.BRIGHT}{ignore.rule}{Style.RESET_ALL})\n",
             )

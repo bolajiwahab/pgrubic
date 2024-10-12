@@ -58,7 +58,7 @@ def test_pass_no_columns_table(
     sql_fail: str = "CREATE TABLE music ();"
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -77,7 +77,7 @@ def test_pass_add_columns_table(
     sql_fail: str = "ALTER TABLE music ADD COLUMN age int;"
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -96,7 +96,7 @@ def test_pass_not_wrongly_typed_required_column(
     sql_fail: str = "CREATE TABLE music (age int, created_at timestamptz);"
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -115,7 +115,7 @@ def test_fail_create_table_wrongly_typed_required_column(
     sql_fail: str = "CREATE TABLE music (age int, created_at date);"
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -134,7 +134,7 @@ def test_fail_alter_table_wrongly_typed_required_column(
     sql_fail: str = "ALTER TABLE music ADD COLUMN created_at date;"
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -154,7 +154,7 @@ def test_fail_wrongly_typed_required_column_description(
     sql_fail: str = "CREATE TABLE music (age int, created_at date);"
 
     _: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -176,7 +176,7 @@ def test_pass_noqa_wrongly_typed_required_column(
     """
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -198,7 +198,7 @@ def test_fail_noqa_wrongly_typed_required_column(
     """
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -220,7 +220,7 @@ def test_pass_general_noqa_wrongly_typed_required_column(
     """
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -246,7 +246,7 @@ def test_fail_fix_create_table_wrongly_typed_required_column(
     wrongly_typed_required_column.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -271,7 +271,7 @@ def test_fail_fix_alter_table_wrongly_typed_required_column(
     wrongly_typed_required_column.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

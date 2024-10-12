@@ -43,7 +43,7 @@ def test_fail_column_rename(lint_column_rename: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_column_rename.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -66,7 +66,7 @@ def test_fail_column_rename_description(
     """
 
     _: core.ViolationMetric = lint_column_rename.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -81,7 +81,7 @@ def test_pass_noqa_column_rename(lint_column_rename: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_column_rename.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -101,7 +101,7 @@ def test_fail_noqa_column_rename(lint_column_rename: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_column_rename.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -123,7 +123,7 @@ def test_pass_general_noqa_column_rename(
     """
 
     violations: core.ViolationMetric = lint_column_rename.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 

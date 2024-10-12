@@ -48,7 +48,7 @@ def test_pass_create_table_timestamp_with_timezone(
     sql_fail: str = "CREATE TABLE music (first_name text);"
 
     violations: core.ViolationMetric = lint_char.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -67,7 +67,7 @@ def test_pass_alter_table_timestamp_with_timezone(
     sql_fail: str = "ALTER TABLE music ADD COLUMN last_name text;"
 
     violations: core.ViolationMetric = lint_char.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -86,7 +86,7 @@ def test_fail_create_table_char(
     sql_fail: str = "CREATE TABLE music (first_name char(0));"
 
     violations: core.ViolationMetric = lint_char.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -105,7 +105,7 @@ def test_fail_alter_table_char(
     sql_fail: str = "ALTER TABLE music ADD COLUMN last_name char;"
 
     violations: core.ViolationMetric = lint_char.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -125,7 +125,7 @@ def test_fail_char_description(
     sql_fail: str = "CREATE TABLE music (middle_name char(0));"
 
     _: core.ViolationMetric = lint_char.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -147,7 +147,7 @@ def test_pass_noqa_char(
     """
 
     violations: core.ViolationMetric = lint_char.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -169,7 +169,7 @@ def test_fail_noqa_char(
     """
 
     violations: core.ViolationMetric = lint_char.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -191,7 +191,7 @@ def test_pass_general_noqa_char(
     """
 
     violations: core.ViolationMetric = lint_char.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -215,7 +215,7 @@ def test_fail_fix_create_table_char(
     char.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_char.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -240,7 +240,7 @@ def test_fail_fix_alter_table_char(
     char.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_char.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

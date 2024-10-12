@@ -53,7 +53,7 @@ def test_pass_non_date_column_without_suffix(
     sql_fail: str = "CREATE TABLE tbl (activated boolean);"
 
     violations: core.ViolationMetric = lint_date_column_without_suffix.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -72,7 +72,7 @@ def test_fail_date_column_without_suffix(
     sql_fail: str = "CREATE TABLE tbl (activated date);"
 
     violations: core.ViolationMetric = lint_date_column_without_suffix.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -92,7 +92,7 @@ def test_fail_date_column_without_suffix_description(
     sql_fail: str = "CREATE TABLE tbl (activated date);"
 
     _: core.ViolationMetric = lint_date_column_without_suffix.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -114,7 +114,7 @@ def test_pass_noqa_date_column_without_suffix(
     """
 
     violations: core.ViolationMetric = lint_date_column_without_suffix.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -136,7 +136,7 @@ def test_fail_noqa_date_column_without_suffix(
     """
 
     violations: core.ViolationMetric = lint_date_column_without_suffix.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -158,7 +158,7 @@ def test_pass_general_noqa_date_column_without_suffix(
     """
 
     violations: core.ViolationMetric = lint_date_column_without_suffix.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -182,7 +182,7 @@ def test_fail_fix_date_column_without_suffix(
     date_column_without_suffix.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_date_column_without_suffix.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -208,7 +208,7 @@ def test_fail_non_applicable_fix_date_column_without_suffix(
     date_column_without_suffix.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_date_column_without_suffix.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -245,7 +245,7 @@ def test_fail_single_letter_identifier(
     sql_fail: str = "CREATE TABLE tbl (a int);"
 
     violations: core.ViolationMetric = lint_single_letter_identifier.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -265,7 +265,7 @@ def test_parse_error(lint_single_letter_identifier: core.Linter) -> None:
 
     with pytest.raises(SystemExit) as excinfo:
         lint_single_letter_identifier.run(
-            file=TEST_FILE,
+            source_file=TEST_FILE,
             source_code=source_code,
         )
 

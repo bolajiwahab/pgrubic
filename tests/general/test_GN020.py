@@ -48,7 +48,7 @@ def test_pass_current_timestamp(
     sql_pass: str = "SELECT CURRENT_TIMESTAMP;"
 
     violations: core.ViolationMetric = lint_current_time.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -67,7 +67,7 @@ def test_fail_current_time(
     sql_fail: str = "SELECT CURRENT_TIME;"
 
     violations: core.ViolationMetric = lint_current_time.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -87,7 +87,7 @@ def test_fail_current_time_description(
     sql_fail: str = "ALTER TABLE tbl ALTER COLUMN time SET DEFAULT CURRENT_TIME;"
 
     _: core.ViolationMetric = lint_current_time.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -109,7 +109,7 @@ def test_pass_noqa_current_time(
     """
 
     violations: core.ViolationMetric = lint_current_time.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -131,7 +131,7 @@ def test_fail_noqa_current_time(
     """
 
     violations: core.ViolationMetric = lint_current_time.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -153,7 +153,7 @@ def test_pass_general_noqa_current_time(
     """
 
     violations: core.ViolationMetric = lint_current_time.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -177,7 +177,7 @@ def test_fail_fix_current_time(
     current_time.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_current_time.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -204,7 +204,7 @@ def test_fail_fix_alter_table_current_time(
     current_time.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_current_time.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

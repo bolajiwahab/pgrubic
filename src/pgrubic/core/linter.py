@@ -48,7 +48,7 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
     # Attributes shared among all subclasses
     config: config.Config
     inline_ignores: list[noqa.NoQaDirective]
-    file: str
+    source_file: str
     source_code: str
 
     def __init__(self) -> None:
@@ -79,7 +79,7 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
             if (
                 (
                     self.statement_location == inline_ignore.location
-                    or self.file == inline_ignore.file
+                    or self.source_file == inline_ignore.source_file
                 )
                 and inline_ignore.rule in (noqa.A_STAR, self.code)
                 and not self.config.lint.ignore_noqa
@@ -100,7 +100,7 @@ class Linter:
     @staticmethod
     def skip_suppressed_violations(
         *,
-        file: str,
+        source_file: str,
         checker: BaseChecker,
         inline_ignores: list[noqa.NoQaDirective],
     ) -> None:
@@ -112,7 +112,7 @@ class Linter:
                 if (
                     (
                         violation.statement_location == inline_ignore.location
-                        or file == inline_ignore.file
+                        or source_file == inline_ignore.source_file
                     )
                     and (inline_ignore.rule in (noqa.A_STAR, checker.code))
                 )
@@ -131,13 +131,13 @@ class Linter:
     def print_violations(
         *,
         checker: BaseChecker,
-        file: str,
+        source_file: str,
     ) -> None:
         """Print all violations collected by a checker."""
         for violation in checker.violations:
             if not checker.is_fix_applicable:
                 sys.stdout.write(
-                    f"\n{file}:{violation.line_number}:{violation.column_offset}:"
+                    f"\n{source_file}:{violation.line_number}:{violation.column_offset}:"
                     f" \033]8;;{DOCUMENTATION_URL}/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"  # noqa: E501
                     f" {violation.description}\n\n",
                 )
@@ -151,19 +151,19 @@ class Linter:
                     )
                 sys.stdout.write("\n")
 
-    def run(self, *, file: str, source_code: str) -> ViolationMetric:
+    def run(self, *, source_file: str, source_code: str) -> ViolationMetric:
         """Run rules on a source code."""
         try:
             tree: ast.Node = parser.parse_sql(source_code)
             comments = _extract_comments(source_code)
 
         except parser.ParseError as error:
-            sys.stderr.write(f"{file}: {Fore.RED}{error!s}{Style.RESET_ALL}")
+            sys.stderr.write(f"{source_file}: {Fore.RED}{error!s}{Style.RESET_ALL}")
 
             sys.exit(1)
 
         inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(
-            file=file,
+            source_file=source_file,
             source_code=source_code,
         )
 
@@ -171,7 +171,7 @@ class Linter:
 
         BaseChecker.inline_ignores = inline_ignores
         BaseChecker.source_code = source_code
-        BaseChecker.file = file
+        BaseChecker.source_file = source_file
 
         for checker in self.checkers:
             checker.violations = set()
@@ -180,14 +180,14 @@ class Linter:
 
             if not self.config.lint.ignore_noqa:
                 self.skip_suppressed_violations(
-                    file=file,
+                    source_file=source_file,
                     checker=checker,
                     inline_ignores=inline_ignores,
                 )
 
             self.print_violations(
                 checker=checker,
-                file=file,
+                source_file=source_file,
             )
 
             if self.config.lint.fix is checker.is_auto_fixable is True:
@@ -214,7 +214,7 @@ class Linter:
         sys.stdout.write("\n")
 
         noqa.report_unused_ignores(
-            file=file,
+            source_file=source_file,
             inline_ignores=inline_ignores,
         )
 

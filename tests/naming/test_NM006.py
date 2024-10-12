@@ -55,7 +55,7 @@ def test_pass_implicit_exclusion_constraint_name_create_table(
     """
 
     violations: core.ViolationMetric = lint_invalid_exclusion_constraint_name.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -74,7 +74,7 @@ def test_pass_implicit_exclusion_constraint_name_alter_table(
     sql_fail: str = "ALTER TABLE tbl ADD EXCLUDE USING gist (tbl_id WITH &&);"
 
     violations: core.ViolationMetric = lint_invalid_exclusion_constraint_name.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -96,7 +96,7 @@ def test_pass_valid_exclusion_constraint_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_exclusion_constraint_name.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -117,7 +117,7 @@ def test_fail_invalid_exclusion_constraint_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_exclusion_constraint_name.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -140,7 +140,7 @@ def test_fail_invalid_exclusion_constraint_name_description(
     """
 
     _: core.ViolationMetric = lint_invalid_exclusion_constraint_name.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -162,7 +162,7 @@ def test_pass_noqa_invalid_exclusion_constraint_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_exclusion_constraint_name.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -185,7 +185,7 @@ def test_fail_noqa_invalid_exclusion_constraint_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_exclusion_constraint_name.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -208,7 +208,7 @@ def test_pass_general_noqa_invalid_exclusion_constraint_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_exclusion_constraint_name.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

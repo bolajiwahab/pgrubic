@@ -48,7 +48,7 @@ def test_pass_create_table_numeric(
     sql_fail: str = "CREATE TABLE transaction (amount numeric);"
 
     violations: core.ViolationMetric = lint_money.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -67,7 +67,7 @@ def test_pass_alter_table_numeric(
     sql_fail: str = "ALTER TABLE transaction ADD COLUMN amount numeric;"
 
     violations: core.ViolationMetric = lint_money.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -86,7 +86,7 @@ def test_fail_create_table_money(
     sql_fail: str = "CREATE TABLE transaction (amount money);"
 
     violations: core.ViolationMetric = lint_money.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -105,7 +105,7 @@ def test_fail_alter_table_money(
     sql_fail: str = "ALTER TABLE transaction ADD COLUMN amount money;"
 
     violations: core.ViolationMetric = lint_money.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -125,7 +125,7 @@ def test_fail_money_description(
     sql_fail: str = "CREATE TABLE transaction (amount money);"
 
     _: core.ViolationMetric = lint_money.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -147,7 +147,7 @@ def test_pass_noqa_money(
     """
 
     violations: core.ViolationMetric = lint_money.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -169,7 +169,7 @@ def test_fail_noqa_money(
     """
 
     violations: core.ViolationMetric = lint_money.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -191,7 +191,7 @@ def test_pass_general_noqa_money(
     """
 
     violations: core.ViolationMetric = lint_money.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -217,7 +217,7 @@ def test_fail_fix_create_table_money(
     money.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_money.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -242,7 +242,7 @@ def test_fail_fix_alter_table_money(
     money.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_money.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

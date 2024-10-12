@@ -49,7 +49,7 @@ def test_pass_snake_case_identifier(
     sql_pass: str = "CREATE TABLE tbl (col int);"
 
     violations: core.ViolationMetric = lint_non_snake_case_identifier.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -68,7 +68,7 @@ def test_fail_non_snake_case_identifier(
     sql_fail: str = """CREATE TABLE "TblAge" (col int);"""
 
     violations: core.ViolationMetric = lint_non_snake_case_identifier.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -88,7 +88,7 @@ def test_fail_non_snake_case_identifier_description(
     sql_fail: str = """CREATE TABLE tbl ("Col" int);"""
 
     _: core.ViolationMetric = lint_non_snake_case_identifier.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -110,7 +110,7 @@ def test_pass_noqa_non_snake_case_identifier(
     """
 
     violations: core.ViolationMetric = lint_non_snake_case_identifier.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -134,7 +134,7 @@ def test_fail_noqa_non_snake_case_identifier(
     """
 
     violations: core.ViolationMetric = lint_non_snake_case_identifier.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -157,7 +157,7 @@ def test_pass_general_noqa_non_snake_case_identifier(
     """
 
     violations: core.ViolationMetric = lint_non_snake_case_identifier.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

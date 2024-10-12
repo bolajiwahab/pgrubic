@@ -49,7 +49,7 @@ def test_pass_named_indexes_no_duplicate_index(
     """
 
     violations: core.ViolationMetric = lint_duplicate_index.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -71,7 +71,7 @@ def test_pass_unnamed_indexes_no_duplicate_index(
     """
 
     violations: core.ViolationMetric = lint_duplicate_index.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -93,7 +93,7 @@ def test_pass_mixed_columns_no_duplicate_index(
     """
 
     violations: core.ViolationMetric = lint_duplicate_index.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -115,7 +115,7 @@ def test_fail_duplicate_index(
     """
 
     violations: core.ViolationMetric = lint_duplicate_index.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -138,7 +138,7 @@ def test_fail_duplicate_index_description(
     """
 
     _: core.ViolationMetric = lint_duplicate_index.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -161,7 +161,7 @@ def test_pass_noqa_duplicate_index(
     """
 
     violations: core.ViolationMetric = lint_duplicate_index.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -184,7 +184,7 @@ def test_fail_noqa_duplicate_index(
     """
 
     violations: core.ViolationMetric = lint_duplicate_index.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -207,7 +207,7 @@ def test_pass_general_noqa_duplicate_index(
     """
 
     violations: core.ViolationMetric = lint_duplicate_index.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

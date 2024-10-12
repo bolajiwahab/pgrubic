@@ -53,7 +53,7 @@ def test_pass_concurrent_detach_partition(
     sql_pass: str = "REFRESH MATERIALIZED VIEW CONCURRENTLY tbl;"
 
     violations: core.ViolationMetric = lint_non_concurrent_refresh_materialized_view.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -72,7 +72,7 @@ def test_fail_non_concurrent_refresh_materialized_view(
     sql_fail: str = "REFRESH MATERIALIZED VIEW tbl;"
 
     violations: core.ViolationMetric = lint_non_concurrent_refresh_materialized_view.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -92,7 +92,7 @@ def test_fail_non_concurrent_refresh_materialized_view_description(
     sql_fail: str = "REFRESH MATERIALIZED VIEW tbl;"
 
     _: core.ViolationMetric = lint_non_concurrent_refresh_materialized_view.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -114,7 +114,7 @@ def test_pass_noqa_non_concurrent_refresh_materialized_view(
     """
 
     violations: core.ViolationMetric = lint_non_concurrent_refresh_materialized_view.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -136,7 +136,7 @@ def test_fail_noqa_non_concurrent_refresh_materialized_view(
     """
 
     violations: core.ViolationMetric = lint_non_concurrent_refresh_materialized_view.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -158,7 +158,7 @@ def test_pass_general_noqa_non_concurrent_refresh_materialized_view(
     """
 
     violations: core.ViolationMetric = lint_non_concurrent_refresh_materialized_view.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -182,7 +182,7 @@ def test_fail_fix_non_concurrent_refresh_materialized_view(
     non_concurrent_refresh_materialized_view.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_non_concurrent_refresh_materialized_view.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

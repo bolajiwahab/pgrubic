@@ -48,7 +48,7 @@ def test_fail_drop_cascade(
     sql_fail: str = "DROP TABLE films_recent CASCADE;"
 
     violations: core.ViolationMetric = lint_drop_cascade.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -68,7 +68,7 @@ def test_fail_drop_cascade_description(
     sql_fail: str = "DROP SCHEMA films_recent CASCADE;"
 
     _: core.ViolationMetric = lint_drop_cascade.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -90,7 +90,7 @@ def test_pass_noqa_drop_cascade(
     """
 
     violations: core.ViolationMetric = lint_drop_cascade.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -112,7 +112,7 @@ def test_fail_noqa_drop_cascade(
     """
 
     violations: core.ViolationMetric = lint_drop_cascade.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -134,7 +134,7 @@ def test_pass_general_noqa_drop_cascade(
     """
 
     violations: core.ViolationMetric = lint_drop_cascade.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -158,7 +158,7 @@ def test_fail_fix_drop_cascade(
     drop_cascade.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_drop_cascade.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -183,7 +183,7 @@ def test_fail_fix_alter_table_drop_cascade(
     drop_cascade.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_drop_cascade.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

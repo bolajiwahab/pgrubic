@@ -16,7 +16,7 @@ def test_extract_star_ignore_from_inline_comments() -> None:
     """
 
     inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=source_code,
     )
 
@@ -31,7 +31,7 @@ def test_extract_ignores() -> None:
     """
 
     inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(
-        file=str(TEST_FILE),
+        source_file=str(TEST_FILE),
         source_code=source_code,
     )
 
@@ -47,7 +47,7 @@ def test_extract_ignores_length() -> None:
     """
 
     inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=source_code,
     )
 
@@ -63,7 +63,7 @@ def test_wrongly_formed_inline_ignores_from_inline_comments(capfd: typing.Any) -
     CREATE TABLE tbl (activated date);
     """
 
-    noqa.extract_ignores(file=TEST_FILE, source_code=source_code)
+    noqa.extract_ignores(source_file=TEST_FILE, source_code=source_code)
 
     _, err = capfd.readouterr()
 
@@ -83,11 +83,11 @@ def test_report_specific_unused_ignores(
     """
 
     inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=source_code,
     )
 
-    noqa.report_unused_ignores(file=TEST_FILE, inline_ignores=inline_ignores)
+    noqa.report_unused_ignores(source_file=TEST_FILE, inline_ignores=inline_ignores)
     out, _ = capfd.readouterr()
     assert (
         out
@@ -105,11 +105,11 @@ def test_report_general_unused_ignores(
     """
 
     inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=source_code,
     )
 
-    noqa.report_unused_ignores(file=TEST_FILE, inline_ignores=inline_ignores)
+    noqa.report_unused_ignores(source_file=TEST_FILE, inline_ignores=inline_ignores)
     out, _ = capfd.readouterr()
     assert (
         out

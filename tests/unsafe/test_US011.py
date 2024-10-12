@@ -57,7 +57,7 @@ def test_pass_not_null_constraint_on_new_column_with_no_static_default(
 
     violations: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            file=TEST_FILE,
+            source_file=TEST_FILE,
             source_code=sql_pass,
         )
     )
@@ -81,7 +81,7 @@ def test_fail_not_null_constraint_on_new_column_with_no_static_default(
 
     violations: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            file=TEST_FILE,
+            source_file=TEST_FILE,
             source_code=sql_fail,
         )
     )
@@ -106,7 +106,7 @@ def test_fail_not_null_constraint_on_new_column_with_no_static_default_descripti
 
     _: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            file=TEST_FILE,
+            source_file=TEST_FILE,
             source_code=sql_fail,
         )
     )
@@ -130,7 +130,7 @@ def test_pass_noqa_not_null_constraint_on_new_column_with_no_static_default(
 
     violations: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            file=TEST_FILE,
+            source_file=TEST_FILE,
             source_code=sql_pass_noqa,
         )
     )
@@ -154,7 +154,7 @@ def test_fail_noqa_not_null_constraint_on_new_column_with_no_static_default(
 
     violations: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            file=TEST_FILE,
+            source_file=TEST_FILE,
             source_code=sql_noqa,
         )
     )
@@ -178,7 +178,7 @@ def test_pass_general_noqa_not_null_constraint_on_new_column_with_no_static_defa
 
     violations: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            file=TEST_FILE,
+            source_file=TEST_FILE,
             source_code=sql_noqa,
         )
     )

@@ -53,7 +53,7 @@ def test_fail_adding_stored_generated_column(
     """
 
     violations: core.ViolationMetric = lint_adding_stored_generated_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -77,7 +77,7 @@ def test_fail_adding_stored_generated_column_description(
     """
 
     _: core.ViolationMetric = lint_adding_stored_generated_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -98,7 +98,7 @@ def test_pass_noqa_adding_stored_generated_column(
     """
 
     violations: core.ViolationMetric = lint_adding_stored_generated_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -121,7 +121,7 @@ def test_fail_noqa_adding_stored_generated_column(
     """
 
     violations: core.ViolationMetric = lint_adding_stored_generated_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -144,7 +144,7 @@ def test_pass_general_noqa_adding_stored_generated_column(
     """
 
     violations: core.ViolationMetric = lint_adding_stored_generated_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 

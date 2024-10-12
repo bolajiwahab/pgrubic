@@ -54,7 +54,7 @@ def test_pass_create_table_generated_column(
     """
 
     violations: core.ViolationMetric = lint_constant_generated_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -76,7 +76,7 @@ def test_pass_alter_table_generated_column(
     """
 
     violations: core.ViolationMetric = lint_constant_generated_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -99,7 +99,7 @@ def test_fail_constant_generated_column(
     """
 
     violations: core.ViolationMetric = lint_constant_generated_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -122,7 +122,7 @@ def test_fail_constant_generated_column_description(
     """
 
     _: core.ViolationMetric = lint_constant_generated_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -145,7 +145,7 @@ def test_pass_noqa_constant_generated_column(
     """
 
     violations: core.ViolationMetric = lint_constant_generated_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -168,7 +168,7 @@ def test_fail_noqa_constant_generated_column(
     """
 
     violations: core.ViolationMetric = lint_constant_generated_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -191,7 +191,7 @@ def test_pass_general_noqa_constant_generated_column(
     """
 
     violations: core.ViolationMetric = lint_constant_generated_column.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

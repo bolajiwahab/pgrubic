@@ -55,7 +55,7 @@ def test_pass_create_table_identity_generated_always(
     """
 
     violations: core.ViolationMetric = lint_identity_generated_by_default.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -78,7 +78,7 @@ def test_pass_alter_table_identity_generated_always(
     """
 
     violations: core.ViolationMetric = lint_identity_generated_by_default.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -101,7 +101,7 @@ def test_fail_create_table_identity_generated_by_default(
     """
 
     violations: core.ViolationMetric = lint_identity_generated_by_default.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -124,7 +124,7 @@ def test_fail_alter_table_identity_generated_by_default(
     """
 
     violations: core.ViolationMetric = lint_identity_generated_by_default.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -148,7 +148,7 @@ def test_fail_identity_generated_by_default_description(
     """
 
     _: core.ViolationMetric = lint_identity_generated_by_default.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -170,7 +170,7 @@ def test_pass_noqa_identity_generated_by_default(
     """
 
     violations: core.ViolationMetric = lint_identity_generated_by_default.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -194,7 +194,7 @@ def test_fail_noqa_identity_generated_by_default(
     """
 
     violations: core.ViolationMetric = lint_identity_generated_by_default.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -218,7 +218,7 @@ def test_pass_general_noqa_identity_generated_by_default(
     """
 
     violations: core.ViolationMetric = lint_identity_generated_by_default.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -248,7 +248,7 @@ def test_fail_fix_create_table_identity_generated_by_default(
     identity_generated_by_default.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_identity_generated_by_default.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -280,7 +280,7 @@ def test_fail_fix_alter_table_identity_generated_by_default(
     identity_generated_by_default.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_identity_generated_by_default.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

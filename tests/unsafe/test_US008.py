@@ -43,7 +43,7 @@ def test_fail_drop_database(lint_drop_database: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_database.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -66,7 +66,7 @@ def test_fail_drop_database_description(
     """
 
     _: core.ViolationMetric = lint_drop_database.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -81,7 +81,7 @@ def test_pass_noqa_drop_database(lint_drop_database: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_database.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -101,7 +101,7 @@ def test_fail_noqa_drop_database(lint_drop_database: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_database.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -123,7 +123,7 @@ def test_pass_general_noqa_drop_database(
     """
 
     violations: core.ViolationMetric = lint_drop_database.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 

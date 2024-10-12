@@ -49,7 +49,7 @@ def test_pass_update_with_where_clause(
     sql_pass: str = "DELETE FROM measurement WHERE city_id = 10;"
 
     violations: core.ViolationMetric = lint_delete_without_where_clause.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -68,7 +68,7 @@ def test_fail_delete_without_where_clause(
     sql_fail: str = "DELETE FROM measurement;"
 
     violations: core.ViolationMetric = lint_delete_without_where_clause.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -88,7 +88,7 @@ def test_fail_delete_without_where_clause_description(
     sql_fail: str = "DELETE FROM measurement;"
 
     _: core.ViolationMetric = lint_delete_without_where_clause.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -110,7 +110,7 @@ def test_pass_noqa_delete_without_where_clause(
     """
 
     violations: core.ViolationMetric = lint_delete_without_where_clause.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -132,7 +132,7 @@ def test_fail_noqa_delete_without_where_clause(
     """
 
     violations: core.ViolationMetric = lint_delete_without_where_clause.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -154,7 +154,7 @@ def test_pass_general_noqa_delete_without_where_clause(
     """
 
     violations: core.ViolationMetric = lint_delete_without_where_clause.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

@@ -49,7 +49,7 @@ def test_pass_index_elements_not_more_than_three(
     sql_fail: str = "CREATE INDEX music_age_idx ON music (age);"
 
     violations: core.ViolationMetric = lint_index_elements_more_than_three.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -70,7 +70,7 @@ def test_fail_index_elements_more_than_three(
     )
 
     violations: core.ViolationMetric = lint_index_elements_more_than_three.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -92,7 +92,7 @@ def test_fail_index_elements_more_than_three_description(
     )
 
     _: core.ViolationMetric = lint_index_elements_more_than_three.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -114,7 +114,7 @@ def test_pass_noqa_index_elements_more_than_three(
     """
 
     violations: core.ViolationMetric = lint_index_elements_more_than_three.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -136,7 +136,7 @@ def test_fail_noqa_index_elements_more_than_three(
     """
 
     violations: core.ViolationMetric = lint_index_elements_more_than_three.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -158,7 +158,7 @@ def test_pass_general_noqa_index_elements_more_than_three(
     """
 
     violations: core.ViolationMetric = lint_index_elements_more_than_three.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

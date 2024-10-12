@@ -12,26 +12,32 @@ def filter_files(
     config: config.Config,
 ) -> tuple[pathlib.Path, ...]:
     """Filters files base on config.lint.include and config.lint.exclude."""
-    files: set[pathlib.Path] = set()
+    source_files: set[pathlib.Path] = set()
 
     for path in paths:
         if path.is_dir():
-            files.update(path.glob("**/*.sql"))
+            source_files.update(path.glob("**/*.sql"))
 
         else:
-            files.add(path)
+            source_files.add(path)
 
     return tuple(
-        file for file in files if is_file_included(file=str(file), config=config)
+        source_file
+        for source_file in source_files
+        if is_file_included(source_file=str(source_file), config=config)
     )
 
 
-def is_file_included(*, file: str, config: config.Config) -> bool:
-    """Check if a file should be included or excluded based on global config."""
+def is_file_included(*, source_file: str, config: config.Config) -> bool:
+    """Check if a source_file should be included or excluded based on global config."""
     return bool(
         (
             not config.lint.include
-            or any(fnmatch.fnmatch(file, pattern) for pattern in config.lint.include)
+            or any(
+                fnmatch.fnmatch(source_file, pattern) for pattern in config.lint.include
+            )
         )
-        and not any(fnmatch.fnmatch(file, pattern) for pattern in config.lint.exclude),
+        and not any(
+            fnmatch.fnmatch(source_file, pattern) for pattern in config.lint.exclude
+        ),
     )

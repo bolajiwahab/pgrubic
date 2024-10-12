@@ -51,7 +51,7 @@ def test_fail_remove_constraint(
     sql_fail: str = "ALTER TABLE public.card DROP CONSTRAINT card_old;"
 
     violations: core.ViolationMetric = lint_remove_constraint.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -71,7 +71,7 @@ def test_fail_remove_constraint_description(
     sql_fail: str = "ALTER TABLE public.card DROP CONSTRAINT card_old;"
 
     _: core.ViolationMetric = lint_remove_constraint.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -93,7 +93,7 @@ def test_pass_noqa_remove_constraint(
     """
 
     violations: core.ViolationMetric = lint_remove_constraint.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -115,7 +115,7 @@ def test_fail_noqa_remove_constraint(
     """
 
     violations: core.ViolationMetric = lint_remove_constraint.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -137,7 +137,7 @@ def test_pass_general_noqa_remove_constraint(
     """
 
     violations: core.ViolationMetric = lint_remove_constraint.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 

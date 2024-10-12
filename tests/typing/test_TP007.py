@@ -48,7 +48,7 @@ def test_pass_create_table_numeric(
     sql_fail: str = "CREATE TABLE tbl (tbl_id bigint GENERATED ALWAYS AS IDENTITY);"
 
     violations: core.ViolationMetric = lint_serial.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -69,7 +69,7 @@ def test_pass_alter_table_numeric(
     """
 
     violations: core.ViolationMetric = lint_serial.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -88,7 +88,7 @@ def test_fail_create_table_serial(
     sql_fail: str = "CREATE TABLE tbl (tbl_id serial);"
 
     violations: core.ViolationMetric = lint_serial.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -107,7 +107,7 @@ def test_fail_alter_table_smallserial(
     sql_fail: str = "ALTER TABLE tbl ADD COLUMN tbl_id smallserial;"
 
     violations: core.ViolationMetric = lint_serial.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -127,7 +127,7 @@ def test_fail_serial_description(
     sql_fail: str = "CREATE TABLE tbl (tbl_id bigserial);"
 
     _: core.ViolationMetric = lint_serial.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -149,7 +149,7 @@ def test_pass_noqa_serial(
     """
 
     violations: core.ViolationMetric = lint_serial.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -171,7 +171,7 @@ def test_fail_noqa_serial(
     """
 
     violations: core.ViolationMetric = lint_serial.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -193,7 +193,7 @@ def test_pass_general_noqa_serial(
     """
 
     violations: core.ViolationMetric = lint_serial.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -217,7 +217,7 @@ def test_fail_fix_create_table_serial(
     serial.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_serial.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -244,7 +244,7 @@ def test_fail_fix_alter_table_serial(
     serial.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_serial.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

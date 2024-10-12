@@ -46,7 +46,7 @@ def test_pass_explicit_columns(
     sql_pass: str = "SELECT city_id, logdate FROM measurement;"
 
     violations: core.ViolationMetric = lint_a_star.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -65,7 +65,7 @@ def test_pass_count_star(
     sql_pass: str = "SELECT count(*) FROM measurement;"
 
     violations: core.ViolationMetric = lint_a_star.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -84,7 +84,7 @@ def test_fail_a_star(
     sql_fail: str = "SELECT * FROM measurement;"
 
     violations: core.ViolationMetric = lint_a_star.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -104,7 +104,7 @@ def test_fail_a_star_description(
     sql_fail: str = "SELECT * FROM measurement;"
 
     _: core.ViolationMetric = lint_a_star.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -126,7 +126,7 @@ def test_pass_noqa_a_star(
     """
 
     violations: core.ViolationMetric = lint_a_star.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -148,7 +148,7 @@ def test_fail_noqa_a_star(
     """
 
     violations: core.ViolationMetric = lint_a_star.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -170,7 +170,7 @@ def test_pass_general_noqa_a_star(
     """
 
     violations: core.ViolationMetric = lint_a_star.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

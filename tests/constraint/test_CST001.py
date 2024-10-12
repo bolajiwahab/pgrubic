@@ -46,7 +46,7 @@ def test_pass_on_update_no_action(lint_cascade_update: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_cascade_update.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -68,7 +68,7 @@ def test_pass_on_update_restrict(lint_cascade_update: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_cascade_update.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -89,7 +89,7 @@ def test_pass_on_update_set_null(lint_cascade_update: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_cascade_update.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -111,7 +111,7 @@ def test_pass_on_update_set_default(lint_cascade_update: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_cascade_update.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -132,7 +132,7 @@ def test_fail_create_table_cascade_update(lint_cascade_update: core.Linter) -> N
     """
 
     violations: core.ViolationMetric = lint_cascade_update.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -154,7 +154,7 @@ def test_fail_alter_table_cascade_update(lint_cascade_update: core.Linter) -> No
     """
 
     violations: core.ViolationMetric = lint_cascade_update.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -178,7 +178,7 @@ def test_fail_cascade_update_description(
     """
 
     _: core.ViolationMetric = lint_cascade_update.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -198,7 +198,7 @@ def test_pass_noqa_cascade_update(lint_cascade_update: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_cascade_update.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -220,7 +220,7 @@ def test_fail_noqa_cascade_update(lint_cascade_update: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_cascade_update.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -244,7 +244,7 @@ def test_pass_general_noqa_cascade_update(
     """
 
     violations: core.ViolationMetric = lint_cascade_update.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -272,7 +272,7 @@ def test_fail_fix_create_table_cascade_update(
     cascade_update.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_cascade_update.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -302,7 +302,7 @@ def test_fail_fix_alter_table_cascade_update(
     cascade_update.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_cascade_update.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

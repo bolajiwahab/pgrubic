@@ -55,7 +55,7 @@ def test_pass_create_or_replace_in_function(
     """
 
     violations: core.ViolationMetric = lint_missing_replace_in_procedure.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -78,7 +78,7 @@ def test_fail_missing_replace_in_procedure(
     """
 
     violations: core.ViolationMetric = lint_missing_replace_in_procedure.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -102,7 +102,7 @@ def test_fail_missing_replace_in_procedure_description(
     """
 
     _: core.ViolationMetric = lint_missing_replace_in_procedure.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -126,7 +126,7 @@ def test_pass_noqa_missing_replace_in_procedure(
     """
 
     violations: core.ViolationMetric = lint_missing_replace_in_procedure.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -150,7 +150,7 @@ def test_fail_noqa_missing_replace_in_procedure(
     """
 
     violations: core.ViolationMetric = lint_missing_replace_in_procedure.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -174,7 +174,7 @@ def test_pass_general_noqa_missing_replace_in_procedure(
     """
 
     violations: core.ViolationMetric = lint_missing_replace_in_procedure.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -202,7 +202,7 @@ def test_fail_fix_missing_replace_in_procedure(
     missing_replace_in_procedure.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_missing_replace_in_procedure.run(
-        file=TEST_FILE,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
