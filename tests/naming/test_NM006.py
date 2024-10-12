@@ -202,7 +202,7 @@ def test_pass_general_noqa_invalid_exclusion_constraint_name(
 ) -> None:
     """Test pass noqa invalid exclusion constraint name."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (tbl_id bigint,
     CONSTRAINT tbl_exclusion EXCLUDE USING gist (tbl_id WITH &&));
     """

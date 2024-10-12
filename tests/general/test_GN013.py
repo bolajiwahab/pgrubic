@@ -196,7 +196,7 @@ def test_pass_general_noqa_nullable_required_column(
 ) -> None:
     """Test fail noqa nullable required column."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE music (age int)
     """
 

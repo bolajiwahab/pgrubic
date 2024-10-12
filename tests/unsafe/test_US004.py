@@ -178,7 +178,7 @@ def test_pass_general_noqa_adding_auto_increment_column(
 ) -> None:
     """Test fail noqa adding auto increment column."""
     sql_noqa: str = """
-    ALTER TABLE public.card ADD COLUMN id serial -- noqa:
+    ALTER TABLE public.card ADD COLUMN id serial -- noqa
     ;
     """
 

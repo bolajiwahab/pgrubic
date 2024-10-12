@@ -118,7 +118,7 @@ def test_pass_general_noqa_column_rename(
 ) -> None:
     """Test fail noqa column rename."""
     sql_noqa: str = """
-    ALTER TABLE public.card RENAME COLUMN id TO card_id -- noqa:
+    ALTER TABLE public.card RENAME COLUMN id TO card_id -- noqa
     ;
     """
 

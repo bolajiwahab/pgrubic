@@ -168,7 +168,7 @@ def test_pass_general_noqa_implicit_constraint_name(
 ) -> None:
     """Test pass noqa implicit constraint name."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (col int PRIMARY KEY)
     """
 

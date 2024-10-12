@@ -186,7 +186,7 @@ def test_pass_general_noqa_numeric_with_precision(
 ) -> None:
     """Test pass noqa numeric with precision."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE transaction (transaction_id int, amount numeric(9, 2));
     """
 

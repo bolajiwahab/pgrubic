@@ -196,7 +196,7 @@ def test_pass_general_noqa_disallowed_data_type(
 ) -> None:
     """Test pass noqa disallowed data type."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (tbl_id int, details varchar);
     """
 

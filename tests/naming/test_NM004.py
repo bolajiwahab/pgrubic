@@ -204,7 +204,7 @@ def test_pass_general_noqa_invalid_foreign_key_name(
 ) -> None:
     """Test pass noqa invalid foreign key name."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE author (author_id bigint, CONSTRAINT author_fkey FOREIGN KEY (tbl_id)
     REFERENCES bookstore (author));
     """

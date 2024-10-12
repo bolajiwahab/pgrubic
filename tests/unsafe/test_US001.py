@@ -115,7 +115,7 @@ def test_pass_general_noqa_drop_column(
 ) -> None:
     """Test fail noqa drop column."""
     sql_noqa: str = """
-    ALTER TABLE public.card DROP COLUMN id -- noqa:
+    ALTER TABLE public.card DROP COLUMN id -- noqa
     ;
     """
 

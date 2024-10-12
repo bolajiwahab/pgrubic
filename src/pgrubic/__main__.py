@@ -50,7 +50,7 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
             source_code: str = source_file.read()
 
         _violations: core.ViolationMetric = linter.run(
-            file=pathlib.Path(file),
+            file=str(file),
             source_code=source_code,
         )
 

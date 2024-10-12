@@ -153,7 +153,7 @@ def test_pass_general_noqa_non_concurrent_index_creation(
 ) -> None:
     """Test pass noqa non concurrent index creation."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE INDEX idx ON public.card(account_id);
     """
 

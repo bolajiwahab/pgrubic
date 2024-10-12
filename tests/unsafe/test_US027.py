@@ -153,7 +153,7 @@ def test_pass_general_noqa_non_concurrent_detach_partition(
 ) -> None:
     """Test pass noqa non concurrent detach partition."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     ALTER TABLE tbl DETACH PARTITION tbl_y2006m02;
     """
 

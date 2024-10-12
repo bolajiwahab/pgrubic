@@ -167,7 +167,7 @@ def test_pass_general_noqa_missing_primary_key(
 ) -> None:
     """Test fail noqa missing primary key."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE music (age int);
     """
 

@@ -134,7 +134,7 @@ def test_pass_general_noqa_not_null_constraint_on_existing_column(
 ) -> None:
     """Test fail noqa not null constraint on existing column."""
     sql_noqa: str = """
-    ALTER TABLE public.card ALTER COLUMN id SET NOT NULL -- noqa:
+    ALTER TABLE public.card ALTER COLUMN id SET NOT NULL -- noqa
     ;
     """
 

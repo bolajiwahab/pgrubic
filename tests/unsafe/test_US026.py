@@ -132,7 +132,7 @@ def test_pass_general_noqa_cluster(
 ) -> None:
     """Test pass noqa vacuum full."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     VACUUM FULL employees;
     """
 

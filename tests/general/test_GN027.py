@@ -167,7 +167,7 @@ def test_pass_general_noqa_yoda_condition(
 ) -> None:
     """Test pass general noqa yoda condition."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     SELECT * FROM measurement WHERE 10 = city_id;
     """
 

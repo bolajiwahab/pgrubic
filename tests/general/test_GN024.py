@@ -148,7 +148,7 @@ def test_pass_general_noqa_null_comparison(
 ) -> None:
     """Test fail noqa null constraint."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     SELECT a = NULL;
     """
 

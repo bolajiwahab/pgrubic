@@ -188,7 +188,7 @@ def test_pass_general_noqa_serial(
 ) -> None:
     """Test pass noqa serial."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (tbl_id int, tbl_id smallserial);
     """
 

@@ -319,7 +319,7 @@ def test_pass_general_noqa_schema_unqualified_object(
 ) -> None:
     """Test fail noqa schema unqualified object."""
     sql_noqa: str = """
-    CREATE TABLE card() -- noqa:
+    CREATE TABLE card() -- noqa
     ;
     """
 

@@ -159,7 +159,7 @@ def test_pass_general_noqa_primary_key_constraint_creating_new_index(
 ) -> None:
     """Test pass noqa primary key constraint creating new index."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     ALTER TABLE public.card ADD CONSTRAINT unq PRIMARY KEY(account_id);
     """
 

@@ -129,7 +129,7 @@ def test_pass_general_noqa_id_column(
 ) -> None:
     """Test fail noqa id column."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     ALTER TABLE tbl ADD COLUMN id int;
     """
 

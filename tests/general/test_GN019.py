@@ -129,7 +129,7 @@ def test_pass_general_noqa_unlogged_table(
 ) -> None:
     """Test fail noqa unlogged table."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     ALTER TABLE tbl SET UNLOGGED;
     """
 

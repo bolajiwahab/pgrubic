@@ -167,7 +167,7 @@ def test_pass_general_noqa_missing_replace_in_procedure(
 ) -> None:
     """Test fail noqa missing replace in procedure."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE PROCEDURE dup(int) LANGUAGE SQL
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$
     ;

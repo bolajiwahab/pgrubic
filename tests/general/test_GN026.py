@@ -146,7 +146,7 @@ def test_pass_general_noqa_not_in(
 ) -> None:
     """Test pass general noqa not in."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     SELECT * FROM measurement WHERE city_id NOT IN (1, 2, 3);
     """
 

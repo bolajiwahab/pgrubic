@@ -132,7 +132,7 @@ def test_pass_general_noqa_rename_table(
 ) -> None:
     """Test pass noqa rename table."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     ALTER TABLE public.card RENAME TO card_old;
     """
 

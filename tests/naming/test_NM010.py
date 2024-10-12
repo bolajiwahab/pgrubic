@@ -151,7 +151,7 @@ def test_pass_general_noqa_non_snake_case_identifier(
 ) -> None:
     """Test pass noqa non snake case identifier."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE "MEasurement__2024_02" PARTITION OF measurement
     FOR VALUES FROM ('2006-02-01') TO ('2006-03-01');
     """

@@ -170,7 +170,7 @@ def test_pass_general_noqa_multi_column_partitioning(
 ) -> None:
     """Test fail noqa multi column partitioning."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE measurement (
         city_id int not null,
         logdate date not null

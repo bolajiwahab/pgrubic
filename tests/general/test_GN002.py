@@ -127,7 +127,7 @@ def test_pass_general_noqa_create_rule(
 ) -> None:
     """Test fail noqa create rule."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE RULE notify_me AS ON UPDATE TO tbl DO ALSO NOTIFY tbl;
     """
 

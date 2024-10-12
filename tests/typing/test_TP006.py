@@ -186,7 +186,7 @@ def test_pass_general_noqa_money(
 ) -> None:
     """Test pass noqa money."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE transaction (transaction_id int, amount money);
     """
 

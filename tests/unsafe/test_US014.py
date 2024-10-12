@@ -159,7 +159,7 @@ def test_pass_general_noqa_unique_constraint_creating_new_index(
 ) -> None:
     """Test pass noqa unique constraint creating new index."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     ALTER TABLE public.card ADD CONSTRAINT unq UNIQUE(account_id);
     """
 

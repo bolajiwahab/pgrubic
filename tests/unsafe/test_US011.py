@@ -172,7 +172,7 @@ def test_pass_general_noqa_not_null_constraint_on_new_column_with_no_static_defa
 ) -> None:
     """Test fail noqa not null constraint on new column with volatile default."""
     sql_noqa: str = """
-    ALTER TABLE public.card ADD COLUMN id bigint NOT NULL -- noqa:
+    ALTER TABLE public.card ADD COLUMN id bigint NOT NULL -- noqa
     ;
     """
 

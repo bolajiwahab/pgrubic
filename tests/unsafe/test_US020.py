@@ -153,7 +153,7 @@ def test_pass_general_noqa_non_concurrent_reindex(
 ) -> None:
     """Test pass noqa non concurrent index reindex."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     REINDEX INDEX idx;
     """
 

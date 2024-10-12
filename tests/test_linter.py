@@ -153,7 +153,7 @@ def test_pass_general_noqa_date_column_without_suffix(
 ) -> None:
     """Test pass noqa date column without suffix."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (activated date);
     """
 

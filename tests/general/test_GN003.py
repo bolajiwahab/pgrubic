@@ -148,7 +148,7 @@ def test_pass_general_noqa_sql_ascii_encoding(
 ) -> None:
     """Test fail noqa sql_ascii encoding."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE DATABASE music ENCODING SQL_ASCII TEMPLATE template0;
     """
 

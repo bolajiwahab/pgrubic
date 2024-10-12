@@ -153,7 +153,7 @@ def test_pass_general_noqa_index_elements_more_than_three(
 ) -> None:
     """Test fail noqa index elements more than three."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE INDEX music_id_age_name_email_idx ON music (id, age, name, email);
     """
 

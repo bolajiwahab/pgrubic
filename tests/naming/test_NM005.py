@@ -197,7 +197,7 @@ def test_pass_general_noqa_invalid_check_constraint_name(
 ) -> None:
     """Test pass noqa invalid check constraint name."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (tbl_id bigint, CONSTRAINT tbl_check CHECK (tbl_id > 10));
     """
 

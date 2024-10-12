@@ -153,7 +153,7 @@ def test_pass_general_noqa_non_concurrent_refresh_materialized_view(
 ) -> None:
     """Test pass noqa non concurrent refresh materialized view."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     REFRESH MATERIALIZED VIEW tbl;
     """
 

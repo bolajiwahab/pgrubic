@@ -132,7 +132,7 @@ def test_pass_general_noqa_remove_constraint(
 ) -> None:
     """Test pass noqa remove constraint."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     ALTER TABLE public.card DROP CONSTRAINT card_old;
     """
 

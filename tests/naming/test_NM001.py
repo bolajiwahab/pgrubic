@@ -169,7 +169,7 @@ def test_pass_general_noqa_invalid_index_name(
 ) -> None:
     """Test pass noqa invalid index name."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE INDEX idx ON tbl (col);
     """
 

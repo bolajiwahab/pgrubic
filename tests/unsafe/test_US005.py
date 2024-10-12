@@ -136,7 +136,7 @@ def test_pass_general_noqa_adding_auto_increment_identity_column(
 ) -> None:
     """Test fail noqa adding auto increment identity column."""
     sql_noqa: str = """
-    ALTER TABLE public.card ADD COLUMN id bigint GENERATED ALWAYS AS IDENTITY -- noqa:
+    ALTER TABLE public.card ADD COLUMN id bigint GENERATED ALWAYS AS IDENTITY -- noqa
     ;
     """
 

@@ -152,7 +152,7 @@ def test_pass_general_noqa_timestamp_column_without_suffix(
 ) -> None:
     """Test pass noqa timestamp column without suffix."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (activated timestamp);
     """
 

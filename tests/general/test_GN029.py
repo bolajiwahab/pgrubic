@@ -165,7 +165,7 @@ def test_pass_general_noqa_a_star(
 ) -> None:
     """Test pass general noqa a_star."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     SELECT * FROM measurement;
     """
 

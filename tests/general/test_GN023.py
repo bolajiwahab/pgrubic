@@ -149,7 +149,7 @@ def test_pass_general_noqa_delete_without_where_clause(
 ) -> None:
     """Test fail noqa delete without where clause."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     DELETE FROM measurement;
     """
 

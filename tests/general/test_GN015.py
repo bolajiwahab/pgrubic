@@ -129,7 +129,7 @@ def test_pass_general_noqa_drop_cascade(
 ) -> None:
     """Test fail noqa drop cascade."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     ALTER TABLE films_recent DROP COLUMN id CASCADE;
     """
 

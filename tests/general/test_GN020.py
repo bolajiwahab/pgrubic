@@ -148,7 +148,7 @@ def test_pass_general_noqa_current_time(
 ) -> None:
     """Test fail noqa current time."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (time time DEFAULT CURRENT_TIME);
     """
 

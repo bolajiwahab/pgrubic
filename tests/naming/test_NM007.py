@@ -186,7 +186,7 @@ def test_pass_general_noqa_invalid_sequence_name(
 ) -> None:
     """Test pass noqa invalid sequence name."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE SEQUENCE seq START 101;
     """
 

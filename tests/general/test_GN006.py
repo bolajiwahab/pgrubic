@@ -127,7 +127,7 @@ def test_pass_general_noqa_create_enum(
 ) -> None:
     """Test fail noqa create enum."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TYPE mood AS ENUM ('sad', 'ok');
     """
 

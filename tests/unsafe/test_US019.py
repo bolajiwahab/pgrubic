@@ -153,7 +153,7 @@ def test_pass_general_noqa_non_concurrent_index_drop(
 ) -> None:
     """Test pass noqa non concurrent index drop."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     DROP INDEX idx;
     """
 

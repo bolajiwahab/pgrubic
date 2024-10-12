@@ -132,7 +132,7 @@ def test_pass_general_noqa_index_movement_to_tablespace(
 ) -> None:
     """Test pass noqa table movement to tablespace."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     ALTER TABLE public.idx SET TABLESPACE test;
     """
 

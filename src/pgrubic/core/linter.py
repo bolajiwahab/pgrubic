@@ -2,7 +2,6 @@
 
 import sys
 import typing
-import pathlib
 import dataclasses
 
 from pglast import ast, parser, stream, visitors, _extract_comments
@@ -22,6 +21,7 @@ class Violation:
     source_text: str
     statement_location: int
     description: str
+    help = ""
 
 
 @dataclasses.dataclass(kw_only=True, slots=True)
@@ -93,6 +93,7 @@ class Linter:
     @staticmethod
     def skip_suppressed_violations(
         *,
+        file: str,
         checker: BaseChecker,
         inline_ignores: list[noqa.NoQaDirective],
     ) -> None:
@@ -102,7 +103,10 @@ class Linter:
                 violation
                 for violation in checker.violations
                 if (
-                    violation.statement_location == inline_ignore.location
+                    (
+                        violation.statement_location == inline_ignore.location
+                        or file == inline_ignore.file
+                    )
                     and (inline_ignore.rule in (noqa.A_STAR, checker.code))
                 )
             }
@@ -120,18 +124,25 @@ class Linter:
     def print_violations(
         *,
         checker: BaseChecker,
-        file: pathlib.Path,
+        file: str,
     ) -> None:
         """Print all violations collected by a checker."""
         for violation in checker.violations:
             sys.stdout.write(
                 f"\n{file}:{violation.line_number}:{violation.column_offset}:"
                 f" \033]8;;{DOCUMENTATION_URL}/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"  # noqa: E501
-                f" {violation.description}:"
-                f" {Fore.GREEN}\n\n{violation.source_text}\n\n{Style.RESET_ALL}",
+                f" {violation.description}\n\n",
             )
+            for idx, line in enumerate(
+                violation.source_text.splitlines(keepends=False),
+                start=violation.line_number - violation.source_text.count("\n"),
+            ):
+                sys.stdout.write(
+                    f"{Fore.BLUE}{idx} | {Style.RESET_ALL}{Fore.RED}{Style.BRIGHT}{line}{Style.RESET_ALL}\n",  # noqa: E501
+                )
+            sys.stdout.write("\n")
 
-    def run(self, *, file: pathlib.Path, source_code: str) -> ViolationMetric:
+    def run(self, *, file: str, source_code: str) -> ViolationMetric:
         """Run rules on a source code."""
         try:
             tree: ast.Node = parser.parse_sql(source_code)
@@ -142,8 +153,9 @@ class Linter:
 
             sys.exit(1)
 
-        inline_ignores: list[noqa.NoQaDirective] = (
-            noqa.extract_ignores_from_inline_comments(source_code)
+        inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(
+            file=file,
+            source_code=source_code,
         )
 
         violations: ViolationMetric = ViolationMetric()
@@ -158,6 +170,7 @@ class Linter:
 
             if not self.config.lint.ignore_noqa:
                 self.skip_suppressed_violations(
+                    file=file,
                     checker=checker,
                     inline_ignores=inline_ignores,
                 )

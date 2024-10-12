@@ -127,7 +127,7 @@ def test_pass_general_noqa_table_inheritance(
 ) -> None:
     """Test fail noqa table inheritance."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE measurement_y2006m02 () INHERITS (measurement);
     """
 

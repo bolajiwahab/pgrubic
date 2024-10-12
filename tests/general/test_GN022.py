@@ -149,7 +149,7 @@ def test_pass_general_noqa_update_without_where_clause(
 ) -> None:
     """Test fail noqa update without where clause."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     UPDATE measurement SET city_id = 1;
     """
 

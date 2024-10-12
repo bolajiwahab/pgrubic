@@ -133,7 +133,7 @@ def test_pass_general_noqa_special_character_in_identifier(
 ) -> None:
     """Test pass noqa special character in identifier."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE INDEX "INDEX" ON tbl (col);
     """
 

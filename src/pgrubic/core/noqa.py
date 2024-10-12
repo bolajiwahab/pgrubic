@@ -2,13 +2,12 @@
 
 import re
 import sys
-import pathlib
 import dataclasses
 
 from pglast import parser
 from colorama import Fore, Style
 
-from pgrubic.core import errors
+from pgrubic import PROGRAM_NAME
 
 A_STAR: str = "*"
 
@@ -46,22 +45,29 @@ def _build_statements_start_end_locations(
     return locations
 
 
-def _get_rules_from_inline_comment(comment: str, location: int) -> list[str]:
-    """Get rule from inline comment."""
-    msg = f"Malformed 'noqa' section in line {location}. Expected 'noqa: <rule>'"
+def _get_rules_from_inline_comment(
+    comment: str,
+    location: int,
+    section: str = "noqa",
+) -> list[str]:
+    """Get rules from inline comment."""
+    comment_remainder = comment.removeprefix(section)
 
-    # This is an ignore identifier e.g noqa: UN005
-    comment_remainder = comment[4:]
+    if not comment_remainder:
+        return [A_STAR]
 
-    if comment_remainder:
-        if not comment_remainder.startswith(":"):
-            raise errors.SQLParseError(
-                msg,
-            )
+    rules: list[str] = [
+        rule.strip()
+        for rule in comment_remainder.removeprefix(":").split(",")
+        if rule and comment_remainder.startswith(":")
+    ]
 
-        rules: list[str] = comment_remainder[1:].replace(",", "").split()
+    if not rules:
+        sys.stderr.write(
+            f"{Fore.YELLOW}Warning: Malformed `noqa` directive at location {location}. Expected `noqa: <rules>`{Style.RESET_ALL}\n",  # noqa: E501
+        )
 
-    return rules if rules else [A_STAR]
+    return rules
 
 
 def _get_statement_locations(
@@ -80,6 +86,7 @@ def _get_statement_locations(
 class NoQaDirective:
     """Representation of a noqa directive."""
 
+    file: str | None = None
     location: int
     line_number: int
     column_offset: int
@@ -87,8 +94,8 @@ class NoQaDirective:
     used: bool = False
 
 
-def extract_ignores_from_inline_comments(source_code: str) -> list[NoQaDirective]:
-    """Extract ignores from inline SQL comments."""
+def _extract_statement_ignores(source_code: str) -> list[NoQaDirective]:
+    """Extract ignores from SQL statements."""
     source_code = _remove_delimiter_from_comments(source_code)
 
     locations = _build_statements_start_end_locations(source_code)
@@ -104,11 +111,9 @@ def extract_ignores_from_inline_comments(source_code: str) -> list[NoQaDirective
 
             line_number = source_code[:statement_end_location].count("\n") + 1
 
-            comment = source_code[token.start : (token.end + 1)]
-
-            # Usual comments can contain noqa e.g. --new table -- noqa: UN005
-            # Hence we extract last possible noqa.
-            comment = [c.strip() for c in comment.split("--")][-1]
+            # Here we extract last possible noqa because we can have a comment followed
+            # by another comment e.g -- new table -- noqa: UN005
+            comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
 
             if comment.startswith("noqa"):
                 rules = _get_rules_from_inline_comment(comment, token.start)
@@ -126,9 +131,49 @@ def extract_ignores_from_inline_comments(source_code: str) -> list[NoQaDirective
     return inline_ignores
 
 
+def _extract_file_ignore(file: str, source_code: str) -> list[NoQaDirective]:
+    """Extract file ignore from the start of a file."""
+    file_ignores: list[NoQaDirective] = []
+
+    for token in parser.scan(source_code):
+        if token.name == "SQL_COMMENT":
+            if token.start != 0:
+                break
+
+            comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
+
+            if comment.strip().startswith(f"{PROGRAM_NAME}: noqa"):
+                rules = _get_rules_from_inline_comment(
+                    comment,
+                    token.start,
+                    section=f"{PROGRAM_NAME}: noqa",
+                )
+
+                file_ignores.extend(
+                    NoQaDirective(
+                        file=file,
+                        location=token.start,
+                        line_number=1,
+                        column_offset=0,
+                        rule=rule,
+                    )
+                    for rule in rules
+                )
+
+    return file_ignores
+
+
+def extract_ignores(*, file: str, source_code: str) -> list[NoQaDirective]:
+    """Extract ignores from source code."""
+    return _extract_statement_ignores(source_code) + _extract_file_ignore(
+        file=file,
+        source_code=source_code,
+    )
+
+
 def report_unused_ignores(
     *,
-    file: pathlib.Path,
+    file: str,
     inline_ignores: list[NoQaDirective],
 ) -> None:
     """Get unused ignores."""

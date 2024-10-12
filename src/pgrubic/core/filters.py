@@ -12,17 +12,14 @@ def filter_files(
     config: config.Config,
 ) -> tuple[pathlib.Path, ...]:
     """Filters files base on config.lint.include and config.lint.exclude."""
-    files: list[pathlib.Path] = []
+    files: set[pathlib.Path] = set()
 
     for path in paths:
-
         if path.is_dir():
-
-            files.extend(path.glob("**/*.sql"))
+            files.update(path.glob("**/*.sql"))
 
         else:
-
-            files.append(path)
+            files.add(path)
 
     return tuple(
         file for file in files if is_file_included(file=str(file), config=config)

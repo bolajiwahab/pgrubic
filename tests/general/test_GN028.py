@@ -215,7 +215,7 @@ def test_pass_general_noqa_wrongly_typed_required_column(
 ) -> None:
     """Test fail noqa wrongly typed required column."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE music (age int, created_at date)
     """
 

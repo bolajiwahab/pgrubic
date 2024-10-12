@@ -188,7 +188,7 @@ def test_pass_general_noqa_integer(
 ) -> None:
     """Test pass noqa integer."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (tbl_id int, retry_count integer);
     """
 

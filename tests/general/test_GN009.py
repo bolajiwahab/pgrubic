@@ -146,7 +146,7 @@ def test_pass_general_noqa_duplicate_column(
 ) -> None:
     """Test fail noqa duplicate column."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE music (age int, age text);
     """
 

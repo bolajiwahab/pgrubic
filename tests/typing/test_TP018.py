@@ -156,7 +156,7 @@ def test_pass_general_noqa_mismatch_column_in_data_type_change(
 ) -> None:
     """Test pass noqa mismatch column in data type change."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     ALTER TABLE account ALTER COLUMN user_id TYPE uuid USING account_id::uuid;
     """
 

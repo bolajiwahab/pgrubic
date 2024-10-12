@@ -155,7 +155,7 @@ def test_pass_general_noqa_required_column_removal(
 ) -> None:
     """Test fail noqa required column removal."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     ALTER TABLE music DROP COLUMN created_at
     """
 

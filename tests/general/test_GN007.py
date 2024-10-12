@@ -167,7 +167,7 @@ def test_pass_general_noqa_missing_replace_in_function(
 ) -> None:
     """Test fail noqa missing replace in function."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE FUNCTION dup(int) RETURNS TABLE(f1 int, f2 text) LANGUAGE SQL
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$
     ;

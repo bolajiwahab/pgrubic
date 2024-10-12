@@ -186,7 +186,7 @@ def test_pass_general_noqa_char(
 ) -> None:
     """Test pass noqa char."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE music (age int, first_name char);
     """
 

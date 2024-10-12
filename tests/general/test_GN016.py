@@ -185,7 +185,7 @@ def test_pass_general_noqa_constant_generated_column(
 ) -> None:
     """Test fail noqa constant generated column."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     ALTER TABLE people
         ADD COLUMN height_in numeric GENERATED ALWAYS AS (2.54) STORED;
     """

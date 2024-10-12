@@ -186,7 +186,7 @@ def test_pass_general_noqa_varchar(
 ) -> None:
     """Test pass noqa varchar."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE music (age int, first_name varchar);
     """
 

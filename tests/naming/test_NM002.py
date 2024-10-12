@@ -197,7 +197,7 @@ def test_pass_general_noqa_invalid_primary_key_name(
 ) -> None:
     """Test pass noqa invalid primary key name."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (tbl_id bigint, CONSTRAINT pkey_tbl PRIMARY KEY (tbl_id));
     """
 

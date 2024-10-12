@@ -146,7 +146,7 @@ def test_pass_general_noqa_table_column_conflict(
 ) -> None:
     """Test fail noqa table column conflict."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE music (age int, music text);
     """
 

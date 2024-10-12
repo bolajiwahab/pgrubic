@@ -132,7 +132,7 @@ def test_pass_general_noqa_drop_table(
 ) -> None:
     """Test pass noqa drop table."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     DROP TABLE public.card;
     """
 

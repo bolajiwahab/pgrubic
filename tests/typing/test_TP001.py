@@ -189,7 +189,7 @@ def test_pass_general_noqa_timestamp_without_timezone(
 ) -> None:
     """Test pass noqa timestamp without timezone."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE music (age int, created_at timestamp);
     """
 

@@ -202,7 +202,7 @@ def test_pass_general_noqa_duplicate_index(
     """Test pass general noqa duplicate index."""
     sql_pass_noqa: str = """
     CREATE INDEX ON measurement (id, city_id);
-    -- noqa:
+    -- noqa
     CREATE INDEX ON measurement (id, city_id);
     """
 

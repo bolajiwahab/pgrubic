@@ -130,7 +130,7 @@ def test_pass_general_noqa_pg_prefix_identifier(
 ) -> None:
     """Test pass noqa pg prefix identifier."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE pg_tbl (id int, CONSTRAINT tbl_pkey PRIMARY KEY (id))
     """
 

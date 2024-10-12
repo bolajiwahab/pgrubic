@@ -118,7 +118,7 @@ def test_pass_general_noqa_drop_database(
 ) -> None:
     """Test fail noqa drop database."""
     sql_noqa: str = """
-    DROP database test -- noqa:
+    DROP database test -- noqa
     ;
     """
 

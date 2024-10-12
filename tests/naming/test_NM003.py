@@ -196,7 +196,7 @@ def test_pass_general_noqa_invalid_unique_key_name(
 ) -> None:
     """Test pass noqa invalid unique key name."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (tbl_id bigint, CONSTRAINT tbl_key UNIQUE (tbl_id));
     """
 

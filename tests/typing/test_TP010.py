@@ -188,7 +188,7 @@ def test_pass_general_noqa_smallint(
 ) -> None:
     """Test pass noqa smallint."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (tbl_id int, retry_count smallint);
     """
 

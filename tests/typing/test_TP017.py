@@ -186,7 +186,7 @@ def test_pass_general_noqa_nullable_boolean_field(
 ) -> None:
     """Test pass noqa nullable boolean field."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE transaction (transaction_id int, is_active boolean);
     """
 

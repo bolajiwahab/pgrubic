@@ -120,7 +120,7 @@ def test_pass_general_noqa_drop_tablespace(
 ) -> None:
     """Test fail noqa drop tablespace."""
     sql_noqa: str = """
-    DROP TABLESPACE test -- noqa:
+    DROP TABLESPACE test -- noqa
     ;
     """
 

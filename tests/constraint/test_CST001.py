@@ -237,7 +237,7 @@ def test_pass_general_noqa_cascade_update(
 ) -> None:
     """Test fail noqa cascade update."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE books (
         author_id INT REFERENCES authors(author_id) ON UPDATE CASCADE
     );

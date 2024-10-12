@@ -161,7 +161,7 @@ def test_pass_general_noqa_invalid_partition_name(
 ) -> None:
     """Test pass noqa invalid partition name."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE measurement__2024_02 PARTITION OF measurement
     FOR VALUES FROM ('2006-02-01') TO ('2006-03-01');
     """

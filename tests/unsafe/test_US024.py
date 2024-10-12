@@ -151,7 +151,7 @@ def test_pass_general_noqa_indexes_movement_to_tablespace(
 ) -> None:
     """Test pass noqa tables movement to tablespace."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     ALTER TABLE ALL IN TABLESPACE test SET TABLESPACE test;
     """
 

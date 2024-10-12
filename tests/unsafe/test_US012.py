@@ -176,7 +176,7 @@ def test_pass_general_noqa_validating_foreign_key_constraint_on_existing_rows(
 ) -> None:
     """Test fail noqa validating foreign key constraint on existing rows."""
     sql_noqa: str = """
-    ALTER TABLE public.card -- noqa:
+    ALTER TABLE public.card -- noqa
         ADD CONSTRAINT fkey FOREIGN KEY(account_id) REFERENCES public.account(id)
     ;
     """

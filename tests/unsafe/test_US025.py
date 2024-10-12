@@ -132,7 +132,7 @@ def test_pass_general_noqa_cluster(
 ) -> None:
     """Test pass noqa cluster."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     CLUSTER employees USING employees_ind;
     """
 

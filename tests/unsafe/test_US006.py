@@ -139,7 +139,7 @@ def test_pass_general_noqa_adding_stored_generated_column(
     """Test fail noqa adding stored generated column."""
     sql_noqa: str = """
     ALTER TABLE public.card
-        ADD COLUMN id bigint GENERATED ALWAYS AS (id / 10) STORED -- noqa:
+        ADD COLUMN id bigint GENERATED ALWAYS AS (id / 10) STORED -- noqa
     ;
     """
 

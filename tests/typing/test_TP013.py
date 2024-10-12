@@ -188,7 +188,7 @@ def test_pass_general_noqa_hstore(
 ) -> None:
     """Test pass noqa hstore."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (tbl_id int, details hstore);
     """
 

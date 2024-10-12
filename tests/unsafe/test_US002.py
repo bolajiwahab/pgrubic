@@ -133,7 +133,7 @@ def test_pass_general_noqa_column_data_type_change(
 ) -> None:
     """Test fail noqa column data type change."""
     sql_noqa: str = """
-    ALTER TABLE public.card ALTER COLUMN id TYPE bigint -- noqa:
+    ALTER TABLE public.card ALTER COLUMN id TYPE bigint -- noqa
     ;
     """
 

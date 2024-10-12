@@ -152,7 +152,7 @@ def test_pass_general_noqa_procedural_language_whitelist(
 ) -> None:
     """Test pass noqa procedural language whitelist."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE LANGUAGE plsample HANDLER plsample_call_handler;
     """
 

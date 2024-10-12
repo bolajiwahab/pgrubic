@@ -154,7 +154,7 @@ def test_pass_general_noqa_select_into(
 ) -> None:
     """Test fail noqa select into."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     SELECT * INTO films_recent FROM films WHERE created_at >= '2002-01-01';
     """
 

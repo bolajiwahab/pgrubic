@@ -132,7 +132,7 @@ def test_pass_general_noqa_truncate_table(
 ) -> None:
     """Test pass noqa truncate table."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     TRUNCATE TABLE public.card;
     """
 

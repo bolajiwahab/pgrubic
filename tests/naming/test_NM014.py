@@ -130,7 +130,7 @@ def test_pass_general_noqa_single_letter_identifier(
 ) -> None:
     """Test pass noqa single letter identifier."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (age int, CONSTRAINT a PRIMARY KEY (id))
     """
 

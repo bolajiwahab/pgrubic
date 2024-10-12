@@ -173,7 +173,7 @@ def test_pass_general_noqa_validating_check_constraint_on_existing_rows(
 ) -> None:
     """Test fail noqa validating check constraint on existing rows."""
     sql_noqa: str = """
-    ALTER TABLE public.card -- noqa:
+    ALTER TABLE public.card -- noqa
         ADD CONSTRAINT chk CHECK(account_id > 0)
     ;
     """

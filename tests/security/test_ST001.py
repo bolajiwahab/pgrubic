@@ -149,7 +149,7 @@ def test_pass_general_noqa_extension_whitelist(
 ) -> None:
     """Test pass noqa extension whitelist."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE EXTENSION logical_ddl;
     """
 

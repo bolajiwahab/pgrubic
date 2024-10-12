@@ -118,7 +118,7 @@ def test_pass_general_noqa_drop_schema(
 ) -> None:
     """Test fail noqa drop schema."""
     sql_noqa: str = """
-    DROP schema test -- noqa:
+    DROP schema test -- noqa
     ;
     """
 
