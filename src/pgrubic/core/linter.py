@@ -18,10 +18,10 @@ class Violation:
 
     line_number: int
     column_offset: int
-    source_text: str
+    statement: str
     statement_location: int
     description: str
-    help = ""
+    help: str | None = None
 
 
 @dataclasses.dataclass(kw_only=True, slots=True)
@@ -48,6 +48,7 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
     # Attributes shared among all subclasses
     config: config.Config
     inline_ignores: list[noqa.NoQaDirective]
+    file: str
     source_code: str
 
     def __init__(self) -> None:
@@ -56,7 +57,7 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
         self.statement_location: int = 0
         self.line_number: int = 0
         self.column_offset: int = 0
-        self.source_text: str = ""
+        self.statement: str = ""
 
     def __init_subclass__(cls, **kwargs: typing.Any) -> None:
         """Set code attribute for subclasses."""
@@ -71,9 +72,15 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
         if not self.config.lint.fix:
             return False
 
+        if not self.is_auto_fixable:
+            return False
+
         for inline_ignore in self.inline_ignores:
             if (
-                self.statement_location == inline_ignore.location
+                (
+                    self.statement_location == inline_ignore.location
+                    or self.file == inline_ignore.file
+                )
                 and inline_ignore.rule in (noqa.A_STAR, self.code)
                 and not self.config.lint.ignore_noqa
             ):
@@ -128,19 +135,21 @@ class Linter:
     ) -> None:
         """Print all violations collected by a checker."""
         for violation in checker.violations:
-            sys.stdout.write(
-                f"\n{file}:{violation.line_number}:{violation.column_offset}:"
-                f" \033]8;;{DOCUMENTATION_URL}/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"  # noqa: E501
-                f" {violation.description}\n\n",
-            )
-            for idx, line in enumerate(
-                violation.source_text.splitlines(keepends=False),
-                start=violation.line_number - violation.source_text.count("\n"),
-            ):
+            if not checker.is_fix_applicable:
                 sys.stdout.write(
-                    f"{Fore.BLUE}{idx} | {Style.RESET_ALL}{Fore.RED}{Style.BRIGHT}{line}{Style.RESET_ALL}\n",  # noqa: E501
+                    f"\n{file}:{violation.line_number}:{violation.column_offset}:"
+                    f" \033]8;;{DOCUMENTATION_URL}/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"  # noqa: E501
+                    f" {violation.description}\n\n",
                 )
-            sys.stdout.write("\n")
+
+                for idx, line in enumerate(
+                    violation.statement.splitlines(keepends=False),
+                    start=violation.line_number - violation.statement.count("\n"),
+                ):
+                    sys.stdout.write(
+                        f"{Fore.BLUE}{idx} | {Style.RESET_ALL}{Fore.RED}{Style.BRIGHT}{line}{Style.RESET_ALL}\n",  # noqa: E501
+                    )
+                sys.stdout.write("\n")
 
     def run(self, *, file: str, source_code: str) -> ViolationMetric:
         """Run rules on a source code."""
@@ -162,6 +171,7 @@ class Linter:
 
         BaseChecker.inline_ignores = inline_ignores
         BaseChecker.source_code = source_code
+        BaseChecker.file = file
 
         for checker in self.checkers:
             checker.violations = set()

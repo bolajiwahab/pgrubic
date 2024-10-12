@@ -17,7 +17,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
         identifier: str,
         line_number: int,
         column_offset: int,
-        source_text: str,
+        statement: str,
         statement_location: int,
     ) -> None:
         """Check identifier for violations."""
@@ -32,7 +32,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             identifier=node.relation.relname,
             line_number=self.line_number,
             column_offset=self.column_offset,
-            source_text=self.source_text,
+            statement=self.statement,
             statement_location=self.statement_location,
         )
 
@@ -46,7 +46,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             identifier=node.colname,
             line_number=self.line_number,
             column_offset=self.column_offset,
-            source_text=self.source_text,
+            statement=self.statement,
             statement_location=self.statement_location,
         )
 
@@ -60,7 +60,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             identifier=node.view.relname,
             line_number=self.line_number,
             column_offset=self.column_offset,
-            source_text=self.source_text,
+            statement=self.statement,
             statement_location=self.statement_location,
         )
 
@@ -74,7 +74,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             identifier=node.idxname,
             line_number=self.line_number,
             column_offset=self.column_offset,
-            source_text=self.source_text,
+            statement=self.statement,
             statement_location=self.statement_location,
         )
 
@@ -88,7 +88,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             identifier=node.sequence.relname,
             line_number=self.line_number,
             column_offset=self.column_offset,
-            source_text=self.source_text,
+            statement=self.statement,
             statement_location=self.statement_location,
         )
 
@@ -102,7 +102,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             identifier=node.schemaname,
             line_number=self.line_number,
             column_offset=self.column_offset,
-            source_text=self.source_text,
+            statement=self.statement,
             statement_location=self.statement_location,
         )
 
@@ -116,7 +116,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             identifier=node.funcname[-1].sval,
             line_number=self.line_number,
             column_offset=self.column_offset,
-            source_text=self.source_text,
+            statement=self.statement,
             statement_location=self.statement_location,
         )
 
@@ -131,7 +131,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
                 identifier=node.conname,
                 line_number=self.line_number,
                 column_offset=self.column_offset,
-                source_text=self.source_text,
+                statement=self.statement,
                 statement_location=self.statement_location,
             )
 
@@ -145,7 +145,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             identifier=node.dbname,
             line_number=self.line_number,
             column_offset=self.column_offset,
-            source_text=self.source_text,
+            statement=self.statement,
             statement_location=self.statement_location,
         )
 
@@ -159,7 +159,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             identifier=node.role,
             line_number=self.line_number,
             column_offset=self.column_offset,
-            source_text=self.source_text,
+            statement=self.statement,
             statement_location=self.statement_location,
         )
 
@@ -173,7 +173,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             identifier=node.tablespacename,
             line_number=self.line_number,
             column_offset=self.column_offset,
-            source_text=self.source_text,
+            statement=self.statement,
             statement_location=self.statement_location,
         )
 
@@ -187,7 +187,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             identifier=node.trigname,
             line_number=self.line_number,
             column_offset=self.column_offset,
-            source_text=self.source_text,
+            statement=self.statement,
             statement_location=self.statement_location,
         )
 
@@ -201,7 +201,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             identifier=node.typeName[-1].sval,
             line_number=self.line_number,
             column_offset=self.column_offset,
-            source_text=self.source_text,
+            statement=self.statement,
             statement_location=self.statement_location,
         )
 
@@ -215,7 +215,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             identifier=node.rulename,
             line_number=self.line_number,
             column_offset=self.column_offset,
-            source_text=self.source_text,
+            statement=self.statement,
             statement_location=self.statement_location,
         )
 
@@ -229,7 +229,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             identifier=node.rel.relname,
             line_number=self.line_number,
             column_offset=self.column_offset,
-            source_text=self.source_text,
+            statement=self.statement,
             statement_location=self.statement_location,
         )
 
@@ -243,6 +243,6 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             identifier=node.typevar.relname,
             line_number=self.line_number,
             column_offset=self.column_offset,
-            source_text=self.source_text,
+            statement=self.statement,
             statement_location=self.statement_location,
         )

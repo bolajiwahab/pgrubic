@@ -40,7 +40,7 @@ class WronglyTypedRequiredColumn(linter.BaseChecker):
                     linter.Violation(
                         line_number=self.line_number,
                         column_offset=self.column_offset,
-                        source_text=self.source_text,
+                        statement=self.statement,
                         statement_location=self.statement_location,
                         description=f"Wrongly typed required column `{column.name}`,"
                         f" expected type is `{column.data_type}`",

@@ -99,11 +99,11 @@ def _set_locations(
 
         line_end = self.source_code.find("\n", statement_location_end)
 
-        source_text = self.source_code[line_start:line_end].strip("\n")
+        statement = self.source_code[line_start:line_end].strip("\n")
 
         self.line_number = line_number
         self.column_offset = column_offset
-        self.source_text = source_text
+        self.statement = statement
         self.statement_location = statement_location
 
         return func(self, ancestors, node)

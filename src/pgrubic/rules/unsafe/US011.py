@@ -33,7 +33,7 @@ class NotNullConstraintOnNewColumnWithVolatileDefault(linter.BaseChecker):
                     linter.Violation(
                         line_number=self.line_number,
                         column_offset=self.column_offset,
-                        source_text=self.source_text,
+                        statement=self.statement,
                         statement_location=self.statement_location,
                         description="Not null constraint on new column with volatile default",  # noqa: E501
                     ),

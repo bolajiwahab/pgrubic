@@ -44,7 +44,7 @@ class NonSnakeCaseIdentifier(CheckIdentifier):
         identifier: str,
         line_number: int,
         column_offset: int,
-        source_text: str,
+        statement: str,
         statement_location: int,
     ) -> None:
         """Check if identifier is not in snake case."""
@@ -57,7 +57,7 @@ class NonSnakeCaseIdentifier(CheckIdentifier):
                 linter.Violation(
                     line_number=line_number,
                     column_offset=column_offset,
-                    source_text=source_text,
+                    statement=statement,
                     statement_location=statement_location,
                     description=f"Identifier `{identifier}` should be in snake case",
                 ),

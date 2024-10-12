@@ -1,8 +1,17 @@
--- pgrubic: noqa: NM016, GN001
+-- pgrubic: noqa: NM016, GN024
 
-SELECT a = NULL from where -- noqa: GN001
+SELECT a = NULL
 ;
 
 -- ALTER TABLE public.example ADD COLUMN foo boolean default false;
 
 -- Truncate table public.example;
+
+SELECT a = NULL
+;
+
+SELECT a = NULL
+;
+
+SELECT a = NULL
+;

@@ -36,7 +36,7 @@ class KeywordIdentifier(CheckIdentifier):
         identifier: str,
         line_number: int,
         column_offset: int,
-        source_text: str,
+        statement: str,
         statement_location: int,
     ) -> None:
         """Check for keywords used as identifiers."""
@@ -54,7 +54,7 @@ class KeywordIdentifier(CheckIdentifier):
                 linter.Violation(
                     line_number=line_number,
                     column_offset=column_offset,
-                    source_text=source_text,
+                    statement=statement,
                     statement_location=statement_location,
                     description=f"Keyword `{identifier}` used as an identifier",
                 ),

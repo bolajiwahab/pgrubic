@@ -5,22 +5,23 @@
 # include = ["test.sql", "new.sql"]
 # exclude = ["*.py"]
 fix = false
+date_column_suffix = "_date"
 
 ignore-noqa = false
 
 disallowed-schemas = [
     { name = "partitions", reason = "Deprecated", use-instead = "part" },
-    { name = "public", reason = "Default schema", use-instead = "amlex" },
+    # { name = "public", reason = "Default schema", use-instead = "amlex" },
 ]
 
 disallowed-data-types = [
     { name = "point", reason = "Deprecated", use-instead = "text" },
 ]
 
-required-columns = [
-    { name = "created", data-type = "timestamptz" },
-    { name = "updated", data-type = "timestamptz" },
-]
+# required-columns = [
+#     { name = "created", data-type = "timestamptz" },
+#     { name = "updated", data-type = "timestamptz" },
+# ]
 
 # exclude = ["*test.sql"]
 # timestamp-column-suffix = "_at"
