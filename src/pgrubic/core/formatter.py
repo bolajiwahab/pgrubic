@@ -25,6 +25,10 @@ class Formatter:
         """Initialize variables."""
         self.config = config
 
+    def __init__(self, config: config.Config) -> None:
+        """Initialize variables."""
+        self.config = config
+
     @staticmethod
     def run(*, source_file: str, source_code: str, config: config.Config) -> str:
         """Format source code."""
