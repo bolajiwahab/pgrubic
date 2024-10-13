@@ -31,6 +31,9 @@ class Formatter:
 
         return str(
             prettify(
+                semicolon_after_last_statement=config.format.semicolon_after_last_statement,
+                separate_statements=config.format.separate_statements,
+                remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
                 statement=source_code,
                 preserve_comments=True,
                 comma_at_eoln=config.format.comma_at_eoln,
@@ -64,4 +67,4 @@ class Formatter:
             sys.exit(1)
 
         with pathlib.Path(source_file).open("w", encoding="utf-8") as sf:
-            sf.write(formatted_source_code)
+            sf.write(formatted_source_code + "\n")

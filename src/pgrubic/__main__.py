@@ -84,7 +84,9 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
 @click.option(
     "--diff",
     is_flag=True,
-    help="Report the difference between the current file and how the formatted file would look like",  # noqa: E501
+    help="""
+    Report the difference between the current file and
+    how the formatted file would look like""",
 )
 @click.argument("paths", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
 def format_sql_file(paths: tuple[pathlib.Path, ...], *, check: bool, diff: bool) -> None:

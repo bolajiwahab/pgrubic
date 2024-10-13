@@ -70,6 +70,9 @@ class Format:
     """Representation of format config."""
 
     comma_at_eoln: bool
+    semicolon_after_last_statement: bool
+    separate_statements: int
+    remove_pg_catalog_from_functions: bool
     diff: bool
     check: bool
 
@@ -177,6 +180,13 @@ def parse_config() -> Config:
         ),
         format=Format(
             comma_at_eoln=config_format["comma-at-eoln"],
+            semicolon_after_last_statement=config_format[
+                "semicolon-after-last-statement"
+            ],
+            separate_statements=config_format["separate-statements"],
+            remove_pg_catalog_from_functions=config_format[
+                "remove-pg-catalog-from-functions"
+            ],
             diff=config_format["diff"],
             check=config_format["check"],
         ),

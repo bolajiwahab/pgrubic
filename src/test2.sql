@@ -1,5 +1,9 @@
 -- pgrubic: noqa
+CREATE INDEX idx
+    ON -- noqa: COV011
+public.tbl (activated);
 
-CREATE INDEX idx on public.tbl(activated);
-
-CREATE TABLE public.tbl (activated date, constraint activated_pkey primary key (activated));
+CREATE TABLE public.tbl (
+    activated date,
+    CONSTRAINT activated_pkey PRIMARY KEY (activated)
+);

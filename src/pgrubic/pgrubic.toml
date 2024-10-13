@@ -23,5 +23,9 @@ regex-sequence = "^.+$"
 
 [format]
 comma-at-eoln = true
+semicolon-after-last-statement = true
+remove-pg-catalog-from-functions = true
+semicolon-at-eoln = true
+separate-statements = 1
 check = false
 diff = false
