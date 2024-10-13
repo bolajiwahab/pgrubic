@@ -186,6 +186,7 @@ legacy_tox_ini = """
         types-toml
         types-colorama
         types-click
+        rich
     commands = mypy src tests docs
 
     [testenv:docbuild]
