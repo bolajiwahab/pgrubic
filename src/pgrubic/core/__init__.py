@@ -8,10 +8,12 @@ from pgrubic.core.loader import (
     add_set_locations_to_rule,
 )
 from pgrubic.core.filters import filter_files
+from pgrubic.core.formatter import Formatter
 from pgrubic.core.formatters import ddl, dml
 
 __all__ = [
     "Linter",
+    "Formatter",
     "BaseChecker",
     "ViolationMetric",
     "load_rules",

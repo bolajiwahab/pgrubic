@@ -66,10 +66,20 @@ class Lint:
 
 
 @dataclasses.dataclass(kw_only=True)
+class Format:
+    """Representation of format config."""
+
+    comma_at_eoln: bool
+    diff: bool
+    check: bool
+
+
+@dataclasses.dataclass(kw_only=True)
 class Config:
     """Representation of config."""
 
     lint: Lint
+    format: Format
 
 
 def _load_default_config() -> dict[str, typing.Any]:
@@ -119,6 +129,7 @@ def parse_config() -> Config:
     """Parse config."""
     merged_config = _merge_config()
     config_lint = merged_config["lint"]
+    config_format = merged_config["format"]
 
     return Config(
         lint=Lint(
@@ -163,5 +174,10 @@ def parse_config() -> Config:
                 )
                 for schema in config_lint["disallowed-schemas"]
             ],
+        ),
+        format=Format(
+            comma_at_eoln=config_format["comma-at-eoln"],
+            diff=config_format["diff"],
+            check=config_format["check"],
         ),
     )

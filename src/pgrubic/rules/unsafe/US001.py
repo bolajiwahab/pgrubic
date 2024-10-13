@@ -13,7 +13,7 @@ class DropColumn(linter.BaseChecker):
     Not only that mistakenly dropping a column can cause data loss, applications that rely
     on the column will break.
 
-    If any part of the application code, other database procedures, views, or reports use
+    If any part of the application code, database procedures, views, or reports use
     the column, dropping it will cause errors and potentially disrupt business operations.
 
     Removing a column from a table may appear to be a reversible action, but it is not.

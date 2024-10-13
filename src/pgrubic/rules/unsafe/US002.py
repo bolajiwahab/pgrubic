@@ -32,7 +32,6 @@ class ColumnDataTypeChange(linter.BaseChecker):
     2. Start writing data to the new column.
     3. Copy all data from the old column to the new column.
     4. Migrate clients to the new column.
-    5. Drop the old column.
     """
 
     def visit_AlterTableCmd(

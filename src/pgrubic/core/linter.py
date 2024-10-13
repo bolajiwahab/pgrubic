@@ -90,7 +90,7 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
 
 
 class Linter:
-    """Holds all lint rules, and runs them against a source file."""
+    """Holds all lint rules, and runs them against a source code."""
 
     def __init__(self, config: config.Config) -> None:
         """Initialize variables."""

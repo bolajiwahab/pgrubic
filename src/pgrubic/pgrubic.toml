@@ -20,3 +20,8 @@ regex-constraint-foreign-key = "^.+$"
 regex-constraint-check = "^.+$"
 regex-constraint-exclusion = "^.+$"
 regex-sequence = "^.+$"
+
+[format]
+comma-at-eoln = true
+check = false
+diff = false

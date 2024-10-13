@@ -79,5 +79,28 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
             sys.exit(1)
 
 
+@cli.command(name="format")
+@click.option("--check", is_flag=True, help="Check if any files would have been modified")
+@click.option(
+    "--diff",
+    is_flag=True,
+    help="Report the difference between the current file and how the formatted file would look like",  # noqa: E501
+)
+@click.argument("paths", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
+def format_sql_file(paths: tuple[pathlib.Path, ...], *, check: bool, diff: bool) -> None:
+    """Format SQL files."""
+    config: core.Config = core.parse_config()
+    config.format.check = check
+    config.format.diff = diff
+
+    formatter: core.Formatter = core.Formatter(config=config)
+
+    for source_file in paths:
+        with source_file.open("r", encoding="utf-8") as sf:
+            source_code: str = sf.read()
+
+        formatter.format(source_file=str(source_file), source_code=source_code)
+
+
 if __name__ == "__main__":
     cli()

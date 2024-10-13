@@ -1,27 +1,31 @@
 """Formatter."""
 
 import sys
+import difflib
 import pathlib
 
 from pglast import parser, prettify
+from rich.syntax import Syntax
+from rich.console import Console
+
+from pgrubic.core import config
 
 
 class Formatter:
     """Format source file."""
 
+    def __init__(self, config: config.Config) -> None:
+        """Initialize variables."""
+        self.config = config
+
     @staticmethod
-    def _run(*, source_path: str, comma_at_eoln: bool) -> str:
+    def run(*, source_file: str, source_code: str, config: config.Config) -> str:
         """Format source file."""
-        file_name = pathlib.Path(source_path).name
-
-        with pathlib.Path(source_path).open("r", encoding="utf-8") as source_file:
-            source_code = source_file.read()
-
         try:
             parser.parse_sql(source_code)
 
         except parser.ParseError as error:
-            sys.stdout.write(f"{file_name}: {error!s}")
+            sys.stdout.write(f"{source_file}: {error!s}")
 
             sys.exit(1)
 
@@ -29,23 +33,35 @@ class Formatter:
             prettify(
                 statement=source_code,
                 preserve_comments=True,
-                comma_at_eoln=comma_at_eoln,
+                comma_at_eoln=config.format.comma_at_eoln,
             ),
         )
 
-    def diff(self, *, source_path: str, comma_at_eoln: bool = True) -> None:
-        """Print all diffs collected by the formatter."""
-        with pathlib.Path(source_path).open("r", encoding="utf-8") as source_file:
-            source_code = source_file.read()
+    def format(self, *, source_file: str, source_code: str) -> None:
+        """Format source code."""
+        source_file = pathlib.Path(source_file).name
 
-        result = self._run(source_path=source_path, comma_at_eoln=comma_at_eoln)
+        formatted_source_code = self.run(
+            source_file=source_file,
+            source_code=source_code,
+            config=self.config,
+        )
 
-        if source_code != result:
-            sys.stdout.write(result)
+        if self.config.format.check and formatted_source_code != source_code:
+            sys.exit(1)
 
-    def format(self, *, source_path: str, comma_at_eoln: bool = True) -> None:
-        """Format source file."""
-        result = self._run(source_path=source_path, comma_at_eoln=comma_at_eoln)
+        if self.config.format.diff and formatted_source_code != source_code:
+            console = Console()
+            diff = difflib.unified_diff(
+                source_code.splitlines(keepends=True),
+                formatted_source_code.splitlines(keepends=True),
+                fromfile=source_file,
+                tofile=source_file,
+            )
+            diff_output = "".join(diff)
 
-        with pathlib.Path(source_path).open("w", encoding="utf-8") as source_file:
-            source_file.write(result)
+            console.print(Syntax(diff_output, "diff", theme="ansi_dark"))
+            sys.exit(1)
+
+        with pathlib.Path(source_file).open("w", encoding="utf-8") as sf:
+            sf.write(formatted_source_code)
