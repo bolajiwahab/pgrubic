@@ -69,7 +69,9 @@ class DisallowedSchema(linter.BaseChecker):
         node: ast.CreateEnumStmt,
     ) -> None:
         """Visit CreateEnumStmt."""
-        schema_name: str = node.typeName[0].sval if len(node.typeName) > 1 else None
+        schema_name: str | None = (
+            node.typeName[0].sval if len(node.typeName) > 1 else None
+        )
 
         for schema in self.config.lint.disallowed_schemas:
             if schema_name == schema.name:
@@ -101,7 +103,9 @@ class DisallowedSchema(linter.BaseChecker):
         node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""
-        schema_name: str = node.funcname[0].sval if len(node.funcname) > 1 else None
+        schema_name: str | None = (
+            node.funcname[0].sval if len(node.funcname) > 1 else None
+        )
 
         for schema in self.config.lint.disallowed_schemas:
             if schema_name == schema.name:

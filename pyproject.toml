@@ -41,7 +41,6 @@ dev = [
   "pytest==7.4.3",
   "coverage==7.6.1",
   "tox==4.18.0",
-  "pre-commit==3.8.0",
 ]
 
 doc = [
@@ -187,7 +186,7 @@ legacy_tox_ini = """
         types-colorama
         types-click
         rich
-    commands = mypy src tests docs
+    commands = mypy {posargs:src} {posargs:tests} {posargs:docs}
 
     [testenv:docbuild]
     commands =
@@ -214,5 +213,5 @@ legacy_tox_ini = """
     [testenv:build-dist]
     deps = build
     commands =
-        python -m build --sdist --wheel {posargs: {toxinidir}}
+        python -m build --sdist --wheel {posargs:{toxinidir}}
 """
