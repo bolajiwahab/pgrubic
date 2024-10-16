@@ -25,6 +25,7 @@ def filter_files(
         source_file
         for source_file in source_files
         if is_file_included(source_file=str(source_file), config=config)
+        and source_file.stat().st_size > 0
     )
 
 

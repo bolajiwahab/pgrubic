@@ -5,7 +5,7 @@ import pathlib
 from pgrubic import core
 
 
-def test_filter_source_paths(linter: core.Linter) -> None:
+def test_filter_source_paths(tmp_path: pathlib.Path, linter: core.Linter) -> None:
     """Test filtering source paths."""
     linter.config.lint.include = [
         "*.sql",
@@ -15,6 +15,11 @@ def test_filter_source_paths(linter: core.Linter) -> None:
     linter.config.lint.exclude = [
         "test.sql",
     ]
+
+    sql_fail: str = "SELECT a = NULL;"
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
 
     paths: tuple[pathlib.Path, ...] = (
         pathlib.Path("test.sql"),
@@ -30,10 +35,14 @@ def test_filter_source_paths(linter: core.Linter) -> None:
         pathlib.Path("alters.sql"),
     )
 
+    for path in paths:
+        file_fail = directory / path
+        file_fail.write_text(sql_fail)
+
     source_paths_filtered_length = 9
 
     paths = core.filter_files(
-        paths=paths,
+        paths=(directory,),
         config=linter.config,
     )
 

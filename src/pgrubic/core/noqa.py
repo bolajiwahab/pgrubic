@@ -2,6 +2,7 @@
 
 import re
 import sys
+import typing
 import dataclasses
 
 from pglast import parser
@@ -169,6 +170,50 @@ def extract_ignores(*, source_file: str, source_code: str) -> list[NoQaDirective
         source_file=source_file,
         source_code=source_code,
     )
+
+
+class Comment(typing.NamedTuple):
+    """Representation of an SQL comment."""
+
+    location: int
+    text: str
+    at_start_of_line: bool
+    continue_previous: bool
+
+
+def extract_comments(source_code: str) -> list[Comment]:
+    """Extract comments from SQL statements."""
+    source_code = _remove_delimiter_from_comments(source_code)
+
+    locations = _build_statements_start_end_locations(source_code)
+    # this is a hack to ensure we always print comment at the top of an SQL statement
+    comments: list[Comment] = []
+    continue_previous = False
+
+    for token in parser.scan(source_code):
+        if token.name in ("C_COMMENT", "SQL_COMMENT"):
+            statement_start_location, _ = _get_statement_locations(
+                locations,
+                token.start,
+            )
+
+            comment = source_code[token.start : (token.end + 1)]
+            at_start_of_line = not source_code[
+                : token.start - statement_start_location
+            ].strip()
+            comment = source_code[token.start : token.end + 1]
+            comments.append(
+                Comment(
+                    statement_start_location,
+                    comment,
+                    at_start_of_line,
+                    continue_previous,
+                ),
+            )
+            continue_previous = True
+        else:
+            continue_previous = False
+    return comments
 
 
 def report_unused_ignores(

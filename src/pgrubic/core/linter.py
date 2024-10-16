@@ -4,7 +4,7 @@ import sys
 import typing
 import dataclasses
 
-from pglast import ast, parser, stream, visitors, _extract_comments
+from pglast import ast, parser, stream, visitors
 from colorama import Fore, Style
 from caseconverter import kebabcase
 
@@ -155,7 +155,7 @@ class Linter:
         """Run rules on a source code."""
         try:
             tree: ast.Node = parser.parse_sql(source_code)
-            comments = _extract_comments(source_code)
+            comments = noqa.extract_comments(source_code)
 
         except parser.ParseError as error:
             sys.stderr.write(f"{source_file}: {Fore.RED}{error!s}{Style.RESET_ALL}")
