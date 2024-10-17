@@ -30,7 +30,10 @@ class Formatter:
         """Format source file."""
         try:
             tree: ast.Node = parser.parse_sql(source_code)
-            comments = noqa.extract_comments(source_code)
+            comments = noqa.extract_comments(
+                source_file=source_file,
+                source_code=source_code,
+            )
 
         except parser.ParseError as error:
             sys.stderr.write(f"{source_file}: {Fore.RED}{error!s}{Style.RESET_ALL}")

@@ -13,6 +13,8 @@ A_STAR: str = "*"
 
 
 def _build_statements_start_end_locations(
+    *,
+    source_file: str,
     source_code: str,
 ) -> list[tuple[int, int]]:
     """Build statements start and end locations."""
@@ -24,7 +26,7 @@ def _build_statements_start_end_locations(
     for idx, token in enumerate(tokens):
         if idx == len(tokens) - 1 and token.name != "ASCII_59":
             sys.stderr.write(
-                f"{Fore.RED}Error: Missing statement terminator at location {token.end}{Style.RESET_ALL}\n",  # noqa: E501
+                f"{Fore.RED}Error:{source_file}:Missing statement terminator at location {token.end}{Style.RESET_ALL}\n",  # noqa: E501
             )
             sys.exit(1)
 
@@ -84,9 +86,12 @@ class NoQaDirective:
     used: bool = False
 
 
-def _extract_statement_ignores(source_code: str) -> list[NoQaDirective]:
+def _extract_statement_ignores(source_file: str, source_code: str) -> list[NoQaDirective]:
     """Extract ignores from SQL statements."""
-    locations = _build_statements_start_end_locations(source_code)
+    locations = _build_statements_start_end_locations(
+        source_file=source_file,
+        source_code=source_code,
+    )
 
     inline_ignores: list[NoQaDirective] = []
 
@@ -153,7 +158,10 @@ def _extract_file_ignore(source_file: str, source_code: str) -> list[NoQaDirecti
 
 def extract_ignores(*, source_file: str, source_code: str) -> list[NoQaDirective]:
     """Extract ignores from source code."""
-    return _extract_statement_ignores(source_code) + _extract_file_ignore(
+    return _extract_statement_ignores(
+        source_file=source_file,
+        source_code=source_code,
+    ) + _extract_file_ignore(
         source_file=source_file,
         source_code=source_code,
     )
@@ -168,9 +176,12 @@ class Comment(typing.NamedTuple):
     continue_previous: bool
 
 
-def extract_comments(source_code: str) -> list[Comment]:
+def extract_comments(*, source_file: str, source_code: str) -> list[Comment]:
     """Extract comments from SQL statements."""
-    locations = _build_statements_start_end_locations(source_code)
+    locations = _build_statements_start_end_locations(
+        source_file=source_file,
+        source_code=source_code,
+    )
 
     # this is a hack to ensure we always print comment at the top of an SQL statement
     comments: list[Comment] = []

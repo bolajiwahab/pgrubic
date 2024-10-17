@@ -102,6 +102,7 @@ def test_missing_statement_terminator() -> None:
 
     with pytest.raises(SystemExit) as excinfo:
         noqa.extract_comments(
+            source_file=TEST_FILE,
             source_code=source_code,
         )
 
