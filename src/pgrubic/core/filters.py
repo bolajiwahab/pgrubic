@@ -24,7 +24,7 @@ def filter_files(
     return tuple(
         source_file
         for source_file in source_files
-        if is_file_included(
+        if _is_file_included(
             source_file=str(source_file),
             include=include,
             exclude=exclude,
@@ -33,7 +33,7 @@ def filter_files(
     )
 
 
-def is_file_included(
+def _is_file_included(
     *,
     source_file: str,
     include: list[str],

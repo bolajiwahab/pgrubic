@@ -1,15 +1,21 @@
 """Formatter."""
 
 import sys
+import typing
 import difflib
 import pathlib
 
 from pglast import ast, parser, stream
 from colorama import Fore, Style
-from rich.syntax import Syntax
-from rich.console import Console
 
 from pgrubic.core import noqa, config
+
+
+class FormatResult(typing.NamedTuple):
+    """Representation of the result of formatting."""
+
+    exit_code: int
+    output: str
 
 
 class Formatter:
@@ -44,7 +50,7 @@ class Formatter:
             + "\n"
         )
 
-    def format(self, *, source_file: str, source_code: str) -> None:
+    def format(self, *, source_file: str, source_code: str) -> FormatResult:
         """Format source code."""
         source_file = pathlib.Path(source_file).name
 
@@ -55,10 +61,9 @@ class Formatter:
         )
 
         if self.config.format.check and formatted_source_code != source_code:
-            sys.exit(1)
+            return FormatResult(exit_code=1, output="")
 
         if self.config.format.diff and formatted_source_code != source_code:
-            console = Console()
             diff = difflib.unified_diff(
                 source_code.splitlines(keepends=True),
                 formatted_source_code.splitlines(keepends=True),
@@ -67,8 +72,6 @@ class Formatter:
             )
             diff_output = "".join(diff)
 
-            console.print(Syntax(diff_output, "diff", theme="ansi_dark"))
-            sys.exit(1)
+            return FormatResult(exit_code=1, output=diff_output)
 
-        with pathlib.Path(source_file).open("w", encoding="utf-8") as sf:
-            sf.write(formatted_source_code + "\n")
+        return FormatResult(exit_code=0, output=formatted_source_code)

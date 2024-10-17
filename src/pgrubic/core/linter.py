@@ -98,7 +98,7 @@ class Linter:
         self.config = config
 
     @staticmethod
-    def skip_suppressed_violations(
+    def _skip_suppressed_violations(
         *,
         source_file: str,
         checker: BaseChecker,
@@ -179,7 +179,7 @@ class Linter:
             checker(tree)
 
             if not self.config.lint.ignore_noqa:
-                self.skip_suppressed_violations(
+                self._skip_suppressed_violations(
                     source_file=source_file,
                     checker=checker,
                     inline_ignores=inline_ignores,

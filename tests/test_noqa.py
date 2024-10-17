@@ -2,6 +2,7 @@
 
 import typing
 
+import pytest
 from colorama import Fore, Style
 
 from tests import TEST_FILE
@@ -93,6 +94,18 @@ def test_report_specific_unused_ignores(
         out
         == f"{TEST_FILE}:3:52: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}NM016{Style.RESET_ALL})\n"  # noqa: E501
     )
+
+
+def test_missing_statement_terminator() -> None:
+    """Test missing statement terminator."""
+    source_code: str = "SELECT * FROM tab"
+
+    with pytest.raises(SystemExit) as excinfo:
+        noqa.extract_comments(
+            source_code=source_code,
+        )
+
+    assert excinfo.value.code == 1
 
 
 def test_report_general_unused_ignores(

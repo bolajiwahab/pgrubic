@@ -4,6 +4,8 @@ import sys
 import pathlib
 
 import click
+from rich.syntax import Syntax
+from rich.console import Console
 
 from pgrubic import PROGRAM_NAME, core
 
@@ -108,11 +110,16 @@ def format_sql_file(
     diff: bool,
 ) -> None:
     """Format SQL files."""
+    console = Console()
     config: core.Config = core.parse_config()
     config.format.check = check
     config.format.diff = diff
 
     formatter: core.Formatter = core.Formatter(config=config)
+
+    # Use the current working directory if no paths are specified
+    if not paths:
+        paths = (pathlib.Path.cwd(),)
 
     source_files = core.filter_files(
         paths=paths,
@@ -124,7 +131,19 @@ def format_sql_file(
         with source_file.open("r", encoding="utf-8") as sf:
             source_code: str = sf.read()
 
-        formatter.format(source_file=str(source_file), source_code=source_code)
+        formatted_result: core.FormatResult = formatter.format(
+            source_file=str(source_file),
+            source_code=source_code,
+        )
+
+        if formatted_result.exit_code == 1:
+            console.print(Syntax(formatted_result.output, "diff", theme="ansi_dark"))
+
+            sys.exit(1)
+
+        if formatted_result.output != source_code:
+            with source_file.open("w", encoding="utf-8") as sf:
+                sf.write(formatted_result.output)
 
 
 if __name__ == "__main__":
