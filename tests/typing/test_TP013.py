@@ -145,7 +145,7 @@ def test_pass_noqa_hstore(
     """Test pass noqa hstore."""
     sql_pass_noqa: str = """
     -- noqa: TP013
-    CREATE TABLE tbl (tbl_id int, details hstore)
+    CREATE TABLE tbl (tbl_id int, details hstore);
     """
 
     violations: core.ViolationMetric = lint_hstore.run(

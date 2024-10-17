@@ -1,6 +1,5 @@
 """Handling noqa comments."""
 
-import re
 import sys
 import typing
 import dataclasses
@@ -13,35 +12,25 @@ from pgrubic import PROGRAM_NAME
 A_STAR: str = "*"
 
 
-def _remove_delimiter_from_comments(source_code: str, delimiter: str = ";") -> str:
-    """Remove delimiter from SQL comments."""
-    comment_pattern = r"\s*--.*|^\s*\/[*][\S\s]*?[*]\/"
-
-    return re.sub(
-        comment_pattern,
-        lambda match: match.group(0).replace(delimiter, " "),
-        source_code,
-        flags=re.MULTILINE,
-    )
-
-
 def _build_statements_start_end_locations(
     source_code: str,
-    delimiter: str = ";",
 ) -> list[tuple[int, int]]:
     """Build statements start and end locations."""
     locations: list[tuple[int, int]] = []
 
     statement_start_location = 0
+    tokens = parser.scan(source_code)
 
-    for statement in source_code.split(delimiter):
-        statement_length = len(statement)
+    for idx, token in enumerate(tokens):
+        if idx == len(tokens) - 1 and token.name != "ASCII_59":
+            sys.stderr.write(
+                f"{Fore.RED}Error: Missing statement terminator at location {token.end}{Style.RESET_ALL}\n",  # noqa: E501
+            )
+            sys.exit(1)
 
-        locations.append(
-            (statement_start_location, statement_start_location + statement_length),
-        )
-
-        statement_start_location += statement_length + 1
+        if token.name == "ASCII_59":
+            locations.append((statement_start_location, token.end))
+            statement_start_location = token.end + 1
 
     return locations
 
@@ -97,8 +86,6 @@ class NoQaDirective:
 
 def _extract_statement_ignores(source_code: str) -> list[NoQaDirective]:
     """Extract ignores from SQL statements."""
-    source_code = _remove_delimiter_from_comments(source_code)
-
     locations = _build_statements_start_end_locations(source_code)
 
     inline_ignores: list[NoQaDirective] = []
@@ -183,9 +170,8 @@ class Comment(typing.NamedTuple):
 
 def extract_comments(source_code: str) -> list[Comment]:
     """Extract comments from SQL statements."""
-    source_code = _remove_delimiter_from_comments(source_code)
-
     locations = _build_statements_start_end_locations(source_code)
+
     # this is a hack to ensure we always print comment at the top of an SQL statement
     comments: list[Comment] = []
     continue_previous = False

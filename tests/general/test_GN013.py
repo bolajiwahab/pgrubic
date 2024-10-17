@@ -153,7 +153,7 @@ def test_pass_noqa_nullable_required_column(
     """Test pass noqa nullable required column."""
     sql_pass_noqa: str = """
     -- noqa: GN013
-    CREATE TABLE music (age int, created_at timestamptz)
+    CREATE TABLE music (age int, created_at timestamptz);
     """
 
     violations: core.ViolationMetric = lint_nullable_required_column.run(
@@ -197,7 +197,7 @@ def test_pass_general_noqa_nullable_required_column(
     """Test fail noqa nullable required column."""
     sql_pass_noqa: str = """
     -- noqa
-    CREATE TABLE music (age int)
+    CREATE TABLE music (age int);
     """
 
     violations: core.ViolationMetric = lint_nullable_required_column.run(

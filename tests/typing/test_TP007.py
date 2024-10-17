@@ -145,7 +145,7 @@ def test_pass_noqa_serial(
     """Test pass noqa serial."""
     sql_pass_noqa: str = """
     -- noqa: TP007
-    CREATE TABLE tbl (tbl_id int, tbl_id serial)
+    CREATE TABLE tbl (tbl_id int, tbl_id serial);
     """
 
     violations: core.ViolationMetric = lint_serial.run(

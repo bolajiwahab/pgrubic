@@ -146,7 +146,7 @@ def test_pass_noqa_timestamp_with_timezone_with_precision(
     """Test pass noqa timestamp with timezone with precision."""
     sql_pass_noqa: str = """
     -- noqa: TP003
-    CREATE TABLE music (age int, created_at timestamptz(10))
+    CREATE TABLE music (age int, created_at timestamptz(10));
     """
 
     violations: core.ViolationMetric = lint_timestamp_with_timezone_with_precision.run(

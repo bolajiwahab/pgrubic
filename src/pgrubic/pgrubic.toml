@@ -22,6 +22,8 @@ regex-constraint-exclusion = "^.+$"
 regex-sequence = "^.+$"
 
 [format]
+include = []
+exclude = []
 comma-at-eoln = true
 semicolon-after-last-statement = true
 remove-pg-catalog-from-functions = true

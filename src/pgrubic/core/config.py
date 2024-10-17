@@ -69,6 +69,8 @@ class Lint:
 class Format:
     """Representation of format config."""
 
+    include: list[str]
+    exclude: list[str]
     comma_at_eoln: bool
     semicolon_after_last_statement: bool
     separate_statements: int
@@ -179,6 +181,8 @@ def parse_config() -> Config:
             ],
         ),
         format=Format(
+            include=config_format["include"],
+            exclude=config_format["exclude"],
             comma_at_eoln=config_format["comma-at-eoln"],
             semicolon_after_last_statement=config_format[
                 "semicolon-after-last-statement"

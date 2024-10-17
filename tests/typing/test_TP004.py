@@ -143,7 +143,7 @@ def test_pass_noqa_char(
     """Test pass noqa char."""
     sql_pass_noqa: str = """
     -- noqa: TP004
-    CREATE TABLE music (age int, birth_place char)
+    CREATE TABLE music (age int, birth_place char);
     """
 
     violations: core.ViolationMetric = lint_char.run(

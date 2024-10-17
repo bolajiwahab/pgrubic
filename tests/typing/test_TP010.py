@@ -145,7 +145,7 @@ def test_pass_noqa_smallint(
     """Test pass noqa smallint."""
     sql_pass_noqa: str = """
     -- noqa: TP010
-    CREATE TABLE tbl (tbl_id int, retry_count smallint)
+    CREATE TABLE tbl (tbl_id int, retry_count smallint);
     """
 
     violations: core.ViolationMetric = lint_smallint.run(

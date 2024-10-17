@@ -91,7 +91,7 @@ def test_fail_required_column_removal_description(
     required_column_removal: core.BaseChecker,
 ) -> None:
     """Test required column removal description."""
-    sql_fail: str = "ALTER TABLE music DROP COLUMN created_at"
+    sql_fail: str = "ALTER TABLE music DROP COLUMN created_at;"
 
     _: core.ViolationMetric = lint_required_column_removal.run(
         source_file=TEST_FILE,
@@ -112,7 +112,7 @@ def test_pass_noqa_required_column_removal(
     """Test pass noqa required column removal."""
     sql_pass_noqa: str = """
     -- noqa: GN012
-    ALTER TABLE music DROP COLUMN created_at
+    ALTER TABLE music DROP COLUMN created_at;
     """
 
     violations: core.ViolationMetric = lint_required_column_removal.run(
@@ -134,7 +134,7 @@ def test_fail_noqa_required_column_removal(
     """Test fail noqa required column removal."""
     sql_fail_noqa: str = """
     -- noqa: GN001
-    ALTER TABLE music DROP COLUMN created_at
+    ALTER TABLE music DROP COLUMN created_at;
     """
 
     violations: core.ViolationMetric = lint_required_column_removal.run(
@@ -156,7 +156,7 @@ def test_pass_general_noqa_required_column_removal(
     """Test fail noqa required column removal."""
     sql_pass_noqa: str = """
     -- noqa
-    ALTER TABLE music DROP COLUMN created_at
+    ALTER TABLE music DROP COLUMN created_at;
     """
 
     violations: core.ViolationMetric = lint_required_column_removal.run(

@@ -84,7 +84,7 @@ def test_fail_implicit_constraint_name(
     lint_implicit_constraint_name: core.Linter,
 ) -> None:
     """Test fail implicit constraint name."""
-    sql_fail: str = "CREATE TABLE tbl (col int PRIMARY KEY)"
+    sql_fail: str = "CREATE TABLE tbl (col int PRIMARY KEY);"
 
     violations: core.ViolationMetric = lint_implicit_constraint_name.run(
         source_file=TEST_FILE,
@@ -147,7 +147,7 @@ def test_fail_noqa_implicit_constraint_name(
     """Test fail noqa implicit constraint name."""
     sql_fail_noqa: str = """
     -- noqa: GN001
-    CREATE TABLE tbl (col int PRIMARY KEY)
+    CREATE TABLE tbl (col int PRIMARY KEY);
     """
 
     violations: core.ViolationMetric = lint_implicit_constraint_name.run(
@@ -169,7 +169,7 @@ def test_pass_general_noqa_implicit_constraint_name(
     """Test pass noqa implicit constraint name."""
     sql_pass_noqa: str = """
     -- noqa
-    CREATE TABLE tbl (col int PRIMARY KEY)
+    CREATE TABLE tbl (col int PRIMARY KEY);
     """
 
     violations: core.ViolationMetric = lint_implicit_constraint_name.run(

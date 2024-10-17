@@ -153,7 +153,7 @@ def test_pass_noqa_disallowed_data_type(
     """Test pass noqa disallowed data type."""
     sql_pass_noqa: str = """
     -- noqa: TP014
-    CREATE TABLE tbl (tbl_id int, details varchar)
+    CREATE TABLE tbl (tbl_id int, details varchar);
     """
 
     violations: core.ViolationMetric = lint_disallowed_data_type.run(

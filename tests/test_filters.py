@@ -43,7 +43,8 @@ def test_filter_source_paths(tmp_path: pathlib.Path, linter: core.Linter) -> Non
 
     paths = core.filter_files(
         paths=(directory,),
-        config=linter.config,
+        include=linter.config.lint.include,
+        exclude=linter.config.lint.exclude,
     )
 
     assert len(paths) == source_paths_filtered_length

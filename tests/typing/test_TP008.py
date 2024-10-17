@@ -145,7 +145,7 @@ def test_pass_noqa_json(
     """Test pass noqa json."""
     sql_pass_noqa: str = """
     -- noqa: TP008
-    CREATE TABLE tbl (tbl_id int, details json)
+    CREATE TABLE tbl (tbl_id int, details json);
     """
 
     violations: core.ViolationMetric = lint_json.run(

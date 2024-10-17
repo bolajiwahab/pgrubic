@@ -143,7 +143,7 @@ def test_pass_noqa_numeric_with_precision(
     """Test pass noqa numeric with precision."""
     sql_pass_noqa: str = """
     -- noqa: TP016
-    CREATE TABLE transaction (transaction_id int, amount numeric(9, 2))
+    CREATE TABLE transaction (transaction_id int, amount numeric(9, 2));
     """
 
     violations: core.ViolationMetric = lint_numeric_with_precision.run(

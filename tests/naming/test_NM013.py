@@ -109,7 +109,7 @@ def test_fail_noqa_pg_prefix_identifier(
     """Test fail noqa pg prefix identifier."""
     sql_fail_noqa: str = """
     -- noqa: GN001
-    CREATE TABLE tbl (id int, CONSTRAINT pg_tbl_pkey PRIMARY KEY (id))
+    CREATE TABLE tbl (id int, CONSTRAINT pg_tbl_pkey PRIMARY KEY (id));
     """
 
     violations: core.ViolationMetric = lint_pg_prefix_identifier.run(
@@ -131,7 +131,7 @@ def test_pass_general_noqa_pg_prefix_identifier(
     """Test pass noqa pg prefix identifier."""
     sql_pass_noqa: str = """
     -- noqa
-    CREATE TABLE pg_tbl (id int, CONSTRAINT tbl_pkey PRIMARY KEY (id))
+    CREATE TABLE pg_tbl (id int, CONSTRAINT tbl_pkey PRIMARY KEY (id));
     """
 
     violations: core.ViolationMetric = lint_pg_prefix_identifier.run(

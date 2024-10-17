@@ -277,7 +277,9 @@ def test_pass_noqa_schema_unqualified_object(
     lint_schema_unqualified_object: core.Linter,
 ) -> None:
     """Test pass noqa schema unqualified object."""
-    sql_pass_noqa: str = "CREATE TABLE card AS SELECT * FROM account -- noqa: SM001;"
+    sql_pass_noqa: str = """
+    -- noqa: SM001
+    CREATE TABLE card AS SELECT * FROM account;"""
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
         source_file=TEST_FILE,

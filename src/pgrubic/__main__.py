@@ -43,7 +43,15 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
 
     violations: core.ViolationMetric = core.ViolationMetric()
 
-    source_files = core.filter_files(paths=paths, config=config)
+    # Use the current working directory if no paths are specified
+    if not paths:
+        paths = (pathlib.Path.cwd(),)
+
+    source_files = core.filter_files(
+        paths=paths,
+        include=config.lint.include,
+        exclude=config.lint.exclude,
+    )
 
     for source_file in source_files:
         with source_file.open("r", encoding="utf-8") as sf:
@@ -80,7 +88,11 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
 
 
 @cli.command(name="format")
-@click.option("--check", is_flag=True, help="Check if any files would have been modified")
+@click.option(
+    "--check",
+    is_flag=True,
+    help="Check if any files would have been modified",
+)
 @click.option(
     "--diff",
     is_flag=True,
@@ -89,7 +101,12 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
     how the formatted file would look like""",
 )
 @click.argument("paths", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
-def format_sql_file(paths: tuple[pathlib.Path, ...], *, check: bool, diff: bool) -> None:
+def format_sql_file(
+    paths: tuple[pathlib.Path, ...],
+    *,
+    check: bool,
+    diff: bool,
+) -> None:
     """Format SQL files."""
     config: core.Config = core.parse_config()
     config.format.check = check
@@ -97,7 +114,13 @@ def format_sql_file(paths: tuple[pathlib.Path, ...], *, check: bool, diff: bool)
 
     formatter: core.Formatter = core.Formatter(config=config)
 
-    for source_file in paths:
+    source_files = core.filter_files(
+        paths=paths,
+        include=config.format.include,
+        exclude=config.format.exclude,
+    )
+
+    for source_file in source_files:
         with source_file.open("r", encoding="utf-8") as sf:
             source_code: str = sf.read()
 

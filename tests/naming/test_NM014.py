@@ -131,7 +131,7 @@ def test_pass_general_noqa_single_letter_identifier(
     """Test pass noqa single letter identifier."""
     sql_pass_noqa: str = """
     -- noqa
-    CREATE TABLE tbl (age int, CONSTRAINT a PRIMARY KEY (id))
+    CREATE TABLE tbl (age int, CONSTRAINT a PRIMARY KEY (id));
     """
 
     violations: core.ViolationMetric = lint_single_letter_identifier.run(

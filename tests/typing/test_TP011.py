@@ -145,7 +145,7 @@ def test_pass_noqa_float(
     """Test pass noqa float."""
     sql_pass_noqa: str = """
     -- noqa: TP011
-    CREATE TABLE tbl (tbl_id int, retry_count float)
+    CREATE TABLE tbl (tbl_id int, retry_count float);
     """
 
     violations: core.ViolationMetric = lint_float.run(

@@ -170,7 +170,7 @@ def test_fail_fix_null_constraint(
     null_constraint: core.BaseChecker,
 ) -> None:
     """Test fail fix null constraint."""
-    sql_fail: str = "CREATE TABLE tbl (age int NULL)"
+    sql_fail: str = "CREATE TABLE tbl (age int NULL);"
 
     sql_fix: str = "CREATE TABLE tbl (\n    age integer\n);"
 

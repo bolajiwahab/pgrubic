@@ -4,11 +4,12 @@ import sys
 import difflib
 import pathlib
 
-from pglast import parser, prettify
+from pglast import ast, parser, stream
+from colorama import Fore, Style
 from rich.syntax import Syntax
 from rich.console import Console
 
-from pgrubic.core import config
+from pgrubic.core import noqa, config
 
 
 class Formatter:
@@ -22,22 +23,25 @@ class Formatter:
     def run(*, source_file: str, source_code: str, config: config.Config) -> str:
         """Format source file."""
         try:
-            parser.parse_sql(source_code)
+            tree: ast.Node = parser.parse_sql(source_code)
+            comments = noqa.extract_comments(source_code)
 
         except parser.ParseError as error:
-            sys.stdout.write(f"{source_file}: {error!s}")
+            sys.stderr.write(f"{source_file}: {Fore.RED}{error!s}{Style.RESET_ALL}")
 
             sys.exit(1)
 
-        return str(
-            prettify(
-                semicolon_after_last_statement=config.format.semicolon_after_last_statement,
-                separate_statements=config.format.separate_statements,
-                remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
-                statement=source_code,
-                preserve_comments=True,
-                comma_at_eoln=config.format.comma_at_eoln,
-            ),
+        return (
+            str(
+                stream.IndentedStream(
+                    comments=comments,
+                    semicolon_after_last_statement=config.format.semicolon_after_last_statement,
+                    separate_statements=config.format.separate_statements,
+                    remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
+                    comma_at_eoln=config.format.comma_at_eoln,
+                )(tree),
+            )
+            + "\n"
         )
 
     def format(self, *, source_file: str, source_code: str) -> None:

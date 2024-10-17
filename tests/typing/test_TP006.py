@@ -143,7 +143,7 @@ def test_pass_noqa_money(
     """Test pass noqa money."""
     sql_pass_noqa: str = """
     -- noqa: TP006
-    CREATE TABLE transaction (transaction_id int, amount money)
+    CREATE TABLE transaction (transaction_id int, amount money);
     """
 
     violations: core.ViolationMetric = lint_money.run(

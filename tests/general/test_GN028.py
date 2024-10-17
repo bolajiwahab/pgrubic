@@ -172,7 +172,7 @@ def test_pass_noqa_wrongly_typed_required_column(
     """Test pass noqa wrongly typed required column."""
     sql_pass_noqa: str = """
     -- noqa: GN013
-    CREATE TABLE music (age int, created_at timestamptz)
+    CREATE TABLE music (age int, created_at timestamptz);
     """
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
@@ -216,7 +216,7 @@ def test_pass_general_noqa_wrongly_typed_required_column(
     """Test fail noqa wrongly typed required column."""
     sql_pass_noqa: str = """
     -- noqa
-    CREATE TABLE music (age int, created_at date)
+    CREATE TABLE music (age int, created_at date);
     """
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(

@@ -155,7 +155,7 @@ def test_pass_noqa_wrongly_typed_required_column(
     """Test pass noqa wrongly typed required column."""
     sql_pass_noqa: str = """
     -- noqa: TP015
-    CREATE TABLE tbl (tbl_id int, created_at varchar)
+    CREATE TABLE tbl (tbl_id int, created_at varchar);
     """
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(

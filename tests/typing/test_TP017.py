@@ -143,7 +143,7 @@ def test_pass_noqa_nullable_boolean_field(
     """Test pass noqa nullable boolean field."""
     sql_pass_noqa: str = """
     -- noqa: TP017
-    CREATE TABLE transaction (transaction_id int, is_active boolean)
+    CREATE TABLE transaction (transaction_id int, is_active boolean);
     """
 
     violations: core.ViolationMetric = lint_nullable_boolean_field.run(

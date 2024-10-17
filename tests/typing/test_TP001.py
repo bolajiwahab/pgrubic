@@ -146,7 +146,7 @@ def test_pass_noqa_timestamp_without_timezone(
     """Test pass noqa timestamp without timezone."""
     sql_pass_noqa: str = """
     -- noqa: TP001
-    CREATE TABLE music (age int, created_at timestamp(10))
+    CREATE TABLE music (age int, created_at timestamp(10));
     """
 
     violations: core.ViolationMetric = lint_timestamp_without_timezone.run(

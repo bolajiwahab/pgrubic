@@ -145,7 +145,7 @@ def test_pass_noqa_xml(
     """Test pass noqa xml."""
     sql_pass_noqa: str = """
     -- noqa: TP012
-    CREATE TABLE tbl (tbl_id int, details xml)
+    CREATE TABLE tbl (tbl_id int, details xml);
     """
 
     violations: core.ViolationMetric = lint_xml.run(

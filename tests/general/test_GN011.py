@@ -92,7 +92,7 @@ def test_fail_missing_required_column(
     lint_missing_required_column: core.Linter,
 ) -> None:
     """Test fail missing required column."""
-    sql_fail: str = "CREATE TABLE music (age int)"
+    sql_fail: str = "CREATE TABLE music (age int);"
 
     violations: core.ViolationMetric = lint_missing_required_column.run(
         source_file=TEST_FILE,
@@ -112,7 +112,7 @@ def test_fail_missing_required_column_description(
     missing_required_column: core.BaseChecker,
 ) -> None:
     """Test missing required column description."""
-    sql_fail: str = "CREATE TABLE music (age int)"
+    sql_fail: str = "CREATE TABLE music (age int);"
 
     _: core.ViolationMetric = lint_missing_required_column.run(
         source_file=TEST_FILE,
@@ -133,7 +133,7 @@ def test_pass_noqa_missing_required_column(
     """Test pass noqa missing required column."""
     sql_pass_noqa: str = """
     -- noqa: GN011
-    CREATE TABLE music (age int)
+    CREATE TABLE music (age int);
     """
 
     violations: core.ViolationMetric = lint_missing_required_column.run(
@@ -155,7 +155,7 @@ def test_fail_noqa_missing_required_column(
     """Test fail noqa missing required column."""
     sql_fail_noqa: str = """
     -- noqa: GN001
-    CREATE TABLE music (age int)
+    CREATE TABLE music (age int);
     """
 
     violations: core.ViolationMetric = lint_missing_required_column.run(
@@ -177,7 +177,7 @@ def test_pass_general_noqa_missing_required_column(
     """Test fail noqa missing required column."""
     sql_pass_noqa: str = """
     -- noqa
-    CREATE TABLE music (age int)
+    CREATE TABLE music (age int);
     """
 
     violations: core.ViolationMetric = lint_missing_required_column.run(
@@ -198,7 +198,7 @@ def test_fail_fix_missing_required_column(
     missing_required_column: core.BaseChecker,
 ) -> None:
     """Test fail fix missing required column."""
-    sql_fail: str = "CREATE TABLE music (age int)"
+    sql_fail: str = "CREATE TABLE music (age int);"
 
     sql_fix: str = (
         "CREATE TABLE music (\n    age integer\n  , created_at timestamptz NOT NULL\n);"

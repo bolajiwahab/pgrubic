@@ -143,7 +143,7 @@ def test_pass_noqa_time_with_timezone(
     """Test pass noqa time with timezone."""
     sql_pass_noqa: str = """
     -- noqa: TP002
-    CREATE TABLE music (age int, created_at timetz)
+    CREATE TABLE music (age int, created_at timetz);
     """
 
     violations: core.ViolationMetric = lint_time_with_timezone.run(
