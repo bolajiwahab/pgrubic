@@ -24,10 +24,9 @@ regex-sequence = "^.+$"
 [format]
 include = []
 exclude = []
-comma-at-eoln = true
+comma-at-beginning = true
 semicolon-after-last-statement = true
 remove-pg-catalog-from-functions = true
-semicolon-at-eoln = true
 separate-statements = 1
 check = false
 diff = false

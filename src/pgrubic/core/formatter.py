@@ -47,7 +47,7 @@ class Formatter:
                     semicolon_after_last_statement=config.format.semicolon_after_last_statement,
                     separate_statements=config.format.separate_statements,
                     remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
-                    comma_at_eoln=config.format.comma_at_eoln,
+                    comma_at_eoln=not (config.format.comma_at_beginning),
                 )(tree),
             )
             + "\n"

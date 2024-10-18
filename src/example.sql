@@ -1,1 +1,1 @@
-SELECT * FROM tab
+SELECT a, b, c FROM tab;

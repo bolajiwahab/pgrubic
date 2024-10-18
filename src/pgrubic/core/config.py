@@ -71,7 +71,7 @@ class Format:
 
     include: list[str]
     exclude: list[str]
-    comma_at_eoln: bool
+    comma_at_beginning: bool
     semicolon_after_last_statement: bool
     separate_statements: int
     remove_pg_catalog_from_functions: bool
@@ -183,7 +183,7 @@ def parse_config() -> Config:
         format=Format(
             include=config_format["include"],
             exclude=config_format["exclude"],
-            comma_at_eoln=config_format["comma-at-eoln"],
+            comma_at_beginning=config_format["comma-at-beginning"],
             semicolon_after_last_statement=config_format[
                 "semicolon-after-last-statement"
             ],
