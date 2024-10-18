@@ -1,0 +1,17 @@
+---
+# yamllint disable rule:line-length
+- id: pgrubic-lint
+  name: pgrubic-lint
+  description: "Pgrubic: A PostgreSQL linter and formatter for schema migrations and design best practices"
+  entry: pgrubic lint
+  language: python
+  types: [sql]
+  require_serial: true
+
+- id: pgrubic-format
+  name: pgrubic-format
+  description: "Pgrubic: A PostgreSQL linter and formatter for schema migrations and design best practices"
+  entry: pgrubic format
+  language: python
+  types: [sql]
+  require_serial: true
