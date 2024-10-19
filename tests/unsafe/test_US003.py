@@ -70,7 +70,7 @@ def test_fail_column_rename_description(
         source_code=sql_fail,
     )
 
-    assert next(iter(column_rename.violations)).description == "Forbid column rename"
+    assert next(iter(column_rename.violations)).description == "Column rename is not safe"
 
 
 def test_pass_noqa_column_rename(lint_column_rename: core.Linter) -> None:

@@ -125,7 +125,7 @@ def test_fail_adding_auto_increment_column_description(
 
     assert (
         next(iter(adding_auto_increment_column.violations)).description
-        == "Forbid adding auto increment column"
+        == "Adding auto increment column is not safe"
     )
 
 

@@ -39,6 +39,6 @@ class ColumnRename(linter.BaseChecker):
                     column_offset=self.column_offset,
                     statement=self.statement,
                     statement_location=self.statement_location,
-                    description="Forbid column rename",
+                    description="Column rename is not safe",
                 ),
             )

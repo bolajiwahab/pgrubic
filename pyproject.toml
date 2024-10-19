@@ -152,7 +152,7 @@ legacy_tox_ini = """
         COVERAGE_FILE = .coverage
     commands =
         coverage erase
-        coverage run --source=src -m pytest tests
+        coverage run --source=src -m pytest {posargs:tests}
 
     [testenv:coverage]
     skip_install = false
@@ -161,19 +161,19 @@ legacy_tox_ini = """
         COVERAGE_FILE = .coverage
     commands =
         {[testenv:tests]commands}
-        coverage report --fail-under=100 --show-missing
+        coverage report --fail-under=100 --show-missing {posargs}
 
     [testenv:isort]
     deps = isort
-    commands = isort --check --diff --profile=black src
+    commands = isort --check --diff --profile=black {posargs:src}
 
     [testenv:linting]
     deps = ruff
-    commands = ruff check .
+    commands = ruff check {posargs}
 
     [testenv:formatting]
     deps = ruff
-    commands = ruff format .
+    commands = ruff format {posargs}
 
     [testenv:typing]
     deps =

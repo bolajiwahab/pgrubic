@@ -19,7 +19,7 @@ class FormatResult(typing.NamedTuple):
 
 
 class Formatter:
-    """Format source file."""
+    """Format source code."""
 
     def __init__(self, config: config.Config) -> None:
         """Initialize variables."""
@@ -27,7 +27,7 @@ class Formatter:
 
     @staticmethod
     def run(*, source_file: str, source_code: str, config: config.Config) -> str:
-        """Format source file."""
+        """Format source code."""
         try:
             tree: ast.Node = parser.parse_sql(source_code)
             comments = noqa.extract_comments(

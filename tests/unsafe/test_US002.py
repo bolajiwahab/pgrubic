@@ -80,7 +80,7 @@ def test_fail_column_data_type_change_description(
 
     assert (
         next(iter(column_data_type_change.violations)).description
-        == "Forbid column data type change"
+        == "Column data type change is not safe"
     )
 
 

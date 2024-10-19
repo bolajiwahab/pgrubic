@@ -27,6 +27,6 @@ class AddingAutoIncrementIdentityColumn(linter.BaseChecker):
                     column_offset=self.column_offset,
                     statement=self.statement,
                     statement_location=self.statement_location,
-                    description="Forbid adding auto increment identity column",
+                    description="Adding auto increment identity column is not safe",
                 ),
             )

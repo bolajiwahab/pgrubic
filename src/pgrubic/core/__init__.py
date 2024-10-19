@@ -1,5 +1,6 @@
 """Core functionalities."""
 
+from pgrubic.formatters import ddl, dml
 from pgrubic.core.config import Config, parse_config
 from pgrubic.core.linter import Linter, BaseChecker, ViolationMetric
 from pgrubic.core.loader import (
@@ -9,7 +10,6 @@ from pgrubic.core.loader import (
 )
 from pgrubic.core.filters import filter_files
 from pgrubic.core.formatter import Formatter, FormatResult
-from pgrubic.core.formatters import ddl, dml
 
 __all__ = [
     "Linter",

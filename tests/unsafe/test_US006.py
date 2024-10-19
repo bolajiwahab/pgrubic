@@ -83,7 +83,7 @@ def test_fail_adding_stored_generated_column_description(
 
     assert (
         next(iter(adding_stored_generated_column.violations)).description
-        == "Forbid adding stored generated column"
+        == "Adding stored generated column is not safe"
     )
 
 

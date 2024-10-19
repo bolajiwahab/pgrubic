@@ -81,7 +81,7 @@ def test_fail_adding_auto_increment_identity_column_description(
 
     assert (
         next(iter(adding_auto_increment_identity_column.violations)).description
-        == "Forbid adding auto increment identity column"
+        == "Adding auto increment identity column is not safe"
     )
 
 
