@@ -29,6 +29,7 @@ dependencies = [
   "toml==0.10.2",
   "click==8.1.7",
   "rich==13.9.2",
+  "deepmerge==2.0",
 ]
 
 [project.optional-dependencies]
@@ -73,7 +74,7 @@ no_implicit_reexport = true
 disallow_untyped_decorators = false
 
 [[tool.mypy.overrides]]
-module = ["pglast.*", "caseconverter.*", "pgrubic.*"]
+module = ["pglast.*", "caseconverter.*", "pgrubic.*", "deepmerge.*"]
 ignore_missing_imports = true
 
 [tool.ruff]

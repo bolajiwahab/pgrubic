@@ -6,6 +6,7 @@ import functools
 import dataclasses
 
 import toml
+from deepmerge import always_merger
 
 from pgrubic import CONFIG_FILE, DEFAULT_CONFIG
 
@@ -83,6 +84,9 @@ class Format:
 class Config:
     """Representation of config."""
 
+    include: list[str]
+    exclude: list[str]
+
     lint: Lint
     format: Format
 
@@ -104,9 +108,7 @@ def _load_user_config() -> dict[str, typing.Any]:
 
 def _merge_config() -> dict[str, typing.Any]:
     """Merge default and user config."""
-    return {
-        k: v | _load_user_config().get(k, {}) for k, v in _load_default_config().items()
-    }
+    return dict(always_merger.merge(_load_user_config(), _load_default_config()))
 
 
 def _get_config_file_absolute_path(config_file: str) -> pathlib.Path | None:
@@ -137,11 +139,13 @@ def parse_config() -> Config:
     config_format = merged_config["format"]
 
     return Config(
+        include=merged_config["include"],
+        exclude=merged_config["exclude"],
         lint=Lint(
             select=config_lint["select"],
             ignore=config_lint["ignore"],
-            include=config_lint["include"],
-            exclude=config_lint["exclude"],
+            include=config_lint["include"] or merged_config["include"],
+            exclude=config_lint["exclude"] or merged_config["exclude"],
             ignore_noqa=config_lint["ignore-noqa"],
             allowed_extensions=config_lint["allowed-extensions"],
             allowed_languages=config_lint["allowed-languages"],
@@ -181,8 +185,8 @@ def parse_config() -> Config:
             ],
         ),
         format=Format(
-            include=config_format["include"],
-            exclude=config_format["exclude"],
+            include=config_format["include"] or merged_config["include"],
+            exclude=config_format["exclude"] or merged_config["exclude"],
             comma_at_beginning=config_format["comma-at-beginning"],
             semicolon_after_last_statement=config_format[
                 "semicolon-after-last-statement"
