@@ -115,7 +115,10 @@ def format_sql_file(
     config.format.check = check
     config.format.diff = diff
 
-    formatter: core.Formatter = core.Formatter(config=config)
+    formatter: core.Formatter = core.Formatter(
+        config=config,
+        formatters=core.load_formatters,
+    )
 
     # Use the current working directory if no paths are specified
     if not paths:

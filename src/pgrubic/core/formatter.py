@@ -21,12 +21,14 @@ class FormatResult(typing.NamedTuple):
 class Formatter:
     """Format source code."""
 
-    def __init__(self, config: config.Config) -> None:
+    def __init__(
+        self,
+        *,
+        config: config.Config,
+        formatters: typing.Callable[[], set[typing.Callable[[], None]]],
+    ) -> None:
         """Initialize variables."""
-        self.config = config
-
-    def __init__(self, config: config.Config) -> None:
-        """Initialize variables."""
+        formatters()
         self.config = config
 
     @staticmethod

@@ -1,4 +1,4 @@
-"""DML formatter."""
+"""Formatter for SELECT statements."""
 
 from pglast import ast, enums, stream, printers
 
