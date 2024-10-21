@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.unsafe.US016 import NonConcurrentIndexCreation
 
@@ -53,7 +53,7 @@ def test_pass_concurrent_index_creation(
     sql_pass: str = "CREATE INDEX CONCURRENTLY idx ON public.card(account_id);"
 
     violations: core.ViolationMetric = lint_non_concurrent_index_creation.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -72,7 +72,7 @@ def test_fail_non_concurrent_index_creation(
     sql_fail: str = "CREATE INDEX idx ON public.card(account_id);"
 
     violations: core.ViolationMetric = lint_non_concurrent_index_creation.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -92,7 +92,7 @@ def test_fail_non_concurrent_index_creation_description(
     sql_fail: str = "CREATE INDEX idx ON public.card(account_id);"
 
     _: core.ViolationMetric = lint_non_concurrent_index_creation.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -114,7 +114,7 @@ def test_pass_noqa_non_concurrent_index_creation(
     """
 
     violations: core.ViolationMetric = lint_non_concurrent_index_creation.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -136,7 +136,7 @@ def test_fail_noqa_non_concurrent_index_creation(
     """
 
     violations: core.ViolationMetric = lint_non_concurrent_index_creation.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -153,12 +153,12 @@ def test_pass_general_noqa_non_concurrent_index_creation(
 ) -> None:
     """Test pass noqa non concurrent index creation."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE INDEX idx ON public.card(account_id);
     """
 
     violations: core.ViolationMetric = lint_non_concurrent_index_creation.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -182,7 +182,7 @@ def test_fail_fix_non_concurrent_index_creation(
     non_concurrent_index_creation.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_non_concurrent_index_creation.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

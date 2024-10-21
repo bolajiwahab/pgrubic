@@ -31,14 +31,12 @@ class PgPrefixIdentifier(CheckIdentifier):
     Remove prefix pg_ from identifier.
     """
 
-    is_auto_fixable: bool = False
-
     def _check_identifier(
         self,
         identifier: str,
         line_number: int,
         column_offset: int,
-        source_text: str,
+        statement: str,
         statement_location: int,
     ) -> None:
         """Checks for identifiers prefix with pg_."""
@@ -47,7 +45,7 @@ class PgPrefixIdentifier(CheckIdentifier):
                 linter.Violation(
                     line_number=line_number,
                     column_offset=column_offset,
-                    source_text=source_text,
+                    statement=statement,
                     statement_location=statement_location,
                     description="Identifier should not use prefix `pg_`",
                 ),

@@ -1,5 +1,3 @@
 """Tests."""
 
-import pathlib
-
-SOURCE_PATH = pathlib.Path("test.sql")
+TEST_FILE: str = "test.sql"

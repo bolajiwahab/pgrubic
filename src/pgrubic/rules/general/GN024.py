@@ -2,6 +2,7 @@
 
 from pglast import ast, enums, visitors
 
+from pgrubic import Operators
 from pgrubic.core import linter
 
 
@@ -37,7 +38,7 @@ class NullComparison(linter.BaseChecker):
         """Visit A_Expr."""
         if (
             node.kind == enums.A_Expr_Kind.AEXPR_OP
-            and node.name[-1].sval in ("=", "<>")
+            and node.name[-1].sval in (Operators.EQ, Operators.NOT_EQ)
             and any(
                 isinstance(expr, ast.A_Const) and expr.isnull
                 for expr in (node.rexpr, node.lexpr)
@@ -47,7 +48,7 @@ class NullComparison(linter.BaseChecker):
                 linter.Violation(
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    source_text=self.source_text,
+                    statement=self.statement,
                     statement_location=self.statement_location,
                     description="Comparison with NULL should be [IS | IS NOT] NULL",
                 ),
@@ -67,7 +68,7 @@ class NullComparison(linter.BaseChecker):
 
         null_type = (
             enums.NullTestType.IS_NULL
-            if node.name[-1].sval == "="
+            if node.name[-1].sval == Operators.EQ
             else enums.NullTestType.IS_NOT_NULL
         )
 

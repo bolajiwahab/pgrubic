@@ -1,14 +1,12 @@
-"""Checker for not null constraint on new column with no static default."""
+"""Checker for not null constraint on new column with volatile default."""
 
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
 
 
-class NotNullConstraintOnNewColumnWithNoStaticDefault(linter.BaseChecker):
-    """Not null constraint on new column with no static default."""
-
-    is_auto_fixable: bool = False
+class NotNullConstraintOnNewColumnWithVolatileDefault(linter.BaseChecker):
+    """Not null constraint on new column with volatile default."""
 
     def visit_ColumnDef(
         self,
@@ -35,8 +33,8 @@ class NotNullConstraintOnNewColumnWithNoStaticDefault(linter.BaseChecker):
                     linter.Violation(
                         line_number=self.line_number,
                         column_offset=self.column_offset,
-                        source_text=self.source_text,
+                        statement=self.statement,
                         statement_location=self.statement_location,
-                        description="Not null constraint on new column with no static default",  # noqa: E501
+                        description="Not null constraint on new column with volatile default",  # noqa: E501
                     ),
                 )

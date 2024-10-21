@@ -1,17 +1,17 @@
-"""Test not null constraint on new column with no static default."""
+"""Test not null constraint on new column with volatile default."""
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
-from pgrubic.rules.unsafe.US011 import NotNullConstraintOnNewColumnWithNoStaticDefault
+from pgrubic.rules.unsafe.US011 import NotNullConstraintOnNewColumnWithVolatileDefault
 
 
 @pytest.fixture(scope="module")
 def not_null_constraint_on_new_column_with_no_static_default() -> core.BaseChecker:
-    """Create an instance of NotNullConstraintOnNewColumnWithNoStaticDefault."""
-    core.add_set_locations_to_rule(NotNullConstraintOnNewColumnWithNoStaticDefault)
-    return NotNullConstraintOnNewColumnWithNoStaticDefault()
+    """Create an instance of NotNullConstraintOnNewColumnWithVolatileDefault."""
+    core.add_set_locations_to_rule(NotNullConstraintOnNewColumnWithVolatileDefault)
+    return NotNullConstraintOnNewColumnWithVolatileDefault()
 
 
 @pytest.fixture
@@ -19,7 +19,7 @@ def lint_not_null_constraint_on_new_column_with_no_static_default(
     linter: core.Linter,
     not_null_constraint_on_new_column_with_no_static_default: core.BaseChecker,
 ) -> core.Linter:
-    """Lint NotNullConstraintOnNewColumnWithNoStaticDefault."""
+    """Lint NotNullConstraintOnNewColumnWithVolatileDefault."""
     linter.checkers.add(not_null_constraint_on_new_column_with_no_static_default)
 
     return linter
@@ -28,7 +28,7 @@ def lint_not_null_constraint_on_new_column_with_no_static_default(
 def test_not_null_constraint_on_new_column_with_no_static_default_rule_code(
     not_null_constraint_on_new_column_with_no_static_default: core.BaseChecker,
 ) -> None:
-    """Test not null constraint on new column with no static default rule code."""
+    """Test not null constraint on new column with volatile default rule code."""
     assert (
         not_null_constraint_on_new_column_with_no_static_default.code
         == not_null_constraint_on_new_column_with_no_static_default.__module__.split(
@@ -40,7 +40,7 @@ def test_not_null_constraint_on_new_column_with_no_static_default_rule_code(
 def test_not_null_constraint_on_new_column_with_no_static_default_auto_fixable(
     not_null_constraint_on_new_column_with_no_static_default: core.BaseChecker,
 ) -> None:
-    """Test not null constraint on new column with no static default auto fixable."""
+    """Test not null constraint on new column with volatile default auto fixable."""
     assert (
         not_null_constraint_on_new_column_with_no_static_default.is_auto_fixable is False
     )
@@ -49,7 +49,7 @@ def test_not_null_constraint_on_new_column_with_no_static_default_auto_fixable(
 def test_pass_not_null_constraint_on_new_column_with_no_static_default(
     lint_not_null_constraint_on_new_column_with_no_static_default: core.Linter,
 ) -> None:
-    """Test not null constraint on new column with no static default."""
+    """Test not null constraint on new column with volatile default."""
     sql_pass: str = """
     ALTER TABLE public.card ADD COLUMN id bigint NOT NULL DEFAULT 0
     ;
@@ -57,7 +57,7 @@ def test_pass_not_null_constraint_on_new_column_with_no_static_default(
 
     violations: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            source_path=SOURCE_PATH,
+            source_file=TEST_FILE,
             source_code=sql_pass,
         )
     )
@@ -73,7 +73,7 @@ def test_pass_not_null_constraint_on_new_column_with_no_static_default(
 def test_fail_not_null_constraint_on_new_column_with_no_static_default(
     lint_not_null_constraint_on_new_column_with_no_static_default: core.Linter,
 ) -> None:
-    """Test not null constraint on new column with no static default."""
+    """Test not null constraint on new column with volatile default."""
     sql_fail: str = """
     ALTER TABLE public.card ADD COLUMN id bigint NOT NULL
     ;
@@ -81,7 +81,7 @@ def test_fail_not_null_constraint_on_new_column_with_no_static_default(
 
     violations: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            source_path=SOURCE_PATH,
+            source_file=TEST_FILE,
             source_code=sql_fail,
         )
     )
@@ -98,7 +98,7 @@ def test_fail_not_null_constraint_on_new_column_with_no_static_default_descripti
     lint_not_null_constraint_on_new_column_with_no_static_default: core.Linter,
     not_null_constraint_on_new_column_with_no_static_default: core.BaseChecker,
 ) -> None:
-    """Test not null constraint on new column with no static default description."""
+    """Test not null constraint on new column with volatile default description."""
     sql_fail: str = """
     ALTER TABLE public.card ADD COLUMN id bigint NOT NULL
     ;
@@ -106,7 +106,7 @@ def test_fail_not_null_constraint_on_new_column_with_no_static_default_descripti
 
     _: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            source_path=SOURCE_PATH,
+            source_file=TEST_FILE,
             source_code=sql_fail,
         )
     )
@@ -115,14 +115,14 @@ def test_fail_not_null_constraint_on_new_column_with_no_static_default_descripti
         next(
             iter(not_null_constraint_on_new_column_with_no_static_default.violations),
         ).description
-        == "Not null constraint on new column with no static default"
+        == "Not null constraint on new column with volatile default"
     )
 
 
 def test_pass_noqa_not_null_constraint_on_new_column_with_no_static_default(
     lint_not_null_constraint_on_new_column_with_no_static_default: core.Linter,
 ) -> None:
-    """Test pass noqa not null constraint on new column with no static default."""
+    """Test pass noqa not null constraint on new column with volatile default."""
     sql_pass_noqa: str = """
     ALTER TABLE public.card ADD COLUMN id bigint NOT NULL -- noqa: US011
     ;
@@ -130,7 +130,7 @@ def test_pass_noqa_not_null_constraint_on_new_column_with_no_static_default(
 
     violations: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            source_path=SOURCE_PATH,
+            source_file=TEST_FILE,
             source_code=sql_pass_noqa,
         )
     )
@@ -146,7 +146,7 @@ def test_pass_noqa_not_null_constraint_on_new_column_with_no_static_default(
 def test_fail_noqa_not_null_constraint_on_new_column_with_no_static_default(
     lint_not_null_constraint_on_new_column_with_no_static_default: core.Linter,
 ) -> None:
-    """Test not null constraint on new column with no static default."""
+    """Test not null constraint on new column with volatile default."""
     sql_noqa: str = """
     ALTER TABLE public.card ADD COLUMN id bigint NOT NULL -- noqa: US002
     ;
@@ -154,7 +154,7 @@ def test_fail_noqa_not_null_constraint_on_new_column_with_no_static_default(
 
     violations: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            source_path=SOURCE_PATH,
+            source_file=TEST_FILE,
             source_code=sql_noqa,
         )
     )
@@ -170,15 +170,15 @@ def test_fail_noqa_not_null_constraint_on_new_column_with_no_static_default(
 def test_pass_general_noqa_not_null_constraint_on_new_column_with_no_static_default(
     lint_not_null_constraint_on_new_column_with_no_static_default: core.Linter,
 ) -> None:
-    """Test fail noqa not null constraint on new column with no static default."""
+    """Test fail noqa not null constraint on new column with volatile default."""
     sql_noqa: str = """
-    ALTER TABLE public.card ADD COLUMN id bigint NOT NULL -- noqa:
+    ALTER TABLE public.card ADD COLUMN id bigint NOT NULL -- noqa
     ;
     """
 
     violations: core.ViolationMetric = (
         lint_not_null_constraint_on_new_column_with_no_static_default.run(
-            source_path=SOURCE_PATH,
+            source_file=TEST_FILE,
             source_code=sql_noqa,
         )
     )

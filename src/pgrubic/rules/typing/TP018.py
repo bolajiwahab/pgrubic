@@ -22,8 +22,6 @@ class MismatchColumnInDataTypeChange(linter.BaseChecker):
     The right column in the USING clause.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_ColumnRef(
         self,
         ancestors: visitors.Ancestor,
@@ -41,7 +39,7 @@ class MismatchColumnInDataTypeChange(linter.BaseChecker):
                 linter.Violation(
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    source_text=self.source_text,
+                    statement=self.statement,
                     statement_location=self.statement_location,
                     description=f"Column `{alter_table_cmd.node.name}` in data type"
                     f" change does not match column `{node.fields[-1].sval}`"

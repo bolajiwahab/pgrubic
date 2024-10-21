@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.general.GN018 import MultiColumnPartitioning
 
@@ -54,7 +54,7 @@ def test_pass_single_column_partitioning(
     """
 
     violations: core.ViolationMetric = lint_multi_column_partitioning.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -78,7 +78,7 @@ def test_fail_multi_column_partitioning(
     """
 
     violations: core.ViolationMetric = lint_multi_column_partitioning.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -103,7 +103,7 @@ def test_fail_multi_column_partitioning_description(
     """
 
     _: core.ViolationMetric = lint_multi_column_partitioning.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -128,7 +128,7 @@ def test_pass_noqa_multi_column_partitioning(
     """
 
     violations: core.ViolationMetric = lint_multi_column_partitioning.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -153,7 +153,7 @@ def test_fail_noqa_multi_column_partitioning(
     """
 
     violations: core.ViolationMetric = lint_multi_column_partitioning.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -170,7 +170,7 @@ def test_pass_general_noqa_multi_column_partitioning(
 ) -> None:
     """Test fail noqa multi column partitioning."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE measurement (
         city_id int not null,
         logdate date not null
@@ -178,7 +178,7 @@ def test_pass_general_noqa_multi_column_partitioning(
     """
 
     violations: core.ViolationMetric = lint_multi_column_partitioning.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

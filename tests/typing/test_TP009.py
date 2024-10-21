@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.typing.TP009 import Integer
 
@@ -48,7 +48,7 @@ def test_pass_create_table_bigint(
     sql_fail: str = "CREATE TABLE tbl (retry_count bigint);"
 
     violations: core.ViolationMetric = lint_integer.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -69,7 +69,7 @@ def test_pass_alter_table_bigint(
     """
 
     violations: core.ViolationMetric = lint_integer.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -88,7 +88,7 @@ def test_fail_create_table_integer(
     sql_fail: str = "CREATE TABLE tbl (retry_count integer);"
 
     violations: core.ViolationMetric = lint_integer.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -107,7 +107,7 @@ def test_fail_alter_table_integer(
     sql_fail: str = "ALTER TABLE tbl ADD COLUMN retry_count integer;"
 
     violations: core.ViolationMetric = lint_integer.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -127,7 +127,7 @@ def test_fail_integer_description(
     sql_fail: str = "CREATE TABLE tbl (retry_count integer);"
 
     _: core.ViolationMetric = lint_integer.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -145,11 +145,11 @@ def test_pass_noqa_integer(
     """Test pass noqa integer."""
     sql_pass_noqa: str = """
     -- noqa: TP009
-    CREATE TABLE tbl (tbl_id int, retry_count integer)
+    CREATE TABLE tbl (tbl_id int, retry_count integer);
     """
 
     violations: core.ViolationMetric = lint_integer.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -171,7 +171,7 @@ def test_fail_noqa_integer(
     """
 
     violations: core.ViolationMetric = lint_integer.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -188,12 +188,12 @@ def test_pass_general_noqa_integer(
 ) -> None:
     """Test pass noqa integer."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (tbl_id int, retry_count integer);
     """
 
     violations: core.ViolationMetric = lint_integer.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -217,7 +217,7 @@ def test_fail_fix_create_table_integer(
     integer.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_integer.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -242,7 +242,7 @@ def test_fail_fix_alter_table_integer(
     integer.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_integer.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

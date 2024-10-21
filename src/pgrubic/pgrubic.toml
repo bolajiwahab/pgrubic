@@ -1,3 +1,5 @@
+include = []
+exclude = []
 [lint]
 select = []
 ignore = []
@@ -20,3 +22,13 @@ regex-constraint-foreign-key = "^.+$"
 regex-constraint-check = "^.+$"
 regex-constraint-exclusion = "^.+$"
 regex-sequence = "^.+$"
+
+[format]
+include = []
+exclude = []
+comma-at-beginning = true
+semicolon-after-last-statement = true
+remove-pg-catalog-from-functions = true
+separate-statements = 1
+check = false
+diff = false

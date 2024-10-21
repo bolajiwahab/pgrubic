@@ -1,7 +1,11 @@
 -- review documentations, unsafe is missing documentations
--- backport configuration for configurable rules -- documentations
--- test loader with a rule
--- test linter with a rule
+errors
+class SQLBaseError(Exception):
+    """Base class for all exceptions."""
+
+
+class SQLParseError(SQLBaseError):
+    """Raised when there is a SQL parse error."""
 
 
 -- for custom printers, we may need to allow number of spaces

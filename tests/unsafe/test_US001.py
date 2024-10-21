@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.unsafe.US001 import DropColumn
 
@@ -40,7 +40,7 @@ def test_fail_drop_column(lint_drop_column: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -63,7 +63,7 @@ def test_fail_drop_column_description(
     """
 
     _: core.ViolationMetric = lint_drop_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -78,7 +78,7 @@ def test_pass_noqa_drop_column(lint_drop_column: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -98,7 +98,7 @@ def test_fail_noqa_drop_column(lint_drop_column: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -115,12 +115,12 @@ def test_pass_general_noqa_drop_column(
 ) -> None:
     """Test fail noqa drop column."""
     sql_noqa: str = """
-    ALTER TABLE public.card DROP COLUMN id -- noqa:
+    ALTER TABLE public.card DROP COLUMN id -- noqa
     ;
     """
 
     violations: core.ViolationMetric = lint_drop_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 

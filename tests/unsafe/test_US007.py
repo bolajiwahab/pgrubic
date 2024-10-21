@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.unsafe.US007 import DropTablespace
 
@@ -43,7 +43,7 @@ def test_fail_drop_tablespace(lint_drop_tablespace: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -66,7 +66,7 @@ def test_fail_drop_tablespace_description(
     """
 
     _: core.ViolationMetric = lint_drop_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -83,7 +83,7 @@ def test_pass_noqa_drop_tablespace(lint_drop_tablespace: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -103,7 +103,7 @@ def test_fail_noqa_drop_tablespace(lint_drop_tablespace: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_drop_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -120,12 +120,12 @@ def test_pass_general_noqa_drop_tablespace(
 ) -> None:
     """Test fail noqa drop tablespace."""
     sql_noqa: str = """
-    DROP TABLESPACE test -- noqa:
+    DROP TABLESPACE test -- noqa
     ;
     """
 
     violations: core.ViolationMetric = lint_drop_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 

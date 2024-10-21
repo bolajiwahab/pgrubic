@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.naming.NM001 import InvalidIndexName
 
@@ -50,7 +50,7 @@ def test_pass_implicit_index_name(
     sql_pass: str = "CREATE INDEX ON tbl (col);"
 
     violations: core.ViolationMetric = lint_invalid_index_name.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -69,7 +69,7 @@ def test_pass_valid_index_name(
     sql_fail: str = "CREATE INDEX tbl_col_idx ON tbl (col);"
 
     violations: core.ViolationMetric = lint_invalid_index_name.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -88,7 +88,7 @@ def test_fail_invalid_index_name(
     sql_fail: str = "CREATE INDEX col_idx ON tbl (col);"
 
     violations: core.ViolationMetric = lint_invalid_index_name.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -108,7 +108,7 @@ def test_fail_invalid_index_name_description(
     sql_fail: str = "CREATE INDEX idx ON tbl (col);"
 
     _: core.ViolationMetric = lint_invalid_index_name.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -130,7 +130,7 @@ def test_pass_noqa_invalid_index_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_index_name.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -152,7 +152,7 @@ def test_fail_noqa_invalid_index_name(
     """
 
     violations: core.ViolationMetric = lint_invalid_index_name.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -169,12 +169,12 @@ def test_pass_general_noqa_invalid_index_name(
 ) -> None:
     """Test pass noqa invalid index name."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE INDEX idx ON tbl (col);
     """
 
     violations: core.ViolationMetric = lint_invalid_index_name.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

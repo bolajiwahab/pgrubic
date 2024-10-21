@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.security.ST002 import ProceduralLanguageWhitelist
 
@@ -52,7 +52,7 @@ def test_pass_allowed_language(
     sql_fail: str = "CREATE LANGUAGE plpgsql;"
 
     violations: core.ViolationMetric = lint_procedural_language_whitelist.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -71,7 +71,7 @@ def test_fail_procedural_language_whitelist(
     sql_fail: str = "CREATE LANGUAGE plsample HANDLER plsample_call_handler;"
 
     violations: core.ViolationMetric = lint_procedural_language_whitelist.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -91,7 +91,7 @@ def test_fail_procedural_language_whitelist_description(
     sql_fail: str = "CREATE LANGUAGE plsample HANDLER plsample_call_handler;"
 
     _: core.ViolationMetric = lint_procedural_language_whitelist.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -113,7 +113,7 @@ def test_pass_noqa_procedural_language_whitelist(
     """
 
     violations: core.ViolationMetric = lint_procedural_language_whitelist.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -135,7 +135,7 @@ def test_fail_noqa_procedural_language_whitelist(
     """
 
     violations: core.ViolationMetric = lint_procedural_language_whitelist.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -152,12 +152,12 @@ def test_pass_general_noqa_procedural_language_whitelist(
 ) -> None:
     """Test pass noqa procedural language whitelist."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE LANGUAGE plsample HANDLER plsample_call_handler;
     """
 
     violations: core.ViolationMetric = lint_procedural_language_whitelist.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

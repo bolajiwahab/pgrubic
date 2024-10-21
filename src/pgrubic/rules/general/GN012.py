@@ -23,8 +23,6 @@ class RequiredColumnRemoval(linter.BaseChecker):
     `required-columns`: List of required columns along with their data types.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_AlterTableCmd(
         self,
         ancestors: visitors.Ancestor,
@@ -38,7 +36,7 @@ class RequiredColumnRemoval(linter.BaseChecker):
                         linter.Violation(
                             line_number=self.line_number,
                             column_offset=self.column_offset,
-                            source_text=self.source_text,
+                            statement=self.statement,
                             statement_location=self.statement_location,
                             description=f"Column `{node.name}` is marked as required"
                             " in config",

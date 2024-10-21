@@ -1,34 +1,46 @@
 """Filters."""
 
 import fnmatch
-from collections import abc
-
-from pgrubic.core import config
+import pathlib
 
 
-def filter_source_paths(
+def filter_files(
     *,
-    source_paths: abc.Sequence[str],
-    config: config.Config,
-) -> list[str]:
-    """Filters source paths based on config.include and config.exclude."""
-    return [
-        source_path
-        for source_path in source_paths
-        if is_source_path_included(source_path, config)
-    ]
+    paths: tuple[pathlib.Path, ...],
+    include: list[str],
+    exclude: list[str],
+    extension: str = "sql",
+) -> tuple[pathlib.Path, ...]:
+    """Filters files base on include and exclude."""
+    source_files: set[pathlib.Path] = set()
 
+    for path in paths:
+        if path.is_dir():
+            source_files.update(path.glob(f"**/*.{extension}"))
 
-def is_source_path_included(source_path: str, config: config.Config) -> bool:
-    """Check if a file should be included or excluded based on global config."""
-    return bool(
-        (
-            not config.lint.include
-            or any(
-                fnmatch.fnmatch(source_path, pattern) for pattern in config.lint.include
-            )
+        elif path.suffix == f".{extension}":
+            source_files.add(path)
+
+    return tuple(
+        source_file
+        for source_file in source_files
+        if _is_file_included(
+            source_file=str(source_file),
+            include=include,
+            exclude=exclude,
         )
-        and not any(
-            fnmatch.fnmatch(source_path, pattern) for pattern in config.lint.exclude
-        ),
+        and source_file.stat().st_size > 0
+    )
+
+
+def _is_file_included(
+    *,
+    source_file: str,
+    include: list[str],
+    exclude: list[str],
+) -> bool:
+    """Check if a source_file should be included or excluded based on global config."""
+    return bool(
+        (not include or any(fnmatch.fnmatch(source_file, pattern) for pattern in include))
+        and not any(fnmatch.fnmatch(source_file, pattern) for pattern in exclude),
     )

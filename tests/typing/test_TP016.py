@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.typing.TP016 import NumericWithPrecision
 
@@ -48,7 +48,7 @@ def test_pass_create_table_numeric(
     sql_fail: str = "CREATE TABLE transaction (amount numeric);"
 
     violations: core.ViolationMetric = lint_numeric_with_precision.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -67,7 +67,7 @@ def test_pass_alter_table_numeric(
     sql_fail: str = "ALTER TABLE transaction ADD COLUMN amount numeric;"
 
     violations: core.ViolationMetric = lint_numeric_with_precision.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -86,7 +86,7 @@ def test_fail_create_table_numeric_with_precision(
     sql_fail: str = "CREATE TABLE transaction (amount numeric(9, 2));"
 
     violations: core.ViolationMetric = lint_numeric_with_precision.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -105,7 +105,7 @@ def test_fail_alter_table_numeric_with_precision(
     sql_fail: str = "ALTER TABLE transaction ADD COLUMN amount numeric(9, 2);"
 
     violations: core.ViolationMetric = lint_numeric_with_precision.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -125,7 +125,7 @@ def test_fail_numeric_with_precision_description(
     sql_fail: str = "CREATE TABLE transaction (amount numeric(9, 2));"
 
     _: core.ViolationMetric = lint_numeric_with_precision.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -143,11 +143,11 @@ def test_pass_noqa_numeric_with_precision(
     """Test pass noqa numeric with precision."""
     sql_pass_noqa: str = """
     -- noqa: TP016
-    CREATE TABLE transaction (transaction_id int, amount numeric(9, 2))
+    CREATE TABLE transaction (transaction_id int, amount numeric(9, 2));
     """
 
     violations: core.ViolationMetric = lint_numeric_with_precision.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -169,7 +169,7 @@ def test_fail_noqa_numeric_with_precision(
     """
 
     violations: core.ViolationMetric = lint_numeric_with_precision.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -186,12 +186,12 @@ def test_pass_general_noqa_numeric_with_precision(
 ) -> None:
     """Test pass noqa numeric with precision."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE transaction (transaction_id int, amount numeric(9, 2));
     """
 
     violations: core.ViolationMetric = lint_numeric_with_precision.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -217,7 +217,7 @@ def test_fail_fix_create_table_numeric_with_precision(
     numeric_with_precision.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_numeric_with_precision.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -242,7 +242,7 @@ def test_fail_fix_alter_table_numeric_with_precision(
     numeric_with_precision.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_numeric_with_precision.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.unsafe.US018 import IndexesMovementToTablespace
 
@@ -51,7 +51,7 @@ def test_pass_indexes_movement_to_tablespace(
     sql_fail: str = "ALTER INDEX ALL IN TABLESPACE test SET TABLESPACE test;"
 
     violations: core.ViolationMetric = lint_indexes_movement_to_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -70,7 +70,7 @@ def test_fail_indexes_movement_to_tablespace(
     sql_fail: str = "ALTER INDEX ALL IN TABLESPACE test SET TABLESPACE test2;"
 
     violations: core.ViolationMetric = lint_indexes_movement_to_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -90,7 +90,7 @@ def test_fail_indexes_movement_to_tablespace_description(
     sql_fail: str = "ALTER INDEX ALL IN TABLESPACE test SET TABLESPACE test2;"
 
     _: core.ViolationMetric = lint_indexes_movement_to_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -112,7 +112,7 @@ def test_pass_noqa_indexes_movement_to_tablespace(
     """
 
     violations: core.ViolationMetric = lint_indexes_movement_to_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -134,7 +134,7 @@ def test_fail_noqa_indexes_movement_to_tablespace(
     """
 
     violations: core.ViolationMetric = lint_indexes_movement_to_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -151,12 +151,12 @@ def test_pass_general_noqa_indexes_movement_to_tablespace(
 ) -> None:
     """Test pass noqa indexes movement to tablespace."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     ALTER INDEX ALL IN TABLESPACE test SET TABLESPACE test;
     """
 
     violations: core.ViolationMetric = lint_indexes_movement_to_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 

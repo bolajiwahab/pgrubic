@@ -32,10 +32,7 @@ class ColumnDataTypeChange(linter.BaseChecker):
     2. Start writing data to the new column.
     3. Copy all data from the old column to the new column.
     4. Migrate clients to the new column.
-    5. Drop the old column.
     """
-
-    is_auto_fixable: bool = False
 
     def visit_AlterTableCmd(
         self,
@@ -48,8 +45,8 @@ class ColumnDataTypeChange(linter.BaseChecker):
                 linter.Violation(
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    source_text=self.source_text,
+                    statement=self.statement,
                     statement_location=self.statement_location,
-                    description="Forbid column data type change",
+                    description="Column data type change is not safe",
                 ),
             )

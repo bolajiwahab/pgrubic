@@ -21,7 +21,7 @@ class NonConcurrentIndexDrop(linter.BaseChecker):
                 linter.Violation(
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    source_text=self.source_text,
+                    statement=self.statement,
                     statement_location=self.statement_location,
                     description="Non concurrent index drop",
                 ),

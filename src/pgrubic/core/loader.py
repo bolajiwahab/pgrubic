@@ -13,9 +13,9 @@ from pgrubic import RULES_DIRECTORY, RULES_BASE_MODULE
 from pgrubic.core import config, linter
 
 
-def load_rules(config: config.Config) -> list[linter.BaseChecker]:
+def load_rules(config: config.Config) -> set[linter.BaseChecker]:
     """Load rules."""
-    rules: list[linter.BaseChecker] = []
+    rules: set[linter.BaseChecker] = set()
 
     for path in sorted(RULES_DIRECTORY.rglob("[!_]*.py"), key=lambda x: x.name):
         module = importlib.import_module(
@@ -44,7 +44,7 @@ def load_rules(config: config.Config) -> list[linter.BaseChecker]:
                     fnmatch.fnmatch(rule.code, pattern) for pattern in config.lint.ignore
                 )
             ):
-                rules.append(typing.cast(linter.BaseChecker, rule))
+                rules.add(typing.cast(linter.BaseChecker, rule))
 
                 add_set_locations_to_rule(rule)
 
@@ -99,11 +99,11 @@ def _set_locations(
 
         line_end = self.source_code.find("\n", statement_location_end)
 
-        source_text = self.source_code[line_start:line_end].strip("\n")
+        statement = self.source_code[line_start:line_end].strip("\n")
 
         self.line_number = line_number
         self.column_offset = column_offset
-        self.source_text = source_text
+        self.statement = statement
         self.statement_location = statement_location
 
         return func(self, ancestors, node)

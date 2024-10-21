@@ -21,8 +21,6 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
     Specify schema.
     """
 
-    is_auto_fixable: bool = False
-
     def _check_enum_for_schema(
         self,
         node: ast.CreateEnumStmt | ast.AlterEnumStmt,
@@ -33,7 +31,7 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
                 linter.Violation(
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    source_text=self.source_text,
+                    statement=self.statement,
                     statement_location=self.statement_location,
                     description=f"Database object `{node.typeName[0].sval}`"
                     " should be schema qualified",
@@ -50,7 +48,7 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
                 linter.Violation(
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    source_text=self.source_text,
+                    statement=self.statement,
                     statement_location=self.statement_location,
                     description=f"Database object `{function_name[0].sval}`"
                     " should be schema qualified",
@@ -82,7 +80,7 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
                 linter.Violation(
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    source_text=self.source_text,
+                    statement=self.statement,
                     statement_location=self.statement_location,
                     description=f"Database object `{node.relname}`"
                     " should be schema qualified",
@@ -106,7 +104,7 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
                     linter.Violation(
                         line_number=self.line_number,
                         column_offset=self.column_offset,
-                        source_text=self.source_text,
+                        statement=self.statement,
                         statement_location=self.statement_location,
                         description=f"Database object `{object_names[-1].sval}`"
                         " should be schema qualified",

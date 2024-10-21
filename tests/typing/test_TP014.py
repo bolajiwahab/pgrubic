@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.core import config
 from pgrubic.rules.typing.TP014 import DisallowedDataType
@@ -56,7 +56,7 @@ def test_pass_create_table_disallowed_data_type(
     sql_fail: str = "CREATE TABLE tbl (details text);"
 
     violations: core.ViolationMetric = lint_disallowed_data_type.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -77,7 +77,7 @@ def test_pass_alter_table_disallowed_data_typeb(
     """
 
     violations: core.ViolationMetric = lint_disallowed_data_type.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -96,7 +96,7 @@ def test_fail_create_table_disallowed_data_type(
     sql_fail: str = "CREATE TABLE tbl (details varchar);"
 
     violations: core.ViolationMetric = lint_disallowed_data_type.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -115,7 +115,7 @@ def test_fail_alter_table_disallowed_data_type(
     sql_fail: str = "ALTER TABLE tbl ADD COLUMN details varchar;"
 
     violations: core.ViolationMetric = lint_disallowed_data_type.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -135,7 +135,7 @@ def test_fail_disallowed_data_type_description(
     sql_fail: str = "CREATE TABLE tbl (details varchar);"
 
     _: core.ViolationMetric = lint_disallowed_data_type.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -153,11 +153,11 @@ def test_pass_noqa_disallowed_data_type(
     """Test pass noqa disallowed data type."""
     sql_pass_noqa: str = """
     -- noqa: TP014
-    CREATE TABLE tbl (tbl_id int, details varchar)
+    CREATE TABLE tbl (tbl_id int, details varchar);
     """
 
     violations: core.ViolationMetric = lint_disallowed_data_type.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -179,7 +179,7 @@ def test_fail_noqa_disallowed_data_type(
     """
 
     violations: core.ViolationMetric = lint_disallowed_data_type.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -196,12 +196,12 @@ def test_pass_general_noqa_disallowed_data_type(
 ) -> None:
     """Test pass noqa disallowed data type."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE tbl (tbl_id int, details varchar);
     """
 
     violations: core.ViolationMetric = lint_disallowed_data_type.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -225,7 +225,7 @@ def test_fail_fix_create_table_disallowed_data_type(
     disallowed_data_type.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_disallowed_data_type.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -250,7 +250,7 @@ def test_fail_fix_alter_table_disallowed_data_type(
     disallowed_data_type.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_disallowed_data_type.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.unsafe.US019 import NonConcurrentIndexDrop
 
@@ -53,7 +53,7 @@ def test_pass_concurrent_index_creation(
     sql_pass: str = "DROP INDEX CONCURRENTLY idx;"
 
     violations: core.ViolationMetric = lint_non_concurrent_index_drop.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -72,7 +72,7 @@ def test_fail_non_concurrent_index_drop(
     sql_fail: str = "DROP INDEX idx;"
 
     violations: core.ViolationMetric = lint_non_concurrent_index_drop.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -92,7 +92,7 @@ def test_fail_non_concurrent_index_drop_description(
     sql_fail: str = "DROP INDEX idx;"
 
     _: core.ViolationMetric = lint_non_concurrent_index_drop.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -114,7 +114,7 @@ def test_pass_noqa_non_concurrent_index_drop(
     """
 
     violations: core.ViolationMetric = lint_non_concurrent_index_drop.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -136,7 +136,7 @@ def test_fail_noqa_non_concurrent_index_drop(
     """
 
     violations: core.ViolationMetric = lint_non_concurrent_index_drop.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -153,12 +153,12 @@ def test_pass_general_noqa_non_concurrent_index_drop(
 ) -> None:
     """Test pass noqa non concurrent index drop."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     DROP INDEX idx;
     """
 
     violations: core.ViolationMetric = lint_non_concurrent_index_drop.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -182,7 +182,7 @@ def test_fail_fix_non_concurrent_index_drop(
     non_concurrent_index_drop.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_non_concurrent_index_drop.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

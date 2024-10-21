@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.naming.NM008 import ImplicitConstraintName
 
@@ -49,7 +49,7 @@ def test_pass_explicit_constraint_name_create_table(
     sql_pass: str = "CREATE TABLE tbl (col int, CONSTRAINT tbl_pkey PRIMARY KEY (col));"
 
     violations: core.ViolationMetric = lint_implicit_constraint_name.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -68,7 +68,7 @@ def test_pass_explicit_constraint_name_add_column(
     sql_fail: str = "ALTER TABLE tbl ADD CONSTRAINT tbl_pkey PRIMARY KEY (col);"
 
     violations: core.ViolationMetric = lint_implicit_constraint_name.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -84,10 +84,10 @@ def test_fail_implicit_constraint_name(
     lint_implicit_constraint_name: core.Linter,
 ) -> None:
     """Test fail implicit constraint name."""
-    sql_fail: str = "CREATE TABLE tbl (col int PRIMARY KEY)"
+    sql_fail: str = "CREATE TABLE tbl (col int PRIMARY KEY);"
 
     violations: core.ViolationMetric = lint_implicit_constraint_name.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -107,7 +107,7 @@ def test_fail_implicit_constraint_name_description(
     sql_fail: str = "ALTER TABLE tbl ADD PRIMARY KEY (col);"
 
     _: core.ViolationMetric = lint_implicit_constraint_name.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -129,7 +129,7 @@ def test_pass_noqa_implicit_constraint_name(
     """
 
     violations: core.ViolationMetric = lint_implicit_constraint_name.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -147,11 +147,11 @@ def test_fail_noqa_implicit_constraint_name(
     """Test fail noqa implicit constraint name."""
     sql_fail_noqa: str = """
     -- noqa: GN001
-    CREATE TABLE tbl (col int PRIMARY KEY)
+    CREATE TABLE tbl (col int PRIMARY KEY);
     """
 
     violations: core.ViolationMetric = lint_implicit_constraint_name.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -168,12 +168,12 @@ def test_pass_general_noqa_implicit_constraint_name(
 ) -> None:
     """Test pass noqa implicit constraint name."""
     sql_pass_noqa: str = """
-    -- noqa:
-    CREATE TABLE tbl (col int PRIMARY KEY)
+    -- noqa
+    CREATE TABLE tbl (col int PRIMARY KEY);
     """
 
     violations: core.ViolationMetric = lint_implicit_constraint_name.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

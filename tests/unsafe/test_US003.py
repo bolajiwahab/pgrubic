@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.unsafe.US003 import ColumnRename
 
@@ -43,7 +43,7 @@ def test_fail_column_rename(lint_column_rename: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_column_rename.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -66,11 +66,11 @@ def test_fail_column_rename_description(
     """
 
     _: core.ViolationMetric = lint_column_rename.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
-    assert next(iter(column_rename.violations)).description == "Forbid column rename"
+    assert next(iter(column_rename.violations)).description == "Column rename is not safe"
 
 
 def test_pass_noqa_column_rename(lint_column_rename: core.Linter) -> None:
@@ -81,7 +81,7 @@ def test_pass_noqa_column_rename(lint_column_rename: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_column_rename.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -101,7 +101,7 @@ def test_fail_noqa_column_rename(lint_column_rename: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_column_rename.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -118,12 +118,12 @@ def test_pass_general_noqa_column_rename(
 ) -> None:
     """Test fail noqa column rename."""
     sql_noqa: str = """
-    ALTER TABLE public.card RENAME COLUMN id TO card_id -- noqa:
+    ALTER TABLE public.card RENAME COLUMN id TO card_id -- noqa
     ;
     """
 
     violations: core.ViolationMetric = lint_column_rename.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 

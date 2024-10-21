@@ -28,8 +28,6 @@ class InvalidPartitionName(linter.BaseChecker):
     `regex-partition`: Regex matching the naming convention for check partitions.
     """
 
-    is_auto_fixable: bool = False
-
     def visit_CreateStmt(
         self,
         ancestors: visitors.Ancestor,
@@ -44,7 +42,7 @@ class InvalidPartitionName(linter.BaseChecker):
                 linter.Violation(
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    source_text=self.source_text,
+                    statement=self.statement,
                     statement_location=self.statement_location,
                     description=f"Partition `{node.relation.relname}` does not follow"
                     f" naming convention `{self.config.lint.regex_partition}`",

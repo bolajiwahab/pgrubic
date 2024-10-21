@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.typing.TP001 import TimestampWithoutTimezone
 
@@ -51,7 +51,7 @@ def test_pass_create_table_timestamp_with_timezone(
     sql_fail: str = "CREATE TABLE music (created_at timestamptz);"
 
     violations: core.ViolationMetric = lint_timestamp_without_timezone.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -70,7 +70,7 @@ def test_pass_alter_table_timestamp_with_timezone(
     sql_fail: str = "ALTER TABLE music ADD COLUMN created_at timestamptz;"
 
     violations: core.ViolationMetric = lint_timestamp_without_timezone.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -89,7 +89,7 @@ def test_fail_create_table_timestamp_without_timezone(
     sql_fail: str = "CREATE TABLE music (created_at timestamp);"
 
     violations: core.ViolationMetric = lint_timestamp_without_timezone.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -108,7 +108,7 @@ def test_fail_alter_table_timestamp_without_timezone(
     sql_fail: str = "ALTER TABLE music ADD COLUMN created_at timestamp(0);"
 
     violations: core.ViolationMetric = lint_timestamp_without_timezone.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -128,7 +128,7 @@ def test_fail_timestamp_without_timezone_description(
     sql_fail: str = "CREATE TABLE music (created_at timestamp);"
 
     _: core.ViolationMetric = lint_timestamp_without_timezone.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -146,11 +146,11 @@ def test_pass_noqa_timestamp_without_timezone(
     """Test pass noqa timestamp without timezone."""
     sql_pass_noqa: str = """
     -- noqa: TP001
-    CREATE TABLE music (age int, created_at timestamp(10))
+    CREATE TABLE music (age int, created_at timestamp(10));
     """
 
     violations: core.ViolationMetric = lint_timestamp_without_timezone.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -172,7 +172,7 @@ def test_fail_noqa_timestamp_without_timezone(
     """
 
     violations: core.ViolationMetric = lint_timestamp_without_timezone.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -189,12 +189,12 @@ def test_pass_general_noqa_timestamp_without_timezone(
 ) -> None:
     """Test pass noqa timestamp without timezone."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE music (age int, created_at timestamp);
     """
 
     violations: core.ViolationMetric = lint_timestamp_without_timezone.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -218,7 +218,7 @@ def test_fail_fix_create_table_timestamp_without_timezone(
     timestamp_without_timezone.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_timestamp_without_timezone.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -243,7 +243,7 @@ def test_fail_fix_alter_table_timestamp_without_timezone(
     timestamp_without_timezone.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_timestamp_without_timezone.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

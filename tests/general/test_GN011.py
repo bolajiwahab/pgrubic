@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.core import config
 from pgrubic.rules.general.GN011 import MissingRequiredColumn
@@ -57,7 +57,7 @@ def test_pass_no_columns_table(
     sql_fail: str = "CREATE TABLE music ();"
 
     violations: core.ViolationMetric = lint_missing_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -76,7 +76,7 @@ def test_pass_specified_required_column(
     sql_fail: str = "CREATE TABLE music (age int, created_at timestamptz);"
 
     violations: core.ViolationMetric = lint_missing_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -92,10 +92,10 @@ def test_fail_missing_required_column(
     lint_missing_required_column: core.Linter,
 ) -> None:
     """Test fail missing required column."""
-    sql_fail: str = "CREATE TABLE music (age int)"
+    sql_fail: str = "CREATE TABLE music (age int);"
 
     violations: core.ViolationMetric = lint_missing_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -112,10 +112,10 @@ def test_fail_missing_required_column_description(
     missing_required_column: core.BaseChecker,
 ) -> None:
     """Test missing required column description."""
-    sql_fail: str = "CREATE TABLE music (age int)"
+    sql_fail: str = "CREATE TABLE music (age int);"
 
     _: core.ViolationMetric = lint_missing_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -133,11 +133,11 @@ def test_pass_noqa_missing_required_column(
     """Test pass noqa missing required column."""
     sql_pass_noqa: str = """
     -- noqa: GN011
-    CREATE TABLE music (age int)
+    CREATE TABLE music (age int);
     """
 
     violations: core.ViolationMetric = lint_missing_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -155,11 +155,11 @@ def test_fail_noqa_missing_required_column(
     """Test fail noqa missing required column."""
     sql_fail_noqa: str = """
     -- noqa: GN001
-    CREATE TABLE music (age int)
+    CREATE TABLE music (age int);
     """
 
     violations: core.ViolationMetric = lint_missing_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -176,12 +176,12 @@ def test_pass_general_noqa_missing_required_column(
 ) -> None:
     """Test fail noqa missing required column."""
     sql_pass_noqa: str = """
-    -- noqa:
-    CREATE TABLE music (age int)
+    -- noqa
+    CREATE TABLE music (age int);
     """
 
     violations: core.ViolationMetric = lint_missing_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -198,7 +198,7 @@ def test_fail_fix_missing_required_column(
     missing_required_column: core.BaseChecker,
 ) -> None:
     """Test fail fix missing required column."""
-    sql_fail: str = "CREATE TABLE music (age int)"
+    sql_fail: str = "CREATE TABLE music (age int);"
 
     sql_fix: str = (
         "CREATE TABLE music (\n    age integer\n  , created_at timestamptz NOT NULL\n);"
@@ -207,7 +207,7 @@ def test_fail_fix_missing_required_column(
     missing_required_column.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_missing_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

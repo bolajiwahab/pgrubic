@@ -23,14 +23,12 @@ class TableColumnConflict(linter.BaseChecker):
     Resolve the conflict.
     """
 
-    is_auto_fixable: bool = False
-
     def _register_violation(
         self,
         table_name: str,
         line_number: int,
         column_offset: int,
-        source_text: str,
+        statement: str,
         statement_location: int,
     ) -> None:
         """Register the violation."""
@@ -38,7 +36,7 @@ class TableColumnConflict(linter.BaseChecker):
             linter.Violation(
                 line_number=line_number,
                 column_offset=column_offset,
-                source_text=source_text,
+                statement=statement,
                 statement_location=statement_location,
                 description=f"Table name `{table_name}` conflicts with the"
                 " name of its column(s)",
@@ -58,7 +56,7 @@ class TableColumnConflict(linter.BaseChecker):
                 table_name=node.relation.relname,
                 line_number=self.line_number,
                 column_offset=self.column_offset,
-                source_text=self.source_text,
+                statement=self.statement,
                 statement_location=self.statement_location,
             )
 
@@ -79,6 +77,6 @@ class TableColumnConflict(linter.BaseChecker):
                 table_name=node.relation.relname,
                 line_number=self.line_number,
                 column_offset=self.column_offset,
-                source_text=self.source_text,
+                statement=self.statement,
                 statement_location=self.statement_location,
             )

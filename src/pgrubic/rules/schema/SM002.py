@@ -45,7 +45,7 @@ class DisallowedSchema(linter.BaseChecker):
                         linter.Violation(
                             line_number=self.line_number,
                             column_offset=self.column_offset,
-                            source_text=self.source_text,
+                            statement=self.statement,
                             statement_location=self.statement_location,
                             description=f"Schema '{node.schemaname}' is disallowed in"
                             f" config with reason: '{schema.reason}'"
@@ -69,7 +69,9 @@ class DisallowedSchema(linter.BaseChecker):
         node: ast.CreateEnumStmt,
     ) -> None:
         """Visit CreateEnumStmt."""
-        schema_name: str = node.typeName[0].sval if len(node.typeName) > 1 else None
+        schema_name: str | None = (
+            node.typeName[0].sval if len(node.typeName) > 1 else None
+        )
 
         for schema in self.config.lint.disallowed_schemas:
             if schema_name == schema.name:
@@ -77,7 +79,7 @@ class DisallowedSchema(linter.BaseChecker):
                     linter.Violation(
                         line_number=self.line_number,
                         column_offset=self.column_offset,
-                        source_text=self.source_text,
+                        statement=self.statement,
                         statement_location=self.statement_location,
                         description=f"Schema '{schema_name}' is disallowed in"
                         f" config with reason: '{schema.reason}'"
@@ -101,7 +103,9 @@ class DisallowedSchema(linter.BaseChecker):
         node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""
-        schema_name: str = node.funcname[0].sval if len(node.funcname) > 1 else None
+        schema_name: str | None = (
+            node.funcname[0].sval if len(node.funcname) > 1 else None
+        )
 
         for schema in self.config.lint.disallowed_schemas:
             if schema_name == schema.name:
@@ -109,7 +113,7 @@ class DisallowedSchema(linter.BaseChecker):
                     linter.Violation(
                         line_number=self.line_number,
                         column_offset=self.column_offset,
-                        source_text=self.source_text,
+                        statement=self.statement,
                         statement_location=self.statement_location,
                         description=f"Schema '{schema_name}' is disallowed in"
                         f" config with reason: '{schema.reason}'"

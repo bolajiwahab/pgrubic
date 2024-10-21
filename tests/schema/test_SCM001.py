@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.schema.SM001 import SchemaUnqualifiedObject
 
@@ -49,7 +49,7 @@ def test_pass_schema_unqualified_object(
     sql_fail: str = "CREATE TABLE public.card();"
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -68,7 +68,7 @@ def test_pass_cte_schema_unqualified_object(
     sql_fail: str = "WITH a AS (SELECT * FROM account) SELECT * FROM a;"
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -87,7 +87,7 @@ def test_pass_drop_schema(
     sql_fail: str = "DROP SCHEMA test;"
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -106,7 +106,7 @@ def test_fail_schema_unqualified_object(
     sql_fail: str = "CREATE TABLE card();"
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -125,7 +125,7 @@ def test_fail_drop_table_schema_unqualified_object(
     sql_fail: str = "DROP TABLE mood;"
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -144,7 +144,7 @@ def test_fail_drop_type_schema_unqualified_object(
     sql_fail: str = "DROP TYPE mood;"
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -163,7 +163,7 @@ def test_fail_drop_procedure_schema_unqualified_object(
     sql_fail: str = "DROP PROCEDURE mood;"
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -182,7 +182,7 @@ def test_fail_create_enum_schema_unqualified_object(
     sql_fail: str = "CREATE TYPE mood AS ENUM ('sad', 'ok');"
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -201,7 +201,7 @@ def test_fail_alter_enum_schema_unqualified_object(
     sql_fail: str = "ALTER TYPE mood ADD VALUE 'sad';"
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -224,7 +224,7 @@ def test_fail_create_function_schema_unqualified_object(
     """
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -243,7 +243,7 @@ def test_fail_alter_function_schema_unqualified_object(
     sql_fail: str = "ALTER FUNCTION check_password(text) SET search_path = admin;"
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -263,7 +263,7 @@ def test_fail_schema_unqualified_object_description(
     sql_fail: str = "CREATE MATERIALIZED VIEW card AS SELECT * FROM account;"
 
     _: core.ViolationMetric = lint_schema_unqualified_object.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -277,10 +277,12 @@ def test_pass_noqa_schema_unqualified_object(
     lint_schema_unqualified_object: core.Linter,
 ) -> None:
     """Test pass noqa schema unqualified object."""
-    sql_pass_noqa: str = "CREATE TABLE card AS SELECT * FROM account -- noqa: SM001;"
+    sql_pass_noqa: str = """
+    -- noqa: SM001
+    CREATE TABLE card AS SELECT * FROM account;"""
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -302,7 +304,7 @@ def test_fail_noqa_schema_unqualified_object(
     """
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -319,12 +321,12 @@ def test_pass_general_noqa_schema_unqualified_object(
 ) -> None:
     """Test fail noqa schema unqualified object."""
     sql_noqa: str = """
-    CREATE TABLE card() -- noqa:
+    CREATE TABLE card() -- noqa
     ;
     """
 
     violations: core.ViolationMetric = lint_schema_unqualified_object.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 

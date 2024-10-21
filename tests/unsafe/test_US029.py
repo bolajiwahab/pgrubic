@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.unsafe.US029 import TruncateTable
 
@@ -51,7 +51,7 @@ def test_fail_truncate_table(
     sql_fail: str = "TRUNCATE TABLE public.card;"
 
     violations: core.ViolationMetric = lint_truncate_table.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -71,7 +71,7 @@ def test_fail_truncate_table_description(
     sql_fail: str = "TRUNCATE TABLE public.card;"
 
     _: core.ViolationMetric = lint_truncate_table.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -93,7 +93,7 @@ def test_pass_noqa_truncate_table(
     """
 
     violations: core.ViolationMetric = lint_truncate_table.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -115,7 +115,7 @@ def test_fail_noqa_truncate_table(
     """
 
     violations: core.ViolationMetric = lint_truncate_table.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -132,12 +132,12 @@ def test_pass_general_noqa_truncate_table(
 ) -> None:
     """Test pass noqa truncate table."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     TRUNCATE TABLE public.card;
     """
 
     violations: core.ViolationMetric = lint_truncate_table.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 

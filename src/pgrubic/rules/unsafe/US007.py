@@ -8,8 +8,6 @@ from pgrubic.core import linter
 class DropTablespace(linter.BaseChecker):
     """Checks for drop tablespace."""
 
-    is_auto_fixable: bool = False
-
     def visit_DropTableSpaceStmt(
         self,
         ancestors: visitors.Ancestor,
@@ -20,7 +18,7 @@ class DropTablespace(linter.BaseChecker):
             linter.Violation(
                 line_number=self.line_number,
                 column_offset=self.column_offset,
-                source_text=self.source_text,
+                statement=self.statement,
                 statement_location=self.statement_location,
                 description="Drop tablespace detected",
             ),

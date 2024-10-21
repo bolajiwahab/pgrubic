@@ -34,7 +34,7 @@ class DropCascade(linter.BaseChecker):
         object_name: str,
         line_number: int,
         column_offset: int,
-        source_text: str,
+        statement: str,
         statement_location: int,
     ) -> None:
         """Register violation."""
@@ -42,7 +42,7 @@ class DropCascade(linter.BaseChecker):
             linter.Violation(
                 line_number=line_number,
                 column_offset=column_offset,
-                source_text=source_text,
+                statement=statement,
                 statement_location=statement_location,
                 description=f"Drop cascade on `{object_name}` detected",
             ),
@@ -62,7 +62,7 @@ class DropCascade(linter.BaseChecker):
                     object_name=get_full_qualified_name(object_names),
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    source_text=self.source_text,
+                    statement=self.statement,
                     statement_location=self.statement_location,
                 )
 
@@ -90,7 +90,7 @@ class DropCascade(linter.BaseChecker):
                 object_name=node.name,
                 line_number=self.line_number,
                 column_offset=self.column_offset,
-                source_text=self.source_text,
+                statement=self.statement,
                 statement_location=self.statement_location,
             )
 

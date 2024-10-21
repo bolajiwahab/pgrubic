@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.typing.TP004 import Char
 
@@ -48,7 +48,7 @@ def test_pass_create_table_timestamp_with_timezone(
     sql_fail: str = "CREATE TABLE music (first_name text);"
 
     violations: core.ViolationMetric = lint_char.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -67,7 +67,7 @@ def test_pass_alter_table_timestamp_with_timezone(
     sql_fail: str = "ALTER TABLE music ADD COLUMN last_name text;"
 
     violations: core.ViolationMetric = lint_char.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -86,7 +86,7 @@ def test_fail_create_table_char(
     sql_fail: str = "CREATE TABLE music (first_name char(0));"
 
     violations: core.ViolationMetric = lint_char.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -105,7 +105,7 @@ def test_fail_alter_table_char(
     sql_fail: str = "ALTER TABLE music ADD COLUMN last_name char;"
 
     violations: core.ViolationMetric = lint_char.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -125,7 +125,7 @@ def test_fail_char_description(
     sql_fail: str = "CREATE TABLE music (middle_name char(0));"
 
     _: core.ViolationMetric = lint_char.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -143,11 +143,11 @@ def test_pass_noqa_char(
     """Test pass noqa char."""
     sql_pass_noqa: str = """
     -- noqa: TP004
-    CREATE TABLE music (age int, birth_place char)
+    CREATE TABLE music (age int, birth_place char);
     """
 
     violations: core.ViolationMetric = lint_char.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -169,7 +169,7 @@ def test_fail_noqa_char(
     """
 
     violations: core.ViolationMetric = lint_char.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -186,12 +186,12 @@ def test_pass_general_noqa_char(
 ) -> None:
     """Test pass noqa char."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE music (age int, first_name char);
     """
 
     violations: core.ViolationMetric = lint_char.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -215,7 +215,7 @@ def test_fail_fix_create_table_char(
     char.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_char.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -240,7 +240,7 @@ def test_fail_fix_alter_table_char(
     char.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_char.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.general.GN029 import AStar
 
@@ -46,7 +46,7 @@ def test_pass_explicit_columns(
     sql_pass: str = "SELECT city_id, logdate FROM measurement;"
 
     violations: core.ViolationMetric = lint_a_star.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -65,7 +65,7 @@ def test_pass_count_star(
     sql_pass: str = "SELECT count(*) FROM measurement;"
 
     violations: core.ViolationMetric = lint_a_star.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -84,7 +84,7 @@ def test_fail_a_star(
     sql_fail: str = "SELECT * FROM measurement;"
 
     violations: core.ViolationMetric = lint_a_star.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -104,7 +104,7 @@ def test_fail_a_star_description(
     sql_fail: str = "SELECT * FROM measurement;"
 
     _: core.ViolationMetric = lint_a_star.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -126,7 +126,7 @@ def test_pass_noqa_a_star(
     """
 
     violations: core.ViolationMetric = lint_a_star.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -148,7 +148,7 @@ def test_fail_noqa_a_star(
     """
 
     violations: core.ViolationMetric = lint_a_star.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -165,12 +165,12 @@ def test_pass_general_noqa_a_star(
 ) -> None:
     """Test pass general noqa a_star."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     SELECT * FROM measurement;
     """
 
     violations: core.ViolationMetric = lint_a_star.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

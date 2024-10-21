@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.unsafe.US012 import ValidatingForeignKeyConstraintOnExistingRows
 
@@ -59,7 +59,7 @@ def test_pass_validating_foreign_key_constraint_on_existing_rows(
 
     violations: core.ViolationMetric = (
         lint_validating_foreign_key_constraint_on_existing_rows.run(
-            source_path=SOURCE_PATH,
+            source_file=TEST_FILE,
             source_code=sql_pass,
         )
     )
@@ -84,7 +84,7 @@ def test_fail_validating_foreign_key_constraint_on_existing_rows(
 
     violations: core.ViolationMetric = (
         lint_validating_foreign_key_constraint_on_existing_rows.run(
-            source_path=SOURCE_PATH,
+            source_file=TEST_FILE,
             source_code=sql_fail,
         )
     )
@@ -109,7 +109,7 @@ def test_fail_validating_foreign_key_constraint_on_existing_rows_description(
     """
 
     _: core.ViolationMetric = lint_validating_foreign_key_constraint_on_existing_rows.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -133,7 +133,7 @@ def test_pass_noqa_validating_foreign_key_constraint_on_existing_rows(
 
     violations: core.ViolationMetric = (
         lint_validating_foreign_key_constraint_on_existing_rows.run(
-            source_path=SOURCE_PATH,
+            source_file=TEST_FILE,
             source_code=sql_pass_noqa,
         )
     )
@@ -158,7 +158,7 @@ def test_fail_noqa_validating_foreign_key_constraint_on_existing_rows(
 
     violations: core.ViolationMetric = (
         lint_validating_foreign_key_constraint_on_existing_rows.run(
-            source_path=SOURCE_PATH,
+            source_file=TEST_FILE,
             source_code=sql_noqa,
         )
     )
@@ -176,14 +176,14 @@ def test_pass_general_noqa_validating_foreign_key_constraint_on_existing_rows(
 ) -> None:
     """Test fail noqa validating foreign key constraint on existing rows."""
     sql_noqa: str = """
-    ALTER TABLE public.card -- noqa:
+    ALTER TABLE public.card -- noqa
         ADD CONSTRAINT fkey FOREIGN KEY(account_id) REFERENCES public.account(id)
     ;
     """
 
     violations: core.ViolationMetric = (
         lint_validating_foreign_key_constraint_on_existing_rows.run(
-            source_path=SOURCE_PATH,
+            source_file=TEST_FILE,
             source_code=sql_noqa,
         )
     )
@@ -213,7 +213,7 @@ def test_fail_fix_validating_foreign_key_constraint_on_existing_rows(
 
     violations: core.ViolationMetric = (
         lint_validating_foreign_key_constraint_on_existing_rows.run(
-            source_path=SOURCE_PATH,
+            source_file=TEST_FILE,
             source_code=sql_fail,
         )
     )

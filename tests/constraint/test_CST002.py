@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.constraint.CT002 import CascadeDelete
 
@@ -46,7 +46,7 @@ def test_pass_on_delete_no_action(lint_cascade_delete: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_cascade_delete.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -68,7 +68,7 @@ def test_pass_on_delete_restrict(lint_cascade_delete: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_cascade_delete.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -89,7 +89,7 @@ def test_pass_on_delete_set_null(lint_cascade_delete: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_cascade_delete.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -111,7 +111,7 @@ def test_pass_on_delete_set_default(lint_cascade_delete: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_cascade_delete.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -132,7 +132,7 @@ def test_fail_create_table_cascade_delete(lint_cascade_delete: core.Linter) -> N
     """
 
     violations: core.ViolationMetric = lint_cascade_delete.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -154,7 +154,7 @@ def test_fail_alter_table_cascade_delete(lint_cascade_delete: core.Linter) -> No
     """
 
     violations: core.ViolationMetric = lint_cascade_delete.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -178,7 +178,7 @@ def test_fail_cascade_delete_description(
     """
 
     _: core.ViolationMetric = lint_cascade_delete.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -198,7 +198,7 @@ def test_pass_noqa_cascade_delete(lint_cascade_delete: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_cascade_delete.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -220,7 +220,7 @@ def test_fail_noqa_cascade_delete(lint_cascade_delete: core.Linter) -> None:
     """
 
     violations: core.ViolationMetric = lint_cascade_delete.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -237,14 +237,14 @@ def test_pass_general_noqa_cascade_delete(
 ) -> None:
     """Test fail noqa cascade update."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE books (
         author_id INT REFERENCES authors(author_id) ON DELETE CASCADE
     );
     """
 
     violations: core.ViolationMetric = lint_cascade_delete.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -272,7 +272,7 @@ def test_fail_fix_create_table_cascade_delete(
     cascade_delete.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_cascade_delete.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -302,7 +302,7 @@ def test_fail_fix_alter_table_cascade_delete(
     cascade_delete.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_cascade_delete.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

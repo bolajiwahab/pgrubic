@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.unsafe.US023 import TableMovementToTablespace
 
@@ -51,7 +51,7 @@ def test_fail_index_movement_to_tablespace(
     sql_fail: str = "ALTER TABLE public.idx SET TABLESPACE test;"
 
     violations: core.ViolationMetric = lint_index_movement_to_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -71,7 +71,7 @@ def test_fail_index_movement_to_tablespace_description(
     sql_fail: str = "ALTER TABLE public.idx SET TABLESPACE test;"
 
     _: core.ViolationMetric = lint_index_movement_to_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -93,7 +93,7 @@ def test_pass_noqa_index_movement_to_tablespace(
     """
 
     violations: core.ViolationMetric = lint_index_movement_to_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -115,7 +115,7 @@ def test_fail_noqa_index_movement_to_tablespace(
     """
 
     violations: core.ViolationMetric = lint_index_movement_to_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -132,12 +132,12 @@ def test_pass_general_noqa_index_movement_to_tablespace(
 ) -> None:
     """Test pass noqa table movement to tablespace."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     ALTER TABLE public.idx SET TABLESPACE test;
     """
 
     violations: core.ViolationMetric = lint_index_movement_to_tablespace.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 

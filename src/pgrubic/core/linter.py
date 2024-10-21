@@ -2,13 +2,13 @@
 
 import sys
 import typing
-import pathlib
 import dataclasses
 
-from pglast import ast, parser, stream, visitors, _extract_comments
+from pglast import ast, parser, stream, visitors
 from colorama import Fore, Style
 from caseconverter import kebabcase
 
+from pgrubic import DOCUMENTATION_URL
 from pgrubic.core import noqa, config
 
 
@@ -18,9 +18,10 @@ class Violation:
 
     line_number: int
     column_offset: int
-    source_text: str
+    statement: str
     statement_location: int
     description: str
+    help: str | None = None
 
 
 @dataclasses.dataclass(kw_only=True, slots=True)
@@ -47,6 +48,7 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
     # Attributes shared among all subclasses
     config: config.Config
     inline_ignores: list[noqa.NoQaDirective]
+    source_file: str
     source_code: str
 
     def __init__(self) -> None:
@@ -55,7 +57,7 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
         self.statement_location: int = 0
         self.line_number: int = 0
         self.column_offset: int = 0
-        self.source_text: str = ""
+        self.statement: str = ""
 
     def __init_subclass__(cls, **kwargs: typing.Any) -> None:
         """Set code attribute for subclasses."""
@@ -70,9 +72,15 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
         if not self.config.lint.fix:
             return False
 
+        if not self.is_auto_fixable:
+            return False
+
         for inline_ignore in self.inline_ignores:
             if (
-                self.statement_location == inline_ignore.location
+                (
+                    self.statement_location == inline_ignore.location
+                    or self.source_file == inline_ignore.source_file
+                )
                 and inline_ignore.rule in (noqa.A_STAR, self.code)
                 and not self.config.lint.ignore_noqa
             ):
@@ -82,7 +90,7 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
 
 
 class Linter:
-    """Holds all lint rules, and runs them against a source file."""
+    """Holds all lint rules, and runs them against a source code."""
 
     def __init__(self, config: config.Config) -> None:
         """Initialize variables."""
@@ -90,8 +98,9 @@ class Linter:
         self.config = config
 
     @staticmethod
-    def skip_suppressed_violations(
+    def _skip_suppressed_violations(
         *,
+        source_file: str,
         checker: BaseChecker,
         inline_ignores: list[noqa.NoQaDirective],
     ) -> None:
@@ -101,7 +110,10 @@ class Linter:
                 violation
                 for violation in checker.violations
                 if (
-                    violation.statement_location == inline_ignore.location
+                    (
+                        violation.statement_location == inline_ignore.location
+                        or source_file == inline_ignore.source_file
+                    )
                     and (inline_ignore.rule in (noqa.A_STAR, checker.code))
                 )
             }
@@ -119,36 +131,50 @@ class Linter:
     def print_violations(
         *,
         checker: BaseChecker,
-        source_path: pathlib.Path,
+        source_file: str,
     ) -> None:
         """Print all violations collected by a checker."""
         for violation in checker.violations:
-            sys.stdout.write(
-                f"\n{source_path}:{violation.line_number}:{violation.column_offset}:"
-                f" \033]8;;http://127.0.0.1:8000/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"
-                f" {violation.description}:"
-                f" {Fore.GREEN}\n\n{violation.source_text}\n\n{Style.RESET_ALL}",
-            )
+            if not checker.is_fix_applicable:
+                sys.stdout.write(
+                    f"\n{source_file}:{violation.line_number}:{violation.column_offset}:"
+                    f" \033]8;;{DOCUMENTATION_URL}/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"  # noqa: E501
+                    f" {violation.description}\n\n",
+                )
 
-    def run(self, *, source_path: pathlib.Path, source_code: str) -> ViolationMetric:
+                for idx, line in enumerate(
+                    violation.statement.splitlines(keepends=False),
+                    start=violation.line_number - violation.statement.count("\n"),
+                ):
+                    sys.stdout.write(
+                        f"{Fore.BLUE}{idx} | {Style.RESET_ALL}{Fore.RED}{Style.BRIGHT}{line}{Style.RESET_ALL}\n",  # noqa: E501
+                    )
+                sys.stdout.write("\n")
+
+    def run(self, *, source_file: str, source_code: str) -> ViolationMetric:
         """Run rules on a source code."""
         try:
             tree: ast.Node = parser.parse_sql(source_code)
-            comments = _extract_comments(source_code)
+            comments = noqa.extract_comments(
+                source_file=source_file,
+                source_code=source_code,
+            )
 
         except parser.ParseError as error:
-            sys.stdout.write(f"{source_path}: {Fore.RED}{error!s}{Style.RESET_ALL}")
+            sys.stderr.write(f"{source_file}: {Fore.RED}{error!s}{Style.RESET_ALL}")
 
             sys.exit(1)
 
-        inline_ignores: list[noqa.NoQaDirective] = (
-            noqa.extract_ignores_from_inline_comments(source_code)
+        inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(
+            source_file=source_file,
+            source_code=source_code,
         )
 
         violations: ViolationMetric = ViolationMetric()
 
         BaseChecker.inline_ignores = inline_ignores
         BaseChecker.source_code = source_code
+        BaseChecker.source_file = source_file
 
         for checker in self.checkers:
             checker.violations = set()
@@ -156,14 +182,15 @@ class Linter:
             checker(tree)
 
             if not self.config.lint.ignore_noqa:
-                self.skip_suppressed_violations(
+                self._skip_suppressed_violations(
+                    source_file=source_file,
                     checker=checker,
                     inline_ignores=inline_ignores,
                 )
 
             self.print_violations(
                 checker=checker,
-                source_path=source_path,
+                source_file=source_file,
             )
 
             if self.config.lint.fix is checker.is_auto_fixable is True:
@@ -190,7 +217,7 @@ class Linter:
         sys.stdout.write("\n")
 
         noqa.report_unused_ignores(
-            source_path=source_path,
+            source_file=source_file,
             inline_ignores=inline_ignores,
         )
 

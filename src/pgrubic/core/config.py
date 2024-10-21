@@ -2,9 +2,11 @@
 
 import typing
 import pathlib
+import functools
 import dataclasses
 
 import toml
+from deepmerge import always_merger
 
 from pgrubic import CONFIG_FILE, DEFAULT_CONFIG
 
@@ -65,10 +67,28 @@ class Lint:
 
 
 @dataclasses.dataclass(kw_only=True)
+class Format:
+    """Representation of format config."""
+
+    include: list[str]
+    exclude: list[str]
+    comma_at_beginning: bool
+    semicolon_after_last_statement: bool
+    separate_statements: int
+    remove_pg_catalog_from_functions: bool
+    diff: bool
+    check: bool
+
+
+@dataclasses.dataclass(kw_only=True)
 class Config:
     """Representation of config."""
 
+    include: list[str]
+    exclude: list[str]
+
     lint: Lint
+    format: Format
 
 
 def _load_default_config() -> dict[str, typing.Any]:
@@ -88,9 +108,7 @@ def _load_user_config() -> dict[str, typing.Any]:
 
 def _merge_config() -> dict[str, typing.Any]:
     """Merge default and user config."""
-    return {
-        k: v | _load_user_config().get(k, {}) for k, v in _load_default_config().items()
-    }
+    return dict(always_merger.merge(_load_user_config(), _load_default_config()))
 
 
 def _get_config_file_absolute_path(config_file: str) -> pathlib.Path | None:
@@ -113,17 +131,21 @@ def _get_config_file_absolute_path(config_file: str) -> pathlib.Path | None:
     return None  # pragma: no cover
 
 
+@functools.lru_cache(maxsize=1)
 def parse_config() -> Config:
     """Parse config."""
     merged_config = _merge_config()
     config_lint = merged_config["lint"]
+    config_format = merged_config["format"]
 
     return Config(
+        include=merged_config["include"],
+        exclude=merged_config["exclude"],
         lint=Lint(
             select=config_lint["select"],
             ignore=config_lint["ignore"],
-            include=config_lint["include"],
-            exclude=config_lint["exclude"],
+            include=config_lint["include"] or merged_config["include"],
+            exclude=config_lint["exclude"] or merged_config["exclude"],
             ignore_noqa=config_lint["ignore-noqa"],
             allowed_extensions=config_lint["allowed-extensions"],
             allowed_languages=config_lint["allowed-languages"],
@@ -161,5 +183,19 @@ def parse_config() -> Config:
                 )
                 for schema in config_lint["disallowed-schemas"]
             ],
+        ),
+        format=Format(
+            include=config_format["include"] or merged_config["include"],
+            exclude=config_format["exclude"] or merged_config["exclude"],
+            comma_at_beginning=config_format["comma-at-beginning"],
+            semicolon_after_last_statement=config_format[
+                "semicolon-after-last-statement"
+            ],
+            separate_statements=config_format["separate-statements"],
+            remove_pg_catalog_from_functions=config_format[
+                "remove-pg-catalog-from-functions"
+            ],
+            diff=config_format["diff"],
+            check=config_format["check"],
         ),
     )

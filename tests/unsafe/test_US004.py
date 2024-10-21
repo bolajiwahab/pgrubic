@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.unsafe.US004 import AddingAutoIncrementColumn
 
@@ -52,7 +52,7 @@ def test_fail_adding_small_serial_column(
     """
 
     violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -74,7 +74,7 @@ def test_fail_adding_serial_column(
     """
 
     violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -96,7 +96,7 @@ def test_fail_adding_big_serial_column(
     """
 
     violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -119,13 +119,13 @@ def test_fail_adding_auto_increment_column_description(
     """
 
     _: core.ViolationMetric = lint_adding_auto_increment_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
     assert (
         next(iter(adding_auto_increment_column.violations)).description
-        == "Forbid adding auto increment column"
+        == "Adding auto increment column is not safe"
     )
 
 
@@ -139,7 +139,7 @@ def test_pass_noqa_adding_auto_increment_column(
     """
 
     violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -161,7 +161,7 @@ def test_fail_noqa_adding_auto_increment_column(
     """
 
     violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -178,12 +178,12 @@ def test_pass_general_noqa_adding_auto_increment_column(
 ) -> None:
     """Test fail noqa adding auto increment column."""
     sql_noqa: str = """
-    ALTER TABLE public.card ADD COLUMN id serial -- noqa:
+    ALTER TABLE public.card ADD COLUMN id serial -- noqa
     ;
     """
 
     violations: core.ViolationMetric = lint_adding_auto_increment_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 

@@ -1,10 +1,12 @@
 """Test filters."""
 
+import pathlib
+
 from pgrubic import core
 
 
-def test_filter_source_paths(linter: core.Linter) -> None:
-    """Test filtering source paths."""
+def test_filter_lint_source_paths(tmp_path: pathlib.Path, linter: core.Linter) -> None:
+    """Test filter lint source paths."""
     linter.config.lint.include = [
         "*.sql",
         "*.txt",
@@ -14,25 +16,80 @@ def test_filter_source_paths(linter: core.Linter) -> None:
         "test.sql",
     ]
 
-    source_paths = [
-        "test.sql",
-        "test.py",
-        "test.txt",
-        "tables.sql",
-        "views.sql",
-        "functions.sql",
-        "triggers.sql",
-        "rules.sql",
-        "procedures.sql",
-        "types.sql",
-        "alters.sql",
-    ]
+    sql_fail: str = "SELECT a = NULL;"
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    paths: tuple[pathlib.Path, ...] = (
+        pathlib.Path("test.sql"),
+        pathlib.Path("test.py"),
+        pathlib.Path("test.txt"),
+        pathlib.Path("tables.sql"),
+        pathlib.Path("views.sql"),
+        pathlib.Path("functions.sql"),
+        pathlib.Path("triggers.sql"),
+        pathlib.Path("rules.sql"),
+        pathlib.Path("procedures.sql"),
+        pathlib.Path("types.sql"),
+        pathlib.Path("alters.sql"),
+    )
+
+    for path in paths:
+        file_fail = directory / path
+        file_fail.write_text(sql_fail)
 
     source_paths_filtered_length = 9
 
-    source_paths = core.filter_source_paths(
-        source_paths=source_paths,
-        config=linter.config,
+    paths = core.filter_files(
+        paths=(directory,),
+        include=linter.config.lint.include,
+        exclude=linter.config.lint.exclude,
     )
 
-    assert len(source_paths) == source_paths_filtered_length
+    assert len(paths) == source_paths_filtered_length
+
+
+def test_filter_format_source_paths(tmp_path: pathlib.Path, linter: core.Linter) -> None:
+    """Test filter format source paths."""
+    linter.config.format.include = [
+        "*.sql",
+        "*.txt",
+    ]
+
+    linter.config.format.exclude = [
+        "test.sql",
+    ]
+
+    sql_fail: str = "SELECT a = NULL;"
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    paths: tuple[pathlib.Path, ...] = (
+        pathlib.Path("test.sql"),
+        pathlib.Path("test.py"),
+        pathlib.Path("test.txt"),
+        pathlib.Path("tables.sql"),
+        pathlib.Path("views.sql"),
+        pathlib.Path("functions.sql"),
+        pathlib.Path("triggers.sql"),
+        pathlib.Path("rules.sql"),
+        pathlib.Path("procedures.sql"),
+        pathlib.Path("types.sql"),
+        pathlib.Path("alters.sql"),
+    )
+
+    for path in paths:
+        file_fail = directory / path
+        file_fail.write_text(sql_fail)
+
+    source_paths_filtered_length = 9
+
+    paths = core.filter_files(
+        paths=(directory,),
+        include=linter.config.format.include,
+        exclude=linter.config.format.exclude,
+    )
+
+    assert len(paths) == source_paths_filtered_length

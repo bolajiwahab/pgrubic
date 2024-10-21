@@ -1,11 +1,14 @@
 """pgrubic."""
 
+import enum
 import typing
 import pathlib
 
 from pglast import ast
 
 PROGRAM_NAME: str = "pgrubic"
+
+DOCUMENTATION_URL: str = "https://bolajiwahab.github.io/pgrubic"
 
 RULES_BASE_MODULE: str = f"{PROGRAM_NAME}/rules/"
 
@@ -22,3 +25,11 @@ def get_full_qualified_name(node: tuple[typing.Any]) -> str:
         return str(node.sval)
 
     return ".".join(n.sval for n in node)
+
+
+@enum.unique
+class Operators(enum.StrEnum):
+    """Operators."""
+
+    EQ = "="
+    NOT_EQ = "<>"

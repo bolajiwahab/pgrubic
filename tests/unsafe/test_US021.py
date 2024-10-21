@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.unsafe.US021 import DropTable
 
@@ -51,7 +51,7 @@ def test_fail_drop_table(
     sql_fail: str = "DROP TABLE public.card;"
 
     violations: core.ViolationMetric = lint_drop_table.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -71,7 +71,7 @@ def test_fail_drop_table_description(
     sql_fail: str = "DROP TABLE public.card;"
 
     _: core.ViolationMetric = lint_drop_table.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -93,7 +93,7 @@ def test_pass_noqa_drop_table(
     """
 
     violations: core.ViolationMetric = lint_drop_table.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -115,7 +115,7 @@ def test_fail_noqa_drop_table(
     """
 
     violations: core.ViolationMetric = lint_drop_table.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 
@@ -132,12 +132,12 @@ def test_pass_general_noqa_drop_table(
 ) -> None:
     """Test pass noqa drop table."""
     sql_noqa: str = """
-    -- noqa:
+    -- noqa
     DROP TABLE public.card;
     """
 
     violations: core.ViolationMetric = lint_drop_table.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_noqa,
     )
 

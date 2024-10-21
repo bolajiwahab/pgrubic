@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.typing.TP006 import Money
 
@@ -48,7 +48,7 @@ def test_pass_create_table_numeric(
     sql_fail: str = "CREATE TABLE transaction (amount numeric);"
 
     violations: core.ViolationMetric = lint_money.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -67,7 +67,7 @@ def test_pass_alter_table_numeric(
     sql_fail: str = "ALTER TABLE transaction ADD COLUMN amount numeric;"
 
     violations: core.ViolationMetric = lint_money.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -86,7 +86,7 @@ def test_fail_create_table_money(
     sql_fail: str = "CREATE TABLE transaction (amount money);"
 
     violations: core.ViolationMetric = lint_money.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -105,7 +105,7 @@ def test_fail_alter_table_money(
     sql_fail: str = "ALTER TABLE transaction ADD COLUMN amount money;"
 
     violations: core.ViolationMetric = lint_money.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -125,7 +125,7 @@ def test_fail_money_description(
     sql_fail: str = "CREATE TABLE transaction (amount money);"
 
     _: core.ViolationMetric = lint_money.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -143,11 +143,11 @@ def test_pass_noqa_money(
     """Test pass noqa money."""
     sql_pass_noqa: str = """
     -- noqa: TP006
-    CREATE TABLE transaction (transaction_id int, amount money)
+    CREATE TABLE transaction (transaction_id int, amount money);
     """
 
     violations: core.ViolationMetric = lint_money.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -169,7 +169,7 @@ def test_fail_noqa_money(
     """
 
     violations: core.ViolationMetric = lint_money.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -186,12 +186,12 @@ def test_pass_general_noqa_money(
 ) -> None:
     """Test pass noqa money."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE transaction (transaction_id int, amount money);
     """
 
     violations: core.ViolationMetric = lint_money.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -217,7 +217,7 @@ def test_fail_fix_create_table_money(
     money.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_money.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -242,7 +242,7 @@ def test_fail_fix_alter_table_money(
     money.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_money.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

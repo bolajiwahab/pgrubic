@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.general.GN001 import TableInheritance
 
@@ -46,7 +46,7 @@ def test_fail_table_inheritance(
     sql_fail: str = "CREATE TABLE measurement_y2006m02 () INHERITS (measurement);"
 
     violations: core.ViolationMetric = lint_table_inheritance.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -66,7 +66,7 @@ def test_fail_table_inheritance_description(
     sql_fail: str = "CREATE TABLE measurement_y2006m02 () INHERITS (measurement);"
 
     _: core.ViolationMetric = lint_table_inheritance.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -88,7 +88,7 @@ def test_pass_noqa_table_inheritance(
     """
 
     violations: core.ViolationMetric = lint_table_inheritance.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -110,7 +110,7 @@ def test_fail_noqa_table_inheritance(
     """
 
     violations: core.ViolationMetric = lint_table_inheritance.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -127,12 +127,12 @@ def test_pass_general_noqa_table_inheritance(
 ) -> None:
     """Test fail noqa table inheritance."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE measurement_y2006m02 () INHERITS (measurement);
     """
 
     violations: core.ViolationMetric = lint_table_inheritance.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

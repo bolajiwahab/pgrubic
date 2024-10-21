@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.core import config
 from pgrubic.rules.general.GN028 import WronglyTypedRequiredColumn
@@ -58,7 +58,7 @@ def test_pass_no_columns_table(
     sql_fail: str = "CREATE TABLE music ();"
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -77,7 +77,7 @@ def test_pass_add_columns_table(
     sql_fail: str = "ALTER TABLE music ADD COLUMN age int;"
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -96,7 +96,7 @@ def test_pass_not_wrongly_typed_required_column(
     sql_fail: str = "CREATE TABLE music (age int, created_at timestamptz);"
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -115,7 +115,7 @@ def test_fail_create_table_wrongly_typed_required_column(
     sql_fail: str = "CREATE TABLE music (age int, created_at date);"
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -134,7 +134,7 @@ def test_fail_alter_table_wrongly_typed_required_column(
     sql_fail: str = "ALTER TABLE music ADD COLUMN created_at date;"
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -154,7 +154,7 @@ def test_fail_wrongly_typed_required_column_description(
     sql_fail: str = "CREATE TABLE music (age int, created_at date);"
 
     _: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -172,11 +172,11 @@ def test_pass_noqa_wrongly_typed_required_column(
     """Test pass noqa wrongly typed required column."""
     sql_pass_noqa: str = """
     -- noqa: GN013
-    CREATE TABLE music (age int, created_at timestamptz)
+    CREATE TABLE music (age int, created_at timestamptz);
     """
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -198,7 +198,7 @@ def test_fail_noqa_wrongly_typed_required_column(
     """
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -215,12 +215,12 @@ def test_pass_general_noqa_wrongly_typed_required_column(
 ) -> None:
     """Test fail noqa wrongly typed required column."""
     sql_pass_noqa: str = """
-    -- noqa:
-    CREATE TABLE music (age int, created_at date)
+    -- noqa
+    CREATE TABLE music (age int, created_at date);
     """
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -246,7 +246,7 @@ def test_fail_fix_create_table_wrongly_typed_required_column(
     wrongly_typed_required_column.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -271,7 +271,7 @@ def test_fail_fix_alter_table_wrongly_typed_required_column(
     wrongly_typed_required_column.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_wrongly_typed_required_column.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

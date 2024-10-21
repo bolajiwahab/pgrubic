@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.naming.NM010 import NonSnakeCaseIdentifier
 
@@ -49,7 +49,7 @@ def test_pass_snake_case_identifier(
     sql_pass: str = "CREATE TABLE tbl (col int);"
 
     violations: core.ViolationMetric = lint_non_snake_case_identifier.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass,
     )
 
@@ -68,7 +68,7 @@ def test_fail_non_snake_case_identifier(
     sql_fail: str = """CREATE TABLE "TblAge" (col int);"""
 
     violations: core.ViolationMetric = lint_non_snake_case_identifier.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -88,7 +88,7 @@ def test_fail_non_snake_case_identifier_description(
     sql_fail: str = """CREATE TABLE tbl ("Col" int);"""
 
     _: core.ViolationMetric = lint_non_snake_case_identifier.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -110,7 +110,7 @@ def test_pass_noqa_non_snake_case_identifier(
     """
 
     violations: core.ViolationMetric = lint_non_snake_case_identifier.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -134,7 +134,7 @@ def test_fail_noqa_non_snake_case_identifier(
     """
 
     violations: core.ViolationMetric = lint_non_snake_case_identifier.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -151,13 +151,13 @@ def test_pass_general_noqa_non_snake_case_identifier(
 ) -> None:
     """Test pass noqa non snake case identifier."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     CREATE TABLE "MEasurement__2024_02" PARTITION OF measurement
     FOR VALUES FROM ('2006-02-01') TO ('2006-03-01');
     """
 
     violations: core.ViolationMetric = lint_non_snake_case_identifier.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 

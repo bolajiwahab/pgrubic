@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.general.GN014 import SelectInto
 
@@ -50,7 +50,7 @@ def test_pass_create_table_as(
     )
 
     violations: core.ViolationMetric = lint_select_into.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -71,7 +71,7 @@ def test_fail_select_into(
     )
 
     violations: core.ViolationMetric = lint_select_into.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -93,7 +93,7 @@ def test_fail_select_into_description(
     )
 
     _: core.ViolationMetric = lint_select_into.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -115,7 +115,7 @@ def test_pass_noqa_select_into(
     """
 
     violations: core.ViolationMetric = lint_select_into.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -137,7 +137,7 @@ def test_fail_noqa_select_into(
     """
 
     violations: core.ViolationMetric = lint_select_into.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -154,12 +154,12 @@ def test_pass_general_noqa_select_into(
 ) -> None:
     """Test fail noqa select into."""
     sql_pass_noqa: str = """
-    -- noqa:
+    -- noqa
     SELECT * INTO films_recent FROM films WHERE created_at >= '2002-01-01';
     """
 
     violations: core.ViolationMetric = lint_select_into.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -185,7 +185,7 @@ def test_fail_fix_select_into(
     select_into.config.lint.fix = True
 
     violations: core.ViolationMetric = lint_select_into.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 

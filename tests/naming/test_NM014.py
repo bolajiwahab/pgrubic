@@ -2,7 +2,7 @@
 
 import pytest
 
-from tests import SOURCE_PATH
+from tests import TEST_FILE
 from pgrubic import core
 from pgrubic.rules.naming.NM014 import SingleLetterIdentifier
 
@@ -49,7 +49,7 @@ def test_fail_single_letter_identifier(
     sql_fail: str = "CREATE TABLE tbl (a int);"
 
     violations: core.ViolationMetric = lint_single_letter_identifier.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -69,7 +69,7 @@ def test_fail_single_letter_identifier_description(
     sql_fail: str = "CREATE ROLE b LOGIN;"
 
     _: core.ViolationMetric = lint_single_letter_identifier.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail,
     )
 
@@ -91,7 +91,7 @@ def test_pass_noqa_single_letter_identifier(
     """
 
     violations: core.ViolationMetric = lint_single_letter_identifier.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
@@ -113,7 +113,7 @@ def test_fail_noqa_single_letter_identifier(
     """
 
     violations: core.ViolationMetric = lint_single_letter_identifier.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_fail_noqa,
     )
 
@@ -130,12 +130,12 @@ def test_pass_general_noqa_single_letter_identifier(
 ) -> None:
     """Test pass noqa single letter identifier."""
     sql_pass_noqa: str = """
-    -- noqa:
-    CREATE TABLE tbl (age int, CONSTRAINT a PRIMARY KEY (id))
+    -- noqa
+    CREATE TABLE tbl (age int, CONSTRAINT a PRIMARY KEY (id));
     """
 
     violations: core.ViolationMetric = lint_single_letter_identifier.run(
-        source_path=SOURCE_PATH,
+        source_file=TEST_FILE,
         source_code=sql_pass_noqa,
     )
 
