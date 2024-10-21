@@ -19,7 +19,7 @@ from pgrubic import (
 from pgrubic.core import config, linter
 
 if typing.TYPE_CHECKING:
-    from collections import abc
+    from collections import abc  # pragma: no cover
 
 
 def load_rules(config: config.Config) -> set[linter.BaseChecker]:
