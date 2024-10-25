@@ -150,7 +150,7 @@ semicolon-after-last-statement = true
 remove-pg-catalog-from-functions = true
 
 # Separate statements by a certain number by of new line, 1 by default
-separate-statements = 1
+lines-between-statements = 1
 
 # Check if SQL files would have been modified, returning a non-zero exit code
 check = false

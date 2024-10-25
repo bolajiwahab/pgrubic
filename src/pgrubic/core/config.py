@@ -1,4 +1,4 @@
-"""Load config."""
+"""Configuration."""
 
 import typing
 import pathlib
@@ -74,7 +74,7 @@ class Format:
     exclude: list[str]
     comma_at_beginning: bool
     semicolon_after_last_statement: bool
-    separate_statements: int
+    lines_between_statements: int
     remove_pg_catalog_from_functions: bool
     diff: bool
     check: bool
@@ -191,7 +191,7 @@ def parse_config() -> Config:
             semicolon_after_last_statement=config_format[
                 "semicolon-after-last-statement"
             ],
-            separate_statements=config_format["separate-statements"],
+            lines_between_statements=config_format["lines-between-statements"],
             remove_pg_catalog_from_functions=config_format[
                 "remove-pg-catalog-from-functions"
             ],

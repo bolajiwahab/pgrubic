@@ -29,6 +29,6 @@ exclude = []
 comma-at-beginning = true
 semicolon-after-last-statement = true
 remove-pg-catalog-from-functions = true
-separate-statements = 1
+lines-between-statements = 1
 check = false
 diff = false

@@ -1,6 +1,7 @@
 """Entry point."""
 
 import sys
+import difflib
 import pathlib
 
 import click
@@ -130,23 +131,43 @@ def format_sql_file(
         exclude=config.format.exclude,
     )
 
+    exit_code: list[int] = []
+
     for source_file in source_files:
         with source_file.open("r", encoding="utf-8") as sf:
             source_code: str = sf.read()
 
-        formatted_result: core.FormatResult = formatter.format(
+        formatted_source_code = formatter.format(
             source_file=str(source_file),
             source_code=source_code,
         )
 
-        if formatted_result.exit_code == 1:
-            console.print(Syntax(formatted_result.output, "diff", theme="ansi_dark"))
+        if formatted_source_code != source_code and config.format.check:
+            exit_code.append(1)
 
-            sys.exit(1)
+        if formatted_source_code != source_code and config.format.diff:
+            diff_unified = difflib.unified_diff(
+                source_code.splitlines(keepends=True),
+                formatted_source_code.splitlines(keepends=True),
+                fromfile=str(source_file),
+                tofile=str(source_file),
+            )
 
-        if formatted_result.output != source_code:
+            diff_output = "".join(diff_unified)
+            console.print(Syntax(diff_output, "diff", theme="ansi_dark"))
+
+            exit_code.append(1)
+
+        if (
+            formatted_source_code != source_code
+            and not config.format.check
+            and not config.format.diff
+        ):
             with source_file.open("w", encoding="utf-8") as sf:
-                sf.write(formatted_result.output)
+                sf.write(formatted_source_code)
+
+    if len(exit_code) > 0:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

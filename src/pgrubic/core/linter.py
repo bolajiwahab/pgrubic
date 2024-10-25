@@ -9,7 +9,7 @@ from colorama import Fore, Style
 from caseconverter import kebabcase
 
 from pgrubic import DOCUMENTATION_URL
-from pgrubic.core import noqa, config, loader
+from pgrubic.core import noqa, config, loader, formatter
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True, slots=True)
@@ -101,9 +101,12 @@ class Linter:
         ] = loader.load_formatters,
     ) -> None:
         """Initialize variables."""
-        formatters()
         self.checkers: set[BaseChecker] = set()
         self.config = config
+        self.formatter = formatter.Formatter(
+            config=config,
+            formatters=formatters,
+        )
 
     @staticmethod
     def _skip_suppressed_violations(
@@ -233,7 +236,7 @@ class Linter:
             violations.fix = stream.IndentedStream(
                 comments=comments,
                 semicolon_after_last_statement=self.config.format.semicolon_after_last_statement,
-                separate_statements=self.config.format.separate_statements,
+                separate_statements=self.config.format.lines_between_statements,
                 remove_pg_catalog_from_functions=self.config.format.remove_pg_catalog_from_functions,
                 comma_at_eoln=not (self.config.format.comma_at_beginning),
             )(tree)
