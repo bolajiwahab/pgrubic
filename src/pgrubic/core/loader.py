@@ -1,16 +1,25 @@
-"""Method to load rules."""
+"""Method to load rules and formatters."""
+
+from __future__ import annotations
 
 import typing
 import fnmatch
 import inspect
 import functools
 import importlib
-from collections import abc
 
 from pglast import ast, visitors
 
-from pgrubic import RULES_DIRECTORY, RULES_BASE_MODULE
+from pgrubic import (
+    RULES_DIRECTORY,
+    RULES_BASE_MODULE,
+    FORMATTERS_DIRECTORY,
+    FORMATTERS_BASE_MODULE,
+)
 from pgrubic.core import config, linter
+
+if typing.TYPE_CHECKING:
+    from collections import abc  # pragma: no cover
 
 
 def load_rules(config: config.Config) -> set[linter.BaseChecker]:
@@ -51,6 +60,28 @@ def load_rules(config: config.Config) -> set[linter.BaseChecker]:
                 add_apply_fix_to_rule(rule)
 
     return rules
+
+
+def load_formatters() -> set[typing.Callable[[], None]]:
+    """Load formatters."""
+    formatters: set[typing.Callable[[], None]] = set()
+
+    for path in sorted(FORMATTERS_DIRECTORY.rglob("[!_]*.py"), key=lambda x: x.name):
+        module = importlib.import_module(
+            str(FORMATTERS_BASE_MODULE / path.relative_to(FORMATTERS_DIRECTORY))
+            .replace(".py", "")
+            .replace("/", "."),
+        )
+
+        for _, formatter in inspect.getmembers(
+            module,
+            lambda x: inspect.isfunction(x)
+            and x.__name__.endswith("_stmt")
+            and x.__module__ == module.__name__,  # noqa: B023
+        ):
+            formatters.add(formatter)
+
+    return formatters
 
 
 def add_set_locations_to_rule(node: typing.Any) -> None:

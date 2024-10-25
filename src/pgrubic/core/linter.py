@@ -9,7 +9,7 @@ from colorama import Fore, Style
 from caseconverter import kebabcase
 
 from pgrubic import DOCUMENTATION_URL
-from pgrubic.core import noqa, config
+from pgrubic.core import noqa, config, loader, formatter
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True, slots=True)
@@ -92,10 +92,21 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
 class Linter:
     """Holds all lint rules, and runs them against a source code."""
 
-    def __init__(self, config: config.Config) -> None:
+    def __init__(
+        self,
+        config: config.Config,
+        formatters: typing.Callable[
+            [],
+            set[typing.Callable[[], None]],
+        ] = loader.load_formatters,
+    ) -> None:
         """Initialize variables."""
         self.checkers: set[BaseChecker] = set()
         self.config = config
+        self.formatter = formatter.Formatter(
+            config=config,
+            formatters=formatters,
+        )
 
     @staticmethod
     def _skip_suppressed_violations(
@@ -224,7 +235,10 @@ class Linter:
         if parser.parse_sql(source_code) != tree:
             violations.fix = stream.IndentedStream(
                 comments=comments,
-                semicolon_after_last_statement=True,
+                semicolon_after_last_statement=self.config.format.semicolon_after_last_statement,
+                separate_statements=self.config.format.lines_between_statements,
+                remove_pg_catalog_from_functions=self.config.format.remove_pg_catalog_from_functions,
+                comma_at_eoln=not (self.config.format.comma_at_beginning),
             )(tree)
 
         return violations

@@ -150,7 +150,7 @@ semicolon-after-last-statement = true
 remove-pg-catalog-from-functions = true
 
 # Separate statements by a certain number by of new line, 1 by default
-separate-statements = 1
+lines-between-statements = 1
 
 # Check if SQL files would have been modified, returning a non-zero exit code
 check = false
@@ -186,10 +186,9 @@ Pgrubic is influenced by a number of tools such as [Strong Migrations](https://g
 [squawk](https://github.com/sbdchd/squawk), [pgextwlist](https://github.com/dimitri/pgextwlist), [Don't_Do_This](https://wiki.postgresql.org/wiki/Don't_Do_This)
 and [schemalint](https://github.com/kristiandupont/schemalint).
 
-Pgrubic stands on the shoulders of giants:
 Pgrubic is built upon the shoulders of:
-[pglast](https://github.com/pglast/pglast) - Python bindings to libpg_query
-[libpg_query](https://github.com/pganalyze/libpg_query) - PostgreSQL parser outside of the server environment
+- [pglast](https://github.com/pglast/pglast) - Python bindings to libpg_query
+- [libpg_query](https://github.com/pganalyze/libpg_query) - PostgreSQL parser outside of the server environment
 
 ## License
 Pgrubic is released under GPL-3.0 license.

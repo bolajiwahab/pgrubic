@@ -10,28 +10,45 @@ from colorama import Fore, Style
 from pgrubic import PROGRAM_NAME
 
 A_STAR: str = "*"
+ASCII_SEMI_COLON: str = "ASCII_59"
+SEMI_COLON: str = ";"
 
 
-def _build_statements_start_end_locations(
+class Statement(typing.NamedTuple):
+    """Representation of an SQL statement."""
+
+    start_location: int
+    end_location: int
+    text: str
+
+
+def build_statements_start_end_locations(
     *,
     source_file: str,
     source_code: str,
-) -> list[tuple[int, int]]:
+) -> list[Statement]:
     """Build statements start and end locations."""
-    locations: list[tuple[int, int]] = []
+    locations: list[Statement] = []
 
     statement_start_location = 0
+
     tokens = parser.scan(source_code)
 
     for idx, token in enumerate(tokens):
-        if idx == len(tokens) - 1 and token.name != "ASCII_59":
+        if idx == len(tokens) - 1 and token.name != ASCII_SEMI_COLON:
             sys.stderr.write(
                 f"{Fore.RED}Error:{source_file}:Missing statement terminator at location {token.end}{Style.RESET_ALL}\n",  # noqa: E501
             )
             sys.exit(1)
 
-        if token.name == "ASCII_59":
-            locations.append((statement_start_location, token.end))
+        if token.name == ASCII_SEMI_COLON:
+            locations.append(
+                Statement(
+                    start_location=statement_start_location,
+                    end_location=token.end,
+                    text=source_code[statement_start_location : token.end + 1],
+                ),
+            )
             statement_start_location = token.end + 1
 
     return locations
@@ -63,11 +80,11 @@ def _get_rules_from_inline_comment(
 
 
 def _get_statement_locations(
-    locations: list[tuple[int, int]],
+    locations: list[Statement],
     stop: int,
 ) -> tuple[int, int]:
     """Get statement start and end locations."""
-    for statement_start_location, statement_end_location in locations:
+    for statement_start_location, statement_end_location, _ in locations:
         if statement_start_location <= stop < statement_end_location:
             break
 
@@ -86,9 +103,12 @@ class NoQaDirective:
     used: bool = False
 
 
-def _extract_statement_ignores(source_file: str, source_code: str) -> list[NoQaDirective]:
+def _extract_statement_ignores(
+    source_file: str,
+    source_code: str,
+) -> list[NoQaDirective]:
     """Extract ignores from SQL statements."""
-    locations = _build_statements_start_end_locations(
+    locations = build_statements_start_end_locations(
         source_file=source_file,
         source_code=source_code,
     )
@@ -167,6 +187,32 @@ def extract_ignores(*, source_file: str, source_code: str) -> list[NoQaDirective
     )
 
 
+def extract_format_ignores(source_file: str, source_code: str) -> list[int]:
+    """Extract format ignores from SQL statements."""
+    locations = build_statements_start_end_locations(
+        source_file=source_file,
+        source_code=source_code,
+    )
+
+    inline_ignores: list[int] = []
+
+    for token in parser.scan(source_code):
+        if token.name == "SQL_COMMENT":
+            statement_start_location, _ = _get_statement_locations(
+                locations,
+                token.start,
+            )
+
+            comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
+
+            if comment.strip().startswith("fmt"):
+                inline_ignores.append(
+                    statement_start_location,
+                )
+
+    return inline_ignores
+
+
 class Comment(typing.NamedTuple):
     """Representation of an SQL comment."""
 
@@ -178,12 +224,11 @@ class Comment(typing.NamedTuple):
 
 def extract_comments(*, source_file: str, source_code: str) -> list[Comment]:
     """Extract comments from SQL statements."""
-    locations = _build_statements_start_end_locations(
+    locations = build_statements_start_end_locations(
         source_file=source_file,
         source_code=source_code,
     )
 
-    # this is a hack to ensure we always print comment at the top of an SQL statement
     comments: list[Comment] = []
     continue_previous = False
 

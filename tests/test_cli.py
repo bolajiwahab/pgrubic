@@ -184,4 +184,6 @@ def test_cli_format_diff(tmp_path: pathlib.Path) -> None:
 
     result = runner.invoke(cli, ["format", str(file_fail), "--diff"])
 
+    assert len(result.output) > 0
+
     assert result.exit_code == 1

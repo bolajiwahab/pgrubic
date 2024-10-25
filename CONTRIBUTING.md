@@ -69,3 +69,14 @@ To add a new formatter, you need to:
 1. Identify the correct category.
 2. Create a file with a name matching the statement tag e.g `create_table` for CREATE TABLE statement.
 3. Inside the file, implement the formatter.
+
+
+### Documentation
+To update the documentation, use:
+```
+tox -e docbuild
+```
+To preview changes to the documentation, from the parent directory, use:
+```
+mkdocs serve --config-file docs/mkdocs.yml
+```
