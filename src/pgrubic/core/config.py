@@ -73,7 +73,7 @@ class Format:
     include: list[str]
     exclude: list[str]
     comma_at_beginning: bool
-    semicolon_after_last_statement: bool
+    new_line_before_semicolon: bool
     lines_between_statements: int
     remove_pg_catalog_from_functions: bool
     diff: bool
@@ -188,9 +188,7 @@ def parse_config() -> Config:
             include=config_format["include"] or merged_config["include"],
             exclude=config_format["exclude"] or merged_config["exclude"],
             comma_at_beginning=config_format["comma-at-beginning"],
-            semicolon_after_last_statement=config_format[
-                "semicolon-after-last-statement"
-            ],
+            new_line_before_semicolon=config_format["new-line-before-semicolon"],
             lines_between_statements=config_format["lines-between-statements"],
             remove_pg_catalog_from_functions=config_format[
                 "remove-pg-catalog-from-functions"

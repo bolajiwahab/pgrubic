@@ -20,7 +20,7 @@ class Formatter:
         formatters: typing.Callable[[], set[typing.Callable[[], None]]],
     ) -> None:
         """Initialize variables."""
-        formatters()
+        self.formatters = formatters()
         self.config = config
 
     @staticmethod
@@ -54,14 +54,19 @@ class Formatter:
                 source_code=statement.text + noqa.SEMI_COLON,
             )
 
-            formatted_source_code.append(
-                stream.IndentedStream(
-                    comments=comments,
-                    semicolon_after_last_statement=config.format.semicolon_after_last_statement,
-                    remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
-                    comma_at_eoln=not (config.format.comma_at_beginning),
-                )(statement.text),
-            )
+            formatted_statement = stream.IndentedStream(
+                comments=comments,
+                semicolon_after_last_statement=False,
+                remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
+                comma_at_eoln=not (config.format.comma_at_beginning),
+            )(statement.text)
+
+            if config.format.new_line_before_semicolon:
+                formatted_statement = formatted_statement + "\n" + noqa.SEMI_COLON
+            else:
+                formatted_statement = formatted_statement + noqa.SEMI_COLON
+
+            formatted_source_code.append(formatted_statement)
 
         return ("\n" + ("\n" * config.format.lines_between_statements)).join(
             formatted_source_code,

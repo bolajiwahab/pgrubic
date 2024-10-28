@@ -21,9 +21,7 @@ def test_format(formatter: core.Formatter) -> None:
 def test_skip_format(formatter: core.Formatter) -> None:
     """Test skip format."""
     source_code = "-- fmt: skip\nselect 1;\n"
-    #     expected_output: str = """-- fmt: skip
-    # select 1;\n;
-    # """
+
     formatted_source_code = formatter.format(
         source_file=TEST_FILE,
         source_code=source_code,

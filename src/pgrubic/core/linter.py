@@ -235,7 +235,7 @@ class Linter:
         if parser.parse_sql(source_code) != tree:
             violations.fix = stream.IndentedStream(
                 comments=comments,
-                semicolon_after_last_statement=self.config.format.semicolon_after_last_statement,
+                semicolon_after_last_statement=False,
                 separate_statements=self.config.format.lines_between_statements,
                 remove_pg_catalog_from_functions=self.config.format.remove_pg_catalog_from_functions,
                 comma_at_eoln=not (self.config.format.comma_at_beginning),

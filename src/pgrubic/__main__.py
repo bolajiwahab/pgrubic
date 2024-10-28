@@ -131,7 +131,7 @@ def format_sql_file(
         exclude=config.format.exclude,
     )
 
-    exit_code: list[int] = []
+    files_requiring_formatting: list[pathlib.Path] = []
 
     for source_file in source_files:
         with source_file.open("r", encoding="utf-8") as sf:
@@ -143,7 +143,7 @@ def format_sql_file(
         )
 
         if formatted_source_code != source_code and config.format.check:
-            exit_code.append(1)
+            files_requiring_formatting.append(source_file)
 
         if formatted_source_code != source_code and config.format.diff:
             diff_unified = difflib.unified_diff(
@@ -156,7 +156,7 @@ def format_sql_file(
             diff_output = "".join(diff_unified)
             console.print(Syntax(diff_output, "diff", theme="ansi_dark"))
 
-            exit_code.append(1)
+            files_requiring_formatting.append(source_file)
 
         if (
             formatted_source_code != source_code
@@ -166,7 +166,7 @@ def format_sql_file(
             with source_file.open("w", encoding="utf-8") as sf:
                 sf.write(formatted_source_code)
 
-    if len(exit_code) > 0:
+    if len(files_requiring_formatting) > 0:
         sys.exit(1)
 
 

@@ -143,8 +143,8 @@ exclude = []
 # Comma at the beginning of an item by default
 comma-at-beginning = true
 
-# Semicolon after last statement by default
-semicolon-after-last-statement = true
+# New line before semicolon false by default
+new-line-before-semicolon = false
 
 # Remove pg_catalog from functions by default
 remove-pg-catalog-from-functions = true
