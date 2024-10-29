@@ -174,6 +174,7 @@ def select_stmt(node: ast.SelectStmt, output: stream.RawStream) -> None:
                 output.print_list(node.targetList)
             if node.intoClause:
                 output.newline()
+                output.space(2)
                 output.write("INTO ")
                 if node.intoClause.rel.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
                     output.write("UNLOGGED ")
@@ -249,7 +250,6 @@ def into_clause(node: ast.IntoClause, output: stream.RawStream) -> None:
         output.write(" ")
         with output.expression(need_parens=True):
             output.print_name(node.colNames, ",")
-    output.newline()
     with output.push_indent(2):
         if node.accessMethod:
             output.write("USING ")

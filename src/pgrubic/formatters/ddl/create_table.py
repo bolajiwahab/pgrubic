@@ -14,7 +14,7 @@ def partition_spec(node: ast.PartitionSpec, output: stream.RawStream) -> None:
         enums.PartitionStrategy.PARTITION_STRATEGY_HASH: "HASH",
     }[node.strategy]
     output.print_symbol(strategy)
-    output.space(1)
+    output.space()
     with output.expression(need_parens=True):
         output.print_list(node.partParams)
 
@@ -31,9 +31,9 @@ def create_table_as_stmt(node: ast.CreateTableAsStmt, output: stream.RawStream) 
     if node.if_not_exists:
         output.writes(IF_NOT_EXISTS)
     output.print_node(node.into)
-    output.space(4)
+    output.space()
     output.write("AS")
-    output.space(1)
+    output.newline()
     with output.push_indent():
         output.print_node(node.query)
     if node.into.skipData:
@@ -65,7 +65,7 @@ def create_stmt(
         output.swrites("PARTITION OF")
         output.print_list(node.inhRelations)
     if node.tableElts:
-        output.space(1)
+        output.space()
         with output.expression(need_parens=True):
             output.newline()
             output.space(4)
@@ -73,15 +73,15 @@ def create_stmt(
             output.newline()
     elif node.partbound:
         output.newline()
-        output.space(1)
+        output.space()
     elif not node.ofTypename:
-        output.space(1)
+        output.space()
         output.swrites("()")
     with output.push_indent(-1):
         first = True
         if node.inhRelations and not node.partbound:
             output.swrites("INHERITS")
-            output.space(1)
+            output.space()
             with output.expression(need_parens=True):
                 output.print_list(node.inhRelations)
             first = False
@@ -107,7 +107,7 @@ def create_stmt(
                 output.newline()
             output.newline()
             output.swrites("WITH")
-            output.space(1)
+            output.space()
             with output.expression(need_parens=True):
                 output.newline()
                 output.space(4)
