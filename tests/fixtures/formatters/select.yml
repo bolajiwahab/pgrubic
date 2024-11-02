@@ -173,8 +173,11 @@ select_with_subquery:
   expected: |
     SELECT *
       FROM users AS u
-     WHERE u.id IN (SELECT o.user_id
-                      FROM orders AS o);
+     WHERE u.id IN (
+              SELECT o.user_id
+                FROM orders AS o
+           );
+
 select_skip_formatting:
   sql: |
     -- fmt: skip

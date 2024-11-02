@@ -3,6 +3,58 @@
 from pglast import ast, enums, stream, printers
 
 
+@printers.node_printer(ast.SubLink, override=True)
+def sub_link(node: ast.SubLink, output: stream.RawStream) -> None:
+    """Printer for SubLink."""
+    slt = enums.SubLinkType
+
+    if node.subLinkType == slt.EXISTS_SUBLINK:
+        output.write("EXISTS")
+        output.space()
+    elif node.subLinkType == slt.ALL_SUBLINK:
+        output.print_node(node.testexpr)
+        output.space()
+        output.write(printers.dml.get_string_value(node.operName))
+        output.space()
+        output.write("ALL")
+        output.space()
+    elif node.subLinkType == slt.ANY_SUBLINK:
+        output.print_node(node.testexpr)
+        if node.operName:
+            output.space()
+            output.write(printers.dml.get_string_value(node.operName))
+            output.space()
+            output.write("ANY")
+            output.space()
+        else:
+            output.space()
+            output.write("IN")
+            output.space()
+    elif node.subLinkType == slt.EXPR_SUBLINK:
+        pass
+    elif node.subLinkType == slt.ARRAY_SUBLINK:
+        output.write("ARRAY")
+    elif node.subLinkType in (
+        slt.MULTIEXPR_SUBLINK,
+        slt.ROWCOMPARE_SUBLINK,
+    ):
+        msg = f"SubLink of type {node.subLinkType} not supported yet"
+        raise NotImplementedError(msg)
+
+    with output.expression(need_parens=False):
+        bool_in_ancestors = ast.BoolExpr in node.ancestors
+        indent = 7 if bool_in_ancestors else 10
+        dedent = -3 if bool_in_ancestors else -3
+        with output.push_indent(indent, relative=False):
+            output.write("(")
+            output.newline()
+            output.print_node(node.subselect)
+            output.newline()
+            output.indent(dedent, relative=False)
+            output.write(")")
+            output.dedent()
+
+
 @printers.node_printer(ast.SelectStmt, override=True)
 def select_stmt(node: ast.SelectStmt, output: stream.RawStream) -> None:
     """Printer for SelectStmt."""

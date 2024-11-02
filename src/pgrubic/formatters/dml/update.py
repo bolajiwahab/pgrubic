@@ -11,8 +11,6 @@ def update_stmt(node: ast.UpdateStmt, output: stream.RawStream) -> None:
             output.write("WITH")
             output.space()
             output.print_node(node.withClause)
-            output.newline()
-            output.space(2)
             output.indent()
 
         output.write("UPDATE")
