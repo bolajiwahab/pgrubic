@@ -34,24 +34,24 @@ class Formatter:
 
             sys.exit(1)
 
-        formatted_source_code: list[str] = []
+        formatted_statements: list[str] = []
 
         format_ignores = noqa.extract_format_ignores(
             source_file=source_file,
             source_code=source_code,
         )
 
-        for statement in noqa.build_statements_start_end_locations(
+        for statement in noqa.extract_statement_locations(
             source_file=source_file,
             source_code=source_code,
         ):
             if statement.start_location in format_ignores:
-                formatted_source_code.append(statement.text.strip("\n"))
+                formatted_statements.append(statement.text)
                 continue
 
             comments = noqa.extract_comments(
                 source_file=source_file,
-                source_code=statement.text + noqa.SEMI_COLON,
+                source_code=statement.text,
             )
 
             formatted_statement = stream.IndentedStream(
@@ -62,18 +62,16 @@ class Formatter:
             )(statement.text)
 
             if config.format.new_line_before_semicolon:
-                formatted_statement = (
-                    formatted_statement + noqa.NEW_LINE + noqa.SEMI_COLON
-                )
+                formatted_statement += noqa.NEW_LINE + noqa.SEMI_COLON
             else:
-                formatted_statement = formatted_statement + noqa.SEMI_COLON
+                formatted_statement += noqa.SEMI_COLON
 
-            formatted_source_code.append(formatted_statement)
+            formatted_statements.append(formatted_statement)
 
         return (
             noqa.NEW_LINE + (noqa.NEW_LINE * config.format.lines_between_statements)
         ).join(
-            formatted_source_code,
+            formatted_statements,
         ) + noqa.NEW_LINE
 
     def format(self, *, source_file: str, source_code: str) -> str:

@@ -160,21 +160,11 @@ class Linter:
                     sys.stdout.write(
                         f"{Fore.BLUE}{idx} | {Style.RESET_ALL}{Fore.RED}{Style.BRIGHT}{line}{Style.RESET_ALL}\n",  # noqa: E501
                     )
-                sys.stdout.write("\n")
+                sys.stdout.write(noqa.NEW_LINE)
 
     def run(self, *, source_file: str, source_code: str) -> ViolationMetric:
         """Run rules on a source code."""
-        try:
-            tree: ast.Node = parser.parse_sql(source_code)
-            comments = noqa.extract_comments(
-                source_file=source_file,
-                source_code=source_code,
-            )
-
-        except parser.ParseError as error:
-            sys.stderr.write(f"{source_file}: {Fore.RED}{error!s}{Style.RESET_ALL}")
-
-            sys.exit(1)
+        fixed_statements: list[str] = []
 
         inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(
             source_file=source_file,
@@ -187,58 +177,92 @@ class Linter:
         BaseChecker.source_code = source_code
         BaseChecker.source_file = source_file
 
-        for checker in self.checkers:
-            checker.violations = set()
-
-            checker(tree)
-
-            if not self.config.lint.ignore_noqa:
-                self._skip_suppressed_violations(
+        for statement in noqa.extract_statement_locations(
+            source_file=source_file,
+            source_code=source_code,
+        ):
+            try:
+                tree: ast.Node = parser.parse_sql(statement.text)
+                comments = noqa.extract_comments(
                     source_file=source_file,
-                    checker=checker,
-                    inline_ignores=inline_ignores,
+                    source_code=statement.text,
                 )
 
-            self.print_violations(
-                checker=checker,
-                source_file=source_file,
-            )
+            except parser.ParseError as error:
+                sys.stderr.write(f"{source_file}: {Fore.RED}{error!s}{Style.RESET_ALL}")
 
-            if self.config.lint.fix is checker.is_auto_fixable is True:
-                violations.fixed_total += len(checker.violations)
+                sys.exit(1)
 
-            if checker.is_auto_fixable is True:
-                violations.fixable_auto_total += len(checker.violations)
+            for checker in self.checkers:
+                checker.statement = statement.text
+                checker.line_number = statement.line_number
+                checker.statement_location = statement.start_location
+
+                checker.violations = set()
+
+                checker(tree)
+
+                if not self.config.lint.ignore_noqa:
+                    self._skip_suppressed_violations(
+                        source_file=source_file,
+                        checker=checker,
+                        inline_ignores=inline_ignores,
+                    )
+
+                self.print_violations(
+                    checker=checker,
+                    source_file=source_file,
+                )
+
+                if self.config.lint.fix is checker.is_auto_fixable is True:
+                    violations.fixed_total += len(checker.violations)
+
+                if checker.is_auto_fixable is True:
+                    violations.fixable_auto_total += len(checker.violations)
+
+                else:
+                    violations.fixable_manual_total += len(checker.violations)
+
+                violations.total += len(checker.violations)
+
+            if parser.parse_sql(statement.text) != tree:
+                fixed_statement = stream.IndentedStream(
+                    comments=comments,
+                    semicolon_after_last_statement=False,
+                    special_functions=True,
+                    separate_statements=self.config.format.lines_between_statements,
+                    remove_pg_catalog_from_functions=self.config.format.remove_pg_catalog_from_functions,
+                    comma_at_eoln=not (self.config.format.comma_at_beginning),
+                )(tree)
+
+                if self.config.format.new_line_before_semicolon:
+                    fixed_statement += noqa.NEW_LINE + noqa.SEMI_COLON
+                else:
+                    fixed_statement += noqa.SEMI_COLON
+
+                fixed_statements.append(fixed_statement)
 
             else:
-                violations.fixable_manual_total += len(checker.violations)
+                fixed_statements.append(statement.text)
 
-            violations.total += len(checker.violations)
+        fixed_source_code = (
+            noqa.NEW_LINE + (noqa.NEW_LINE * self.config.format.lines_between_statements)
+        ).join(
+            fixed_statements,
+        ) + noqa.NEW_LINE
+        if parser.parse_sql(fixed_source_code) != parser.parse_sql(source_code):
+            violations.fix = (
+                noqa.NEW_LINE
+                + (noqa.NEW_LINE * self.config.format.lines_between_statements)
+            ).join(
+                fixed_statements,
+            ) + noqa.NEW_LINE
 
-        # To be removed
-        sys.stdout.write(
-            stream.IndentedStream(
-                comments=comments,
-                semicolon_after_last_statement=True,
-                comma_at_eoln=True,
-                remove_pg_catalog_from_functions=True,
-            )(tree),
-        )
-        # to be removed
-        sys.stdout.write("\n")
+            sys.stdout.write(violations.fix)
 
         noqa.report_unused_ignores(
             source_file=source_file,
             inline_ignores=inline_ignores,
         )
-
-        if parser.parse_sql(source_code) != tree:
-            violations.fix = stream.IndentedStream(
-                comments=comments,
-                semicolon_after_last_statement=True,
-                separate_statements=self.config.format.lines_between_statements,
-                remove_pg_catalog_from_functions=self.config.format.remove_pg_catalog_from_functions,
-                comma_at_eoln=not (self.config.format.comma_at_beginning),
-            )(tree)
 
         return violations
