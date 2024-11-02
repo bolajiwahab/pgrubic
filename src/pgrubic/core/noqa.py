@@ -12,6 +12,7 @@ from pgrubic import PROGRAM_NAME
 A_STAR: str = "*"
 ASCII_SEMI_COLON: str = "ASCII_59"
 SEMI_COLON: str = ";"
+NEW_LINE: str = "\n"
 
 
 class Statement(typing.NamedTuple):

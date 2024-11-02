@@ -9,6 +9,7 @@ from rich.syntax import Syntax
 from rich.console import Console
 
 from pgrubic import PROGRAM_NAME, core
+from pgrubic.core import noqa
 
 
 @click.group(
@@ -136,6 +137,11 @@ def format_sql_file(
     for source_file in source_files:
         with source_file.open("r", encoding="utf-8") as sf:
             source_code: str = sf.read()
+            source_code = (
+                source_code
+                if source_code.endswith(noqa.NEW_LINE)
+                else source_code + noqa.NEW_LINE
+            )
 
         formatted_source_code = formatter.format(
             source_file=str(source_file),

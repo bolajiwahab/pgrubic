@@ -62,15 +62,19 @@ class Formatter:
             )(statement.text)
 
             if config.format.new_line_before_semicolon:
-                formatted_statement = formatted_statement + "\n" + noqa.SEMI_COLON
+                formatted_statement = (
+                    formatted_statement + noqa.NEW_LINE + noqa.SEMI_COLON
+                )
             else:
                 formatted_statement = formatted_statement + noqa.SEMI_COLON
 
             formatted_source_code.append(formatted_statement)
 
-        return ("\n" + ("\n" * config.format.lines_between_statements)).join(
+        return (
+            noqa.NEW_LINE + (noqa.NEW_LINE * config.format.lines_between_statements)
+        ).join(
             formatted_source_code,
-        ) + "\n"
+        ) + noqa.NEW_LINE
 
     def format(self, *, source_file: str, source_code: str) -> str:
         """Format source code."""
