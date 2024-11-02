@@ -180,7 +180,7 @@ def test_fail_fix_select_into(
         "SELECT * INTO films_recent FROM films WHERE created_at >= '2002-01-01';"
     )
 
-    sql_fix: str = "CREATE TABLE films_recent AS\nSELECT *\n  FROM films\n WHERE created_at >= '2002-01-01';"  # noqa: E501
+    sql_fix: str = "CREATE TABLE films_recent AS\nSELECT *\n  FROM films\n WHERE created_at >= '2002-01-01';\n"  # noqa: E501
 
     select_into.config.lint.fix = True
 

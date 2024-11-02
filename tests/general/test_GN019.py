@@ -153,7 +153,7 @@ def test_fail_fix_unlogged_table(
     """Test fail fix unlogged table."""
     sql_fail: str = "CREATE UNLOGGED TABLE account (id int);"
 
-    sql_fix: str = "CREATE TABLE account (\n    id integer\n);"
+    sql_fix: str = "CREATE TABLE account (\n    id integer\n);\n"
 
     unlogged_table.config.lint.fix = True
 
@@ -178,7 +178,7 @@ def test_fail_fix_alter_table_unlogged_table(
     """Test fail fix unlogged table."""
     sql_fail: str = "ALTER TABLE account SET UNLOGGED;"
 
-    sql_fix: str = "ALTER TABLE account\n    SET LOGGED;"
+    sql_fix: str = "ALTER TABLE account\n    SET LOGGED;\n"
 
     unlogged_table.config.lint.fix = True
 

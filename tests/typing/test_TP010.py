@@ -212,7 +212,7 @@ def test_fail_fix_create_table_smallint(
     """Test fail fix smallint."""
     sql_fail: str = "CREATE TABLE tbl (user_id uuid, retry_count smallint);"
 
-    sql_fix: str = "CREATE TABLE tbl (\n    user_id uuid\n  , retry_count bigint\n);"
+    sql_fix: str = "CREATE TABLE tbl (\n    user_id uuid\n  , retry_count bigint\n);\n"
 
     smallint.config.lint.fix = True
 
@@ -237,7 +237,7 @@ def test_fail_fix_alter_table_smallint(
     """Test fail fix smallint."""
     sql_fail: str = "ALTER TABLE tbl ADD COLUMN retry_count smallint;"
 
-    sql_fix: str = "ALTER TABLE tbl\n    ADD COLUMN retry_count bigint;"
+    sql_fix: str = "ALTER TABLE tbl\n    ADD COLUMN retry_count bigint;\n"
 
     smallint.config.lint.fix = True
 

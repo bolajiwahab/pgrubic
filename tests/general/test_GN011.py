@@ -201,7 +201,7 @@ def test_fail_fix_missing_required_column(
     sql_fail: str = "CREATE TABLE music (age int);"
 
     sql_fix: str = (
-        "CREATE TABLE music (\n    age integer\n  , created_at timestamptz NOT NULL\n);"
+        "CREATE TABLE music (\n    age integer\n  , created_at timestamptz NOT NULL\n);\n"
     )
 
     missing_required_column.config.lint.fix = True

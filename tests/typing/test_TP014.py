@@ -220,7 +220,7 @@ def test_fail_fix_create_table_disallowed_data_type(
     """Test fail fix disallowed data type."""
     sql_fail: str = "CREATE TABLE tbl (user_id int, details varchar);"
 
-    sql_fix: str = "CREATE TABLE tbl (\n    user_id integer\n  , details text\n);"
+    sql_fix: str = "CREATE TABLE tbl (\n    user_id integer\n  , details text\n);\n"
 
     disallowed_data_type.config.lint.fix = True
 
@@ -245,7 +245,7 @@ def test_fail_fix_alter_table_disallowed_data_type(
     """Test fail fix disallowed data type."""
     sql_fail: str = "ALTER TABLE tbl ADD COLUMN details varchar;"
 
-    sql_fix: str = "ALTER TABLE tbl\n    ADD COLUMN details text;"
+    sql_fix: str = "ALTER TABLE tbl\n    ADD COLUMN details text;\n"
 
     disallowed_data_type.config.lint.fix = True
 

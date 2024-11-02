@@ -177,7 +177,7 @@ def test_fail_fix_date_column_without_suffix(
     """Test fail fix date column without suffix."""
     sql_fail: str = "CREATE TABLE tbl (activated date);"
 
-    sql_fix: str = "CREATE TABLE tbl (\n    activated_date date\n);"
+    sql_fix: str = "CREATE TABLE tbl (\n    activated_date date\n);\n"
 
     date_column_without_suffix.config.lint.fix = True
 

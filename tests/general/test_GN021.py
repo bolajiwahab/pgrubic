@@ -172,7 +172,7 @@ def test_fail_fix_null_constraint(
     """Test fail fix null constraint."""
     sql_fail: str = "CREATE TABLE tbl (age int NULL);"
 
-    sql_fix: str = "CREATE TABLE tbl (\n    age integer\n);"
+    sql_fix: str = "CREATE TABLE tbl (\n    age integer\n);\n"
 
     null_constraint.config.lint.fix = True
 
@@ -197,7 +197,7 @@ def test_fail_fix_alter_table_null_constraint(
     """Test fail fix null constraint."""
     sql_fail: str = "ALTER TABLE tbl ADD COLUMN age int NULL;"
 
-    sql_fix: str = "ALTER TABLE tbl\n    ADD COLUMN age integer;"
+    sql_fix: str = "ALTER TABLE tbl\n    ADD COLUMN age integer;\n"
 
     null_constraint.config.lint.fix = True
 

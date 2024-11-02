@@ -210,7 +210,7 @@ def test_fail_fix_create_table_nullable_boolean_field(
     """Test fail fix nullable boolean field."""
     sql_fail: str = "CREATE TABLE transaction (user_id int, is_active boolean);"
 
-    sql_fix: str = "CREATE TABLE transaction (\n    user_id integer\n  , is_active boolean NOT NULL\n);"  # noqa: E501
+    sql_fix: str = "CREATE TABLE transaction (\n    user_id integer\n  , is_active boolean NOT NULL\n);\n"  # noqa: E501
 
     nullable_boolean_field.config.lint.fix = True
 
@@ -235,7 +235,7 @@ def test_fail_fix_alter_table_nullable_boolean_field(
     """Test fail fix nullable boolean field."""
     sql_fail: str = "ALTER TABLE transaction ADD COLUMN is_active boolean;"
 
-    sql_fix: str = "ALTER TABLE transaction\n    ADD COLUMN is_active boolean NOT NULL;"
+    sql_fix: str = "ALTER TABLE transaction\n    ADD COLUMN is_active boolean NOT NULL;\n"
 
     nullable_boolean_field.config.lint.fix = True
 

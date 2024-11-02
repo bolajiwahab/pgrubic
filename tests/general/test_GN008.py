@@ -197,7 +197,7 @@ def test_fail_fix_missing_replace_in_procedure(
     ;
     """
 
-    sql_fix: str = "CREATE OR REPLACE PROCEDURE dup(integer)\nLANGUAGE sql\nAS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;"  # noqa: E501
+    sql_fix: str = "CREATE OR REPLACE PROCEDURE dup(integer)\nLANGUAGE sql\nAS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;\n"  # noqa: E501
 
     missing_replace_in_procedure.config.lint.fix = True
 

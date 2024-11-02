@@ -191,7 +191,7 @@ def test_fail_fix_yoda_condition(
     """Test fail fix yoda condition."""
     sql_fail: str = "SELECT * FROM measurement WHERE 10 = city_id;"
 
-    sql_fix: str = "SELECT *\n  FROM measurement\n WHERE city_id = 10;"
+    sql_fix: str = "SELECT *\n  FROM measurement\n WHERE city_id = 10;\n"
 
     yoda_condition.config.lint.fix = True
 

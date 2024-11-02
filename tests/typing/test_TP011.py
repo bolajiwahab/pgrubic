@@ -212,7 +212,7 @@ def test_fail_fix_create_table_float(
     """Test fail fix float."""
     sql_fail: str = "CREATE TABLE tbl (user_id uuid, retry_count float);"
 
-    sql_fix: str = "CREATE TABLE tbl (\n    user_id uuid\n  , retry_count numeric\n);"
+    sql_fix: str = "CREATE TABLE tbl (\n    user_id uuid\n  , retry_count numeric\n);\n"
 
     pg_float.config.lint.fix = True
 
@@ -237,7 +237,7 @@ def test_fail_fix_alter_table_float(
     """Test fail fix float."""
     sql_fail: str = "ALTER TABLE tbl ADD COLUMN retry_count double precision;"
 
-    sql_fix: str = "ALTER TABLE tbl\n    ADD COLUMN retry_count numeric;"
+    sql_fix: str = "ALTER TABLE tbl\n    ADD COLUMN retry_count numeric;\n"
 
     pg_float.config.lint.fix = True
 

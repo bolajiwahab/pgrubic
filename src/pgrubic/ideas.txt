@@ -1,3 +1,4 @@
+-- we need to review how cli options override config
 -- review documentations, unsafe is missing documentations
 errors
 class SQLBaseError(Exception):

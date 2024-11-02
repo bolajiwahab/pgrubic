@@ -177,7 +177,7 @@ def test_fail_fix_non_concurrent_refresh_materialized_view(
     """Test fail fix non concurrent refresh materialized view."""
     sql_fail: str = "REFRESH MATERIALIZED VIEW tbl;"
 
-    sql_fix: str = "REFRESH MATERIALIZED VIEW CONCURRENTLY tbl;"
+    sql_fix: str = "REFRESH MATERIALIZED VIEW CONCURRENTLY tbl;\n"
 
     non_concurrent_refresh_materialized_view.config.lint.fix = True
 

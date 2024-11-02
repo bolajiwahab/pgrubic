@@ -172,7 +172,7 @@ def test_fail_fix_current_time(
     """Test fail fix current time."""
     sql_fail: str = "CREATE TABLE tbl (time time DEFAULT CURRENT_TIME);"
 
-    sql_fix: str = "CREATE TABLE tbl (\n    time time DEFAULT CURRENT_TIMESTAMP\n);"
+    sql_fix: str = "CREATE TABLE tbl (\n    time time DEFAULT CURRENT_TIMESTAMP\n);\n"
 
     current_time.config.lint.fix = True
 
@@ -198,7 +198,7 @@ def test_fail_fix_alter_table_current_time(
     sql_fail: str = "ALTER TABLE account ALTER COLUMN time SET DEFAULT CURRENT_TIME;"
 
     sql_fix: str = (
-        "ALTER TABLE account\n    ALTER COLUMN time SET DEFAULT CURRENT_TIMESTAMP;"
+        "ALTER TABLE account\n    ALTER COLUMN time SET DEFAULT CURRENT_TIMESTAMP;\n"
     )
 
     current_time.config.lint.fix = True
