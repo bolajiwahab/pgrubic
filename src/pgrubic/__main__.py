@@ -28,13 +28,19 @@ def cli() -> None:
 
 
 @cli.command()
-@click.option("--fix", is_flag=True, help="Fix lint violations automatically.")
+@click.option(
+    "--fix",
+    is_flag=True,
+    default=None,
+    help="Fix lint violations automatically.",
+)
 @click.argument("paths", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
 def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
     """Lint SQL files."""
     config: core.Config = core.parse_config()
 
-    config.lint.fix = fix
+    if fix:
+        config.lint.fix = fix
 
     linter: core.Linter = core.Linter(config=config)
 
@@ -95,11 +101,13 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
 @click.option(
     "--check",
     is_flag=True,
+    default=None,
     help="Check if any files would have been modified",
 )
 @click.option(
     "--diff",
     is_flag=True,
+    default=None,
     help="""
     Report the difference between the current file and
     how the formatted file would look like""",
@@ -114,8 +122,10 @@ def format_sql_file(
     """Format SQL files."""
     console = Console()
     config: core.Config = core.parse_config()
-    config.format.check = check
-    config.format.diff = diff
+    if check:
+        config.format.check = check
+    if diff:
+        config.format.diff = diff
 
     formatter: core.Formatter = core.Formatter(
         config=config,

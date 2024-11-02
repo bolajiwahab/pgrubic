@@ -250,6 +250,7 @@ class Linter:
         ).join(
             fixed_statements,
         ) + noqa.NEW_LINE
+
         if parser.parse_sql(fixed_source_code) != parser.parse_sql(source_code):
             violations.fix = (
                 noqa.NEW_LINE
