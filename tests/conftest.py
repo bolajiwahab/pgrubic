@@ -7,7 +7,7 @@ import pytest
 from pgrubic import core
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def linter() -> core.Linter:
     """Setup linter."""
     config: core.Config = core.parse_config()
@@ -17,7 +17,7 @@ def linter() -> core.Linter:
     return core.Linter(config=config)
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def formatter() -> core.Formatter:
     """Setup formatters."""
     config: core.Config = core.parse_config()

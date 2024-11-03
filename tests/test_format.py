@@ -37,3 +37,17 @@ def test_format_parse_error(formatter: core.Formatter) -> None:
         formatter.format(source_file=TEST_FILE, source_code=source_code)
 
     assert excinfo.value.code == 1
+
+
+def test_new_line_before_semicolon(formatter: core.Formatter) -> None:
+    """Test new line before semicolon."""
+    source_code = "select 1;"
+    expected_output: str = "SELECT 1\n;\n"
+
+    formatter.config.format.new_line_before_semicolon = True
+    formatted_source_code = formatter.format(
+        source_file=TEST_FILE,
+        source_code=source_code,
+    )
+
+    assert formatted_source_code == expected_output
