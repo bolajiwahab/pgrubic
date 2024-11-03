@@ -18,6 +18,7 @@ def delete_stmt(node: ast.DeleteStmt, output: stream.RawStream) -> None:
         output.print_node(node.relation)
         if node.usingClause:
             output.newline()
+            output.space()
             output.write("USING")
             output.space()
             output.print_list(node.usingClause)

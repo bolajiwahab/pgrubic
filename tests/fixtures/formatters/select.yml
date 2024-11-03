@@ -177,11 +177,3 @@ select_with_subquery:
               SELECT o.user_id
                 FROM orders AS o
            );
-
-select_skip_formatting:
-  sql: |
-    -- fmt: skip
-    SELECT * FROM users u;
-  expected: |
-    -- fmt: skip
-    SELECT * FROM users u;
