@@ -1,4 +1,5 @@
 ## Pgrubic
+[![Coverage badge](https://github.com/bolajiwahab/pgrubic/raw/python-coverage-comment-action-data/badge.svg)](https://github.com/bolajiwahab/pgrubic/tree/python-coverage-comment-action-data)
 
 Pgrubic is a PostgreSQL linter and formatter for schema migrations and design best practices.
 
