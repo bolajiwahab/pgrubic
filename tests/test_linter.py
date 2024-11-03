@@ -177,7 +177,7 @@ def test_fail_fix_date_column_without_suffix(
     """Test fail fix date column without suffix."""
     sql_fail: str = "CREATE TABLE tbl (activated date);"
 
-    sql_fix: str = "CREATE TABLE tbl (\n    activated_date date\n);"
+    sql_fix: str = "CREATE TABLE tbl (\n    activated_date date\n);\n"
 
     date_column_without_suffix.config.lint.fix = True
 
@@ -270,3 +270,29 @@ def test_parse_error(lint_single_letter_identifier: core.Linter) -> None:
         )
 
     assert excinfo.value.code == 1
+
+
+def test_new_line_before_semicolon(
+    lint_date_column_without_suffix: core.Linter,
+    date_column_without_suffix: core.BaseChecker,
+) -> None:
+    """Test new line before semicolon."""
+    sql_fail: str = "CREATE TABLE tbl (activated date);"
+
+    sql_fix: str = "CREATE TABLE tbl (\n    activated_date date\n)\n;\n"
+
+    date_column_without_suffix.config.lint.fix = True
+    date_column_without_suffix.config.format.new_line_before_semicolon = True
+
+    violations: core.ViolationMetric = lint_date_column_without_suffix.run(
+        source_file=TEST_FILE,
+        source_code=sql_fail,
+    )
+
+    assert violations == core.ViolationMetric(
+        total=1,
+        fixed_total=1,
+        fixable_auto_total=1,
+        fixable_manual_total=0,
+        fix=sql_fix,
+    )

@@ -131,7 +131,7 @@ def test_fail_fix_table_disallowed_schema(
     """Test fail fix table disallowed schema."""
     sql_fail: str = "CREATE TABLE test.card();"
 
-    sql_fix: str = "CREATE TABLE app.card ();"
+    sql_fix: str = "CREATE TABLE app.card ();\n"
 
     disallowed_schema.config.lint.fix = True
 
@@ -183,7 +183,7 @@ def test_fail_fix_function_disallowed_schema(
     ;
     """
 
-    sql_fix: str = "CREATE FUNCTION app.dup(integer)\nRETURNS TABLE (f1 integer)\nLANGUAGE sql\nAS $$ SELECT $1 $$;"  # noqa: E501
+    sql_fix: str = "CREATE FUNCTION app.dup(integer)\nRETURNS TABLE (f1 integer)\nLANGUAGE sql\nAS $$ SELECT $1 $$;\n"  # noqa: E501
 
     disallowed_schema.config.lint.fix = True
 
@@ -227,7 +227,7 @@ def test_fail_fix_enum_disallowed_schema(
     """Test fail fix enum disallowed schema."""
     sql_fail: str = "CREATE TYPE test.mood AS ENUM ('sad', 'ok');"
 
-    sql_fix: str = "CREATE TYPE app.mood AS ENUM (\n    'sad'\n  , 'ok'\n);"
+    sql_fix: str = "CREATE TYPE app.mood AS ENUM (\n    'sad'\n  , 'ok'\n);\n"
 
     disallowed_schema.config.lint.fix = True
 

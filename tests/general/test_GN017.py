@@ -153,7 +153,7 @@ def test_fail_fix_id_column(
     """Test fail fix id column."""
     sql_fail: str = "CREATE TABLE account (id int);"
 
-    sql_fix: str = "CREATE TABLE account (\n    account_id integer\n);"
+    sql_fix: str = "CREATE TABLE account (\n    account_id integer\n);\n"
 
     id_column.config.lint.fix = True
 
@@ -178,7 +178,7 @@ def test_fail_fix_alter_table_id_column(
     """Test fail fix id column."""
     sql_fail: str = "ALTER TABLE account ADD COLUMN id int;"
 
-    sql_fix: str = "ALTER TABLE account\n    ADD COLUMN account_id integer;"
+    sql_fix: str = "ALTER TABLE account\n    ADD COLUMN account_id integer;\n"
 
     id_column.config.lint.fix = True
 

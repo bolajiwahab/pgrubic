@@ -204,7 +204,7 @@ def test_fail_fix_validating_check_constraint_on_existing_rows(
     ;
     """
 
-    sql_fix: str = "ALTER TABLE public.card\n    ADD CONSTRAINT chk CHECK (account_id > 0) NOT VALID ;"  # noqa: E501
+    sql_fix: str = "ALTER TABLE public.card\n    ADD CONSTRAINT chk CHECK (account_id > 0) NOT VALID ;\n"  # noqa: E501
 
     validating_check_constraint_on_existing_rows.config.lint.fix = True
 

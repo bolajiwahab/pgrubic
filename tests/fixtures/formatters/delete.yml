@@ -1,0 +1,27 @@
+---
+formatter: DELETE
+
+simple_select:
+  sql: |
+    DELETE FROM users WHERE id = 1;
+  expected: |
+    DELETE FROM users
+     WHERE id = 1;
+
+delete_using:
+  sql: |
+    DELETE FROM users u using orders o WHERE u.id = o.user_id;
+  expected: |
+    DELETE FROM users AS u
+     USING orders AS o
+     WHERE u.id = o.user_id;
+
+delete_with_subquery:
+  sql: |
+    DELETE FROM users WHERE id IN (SELECT id FROM orders);
+  expected: |
+    DELETE FROM users
+     WHERE id IN (
+              SELECT id
+                FROM orders
+           );

@@ -172,9 +172,7 @@ def test_fail_fix_sql_ascii_encoding(
     """Test fail fix sql_ascii encoding."""
     sql_fail: str = "CREATE DATABASE music ENCODING SQL_ASCII TEMPLATE template0;"
 
-    sql_fix: str = (
-        "CREATE DATABASE music\n  WITH encoding = 'utf8'\n       template = 'template0';"
-    )
+    sql_fix: str = "CREATE DATABASE music\n  WITH encoding = 'utf8'\n       template = 'template0';\n"  # noqa: E501
 
     sql_ascii_encoding.config.lint.fix = True
 

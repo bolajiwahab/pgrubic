@@ -12,6 +12,7 @@ from pgrubic import PROGRAM_NAME
 A_STAR: str = "*"
 ASCII_SEMI_COLON: str = "ASCII_59"
 SEMI_COLON: str = ";"
+NEW_LINE: str = "\n"
 
 
 class Statement(typing.NamedTuple):
@@ -19,10 +20,11 @@ class Statement(typing.NamedTuple):
 
     start_location: int
     end_location: int
+    line_number: int
     text: str
 
 
-def build_statements_start_end_locations(
+def extract_statement_locations(
     *,
     source_file: str,
     source_code: str,
@@ -46,7 +48,9 @@ def build_statements_start_end_locations(
                 Statement(
                     start_location=statement_start_location,
                     end_location=token.end,
-                    text=source_code[statement_start_location : token.end + 1],
+                    line_number=source_code[: (token.end)].count(NEW_LINE) + 1,
+                    text=source_code[statement_start_location : token.end].strip(NEW_LINE)
+                    + SEMI_COLON,
                 ),
             )
             statement_start_location = token.end + 1
@@ -84,7 +88,7 @@ def _get_statement_locations(
     stop: int,
 ) -> tuple[int, int]:
     """Get statement start and end locations."""
-    for statement_start_location, statement_end_location, _ in locations:
+    for statement_start_location, statement_end_location, _, _ in locations:
         if statement_start_location <= stop < statement_end_location:
             break
 
@@ -108,7 +112,7 @@ def _extract_statement_ignores(
     source_code: str,
 ) -> list[NoQaDirective]:
     """Extract ignores from SQL statements."""
-    locations = build_statements_start_end_locations(
+    locations = extract_statement_locations(
         source_file=source_file,
         source_code=source_code,
     )
@@ -189,7 +193,7 @@ def extract_ignores(*, source_file: str, source_code: str) -> list[NoQaDirective
 
 def extract_format_ignores(source_file: str, source_code: str) -> list[int]:
     """Extract format ignores from SQL statements."""
-    locations = build_statements_start_end_locations(
+    locations = extract_statement_locations(
         source_file=source_file,
         source_code=source_code,
     )
@@ -224,7 +228,7 @@ class Comment(typing.NamedTuple):
 
 def extract_comments(*, source_file: str, source_code: str) -> list[Comment]:
     """Extract comments from SQL statements."""
-    locations = build_statements_start_end_locations(
+    locations = extract_statement_locations(
         source_file=source_file,
         source_code=source_code,
     )

@@ -210,7 +210,7 @@ def test_fail_fix_create_table_char(
     """Test fail fix char."""
     sql_fail: str = "CREATE TABLE music (age int, first_name char(0));"
 
-    sql_fix: str = "CREATE TABLE music (\n    age integer\n  , first_name text\n);"
+    sql_fix: str = "CREATE TABLE music (\n    age integer\n  , first_name text\n);\n"
 
     char.config.lint.fix = True
 
@@ -235,7 +235,7 @@ def test_fail_fix_alter_table_char(
     """Test fail fix char."""
     sql_fail: str = "ALTER TABLE music ADD COLUMN last_name char;"
 
-    sql_fix: str = "ALTER TABLE music\n    ADD COLUMN last_name text;"
+    sql_fix: str = "ALTER TABLE music\n    ADD COLUMN last_name text;\n"
 
     char.config.lint.fix = True
 

@@ -211,7 +211,7 @@ def test_fail_fix_create_table_money(
     sql_fail: str = "CREATE TABLE transaction (user_id int, amount money);"
 
     sql_fix: str = (
-        "CREATE TABLE transaction (\n    user_id integer\n  , amount numeric\n);"
+        "CREATE TABLE transaction (\n    user_id integer\n  , amount numeric\n);\n"
     )
 
     money.config.lint.fix = True
@@ -237,7 +237,7 @@ def test_fail_fix_alter_table_money(
     """Test fail fix money."""
     sql_fail: str = "ALTER TABLE transaction ADD COLUMN total money;"
 
-    sql_fix: str = "ALTER TABLE transaction\n    ADD COLUMN total numeric;"
+    sql_fix: str = "ALTER TABLE transaction\n    ADD COLUMN total numeric;\n"
 
     money.config.lint.fix = True
 

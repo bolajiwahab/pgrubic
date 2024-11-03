@@ -9,6 +9,7 @@ from rich.syntax import Syntax
 from rich.console import Console
 
 from pgrubic import PROGRAM_NAME, core
+from pgrubic.core import noqa
 
 
 @click.group(
@@ -27,13 +28,19 @@ def cli() -> None:
 
 
 @cli.command()
-@click.option("--fix", is_flag=True, help="Fix lint violations automatically.")
+@click.option(
+    "--fix",
+    is_flag=True,
+    default=None,
+    help="Fix lint violations automatically.",
+)
 @click.argument("paths", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
 def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
     """Lint SQL files."""
     config: core.Config = core.parse_config()
 
-    config.lint.fix = fix
+    if fix:
+        config.lint.fix = fix
 
     linter: core.Linter = core.Linter(config=config)
 
@@ -94,11 +101,13 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
 @click.option(
     "--check",
     is_flag=True,
+    default=None,
     help="Check if any files would have been modified",
 )
 @click.option(
     "--diff",
     is_flag=True,
+    default=None,
     help="""
     Report the difference between the current file and
     how the formatted file would look like""",
@@ -113,8 +122,10 @@ def format_sql_file(
     """Format SQL files."""
     console = Console()
     config: core.Config = core.parse_config()
-    config.format.check = check
-    config.format.diff = diff
+    if check:
+        config.format.check = check
+    if diff:
+        config.format.diff = diff
 
     formatter: core.Formatter = core.Formatter(
         config=config,
@@ -131,11 +142,16 @@ def format_sql_file(
         exclude=config.format.exclude,
     )
 
-    exit_code: list[int] = []
+    files_requiring_formatting: list[pathlib.Path] = []
 
     for source_file in source_files:
         with source_file.open("r", encoding="utf-8") as sf:
             source_code: str = sf.read()
+            source_code = (
+                source_code
+                if source_code.endswith(noqa.NEW_LINE)
+                else source_code + noqa.NEW_LINE
+            )
 
         formatted_source_code = formatter.format(
             source_file=str(source_file),
@@ -143,7 +159,7 @@ def format_sql_file(
         )
 
         if formatted_source_code != source_code and config.format.check:
-            exit_code.append(1)
+            files_requiring_formatting.append(source_file)
 
         if formatted_source_code != source_code and config.format.diff:
             diff_unified = difflib.unified_diff(
@@ -156,7 +172,7 @@ def format_sql_file(
             diff_output = "".join(diff_unified)
             console.print(Syntax(diff_output, "diff", theme="ansi_dark"))
 
-            exit_code.append(1)
+            files_requiring_formatting.append(source_file)
 
         if (
             formatted_source_code != source_code
@@ -166,7 +182,7 @@ def format_sql_file(
             with source_file.open("w", encoding="utf-8") as sf:
                 sf.write(formatted_source_code)
 
-    if len(exit_code) > 0:
+    if len(files_requiring_formatting) > 0:
         sys.exit(1)
 
 

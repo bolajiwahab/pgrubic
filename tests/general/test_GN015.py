@@ -153,7 +153,7 @@ def test_fail_fix_drop_cascade(
     """Test fail fix drop cascade."""
     sql_fail: str = "DROP MATERIALIZED VIEW films_recent CASCADE;"
 
-    sql_fix: str = "DROP MATERIALIZED VIEW films_recent;"
+    sql_fix: str = "DROP MATERIALIZED VIEW films_recent;\n"
 
     drop_cascade.config.lint.fix = True
 
@@ -178,7 +178,7 @@ def test_fail_fix_alter_table_drop_cascade(
     """Test fail fix drop cascade."""
     sql_fail: str = "ALTER TABLE films_recent DROP COLUMN films_recent CASCADE;"
 
-    sql_fix: str = "ALTER TABLE films_recent\n    DROP COLUMN films_recent;"
+    sql_fix: str = "ALTER TABLE films_recent\n    DROP COLUMN films_recent;\n"
 
     drop_cascade.config.lint.fix = True
 

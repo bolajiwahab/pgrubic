@@ -176,7 +176,7 @@ def test_fail_fix_timestamp_column_without_suffix(
     """Test fail fix timestamp column without suffix."""
     sql_fail: str = "CREATE TABLE tbl (activated timestamp);"
 
-    sql_fix: str = "CREATE TABLE tbl (\n    activated_at timestamp\n);"
+    sql_fix: str = "CREATE TABLE tbl (\n    activated_at timestamp\n);\n"
 
     timestamp_column_without_suffix.config.lint.fix = True
 

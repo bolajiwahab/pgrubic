@@ -122,20 +122,7 @@ def _set_locations(
             else statement_length
         )
 
-        statement_location_end = statement_location + statement_length
-
-        line_number = self.source_code[:statement_location_end].count("\n") + 1
-
-        line_start = self.source_code[:statement_location_end].rfind(";\n") + 1
-
-        line_end = self.source_code.find("\n", statement_location_end)
-
-        statement = self.source_code[line_start:line_end].strip("\n")
-
-        self.line_number = line_number
         self.column_offset = column_offset
-        self.statement = statement
-        self.statement_location = statement_location
 
         return func(self, ancestors, node)
 

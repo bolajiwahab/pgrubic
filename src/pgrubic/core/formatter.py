@@ -20,7 +20,7 @@ class Formatter:
         formatters: typing.Callable[[], set[typing.Callable[[], None]]],
     ) -> None:
         """Initialize variables."""
-        formatters()
+        self.formatters = formatters()
         self.config = config
 
     @staticmethod
@@ -34,38 +34,45 @@ class Formatter:
 
             sys.exit(1)
 
-        formatted_source_code: list[str] = []
+        formatted_statements: list[str] = []
 
         format_ignores = noqa.extract_format_ignores(
             source_file=source_file,
             source_code=source_code,
         )
 
-        for statement in noqa.build_statements_start_end_locations(
+        for statement in noqa.extract_statement_locations(
             source_file=source_file,
             source_code=source_code,
         ):
             if statement.start_location in format_ignores:
-                formatted_source_code.append(statement.text.strip("\n"))
+                formatted_statements.append(statement.text)
                 continue
 
             comments = noqa.extract_comments(
                 source_file=source_file,
-                source_code=statement.text + noqa.SEMI_COLON,
+                source_code=statement.text,
             )
 
-            formatted_source_code.append(
-                stream.IndentedStream(
-                    comments=comments,
-                    semicolon_after_last_statement=config.format.semicolon_after_last_statement,
-                    remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
-                    comma_at_eoln=not (config.format.comma_at_beginning),
-                )(statement.text),
-            )
+            formatted_statement = stream.IndentedStream(
+                comments=comments,
+                semicolon_after_last_statement=False,
+                remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
+                comma_at_eoln=not (config.format.comma_at_beginning),
+            )(statement.text)
 
-        return ("\n" + ("\n" * config.format.lines_between_statements)).join(
-            formatted_source_code,
-        ) + "\n"
+            if config.format.new_line_before_semicolon:
+                formatted_statement += noqa.NEW_LINE + noqa.SEMI_COLON
+            else:
+                formatted_statement += noqa.SEMI_COLON
+
+            formatted_statements.append(formatted_statement)
+
+        return (
+            noqa.NEW_LINE + (noqa.NEW_LINE * config.format.lines_between_statements)
+        ).join(
+            formatted_statements,
+        ) + noqa.NEW_LINE
 
     def format(self, *, source_file: str, source_code: str) -> str:
         """Format source code."""

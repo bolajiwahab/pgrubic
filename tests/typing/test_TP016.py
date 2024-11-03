@@ -211,7 +211,7 @@ def test_fail_fix_create_table_numeric_with_precision(
     sql_fail: str = "CREATE TABLE transaction (user_id int, amount numeric(9, 2));"
 
     sql_fix: str = (
-        "CREATE TABLE transaction (\n    user_id integer\n  , amount numeric\n);"
+        "CREATE TABLE transaction (\n    user_id integer\n  , amount numeric\n);\n"
     )
 
     numeric_with_precision.config.lint.fix = True
@@ -237,7 +237,7 @@ def test_fail_fix_alter_table_numeric_with_precision(
     """Test fail fix numeric with precision."""
     sql_fail: str = "ALTER TABLE transaction ADD COLUMN total numeric(9, 2);"
 
-    sql_fix: str = "ALTER TABLE transaction\n    ADD COLUMN total numeric;"
+    sql_fix: str = "ALTER TABLE transaction\n    ADD COLUMN total numeric;\n"
 
     numeric_with_precision.config.lint.fix = True
 

@@ -172,7 +172,7 @@ def test_fail_fix_is_null_null_comparison(
     """Test fail fix null constraint."""
     sql_fail: str = "SELECT a = NULL;"
 
-    sql_fix: str = "SELECT a IS NULL;"
+    sql_fix: str = "SELECT a IS NULL;\n"
 
     null_comparison.config.lint.fix = True
 
@@ -197,7 +197,7 @@ def test_fail_fix_is_not_null_null_comparison(
     """Test fail fix null constraint."""
     sql_fail: str = "SELECT NULL != a;"
 
-    sql_fix: str = "SELECT a IS NOT NULL;"
+    sql_fix: str = "SELECT a IS NOT NULL;\n"
 
     null_comparison.config.lint.fix = True
 

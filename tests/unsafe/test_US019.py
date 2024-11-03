@@ -177,7 +177,7 @@ def test_fail_fix_non_concurrent_index_drop(
     """Test fail fix non concurrent index drop."""
     sql_fail: str = "DROP INDEX idx;"
 
-    sql_fix: str = "DROP INDEX CONCURRENTLY idx;"
+    sql_fix: str = "DROP INDEX CONCURRENTLY idx;\n"
 
     non_concurrent_index_drop.config.lint.fix = True
 

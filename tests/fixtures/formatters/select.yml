@@ -1,0 +1,179 @@
+---
+formatter: SELECT
+
+simple_select:
+  sql: |
+    SELECT a, b, c FROM films WHERE date_prod >= '2002-01-01'
+      AND id = 1 AND genre = 'action' OR id = 2 ORDER BY date_prod DESC LIMIT 100
+      OFFSET 5 ROWS;
+  expected: |
+    SELECT a
+         , b
+         , c
+      FROM films
+     WHERE (date_prod >= '2002-01-01'
+       AND id = 1
+       AND genre = 'action')
+        OR id = 2
+     ORDER BY date_prod DESC
+     LIMIT 100
+    OFFSET 5;
+
+select_limit_null:
+  sql: |
+    SELECT * FROM films LIMIT NULL;
+  expected: |
+    SELECT *
+      FROM films
+     LIMIT ALL;
+
+select_fetch_only:
+  sql: |
+    SELECT * FROM films FETCH FIRST 3 ROWS ONLY;
+  expected: |
+    SELECT *
+      FROM films
+     LIMIT 3;
+
+select_fetch_row_with_ties:
+  sql: |
+    SELECT *
+      FROM films
+      ORDER BY date_prod
+     FETCH FIRST 3 ROWS WITH TIES;
+  expected: |
+    SELECT *
+      FROM films
+     ORDER BY date_prod
+     FETCH FIRST 3 ROWS WITH TIES;
+
+select_into:
+  sql: |
+    SELECT * INTO public.films_recent FROM films WHERE date_prod >= '2002-01-01';
+  expected: |
+    SELECT *
+      INTO public.films_recent
+      FROM films
+     WHERE date_prod >= '2002-01-01';
+
+select_from_values:
+  sql: |
+    SELECT * FROM (VALUES (1, 'one'), (2, 'two'), (3, 'three')) AS t (num,letter);
+  expected: |
+    SELECT *
+      FROM ((VALUES (1, 'one')
+                  , (2, 'two')
+                  , (3, 'three'))) AS t (num, letter);
+
+select_with_comments:
+  sql: |
+    -- this is a comment
+    SELECT * FROM users WHERE id=1;
+  expected: |
+    -- this is a comment
+    SELECT *
+      FROM users
+     WHERE id = 1;
+
+select_union:
+  sql: |
+    SELECT * FROM users WHERE id=1
+    UNION
+    SELECT * FROM users WHERE id=2;
+  expected: |
+    SELECT *
+      FROM users
+     WHERE id = 1
+     UNION
+    SELECT *
+      FROM users
+     WHERE id = 2;
+
+select_union_all:
+  sql: |
+    SELECT * FROM users WHERE id=1
+    UNION ALL
+    SELECT * FROM users WHERE id=2;
+  expected: |
+    SELECT *
+      FROM users
+     WHERE id = 1
+     UNION ALL
+    SELECT *
+      FROM users
+     WHERE id = 2;
+
+select_intersect_all:
+  sql: |
+    SELECT * FROM users WHERE id=1
+    INTERSECT ALL
+    SELECT * FROM users WHERE id=2;
+  expected: |
+    SELECT *
+      FROM users
+     WHERE id = 1
+    INTERSECT ALL
+    SELECT *
+      FROM users
+     WHERE id = 2;
+
+select_distinct:
+  sql: |
+    SELECT DISTINCT a, b FROM users WHERE id=1;
+  expected: |
+    SELECT DISTINCT
+           a
+         , b
+      FROM users
+     WHERE id = 1;
+
+select_distinct_on:
+  sql: |
+    SELECT DISTINCT ON (a) a, b FROM users WHERE id=1;
+  expected: |
+    SELECT DISTINCT ON (a)
+           a
+         , b
+      FROM users
+     WHERE id = 1;
+
+select_with_left_join:
+  sql: |
+    SELECT * FROM users u
+    LEFT JOIN orders o ON u.id = o.user_id;
+  expected: |
+    SELECT *
+      FROM users AS u
+      LEFT JOIN orders AS o
+        ON u.id = o.user_id;
+
+select_with_join:
+  sql: |
+    SELECT * FROM users u
+    JOIN orders o ON u.id = o.user_id;
+  expected: |
+    SELECT *
+      FROM users AS u
+     INNER JOIN orders AS o
+        ON u.id = o.user_id;
+
+select_with_using:
+  sql: |
+    SELECT * FROM users u
+    JOIN orders o USING (id);
+  expected: |
+    SELECT *
+      FROM users AS u
+     INNER JOIN orders AS o USING (id);
+
+select_with_subquery:
+  sql: |
+    SELECT * FROM users u
+    WHERE u.id IN (SELECT o.user_id FROM orders o);
+  expected: |
+    SELECT *
+      FROM users AS u
+     WHERE u.id IN (
+              SELECT o.user_id
+                FROM orders AS o
+           );

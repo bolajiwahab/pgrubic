@@ -212,7 +212,7 @@ def test_fail_fix_create_table_json(
     """Test fail fix json."""
     sql_fail: str = "CREATE TABLE tbl (user_id int, details json);"
 
-    sql_fix: str = "CREATE TABLE tbl (\n    user_id integer\n  , details jsonb\n);"
+    sql_fix: str = "CREATE TABLE tbl (\n    user_id integer\n  , details jsonb\n);\n"
 
     json.config.lint.fix = True
 
@@ -237,7 +237,7 @@ def test_fail_fix_alter_table_json(
     """Test fail fix json."""
     sql_fail: str = "ALTER TABLE tbl ADD COLUMN details json;"
 
-    sql_fix: str = "ALTER TABLE tbl\n    ADD COLUMN details jsonb;"
+    sql_fix: str = "ALTER TABLE tbl\n    ADD COLUMN details jsonb;\n"
 
     json.config.lint.fix = True
 

@@ -177,7 +177,7 @@ def test_fail_fix_non_concurrent_reindex(
     """Test fail fix non concurrent index reindex."""
     sql_fail: str = "REINDEX INDEX idx;"
 
-    sql_fix: str = "REINDEX (CONCURRENTLY) INDEX idx;"
+    sql_fix: str = "REINDEX (CONCURRENTLY) INDEX idx;\n"
 
     non_concurrent_reindex.config.lint.fix = True
 

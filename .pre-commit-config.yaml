@@ -69,6 +69,7 @@ repos:
         types: [python]
       - id: mypy
         name: Type checking with mypy
+        additional_dependencies: [types-PyYAML]
         entry: mypy
         language: python
         types: [python]

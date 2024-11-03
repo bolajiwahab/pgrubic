@@ -223,7 +223,7 @@ def test_fail_fix_create_table_wrongly_typed_required_column(
     sql_fail: str = "CREATE TABLE tbl (user_id int, created_at varchar);"
 
     sql_fix: str = (
-        "CREATE TABLE tbl (\n    user_id integer\n  , created_at timestamptz\n);"
+        "CREATE TABLE tbl (\n    user_id integer\n  , created_at timestamptz\n);\n"
     )
 
     wrongly_typed_required_column.config.lint.fix = True
@@ -249,7 +249,7 @@ def test_fail_fix_alter_table_wrongly_typed_required_column(
     """Test fail fix wrongly typed required column."""
     sql_fail: str = "ALTER TABLE tbl ADD COLUMN created_at varchar;"
 
-    sql_fix: str = "ALTER TABLE tbl\n    ADD COLUMN created_at timestamptz;"
+    sql_fix: str = "ALTER TABLE tbl\n    ADD COLUMN created_at timestamptz;\n"
 
     wrongly_typed_required_column.config.lint.fix = True
 

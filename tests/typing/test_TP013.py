@@ -212,7 +212,7 @@ def test_fail_fix_create_table_hstore(
     """Test fail fix hstore."""
     sql_fail: str = "CREATE TABLE tbl (user_id int, details hstore);"
 
-    sql_fix: str = "CREATE TABLE tbl (\n    user_id integer\n  , details jsonb\n);"
+    sql_fix: str = "CREATE TABLE tbl (\n    user_id integer\n  , details jsonb\n);\n"
 
     hstore.config.lint.fix = True
 
@@ -237,7 +237,7 @@ def test_fail_fix_alter_table_hstore(
     """Test fail fix hstore."""
     sql_fail: str = "ALTER TABLE tbl ADD COLUMN details hstore;"
 
-    sql_fix: str = "ALTER TABLE tbl\n    ADD COLUMN details jsonb;"
+    sql_fix: str = "ALTER TABLE tbl\n    ADD COLUMN details jsonb;\n"
 
     hstore.config.lint.fix = True
 

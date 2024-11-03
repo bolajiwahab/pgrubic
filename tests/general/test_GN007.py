@@ -197,7 +197,7 @@ def test_fail_fix_missing_replace_in_function(
     ;
     """
 
-    sql_fix: str = "CREATE OR REPLACE FUNCTION dup(integer)\nRETURNS TABLE (f1 integer, f2 text)\nLANGUAGE sql\nAS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;"  # noqa: E501
+    sql_fix: str = "CREATE OR REPLACE FUNCTION dup(integer)\nRETURNS TABLE (f1 integer, f2 text)\nLANGUAGE sql\nAS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;\n"  # noqa: E501
 
     missing_replace_in_function.config.lint.fix = True
 
