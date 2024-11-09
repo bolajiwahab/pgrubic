@@ -51,13 +51,14 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
     source_file: str
     source_code: str
 
+    statement_location: int
+    line_number: int
+    column_offset: int
+    statement: str
+
     def __init__(self) -> None:
         """Initialize variables."""
         self.violations: set[Violation] = set()
-        self.statement_location: int = 0
-        self.line_number: int = 0
-        self.column_offset: int = 0
-        self.statement: str = ""
 
     def __init_subclass__(cls, **kwargs: typing.Any) -> None:
         """Set code attribute for subclasses."""
@@ -193,11 +194,11 @@ class Linter:
 
                 sys.exit(1)
 
-            for checker in self.checkers:
-                checker.statement = statement.text
-                checker.line_number = statement.line_number
-                checker.statement_location = statement.start_location
+            BaseChecker.statement = statement.text
+            BaseChecker.statement_location = statement.start_location
+            BaseChecker.line_number = statement.line_number
 
+            for checker in self.checkers:
                 checker.violations = set()
 
                 checker(tree)

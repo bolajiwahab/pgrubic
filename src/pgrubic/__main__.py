@@ -1,8 +1,11 @@
 """Entry point."""
 
 import sys
+import typing
 import difflib
+import logging
 import pathlib
+from collections import abc
 
 import click
 from rich.syntax import Syntax
@@ -10,6 +13,13 @@ from rich.console import Console
 
 from pgrubic import PROGRAM_NAME, core
 from pgrubic.core import noqa
+
+T = typing.TypeVar("T")
+
+
+def common_options(func: abc.Callable[..., T]) -> abc.Callable[..., T]:
+    """Decorator to add common options to each subcommand."""
+    return click.option("--verbose", is_flag=True, help="Enable verbose logging.")(func)
 
 
 @click.group(
@@ -34,13 +44,32 @@ def cli() -> None:
     default=None,
     help="Fix lint violations automatically.",
 )
+@click.option(
+    "--ignore-noqa",
+    is_flag=True,
+    default=None,
+    help="Whether to ignore noqa directives.",
+)
+@common_options
 @click.argument("paths", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
-def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
+def lint(
+    paths: tuple[pathlib.Path, ...],
+    *,
+    verbose: bool,
+    fix: bool,
+    ignore_noqa: bool,
+) -> None:
     """Lint SQL files."""
+    if verbose:
+        core.logger.setLevel(logging.INFO)
+
     config: core.Config = core.parse_config()
 
     if fix:
         config.lint.fix = fix
+
+    if ignore_noqa:
+        config.lint.ignore_noqa = ignore_noqa
 
     linter: core.Linter = core.Linter(config=config)
 
@@ -102,7 +131,7 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
     "--check",
     is_flag=True,
     default=None,
-    help="Check if any files would have been modified",
+    help="Check if any files would have been modified.",
 )
 @click.option(
     "--diff",
@@ -110,20 +139,27 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
     default=None,
     help="""
     Report the difference between the current file and
-    how the formatted file would look like""",
+    how the formatted file would look like.""",
 )
+@common_options
 @click.argument("paths", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
 def format_sql_file(
     paths: tuple[pathlib.Path, ...],
     *,
     check: bool,
     diff: bool,
+    verbose: bool,
 ) -> None:
     """Format SQL files."""
+    if verbose:
+        core.logger.setLevel(logging.INFO)
+
     console = Console()
     config: core.Config = core.parse_config()
+
     if check:
         config.format.check = check
+
     if diff:
         config.format.diff = diff
 

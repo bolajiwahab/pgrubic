@@ -9,6 +9,7 @@ from pgrubic.core.loader import (
     add_set_locations_to_rule,
 )
 from pgrubic.core.filters import filter_files
+from pgrubic.core.logging import logger
 from pgrubic.core.formatter import Formatter
 
 __all__ = [
@@ -23,4 +24,5 @@ __all__ = [
     "parse_config",
     "filter_files",
     "Config",
+    "logger",
 ]

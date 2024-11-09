@@ -1,5 +1,6 @@
 """Configuration."""
 
+import os
 import typing
 import pathlib
 import dataclasses
@@ -7,7 +8,8 @@ import dataclasses
 import toml
 from deepmerge import always_merger
 
-from pgrubic import CONFIG_FILE, DEFAULT_CONFIG
+from pgrubic import CONFIG_FILE, DEFAULT_CONFIG, CONFIG_PATH_ENVIRONMENT_VARIABLE
+from pgrubic.core.logging import logger
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
@@ -86,6 +88,8 @@ class Config:
     include: list[str]
     exclude: list[str]
 
+    postgres_target_version: int
+
     lint: Lint
     format: Format
 
@@ -96,8 +100,8 @@ def _load_default_config() -> dict[str, typing.Any]:
 
 
 def _load_user_config() -> dict[str, typing.Any]:
-    """Load config from from absolute path config file."""
-    config_file_absolute_path = _get_config_file_absolute_path(CONFIG_FILE)
+    """Load config from absolute path config file."""
+    config_file_absolute_path = _get_config_file_absolute_path()
 
     if config_file_absolute_path:
         return dict(toml.load(config_file_absolute_path))
@@ -110,22 +114,44 @@ def _merge_config() -> dict[str, typing.Any]:
     return dict(always_merger.merge(_load_user_config(), _load_default_config()))
 
 
-def _get_config_file_absolute_path(config_file: str) -> pathlib.Path | None:
+def _get_config_file_absolute_path(
+    config_file: str = CONFIG_FILE,
+) -> pathlib.Path | None:
     """Get the absolute path of the config file.
-    We use the first config file we find upwards.
+    If environment variable is set, we try to use that else, we use the first config file
+    that we find upwards from the current working directory.
     """
+    env_config_path = os.getenv(CONFIG_PATH_ENVIRONMENT_VARIABLE)
+
+    if env_config_path:
+        config_file_absolute_path = pathlib.Path(env_config_path) / config_file
+        if pathlib.Path.exists(config_file_absolute_path):
+            logger.info(
+                """Using settings from "%s\"""",
+                config_file_absolute_path,
+            )
+            return config_file_absolute_path
+
     current_directory = pathlib.Path.cwd()
 
     # Traverse upwards through the directory tree
     while current_directory != current_directory.parent:
         # Check if the configuration file exists
-        config_absolute_path = current_directory / config_file
+        config_file_absolute_path = current_directory / config_file
 
-        if pathlib.Path.exists(config_absolute_path):
-            return config_absolute_path
+        if pathlib.Path.exists(config_file_absolute_path):
+            logger.info(
+                """Using settings from "%s\"""",
+                config_file_absolute_path,
+            )
+            return config_file_absolute_path
 
         # Move up one directory
         current_directory = current_directory.parent  # pragma: no cover
+
+    logger.info(
+        """Using default settings""",
+    )
 
     return None  # pragma: no cover
 
@@ -139,6 +165,7 @@ def parse_config() -> Config:
     return Config(
         include=merged_config["include"],
         exclude=merged_config["exclude"],
+        postgres_target_version=merged_config["postgres-target-version"],
         lint=Lint(
             select=config_lint["select"],
             ignore=config_lint["ignore"],
