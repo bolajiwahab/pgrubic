@@ -96,6 +96,7 @@ class Linter:
     def __init__(
         self,
         config: config.Config,
+        # rules: typing.Any,
         formatters: typing.Callable[
             [],
             set[typing.Callable[[], None]],
@@ -173,6 +174,7 @@ class Linter:
         )
 
         violations: ViolationMetric = ViolationMetric()
+        _violations: set[Violation] = set()
 
         BaseChecker.inline_ignores = inline_ignores
         BaseChecker.source_code = source_code
@@ -215,6 +217,8 @@ class Linter:
                     source_file=source_file,
                 )
 
+                _violations.update(checker.violations)
+
                 if self.config.lint.fix is checker.is_auto_fixable is True:
                     violations.fixed_total += len(checker.violations)
 
@@ -253,12 +257,7 @@ class Linter:
         ) + noqa.NEW_LINE
 
         if parser.parse_sql(fixed_source_code) != parser.parse_sql(source_code):
-            violations.fix = (
-                noqa.NEW_LINE
-                + (noqa.NEW_LINE * self.config.format.lines_between_statements)
-            ).join(
-                fixed_statements,
-            ) + noqa.NEW_LINE
+            violations.fix = fixed_source_code
 
             sys.stdout.write(violations.fix)
 
@@ -266,5 +265,7 @@ class Linter:
             source_file=source_file,
             inline_ignores=inline_ignores,
         )
+
+        print(_violations)  # noqa: T201
 
         return violations

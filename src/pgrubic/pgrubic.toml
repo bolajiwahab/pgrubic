@@ -1,6 +1,6 @@
 include = []
 exclude = []
-postgres-target-version = "14"
+postgres-target-version = 14
 [lint]
 select = []
 ignore = []

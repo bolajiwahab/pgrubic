@@ -43,11 +43,11 @@ def test_cli_lint_directory(tmp_path: pathlib.Path) -> None:
     assert result.exit_code == 1
 
 
-def test_cli_lint_no_specified_paths(
+def test_cli_lint_current_directory(
     tmp_path: pathlib.Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Test cli lint no specified paths."""
+    """Test cli lint current directory."""
     runner = testing.CliRunner()
 
     sql_fail: str = "SELECT a = NULL;"
@@ -132,11 +132,11 @@ def test_cli_format_directory(tmp_path: pathlib.Path) -> None:
     assert result.exit_code == 0
 
 
-def test_cli_format_no_specified_paths(
+def test_cli_format_current_directory(
     tmp_path: pathlib.Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Test cli format no specified paths."""
+    """Test cli format current directory."""
     runner = testing.CliRunner()
 
     sql_pass: str = "SELECT a = NULL; SELECT * FROM example;"

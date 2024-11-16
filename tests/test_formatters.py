@@ -3,30 +3,19 @@
 import typing
 import pathlib
 
-import yaml
 import pytest
 
 from tests import TEST_FILE
 from pgrubic import core
-from tests.conftest import update_config
-
-
-def load_test_cases(directory: pathlib.Path) -> list[tuple[str, ...]]:
-    """Load test cases from directory."""
-    test_cases: list[tuple[str, ...]] = []
-
-    for file in sorted(directory.rglob("*.yml"), key=lambda x: x.name):
-        with file.open() as f:
-            content: dict[str, typing.Any] = yaml.safe_load(f)
-
-        formatter = content.pop("formatter")
-        test_cases.extend((formatter + "_" + k, v) for k, v in content.items())
-    return test_cases
+from tests.conftest import update_config, load_test_cases
 
 
 @pytest.mark.parametrize(
     ("test_id", "test_case"),
-    load_test_cases(pathlib.Path("tests/fixtures/formatters")),
+    load_test_cases(
+        case="formatter",
+        directory=pathlib.Path("tests/fixtures/formatters"),
+    ),
 )
 def test_formatters(
     formatter: core.Formatter,
@@ -39,7 +28,7 @@ def test_formatters(
         test_case.get("config", {}),
     )
 
-    # Apply overrides to configuration
+    # Apply overrides to global configuration
     update_config(formatter.config, config_overrides)
 
     actual_output = formatter.format(
@@ -48,3 +37,26 @@ def test_formatters(
     )
 
     assert actual_output == test_case["expected"], f"Test failed: {test_id}"
+
+
+def test_format_parse_error(formatter: core.Formatter) -> None:
+    """Test format."""
+    source_code = "SELECT * FROM;"
+    with pytest.raises(SystemExit) as excinfo:
+        formatter.format(source_file=TEST_FILE, source_code=source_code)
+
+    assert excinfo.value.code == 1
+
+
+def test_new_line_before_semicolon(formatter: core.Formatter) -> None:
+    """Test new line before semicolon."""
+    source_code = "select 1;"
+    expected_output: str = "SELECT 1\n;\n"
+
+    formatter.config.format.new_line_before_semicolon = True
+    formatted_source_code = formatter.format(
+        source_file=TEST_FILE,
+        source_code=source_code,
+    )
+
+    assert formatted_source_code == expected_output

@@ -118,8 +118,9 @@ def _get_config_file_absolute_path(
     config_file: str = CONFIG_FILE,
 ) -> pathlib.Path | None:
     """Get the absolute path of the config file.
-    If environment variable is set, we try to use that else, we use the first config file
-    that we find upwards from the current working directory.
+    If CONFIG_PATH_ENVIRONMENT_VARIABLE environment variable is set, we try to use that
+    else, we use the first config file that we find upwards from the current working
+    directory.
     """
     env_config_path = os.getenv(CONFIG_PATH_ENVIRONMENT_VARIABLE)
 

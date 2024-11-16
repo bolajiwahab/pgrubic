@@ -49,7 +49,9 @@ def extract_statement_locations(
                     start_location=statement_start_location,
                     end_location=token.end,
                     line_number=source_code[: (token.end)].count(NEW_LINE) + 1,
-                    text=source_code[statement_start_location : token.end].strip(NEW_LINE)
+                    text=source_code[statement_start_location : token.end].strip(
+                        NEW_LINE,
+                    )
                     + SEMI_COLON,
                 ),
             )

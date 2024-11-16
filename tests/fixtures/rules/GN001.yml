@@ -1,0 +1,7 @@
+---
+rule: GN001
+
+test_fail_table_inheritance:
+  sql: |
+    CREATE TABLE public.measurement_y2006m02 () INHERITS (public.measurement);
+    CREATE TABLE public.measurement_y2006m02 () INHERITS (public.measurement);
