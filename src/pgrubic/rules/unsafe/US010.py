@@ -17,9 +17,10 @@ class NotNullConstraintOnExistingColumn(linter.BaseChecker):
         if node.subtype == enums.AlterTableType.AT_SetNotNull:
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description=f"Not null constraint on existing column `{node.name}`",
                 ),

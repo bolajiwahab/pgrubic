@@ -43,9 +43,10 @@ class ColumnDataTypeChange(linter.BaseChecker):
         if node.subtype == enums.AlterTableType.AT_AlterColumnType:
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description="Column data type change is not safe",
                 ),

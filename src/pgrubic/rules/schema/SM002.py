@@ -43,9 +43,10 @@ class DisallowedSchema(linter.BaseChecker):
                 if node.schemaname == schema.name:
                     self.violations.add(
                         linter.Violation(
+                            rule=self.code,
                             line_number=self.line_number,
                             column_offset=self.column_offset,
-                            statement=self.statement,
+                            line=self.line,
                             statement_location=self.statement_location,
                             description=f"Schema '{node.schemaname}' is disallowed in"
                             f" config with reason: '{schema.reason}'"
@@ -77,9 +78,10 @@ class DisallowedSchema(linter.BaseChecker):
             if schema_name == schema.name:
                 self.violations.add(
                     linter.Violation(
+                        rule=self.code,
                         line_number=self.line_number,
                         column_offset=self.column_offset,
-                        statement=self.statement,
+                        line=self.line,
                         statement_location=self.statement_location,
                         description=f"Schema '{schema_name}' is disallowed in"
                         f" config with reason: '{schema.reason}'"
@@ -111,9 +113,10 @@ class DisallowedSchema(linter.BaseChecker):
             if schema_name == schema.name:
                 self.violations.add(
                     linter.Violation(
+                        rule=self.code,
                         line_number=self.line_number,
                         column_offset=self.column_offset,
-                        statement=self.statement,
+                        line=self.line,
                         statement_location=self.statement_location,
                         description=f"Schema '{schema_name}' is disallowed in"
                         f" config with reason: '{schema.reason}'"

@@ -25,16 +25,17 @@ class SingleLetterIdentifier(CheckIdentifier):
         identifier: str,
         line_number: int,
         column_offset: int,
-        statement: str,
+        line: str,
         statement_location: int,
     ) -> None:
         """Checks for identifiers prefix with pg_."""
         if identifier and len(identifier) == 1:
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=line_number,
                     column_offset=column_offset,
-                    statement=statement,
+                    line=line,
                     statement_location=statement_location,
                     description=f"Single letter identifier `{identifier}`"
                     " is not descriptive enough",

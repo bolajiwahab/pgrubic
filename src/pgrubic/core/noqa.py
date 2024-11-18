@@ -20,7 +20,6 @@ class Statement(typing.NamedTuple):
 
     start_location: int
     end_location: int
-    line_number: int
     text: str
 
 
@@ -48,11 +47,7 @@ def extract_statement_locations(
                 Statement(
                     start_location=statement_start_location,
                     end_location=token.end,
-                    line_number=source_code[: (token.end)].count(NEW_LINE) + 1,
-                    text=source_code[statement_start_location : token.end].strip(
-                        NEW_LINE,
-                    )
-                    + SEMI_COLON,
+                    text=source_code[statement_start_location : token.end] + SEMI_COLON,
                 ),
             )
             statement_start_location = token.end + 1
@@ -90,7 +85,7 @@ def _get_statement_locations(
     stop: int,
 ) -> tuple[int, int]:
     """Get statement start and end locations."""
-    for statement_start_location, statement_end_location, _, _ in locations:
+    for statement_start_location, statement_end_location, _ in locations:
         if statement_start_location <= stop < statement_end_location:
             break
 
@@ -131,7 +126,7 @@ def _extract_statement_ignores(
             line_number = source_code[:statement_end_location].count("\n") + 1
 
             # Here we extract last possible noqa because we can have a comment followed
-            # by another comment e.g -- new table -- noqa: UN005
+            # by another comment e.g -- new table -- noqa: US005
             comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
 
             if comment.startswith("noqa"):

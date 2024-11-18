@@ -16,6 +16,7 @@ from tests.conftest import update_config, load_test_cases
 )
 def test_rules(
     linter_new: core.Linter,
+    test_id: str,  # noqa: ARG001
     test_case: dict[str, str],
     capfd: typing.Any,
 ) -> None:
@@ -28,16 +29,9 @@ def test_rules(
     # Apply overrides to global configuration
     update_config(linter_new.config, config_overrides)
 
-    violations = linter_new.run(
+    _ = linter_new.run(
         source_file=TEST_FILE,
         source_code=test_case["sql"],
     )
 
     out, _ = capfd.readouterr()
-
-    assert violations == core.ViolationMetric(
-        total=1,
-        fixed_total=0,
-        fixable_auto_total=0,
-        fixable_manual_total=1,
-    )

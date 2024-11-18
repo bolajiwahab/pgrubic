@@ -41,9 +41,10 @@ class InvalidCheckConstraintName(linter.BaseChecker):
         ):
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description=f"Check constraint"
                     f" `{node.conname}` does not follow naming convention"

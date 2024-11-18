@@ -16,9 +16,10 @@ from pgrubic.core import noqa, config, loader, formatter
 class Violation:
     """Representation of rule violation."""
 
+    rule: str
     line_number: int
     column_offset: int
-    statement: str
+    line: str
     statement_location: int
     description: str
     help: str | None = None
@@ -52,9 +53,11 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
     source_code: str
 
     statement_location: int
+    node_location: int
     line_number: int
     column_offset: int
     statement: str
+    line: str
 
     def __init__(self) -> None:
         """Initialize variables."""
@@ -150,17 +153,17 @@ class Linter:
         for violation in checker.violations:
             if not checker.is_fix_applicable:
                 sys.stdout.write(
-                    f"\n{source_file}:{violation.line_number}:{violation.column_offset}:"
+                    f"{noqa.NEW_LINE}{source_file}:{violation.line_number}:{violation.column_offset}:"
                     f" \033]8;;{DOCUMENTATION_URL}/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"  # noqa: E501
-                    f" {violation.description}\n\n",
+                    f" {violation.description}{noqa.NEW_LINE}",
                 )
 
                 for idx, line in enumerate(
-                    violation.statement.splitlines(keepends=False),
-                    start=violation.line_number - violation.statement.count("\n"),
+                    violation.line.splitlines(keepends=False),
+                    start=violation.line_number - violation.line.count(noqa.NEW_LINE),
                 ):
                     sys.stdout.write(
-                        f"{Fore.BLUE}{idx} | {Style.RESET_ALL}{Fore.RED}{Style.BRIGHT}{line}{Style.RESET_ALL}\n",  # noqa: E501
+                        f"{Fore.BLUE}{idx} | {Style.RESET_ALL}{Fore.RED}{Style.BRIGHT}{line}{Style.RESET_ALL}{noqa.NEW_LINE}",  # noqa: E501
                     )
                 sys.stdout.write(noqa.NEW_LINE)
 
@@ -198,7 +201,6 @@ class Linter:
 
             BaseChecker.statement = statement.text
             BaseChecker.statement_location = statement.start_location
-            BaseChecker.line_number = statement.line_number
 
             for checker in self.checkers:
                 checker.violations = set()
@@ -248,7 +250,7 @@ class Linter:
                 fixed_statements.append(fixed_statement)
 
             else:
-                fixed_statements.append(statement.text)
+                fixed_statements.append(statement.text.strip())
 
         fixed_source_code = (
             noqa.NEW_LINE + (noqa.NEW_LINE * self.config.format.lines_between_statements)
@@ -266,6 +268,6 @@ class Linter:
             inline_ignores=inline_ignores,
         )
 
-        print(_violations)  # noqa: T201
+        # print(_violations)  # noqa: ERA001
 
         return violations

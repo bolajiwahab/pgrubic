@@ -1,4 +1,4 @@
-"""Method to load rules and formatters."""
+"""Methods to load rules and formatters."""
 
 from __future__ import annotations
 
@@ -8,18 +8,18 @@ import inspect
 import functools
 import importlib
 
-from pglast import ast, visitors
-
 from pgrubic import (
     RULES_DIRECTORY,
     RULES_BASE_MODULE,
     FORMATTERS_DIRECTORY,
     FORMATTERS_BASE_MODULE,
 )
-from pgrubic.core import config, linter
+from pgrubic.core import noqa, config, linter
 
 if typing.TYPE_CHECKING:
     from collections import abc  # pragma: no cover
+
+    from pglast import ast, visitors
 
 
 def load_rules(config: config.Config) -> set[linter.BaseChecker]:
@@ -109,20 +109,28 @@ def _set_locations(
         ancestors: visitors.Ancestor,
         node: ast.Node,
     ) -> typing.Any:
-        node_location = getattr(node, "location", 0)
-        # Some nodes have location as None.
-        node_location = node_location if node_location else 0
+        # some nodes have location attribute which is different from node location
+        # for example ast.CreateTablespaceStmt while some nodes do not carry location.
+        if hasattr(node, "location") and isinstance(node.location, int):
+            self.node_location = self.statement_location + node.location
+        else:
+            self.node_location = self.statement_location + len(self.statement)
 
-        statement_location = ancestors.find_nearest(ast.RawStmt).node.stmt_location
-        statement_length = ancestors.find_nearest(ast.RawStmt).node.stmt_len
+        # get the position of the newline just before our node location,
+        line_start = self.source_code.rfind(noqa.NEW_LINE, 0, self.node_location)
+        # get the position of the newline just after our node location
+        line_end = self.source_code.find(noqa.NEW_LINE, self.node_location)
 
-        column_offset = (
-            node_location - statement_location
-            if isinstance(node_location, int) and node_location > 0
-            else statement_length
-        )
+        # line number is number of newlines before our node location,
+        # increment by 1 to land on the actual node
+        self.line_number = self.source_code[: self.node_location].count(noqa.NEW_LINE) + 1
+        self.column_offset = self.node_location - line_start
 
-        self.column_offset = column_offset
+        # If a node has no location, we return the whole statement instead
+        if hasattr(node, "location") and isinstance(node.location, int):
+            self.line = self.source_code[line_start:line_end].strip()
+        else:
+            self.line = self.statement.strip()
 
         return func(self, ancestors, node)
 

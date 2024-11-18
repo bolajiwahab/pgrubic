@@ -10,7 +10,7 @@ class UpdateWithoutWhereClause(linter.BaseChecker):
     Checks for **UPDATE** without a **WHERE** clause.
 
     ## **Why not?**
-    Executing an **UPDATE** statement without a **WHERE** clause will update all the rows
+    Executing an **UPDATE** line without a **WHERE** clause will update all the rows
     in the table which is most likely an accidental mistake and not what you want.
 
     ## **When should you?**
@@ -29,9 +29,10 @@ class UpdateWithoutWhereClause(linter.BaseChecker):
         if not node.whereClause:
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description="Found UPDATE without a WHERE clause",
                 ),

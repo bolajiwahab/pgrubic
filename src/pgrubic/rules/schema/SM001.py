@@ -29,9 +29,10 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         if len(node.typeName) < SCHEMA_QUALIFIED_LENGTH:
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description=f"Database object `{node.typeName[0].sval}`"
                     " should be schema qualified",
@@ -46,9 +47,10 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         if len(function_name) < SCHEMA_QUALIFIED_LENGTH:
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description=f"Database object `{function_name[0].sval}`"
                     " should be schema qualified",
@@ -61,7 +63,7 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         node: ast.RangeVar,
     ) -> None:
         """Visit RangeVar."""
-        # We exclude DML statements here due to the possibility of
+        # We exclude DML lines here due to the possibility of
         # Common Table Expressions which are not schema qualified
         if (
             not isinstance(
@@ -78,9 +80,10 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         ):
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description=f"Database object `{node.relname}`"
                     " should be schema qualified",
@@ -102,9 +105,10 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
             ):
                 self.violations.add(
                     linter.Violation(
+                        rule=self.code,
                         line_number=self.line_number,
                         column_offset=self.column_offset,
-                        statement=self.statement,
+                        line=self.line,
                         statement_location=self.statement_location,
                         description=f"Database object `{object_names[-1].sval}`"
                         " should be schema qualified",

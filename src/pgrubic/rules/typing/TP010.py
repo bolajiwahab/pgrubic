@@ -31,9 +31,10 @@ class Smallint(linter.BaseChecker):
         if node.typeName.names[-1].sval == "int2":
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description="Prefer bigint over smallint",
                 ),
