@@ -84,18 +84,18 @@ def load_formatters() -> set[typing.Callable[[], None]]:
     return formatters
 
 
-def add_set_locations_to_rule(node: typing.Any) -> None:
+def add_set_locations_to_rule(rule: linter.BaseChecker) -> None:
     """Add _set_locations to rule."""
-    for name, method in inspect.getmembers(node, inspect.isfunction):
+    for name, method in inspect.getmembers(rule, inspect.isfunction):
         if method.__name__.startswith("visit_"):
-            setattr(node, name, _set_locations(method))
+            setattr(rule, name, _set_locations(method))
 
 
-def add_apply_fix_to_rule(node: typing.Any) -> None:
+def add_apply_fix_to_rule(rule: linter.BaseChecker) -> None:
     """Add apply_fix to rule."""
-    for name, method in inspect.getmembers(node, inspect.isfunction):
+    for name, method in inspect.getmembers(rule, inspect.isfunction):
         if method.__name__.startswith("_fix"):
-            setattr(node, name, apply_fix(method))
+            setattr(rule, name, apply_fix(method))
 
 
 def _set_locations(
@@ -117,7 +117,7 @@ def _set_locations(
             self.node_location = self.statement_location + len(self.statement)
 
         # get the position of the newline just before our node location,
-        line_start = self.source_code.rfind(noqa.NEW_LINE, 0, self.node_location)
+        line_start = self.source_code.rfind(noqa.NEW_LINE, 0, self.node_location) + 1
         # get the position of the newline just after our node location
         line_end = self.source_code.find(noqa.NEW_LINE, self.node_location)
 
