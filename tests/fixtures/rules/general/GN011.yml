@@ -1,0 +1,26 @@
+---
+rule: GN011
+
+test_fail_missing_required_column:
+  sql_fail: |
+    CREATE TABLE music (age bigint, music text);
+  sql_fix: |
+    CREATE TABLE music (
+        age bigint
+      , music text
+      , created_at timestamptz NOT NULL
+    );
+  config:
+    lint:
+      required_columns:
+        - name: created_at
+          data_type: timestamptz
+
+test_pass_no_missing_required_column:
+  sql_pass: |
+    CREATE TABLE music (age bigint, name text, created_at timestamptz);
+  config:
+    lint:
+      required_columns:
+        - name: created_at
+          data_type: timestamptz

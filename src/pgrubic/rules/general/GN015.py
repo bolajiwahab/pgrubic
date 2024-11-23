@@ -2,7 +2,7 @@
 
 from pglast import ast, enums, visitors
 
-from pgrubic import get_full_qualified_name
+from pgrubic import get_fully_qualified_name
 from pgrubic.core import linter
 
 
@@ -60,7 +60,7 @@ class DropCascade(linter.BaseChecker):
 
             if node.behavior == enums.DropBehavior.DROP_CASCADE:
                 self._register_violation(
-                    object_name=get_full_qualified_name(object_names),
+                    object_name=get_fully_qualified_name(object_names),
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,

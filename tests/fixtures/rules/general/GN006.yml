@@ -1,0 +1,6 @@
+---
+rule: GN006
+
+test_fail_create_enum:
+  sql_fail: |
+    CREATE TYPE mood AS ENUM ('sad', 'ok');

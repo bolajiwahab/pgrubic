@@ -2,7 +2,6 @@
 
 import sys
 import typing
-import dataclasses
 
 from pglast import ast, parser, stream, visitors
 from colorama import Fore, Style
@@ -12,8 +11,7 @@ from pgrubic import DOCUMENTATION_URL
 from pgrubic.core import noqa, config, loader, formatter
 
 
-@dataclasses.dataclass(kw_only=True, frozen=True, slots=True)
-class Violation:
+class Violation(typing.NamedTuple):
     """Representation of rule violation."""
 
     rule: str
@@ -22,18 +20,22 @@ class Violation:
     line: str
     statement_location: int
     description: str
+    auto_fixable: bool = False
     help: str | None = None
 
 
-@dataclasses.dataclass(kw_only=True, slots=True)
-class ViolationMetric:
-    """Violation Metric."""
+class LintResult(typing.NamedTuple):
+    """Lint Result."""
+
+    violations: set[Violation]
+    fixed_sql: str | None = None
+
+
+class ViolationStats(typing.NamedTuple):
+    """Violation Stats."""
 
     total: int = 0
-    fixed_total: int = 0
-    fixable_auto_total: int = 0
-    fixable_manual_total: int = 0
-    fix: str | None = None
+    fixable: int = 0
 
 
 class BaseChecker(visitors.Visitor):  # type: ignore[misc]
@@ -79,6 +81,7 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
         if not self.is_auto_fixable:
             return False
 
+        # if the violation has been suppressed by noqa, there is no need to fix it
         for inline_ignore in self.inline_ignores:
             if (
                 (
@@ -144,6 +147,14 @@ class Linter:
                 }
 
     @staticmethod
+    def get_violation_stats(violations: set[Violation]) -> ViolationStats:
+        """Get violation stats."""
+        return ViolationStats(
+            total=len(violations),
+            fixable=sum(1 for violation in violations if violation.auto_fixable),
+        )
+
+    @staticmethod
     def print_violations(
         *,
         checker: BaseChecker,
@@ -165,9 +176,25 @@ class Linter:
                     sys.stdout.write(
                         f"{Fore.BLUE}{idx} | {Style.RESET_ALL}{Fore.RED}{Style.BRIGHT}{line}{Style.RESET_ALL}{noqa.NEW_LINE}",  # noqa: E501
                     )
-                sys.stdout.write(noqa.NEW_LINE)
+                    # in order to have arrow pointing to the violation, we need to shift
+                    # the screen by the length of the line_number as well as 2 spaces
+                    # used above between the separator (|)
+                    (
+                        sys.stdout.write(
+                            " "
+                            * (
+                                violation.column_offset
+                                + len(str(violation.line_number))
+                                + 2
+                            )
+                            + "^"
+                            + noqa.NEW_LINE,
+                        )
+                        if idx == violation.line_number
+                        else None
+                    )
 
-    def run(self, *, source_file: str, source_code: str) -> ViolationMetric:
+    def run(self, *, source_file: str, source_code: str) -> LintResult:
         """Run rules on a source code."""
         fixed_statements: list[str] = []
 
@@ -176,8 +203,7 @@ class Linter:
             source_code=source_code,
         )
 
-        violations: ViolationMetric = ViolationMetric()
-        _violations: set[Violation] = set()
+        violations: set[Violation] = set()
 
         BaseChecker.inline_ignores = inline_ignores
         BaseChecker.source_code = source_code
@@ -219,18 +245,7 @@ class Linter:
                     source_file=source_file,
                 )
 
-                _violations.update(checker.violations)
-
-                if self.config.lint.fix is checker.is_auto_fixable is True:
-                    violations.fixed_total += len(checker.violations)
-
-                if checker.is_auto_fixable is True:
-                    violations.fixable_auto_total += len(checker.violations)
-
-                else:
-                    violations.fixable_manual_total += len(checker.violations)
-
-                violations.total += len(checker.violations)
+                violations.update(checker.violations)
 
             if parser.parse_sql(statement.text) != tree:
                 fixed_statement = stream.IndentedStream(
@@ -258,16 +273,16 @@ class Linter:
             fixed_statements,
         ) + noqa.NEW_LINE
 
-        if parser.parse_sql(fixed_source_code) != parser.parse_sql(source_code):
-            violations.fix = fixed_source_code
+        fix = None
 
-            sys.stdout.write(violations.fix)
+        if parser.parse_sql(fixed_source_code) != parser.parse_sql(source_code):
+            fix = fixed_source_code
+
+            sys.stdout.write(fix)
 
         noqa.report_unused_ignores(
             source_file=source_file,
             inline_ignores=inline_ignores,
         )
 
-        # print(_violations)  # noqa: ERA001
-
-        return violations
+        return LintResult(violations=violations, fixed_sql=fix)

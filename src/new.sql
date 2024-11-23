@@ -1,3 +1,6 @@
-CREATE INDEX concurrently ON public.measurement (id, city_id);
--- noqa: GN025
-CREATE INDEX concurrently ON public.measurement (id, city_id);
+CREATE TABLE public.music (
+    age timestamp NOT NULL,
+    COnstraint music_pkey PRIMARY KEY (age)
+);
+
+UPDATE users SET name = 'John Doe' WHERE id = 1;

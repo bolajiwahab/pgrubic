@@ -5,20 +5,20 @@ import pathlib
 
 import pytest
 
-from tests import TEST_FILE
+from tests import TEST_FILE, conftest
 from pgrubic import core
-from tests.conftest import update_config, load_test_cases
 
 
 @pytest.mark.parametrize(
-    ("test_id", "test_case"),
-    load_test_cases(
-        case="formatter",
+    ("test_formatter", "test_id", "test_case"),
+    conftest.load_test_cases(
+        test_case_type=conftest.TestCaseType.FORMATTER,
         directory=pathlib.Path("tests/fixtures/formatters"),
     ),
 )
 def test_formatters(
     formatter: core.Formatter,
+    test_formatter: str,
     test_id: str,
     test_case: dict[str, str],
 ) -> None:
@@ -29,14 +29,16 @@ def test_formatters(
     )
 
     # Apply overrides to global configuration
-    update_config(formatter.config, config_overrides)
+    conftest.update_config(formatter.config, config_overrides)
 
     actual_output = formatter.format(
         source_file=TEST_FILE,
         source_code=test_case["sql"],
     )
 
-    assert actual_output == test_case["expected"], f"Test failed: {test_id}"
+    assert (
+        actual_output == test_case["expected"]
+    ), f"Test failed for formatter: `{test_formatter}` in `{test_id}`"
 
 
 def test_format_parse_error(formatter: core.Formatter) -> None:

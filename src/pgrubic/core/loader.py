@@ -124,11 +124,11 @@ def _set_locations(
         # line number is number of newlines before our node location,
         # increment by 1 to land on the actual node
         self.line_number = self.source_code[: self.node_location].count(noqa.NEW_LINE) + 1
-        self.column_offset = self.node_location - line_start
+        self.column_offset = self.node_location - line_start + 1
 
         # If a node has no location, we return the whole statement instead
         if hasattr(node, "location") and isinstance(node.location, int):
-            self.line = self.source_code[line_start:line_end].strip()
+            self.line = self.source_code[line_start:line_end]
         else:
             self.line = self.statement.strip()
 

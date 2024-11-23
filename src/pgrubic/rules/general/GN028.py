@@ -1,68 +1,46 @@
-"""Checker for missing required columns."""
+"""Checker for usage of AStar."""
 
-from pglast import ast, enums, visitors
+from pglast import ast, visitors
 
-from pgrubic.core import config, linter
+from pgrubic.core import linter
 
 
-class WronglyTypedRequiredColumn(linter.BaseChecker):
+class AStar(linter.BaseChecker):
     """## **What it does**
-    Checks for wrongly typed required column.
+    Checks for usage of asterisk (*) in column references.
 
     ## **Why not?**
-    If a column has been specified as required with a specific data type and you have
-    defined it with a different data type, you are probably doing something wrong.
+    Specifying the columns in a query explicitly greatly improves clarity and readability.
+    This approach helps developers quickly grasp the purpose of the query and fosters
+    better collaboration.
+
+    Also, using (SELECT *) complicates code maintenance. When the table structure
+    changes, such as adding, renaming, or removing columns, queries with SELECT * can
+    fail unexpectedly or silently return incorrect results.
+    By explicitly listing the necessary columns, you ensure the code is more resilient to
+    changes in the database schema.
 
     ## **When should you?**
-    Never.
+    Almost Never.
 
     ## **Use instead:**
-    Use the right data type for the required column.
-
-    ## **Configuration**
-    `required-columns`: List of required columns along with their data types.
+    Name Columns Explicitly.
     """
 
-    is_auto_fixable: bool = True
-
-    def visit_ColumnDef(
+    def visit_A_Star(
         self,
         ancestors: visitors.Ancestor,
-        node: ast.ColumnDef,
+        node: ast.A_Star,
     ) -> None:
-        """Visit ColumnDef."""
-        for column in self.config.lint.required_columns:
-            if (
-                node.colname == column.name
-                and node.typeName.names[-1].sval != column.data_type
-            ):
-                self.violations.add(
-                    linter.Violation(
-                        rule=self.code,
-                        line_number=self.line_number,
-                        column_offset=self.column_offset,
-                        line=self.line,
-                        statement_location=self.statement_location,
-                        description=f"Wrongly typed required column `{column.name}`,"
-                        f" expected type is `{column.data_type}`",
-                    ),
-                )
-
-                self._fix(node, column)
-
-    def _fix(self, node: ast.ColumnDef, column: config.Column) -> None:
-        """Fix violation."""
-        node.typeName = ast.TypeName(
-            names=(
-                {
-                    "@": "String",
-                    "sval": column.data_type,
-                },
-            ),
-        )
-        node.constraints = (
-            *(node.constraints or []),
-            ast.Constraint(
-                contype=enums.ConstrType.CONSTR_NOTNULL,
-            ),
-        )
+        """Visit A_Star."""
+        if ancestors.find_nearest(ast.SelectStmt):
+            self.violations.add(
+                linter.Violation(
+                    rule=self.code,
+                    line_number=self.line_number,
+                    column_offset=self.column_offset,
+                    line=self.line,
+                    statement_location=self.statement_location,
+                    description="Asterisk in column reference is discouraged",
+                ),
+            )

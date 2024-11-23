@@ -1,0 +1,16 @@
+---
+rule: GN018
+
+test_fail_multiple_column_partitioning:
+  sql_fail: |
+    CREATE TABLE measurement (
+        city_id bigint not null,
+        logdate date not null
+    ) PARTITION BY RANGE (city_id, logdate);
+
+test_fail_single_column_partitioning:
+  sql_pass: |
+    CREATE TABLE measurement (
+        city_id bigint not null,
+        logdate date not null
+    ) PARTITION BY RANGE (logdate);

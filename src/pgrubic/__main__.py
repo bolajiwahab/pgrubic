@@ -80,7 +80,8 @@ def lint(
     for rule in rules:
         linter.checkers.add(rule())
 
-    violations: core.ViolationMetric = core.ViolationMetric()
+    total_violations = 0
+    fixable_violations = 0
 
     # Use the current working directory if no paths are specified
     if not paths:
@@ -96,31 +97,33 @@ def lint(
         with source_file.open("r", encoding="utf-8") as sf:
             source_code: str = sf.read()
 
-        _violations: core.ViolationMetric = linter.run(
+        lint_result = linter.run(
             source_file=str(source_file),
             source_code=source_code,
         )
 
-        violations.total += _violations.total
-        violations.fixed_total += _violations.fixed_total
-        violations.fixable_auto_total += _violations.fixable_auto_total
-        violations.fixable_manual_total += _violations.fixable_manual_total
+        violations = linter.get_violation_stats(
+            lint_result.violations,
+        )
 
-    if violations.total > 0:
+        total_violations += violations.total
+        fixable_violations += violations.fixable
+
+    if total_violations > 0:
         if config.lint.fix is True:
             sys.stdout.write(
-                f"Found {violations.total} violations"
-                f" ({violations.fixed_total} fixed,"
-                f" {violations.fixable_manual_total} remaining).\n",
+                f"Found {total_violations} violations"
+                f" ({fixable_violations} fixed,"
+                f" {total_violations - fixable_violations} remaining).\n",
             )
 
-            if violations.fixable_manual_total > 0:
+            if (total_violations - fixable_violations) > 0:
                 sys.exit(1)
 
         else:
             sys.stdout.write(
-                f"Found {violations.total} violations.\n"
-                f"{violations.fixable_auto_total} fixes available.\n",
+                f"Found {total_violations} violations.\n"
+                f"{fixable_violations} fixes available.\n",
             )
 
             sys.exit(1)

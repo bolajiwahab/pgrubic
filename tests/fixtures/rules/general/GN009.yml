@@ -1,0 +1,10 @@
+---
+rule: GN009
+
+test_fail_duplicate_column:
+  sql_fail: |
+    CREATE TABLE music (age bigint, age text);
+
+test_pass_no_duplicate_column:
+  sql_pass: |
+    CREATE TABLE music (age bigint, name text);

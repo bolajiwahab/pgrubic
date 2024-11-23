@@ -1,0 +1,14 @@
+---
+rule: GN028
+
+test_fail_a_star:
+  sql_fail: |
+    SELECT * FROM measurement WHERE 10 = city_id;
+
+test_pass_explicit_columns:
+  sql_pass: |
+    SELECT a, b, c FROM measurement;
+
+test_pass_count_star:
+  sql_pass: |
+    SELECT count(*) FROM measurement;

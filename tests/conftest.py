@@ -1,5 +1,6 @@
 """Conftest."""
 
+import enum
 import typing
 import pathlib
 
@@ -44,13 +45,24 @@ def formatter() -> core.Formatter:
     return core.Formatter(config=config, formatters=core.load_formatters)
 
 
-def load_test_cases(*, case: str, directory: pathlib.Path) -> list[tuple[str, ...]]:
+class TestCaseType(enum.StrEnum):
+    """Test case type."""
+
+    RULE = enum.auto()
+    FORMATTER = enum.auto()
+
+
+def load_test_cases(
+    *,
+    test_case_type: TestCaseType,
+    directory: pathlib.Path,
+) -> list[tuple[str, ...]]:
     """Load test cases from directory..
 
     Parameters
     ----------
-    case: str
-        Case to load test for.
+    test_case_type: TestCaseType
+        Type of test case.
 
     directory: pathlib.Path
         Directory to load test cases from.
@@ -66,8 +78,8 @@ def load_test_cases(*, case: str, directory: pathlib.Path) -> list[tuple[str, ..
         with file.open() as f:
             content: dict[str, typing.Any] = yaml.safe_load(f)
 
-        prefix = content.pop(case)
-        test_cases.extend((prefix + "_" + k, v) for k, v in content.items())
+        parent = content.pop(test_case_type)
+        test_cases.extend((parent, (parent + "_" + k), v) for k, v in content.items())
     return test_cases
 
 
@@ -78,6 +90,9 @@ def update_config(config: core.Config, overrides: dict[str, typing.Any]) -> None
             # If value is a dictionary, recursively update the nested config attribute
             sub_config = getattr(config, key)
             update_config(sub_config, value)
+        elif key == "required_columns":
+            # Ensure required_columns is a list of columns
+            setattr(config, key, [core.config.Column(**col) for col in value])
         else:
             # Set the attribute directly, e.g., config.format.lines_between_statements = 1
             setattr(config, key, value)

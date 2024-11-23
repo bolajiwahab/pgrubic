@@ -1,0 +1,11 @@
+---
+rule: GN012
+
+test_fail_required_column_removal:
+  sql_fail: |
+    ALTER TABLE music DROP COLUMN age;
+  config:
+    lint:
+      required_columns:
+        - name: age
+          data_type: bigint

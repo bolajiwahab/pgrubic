@@ -1,0 +1,15 @@
+---
+rule: GN003
+
+test_fail_ascii_encoding:
+  sql_fail: |
+    CREATE DATABASE music ENCODING SQL_ASCII TEMPLATE template0 connection limit 10;
+  sql_fix: |
+    CREATE DATABASE music
+      WITH ENCODING = 'utf8'
+           TEMPLATE = 'template0'
+           CONNECTION LIMIT = 10;
+
+test_pass_utf8_encoding:
+  sql_pass: |
+    CREATE DATABASE music ENCODING UTF8 TEMPLATE template0;

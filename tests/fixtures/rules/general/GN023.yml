@@ -1,0 +1,10 @@
+---
+rule: GN023
+
+test_fail_delete_without_where_clause:
+  sql_fail: |
+    DELETE FROM measurement;
+
+test_pass_delete_with_where_clause:
+  sql_pass: |
+    DELETE FROM measurement WHERE city_id = 10;

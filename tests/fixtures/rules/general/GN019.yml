@@ -1,0 +1,28 @@
+---
+rule: GN019
+
+test_fail_create_unlogged_table:
+  sql_fail: |
+    CREATE UNLOGGED TABLE tbl (tbl_id bigint);
+  sql_fix: |
+    CREATE TABLE tbl (
+        tbl_id bigint
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_id_column_existing_table:
+  sql_fail: |
+    ALTER TABLE tbl SET UNLOGGED;
+  sql_fix: |
+    ALTER TABLE tbl
+        SET LOGGED;
+
+test_pass_regular_table:
+  sql_pass: |
+    CREATE TABLE tbl (tbl_id bigint);
+
+test_pass_set_logged_table:
+  sql_pass: |
+    ALTER TABLE tbl SET LOGGED;

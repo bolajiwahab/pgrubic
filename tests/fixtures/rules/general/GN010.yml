@@ -1,0 +1,10 @@
+---
+rule: GN010
+
+test_fail_table_column_conflict:
+  sql_fail: |
+    CREATE TABLE music (age bigint, music text);
+
+test_pass_no_table_column_conflict:
+  sql_pass: |
+    CREATE TABLE music (age bigint, name text);

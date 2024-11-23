@@ -1,0 +1,15 @@
+---
+rule: GN014
+
+test_fail_select_into:
+  sql_fail: |
+    SELECT * INTO films_recent FROM films WHERE created_at >= '2002-01-01';
+  sql_fix: |
+    CREATE TABLE films_recent AS
+    SELECT *
+      FROM films
+     WHERE created_at >= '2002-01-01';
+
+test_pass_create_table_as:
+  sql_pass: |
+    CREATE TABLE films_recent AS SELECT * FROM films WHERE created_at >= '2002-01-01';

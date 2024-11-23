@@ -1,0 +1,10 @@
+---
+rule: GN026
+
+test_fail_not_in:
+  sql_fail: |
+    SELECT first_name, last_name FROM measurement WHERE city_id NOT IN (1, 2, 3);
+
+test_pass_in:
+  sql_pass: |
+    SELECT first_name, last_name FROM measurement WHERE city_id IN (1, 2, 3);

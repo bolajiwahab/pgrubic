@@ -27,7 +27,7 @@ DEFAULT_CONFIG: pathlib.Path = pathlib.Path(__file__).resolve().parent / CONFIG_
 CONFIG_PATH_ENVIRONMENT_VARIABLE: str = f"{PROGRAM_NAME.upper()}_CONFIG_PATH"
 
 
-def get_full_qualified_name(node: tuple[typing.Any]) -> str:
+def get_fully_qualified_name(node: tuple[typing.Any]) -> str:
     """Get fully qualified type name."""
     if isinstance(node, ast.String):
         return str(node.sval)

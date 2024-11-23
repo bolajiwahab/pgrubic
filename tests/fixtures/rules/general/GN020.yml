@@ -1,0 +1,35 @@
+---
+rule: GN020
+
+test_fail_current_time_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (time time DEFAULT CURRENT_TIME);
+  sql_fix: |
+    CREATE TABLE tbl (
+        time time DEFAULT CURRENT_TIMESTAMP
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_current_time_existing_table:
+  sql_fail: |
+    ALTER TABLE account ALTER COLUMN time SET DEFAULT CURRENT_TIME;
+  sql_fix: |
+    ALTER TABLE account
+        ALTER COLUMN time SET DEFAULT CURRENT_TIMESTAMP;
+
+test_fail_current_time_select:
+  sql_fail: |
+    SELECT CURRENT_TIME;
+  sql_fix: |
+    SELECT CURRENT_TIMESTAMP;
+
+test_pass_current_timestamp_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (time time DEFAULT CURRENT_TIMESTAMP);
+
+test_pass_current_timestamp_existing_table:
+  sql_pass: |
+    ALTER TABLE account
+        ALTER COLUMN time SET DEFAULT CURRENT_TIMESTAMP;

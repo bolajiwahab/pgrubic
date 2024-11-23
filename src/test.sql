@@ -10,6 +10,7 @@ partitions."table" (age int primary key, bage int,
 dage int, CONSTRAINT chk CHECK (age = NULL));
 
 create table
+
 partitions."table" (age int primary key, bage int,
     cage int, badge int,
 dage int, CONSTRAINT chk CHECK (age = NULL));

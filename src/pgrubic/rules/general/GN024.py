@@ -52,6 +52,7 @@ class NullComparison(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Comparison with NULL should be [IS | IS NOT] NULL",
+                    auto_fixable=self.is_auto_fixable,
                 ),
             )
 

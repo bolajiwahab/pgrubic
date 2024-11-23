@@ -1,0 +1,45 @@
+---
+rule: GN013
+
+test_fail_nullable_required_column_existing_table:
+  sql_fail: |
+    ALTER TABLE music ADD COLUMN age bigint;
+  sql_fix: |
+    ALTER TABLE music
+        ADD COLUMN age bigint NOT NULL;
+  config:
+    lint:
+      required_columns:
+        - name: age
+          data_type: bigint
+
+test_fail_nullable_required_column_new_table:
+  sql_fail: |
+    CREATE TABLE music (age bigint);
+  sql_fix: |
+    CREATE TABLE music (
+        age bigint NOT NULL
+    );
+  config:
+    lint:
+      required_columns:
+        - name: age
+          data_type: bigint
+
+test_pass_required_column_existing_table:
+  sql_pass: |
+    ALTER TABLE music ADD COLUMN age bigint NOT NULL;
+  config:
+    lint:
+      required_columns:
+        - name: age
+          data_type: bigint
+
+test_pass_required_column_new_table:
+  sql_pass: |
+    CREATE TABLE music (age bigint NOT NULL);
+  config:
+    lint:
+      required_columns:
+        - name: age
+          data_type: bigint

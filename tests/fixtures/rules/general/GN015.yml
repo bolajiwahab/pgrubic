@@ -1,0 +1,46 @@
+---
+rule: GN015
+
+test_fail_drop_table_cascade:
+  sql_fail: |
+    DROP TABLE films_recent CASCADE;
+  sql_fix: |
+    DROP TABLE films_recent;
+
+test_fail_drop_column_cascade:
+  sql_fail: |
+    ALTER TABLE films_recent DROP COLUMN id CASCADE;
+  sql_fix: |
+    ALTER TABLE films_recent
+        DROP COLUMN id;
+
+test_fail_drop_schema_cascade:
+  sql_fail: |
+    DROP SCHEMA films_recent CASCADE;
+  sql_fix: |
+    DROP SCHEMA films_recent;
+
+test_fail_drop_view_cascade:
+  sql_fail: |
+    DROP VIEW films_recent CASCADE;
+  sql_fix: |
+    DROP VIEW films_recent;
+
+test_fail_drop_materialized_view_cascade:
+  sql_fail: |
+    DROP MATERIALIZED VIEW films_recent CASCADE;
+  sql_fix: |
+    DROP MATERIALIZED VIEW films_recent;
+
+test_fail_drop_index_cascade:
+  sql_fail: |
+    DROP INDEX films_recent CASCADE;
+  sql_fix: |
+    DROP INDEX CONCURRENTLY films_recent;
+
+test_fail_drop_constraint_cascade:
+  sql_fail: |
+    ALTER TABLE films_recent DROP CONSTRAINT films_recent_pkey CASCADE;
+  sql_fix: |
+    ALTER TABLE films_recent
+        DROP CONSTRAINT films_recent_pkey;
