@@ -98,7 +98,10 @@ test_pass_allowed_schema_table:
     CREATE TABLE public.card();
   config:
     lint:
-      disallowed_schemas: []
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
 
 test_pass_allowed_schema_materialized_view:
   sql_pass: |

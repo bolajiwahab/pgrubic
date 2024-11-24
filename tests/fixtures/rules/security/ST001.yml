@@ -1,0 +1,25 @@
+---
+rule: ST001
+
+test_fail_disallowed_extensions:
+  sql_fail: |
+    CREATE EXTENSION logical_ddl;
+  config:
+    lint:
+      allowed_extensions: []
+
+test_fail_disallowed_extension:
+  sql_fail: |
+    CREATE EXTENSION logical_ddl;
+  config:
+    lint:
+      allowed_extensions:
+        - pg_stat_statements
+
+test_pass_allowed_extension:
+  sql_pass: |
+    CREATE EXTENSION pg_stat_statements;
+  config:
+    lint:
+      allowed_extensions:
+        - pg_stat_statements
