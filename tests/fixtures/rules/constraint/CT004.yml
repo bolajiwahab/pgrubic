@@ -1,0 +1,6 @@
+---
+rule: CT004
+
+test_fail_drop_constrint:
+  sql_fail: |
+    ALTER TABLE public.card DROP CONSTRAINT card_old;

@@ -1,6 +1,31 @@
 """Formatter for CONSTRAINT."""
 
+from typing import TypeVar
+
 from pglast import ast, enums, stream, printers
+
+SelfConstrTypePrinter = TypeVar(
+    "SelfConstrTypePrinter",
+    bound="printers.ddl.ConstrTypePrinter",
+)
+
+
+def CONSTR_IDENTITY(
+    self: SelfConstrTypePrinter,  # noqa: ARG001
+    node: ast.Node,
+    output: stream.RawStream,
+) -> None:
+    """Printer for CONSTRAINT IDENTITY."""
+    output.swrite("GENERATED ")
+    if node.generated_when == enums.ATTRIBUTE_IDENTITY_ALWAYS:
+        output.write("ALWAYS ")
+    elif node.generated_when == enums.ATTRIBUTE_IDENTITY_BY_DEFAULT:
+        output.write("BY DEFAULT ")
+    output.write("AS IDENTITY")
+    if node.options:
+        output.space()
+        with output.expression(needs_parens=True):
+            output.print_list(node.options, "")
 
 
 @printers.node_printer(ast.Constraint, override=True)
@@ -12,6 +37,7 @@ def constraint(node: ast.AlterEnumStmt, output: stream.RawStream) -> None:
         output.newline()
         output.space(6)
 
+    printers.ddl.ConstrTypePrinter.CONSTR_IDENTITY = CONSTR_IDENTITY
     printers.ddl.constr_type_printer(node.contype, node, output)
 
     if node.indexname:

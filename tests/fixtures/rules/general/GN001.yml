@@ -4,9 +4,8 @@ rule: GN001
 test_fail_table_inheritance:
   sql_fail: |
     CREATE TABLE public.measurement_y2006m02 () INHERITS (public.measurement);
-  line_number: 2
 
-test_pass_table_partition:
+test_fail_table_partition:
   sql_pass: |
     CREATE TABLE measurement_y2007m12 PARTITION OF measurement
         FOR VALUES FROM ('2007-12-01') TO ('2008-01-01');

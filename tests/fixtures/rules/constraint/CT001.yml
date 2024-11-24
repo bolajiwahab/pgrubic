@@ -1,0 +1,71 @@
+---
+# yamllint disable rule:line-length
+rule: CT001
+
+test_fail_on_update_cascade_new_table:
+  sql_fail: |
+    CREATE TABLE books (
+        author_id bigint REFERENCES authors(author_id) ON UPDATE CASCADE
+    );
+  sql_fix: |
+    CREATE TABLE books (
+        author_id bigint REFERENCES authors (author_id) ON UPDATE RESTRICT
+    );
+
+test_fail_on_update_cascade_existing_table:
+  sql_fail: |
+    ALTER TABLE books
+        ADD CONSTRAINT distfk
+            FOREIGN KEY (author_id) REFERENCES authors (author_id) ON UPDATE CASCADE;
+  sql_fix: |
+    ALTER TABLE books
+        ADD CONSTRAINT distfk
+            FOREIGN KEY (author_id) REFERENCES authors (author_id) ON UPDATE RESTRICT NOT VALID;
+
+test_pass_on_update_no_action_new_table:
+  sql_pass: |
+    CREATE TABLE books (
+        author_id bigint REFERENCES authors(author_id) ON UPDATE NO ACTION
+    );
+
+test_pass_on_update_no_action_existing_table:
+  sql_pass: |
+    ALTER TABLE books
+        ADD CONSTRAINT distfk
+            FOREIGN KEY (author_id) REFERENCES authors (author_id) ON UPDATE NO ACTION;
+
+test_pass_on_update_set_default_new_table:
+  sql_pass: |
+    CREATE TABLE books (
+        author_id bigint REFERENCES authors(author_id) ON UPDATE SET DEFAULT
+    );
+
+test_pass_on_update_set_default_existing_table:
+  sql_pass: |
+    ALTER TABLE books
+        ADD CONSTRAINT distfk
+            FOREIGN KEY (author_id) REFERENCES authors (author_id) ON UPDATE SET DEFAULT;
+
+test_pass_on_update_set_null_new_table:
+  sql_pass: |
+    CREATE TABLE books (
+        author_id bigint REFERENCES authors(author_id) ON UPDATE SET NULL
+    );
+
+test_pass_on_update_set_null_existing_table:
+  sql_pass: |
+    ALTER TABLE books
+        ADD CONSTRAINT distfk
+            FOREIGN KEY (author_id) REFERENCES authors (author_id) ON UPDATE SET NULL;
+
+test_pass_on_update_restrict_new_table:
+  sql_pass: |
+    CREATE TABLE books (
+        author_id bigint REFERENCES authors(author_id) ON UPDATE RESTRICT
+    );
+
+test_pass_on_update_restrict_existing_table:
+  sql_pass: |
+    ALTER TABLE books
+        ADD CONSTRAINT distfk
+            FOREIGN KEY (author_id) REFERENCES authors (author_id) ON UPDATE RESTRICT;

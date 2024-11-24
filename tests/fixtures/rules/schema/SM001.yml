@@ -1,0 +1,56 @@
+---
+rule: SM001
+
+test_fail_schema_unqualified_table:
+  sql_fail: |
+    CREATE TABLE card();
+
+test_fail_schema_unqualified_materialized_view:
+  sql_fail: |
+    CREATE MATERIALIZED VIEW card AS SELECT * FROM public.account;
+
+test_fail_schema_unqualified_view:
+  sql_fail: |
+    CREATE VIEW card AS SELECT * FROM public.account;
+
+test_fail_schema_unqualified_type:
+  sql_fail: |
+    CREATE TYPE mood AS ENUM ('sad', 'ok');
+
+test_fail_schame_unqualified_function:
+  sql_fail: |
+    CREATE FUNCTION dup(int) RETURNS TABLE(f1 int, f2 text) LANGUAGE SQL
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+
+test_fail_schame_unqualified_procedure:
+  sql_fail: |
+    CREATE OR REPLACE PROCEDURE dup(bigint)
+    LANGUAGE sql
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+
+test_pass_schema_qualified_table:
+  sql_pass: |
+    CREATE TABLE public.card();
+
+test_pass_schema_qualified_materialized_view:
+  sql_pass: |
+    CREATE MATERIALIZED VIEW public.card AS SELECT * FROM public.account;
+
+test_pass_schema_qualified_view:
+  sql_pass: |
+    CREATE VIEW public.card AS SELECT * FROM public.account;
+
+test_pass_schema_qualified_type:
+  sql_pass: |
+    CREATE TYPE public.mood AS ENUM ('sad', 'ok');
+
+test_pass_schema_qualified_function:
+  sql_pass: |
+    CREATE FUNCTION public.dup(int) RETURNS TABLE(f1 int, f2 text) LANGUAGE SQL
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+
+test_pass_schema_qualified_procedure:
+  sql_pass: |
+    CREATE OR REPLACE PROCEDURE public.dup(bigint)
+    LANGUAGE sql
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;

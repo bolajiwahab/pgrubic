@@ -92,7 +92,28 @@ def update_config(config: core.Config, overrides: dict[str, typing.Any]) -> None
             update_config(sub_config, value)
         elif key == "required_columns":
             # Ensure required_columns is a list of columns
-            setattr(config, key, [core.config.Column(**col) for col in value])
+            setattr(
+                config,
+                key,
+                [
+                    core.config.Column(name=col["name"], data_type=col["data_type"])
+                    for col in value
+                ],
+            )
+        elif key == "disallowed_schemas":
+            # Ensure disallowed_schemas is a list of disallowed_schema
+            setattr(
+                config,
+                key,
+                [
+                    core.config.DisallowedSchema(
+                        name=col["name"],
+                        reason=col["reason"],
+                        use_instead=col["use_instead"],
+                    )
+                    for col in value
+                ],
+            )
         else:
             # Set the attribute directly, e.g., config.format.lines_between_statements = 1
             setattr(config, key, value)

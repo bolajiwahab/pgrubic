@@ -1,0 +1,139 @@
+---
+rule: SM002
+
+test_fail_disallowed_schema_table:
+  sql_fail: |
+    CREATE TABLE test.card();
+  sql_fix: |
+    CREATE TABLE app.card ();
+  config:
+    lint:
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
+
+test_fail_disallowed_schema_materialized_view:
+  sql_fail: |
+    CREATE MATERIALIZED VIEW test.card AS SELECT * FROM public.account;
+  config:
+    lint:
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
+
+test_fail_disallowed_schema_view:
+  sql_fail: |
+    CREATE VIEW test.card AS SELECT * FROM public.account;
+  config:
+    lint:
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
+
+test_fail_disallowed_schema_type:
+  sql_fail: |
+    CREATE TYPE test.mood AS ENUM ('sad', 'ok');
+  config:
+    lint:
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
+
+test_fail_disallowed_schema_function:
+  sql_fail: |
+    CREATE FUNCTION test.dup(int) RETURNS TABLE(f1 int, f2 text) LANGUAGE SQL
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  config:
+    lint:
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
+
+test_fail_disallowed_schema_procedure:
+  sql_fail: |
+    CREATE OR REPLACE PROCEDURE test.dup(bigint)
+    LANGUAGE sql
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  config:
+    lint:
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
+
+test_pass_schame_unqualified_table:
+  sql_pass: |
+    CREATE TABLE card();
+
+test_pass_schame_unqualified_materialized_view:
+  sql_pass: |
+    CREATE MATERIALIZED VIEW card AS SELECT * FROM public.account;
+
+test_pass_schame_unqualified_view:
+  sql_pass: |
+    CREATE VIEW card AS SELECT * FROM public.account;
+
+test_pass_schema_unqualified_type:
+  sql_pass: |
+    CREATE TYPE mood AS ENUM ('sad', 'ok');
+
+test_pass_schame_unqualified_function:
+  sql_pass: |
+    CREATE FUNCTION dup(int) RETURNS TABLE(f1 int, f2 text) LANGUAGE SQL
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+
+test_pass_schame_unqualified_procedure:
+  sql_pass: |
+    CREATE OR REPLACE PROCEDURE dup(bigint)
+    LANGUAGE sql
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+
+test_pass_allowed_schema_table:
+  sql_pass: |
+    CREATE TABLE public.card();
+  config:
+    lint:
+      disallowed_schemas: []
+
+test_pass_allowed_schema_materialized_view:
+  sql_pass: |
+    CREATE MATERIALIZED VIEW public.card AS SELECT * FROM public.account;
+  config:
+    lint:
+      disallowed_schemas: []
+
+test_pass_allowed_schema_view:
+  sql_pass: |
+    CREATE VIEW public.card AS SELECT * FROM public.account;
+  config:
+    lint:
+      disallowed_schemas: []
+
+test_pass_allowed_schema_type:
+  sql_pass: |
+    CREATE TYPE public.mood AS ENUM ('sad', 'ok');
+  config:
+    lint:
+      disallowed_schemas: []
+
+test_pass_allowed_schema_function:
+  sql_pass: |
+    CREATE FUNCTION public.dup(int) RETURNS TABLE(f1 int, f2 text) LANGUAGE SQL
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  config:
+    lint:
+      disallowed_schemas: []
+
+test_pass_allowed_schema_procedure:
+  sql_pass: |
+    CREATE PROCEDURE public.dup(bigint)
+    LANGUAGE sql
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  config:
+    lint:
+      disallowed_schemas: []

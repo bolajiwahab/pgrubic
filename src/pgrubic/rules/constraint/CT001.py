@@ -44,8 +44,10 @@ class CascadeUpdate(linter.BaseChecker):
                 ),
             )
 
-            self._fix(node)
+            self._fix(ancestors=ancestors, node=node)
 
-    def _fix(self, node: ast.Constraint) -> None:
+    def _fix(self, ancestors: visitors.Ancestor, node: ast.Constraint) -> None:
         """Fix violation."""
         node.fk_upd_action = enums.FKCONSTR_ACTION_RESTRICT
+        if ancestors.find_nearest(ast.AlterTableCmd):
+            node.skip_validation = True
