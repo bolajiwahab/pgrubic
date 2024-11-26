@@ -48,7 +48,7 @@ class DisallowedDataType(linter.BaseChecker):
 
                 self._fix(node, data_type)
 
-    def _fix(self, node: ast.TypeName, data_type: config.DisallowedType) -> None:
+    def _fix(self, node: ast.TypeName, data_type: config.DisallowedDataType) -> None:
         """Fix violation."""
         node.names = (
             {

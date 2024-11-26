@@ -114,6 +114,20 @@ def update_config(config: core.Config, overrides: dict[str, typing.Any]) -> None
                     for col in value
                 ],
             )
+        elif key == "disallowed_data_types":
+            # Ensure disallowed_types is a list of disallowed_type
+            setattr(
+                config,
+                key,
+                [
+                    core.config.DisallowedDataType(
+                        name=col["name"],
+                        reason=col["reason"],
+                        use_instead=col["use_instead"],
+                    )
+                    for col in value
+                ],
+            )
         else:
             # Set the attribute directly, e.g., config.format.lines_between_statements = 1
             setattr(config, key, value)

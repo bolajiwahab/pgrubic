@@ -1,7 +1,6 @@
 ---
 rule: TP006
 
-
 test_fail_money_new_table:
   sql_fail: |
     CREATE TABLE tbl (amount money);

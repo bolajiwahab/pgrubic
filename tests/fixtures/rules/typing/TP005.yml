@@ -1,7 +1,6 @@
 ---
 rule: TP005
 
-
 test_fail_varchar_new_table:
   sql_fail: |
     CREATE TABLE tbl (last_name varchar);

@@ -1,7 +1,6 @@
 ---
 rule: TP004
 
-
 test_fail_char_new_table:
   sql_fail: |
     CREATE TABLE tbl (last_name char);

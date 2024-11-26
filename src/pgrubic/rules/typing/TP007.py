@@ -31,6 +31,13 @@ class Serial(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
+        # While serial is not a postgres type, it can be used as a shortcut to type a
+        # column as either smallint, int or bigint with a backing sequence.
+        # Using serial in column definition is fine and works but it does not work
+        # in cases of trying to change a column type since serial is not a type e.g
+        # `ALTER TABLE table_name ALTER COLUMN column_name TYPE serial;`
+        # results in error `ERROR:  type "serial" does not exist`
+        # But such cases are still parseable. For this reason, we skip such statements
         alter_table_cmd: visitors.Ancestor = ancestors.find_nearest(ast.AlterTableCmd)
 
         if (

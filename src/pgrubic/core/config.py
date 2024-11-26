@@ -22,8 +22,8 @@ class DisallowedSchema:
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
-class DisallowedType:
-    """Representation of disallowed type."""
+class DisallowedDataType:
+    """Representation of disallowed data type."""
 
     name: str
     reason: str
@@ -51,7 +51,7 @@ class Lint:
     allowed_languages: list[str]
     required_columns: list[Column]
     disallowed_schemas: list[DisallowedSchema]
-    disallowed_data_types: list[DisallowedType]
+    disallowed_data_types: list[DisallowedDataType]
 
     fix: bool
 
@@ -194,7 +194,7 @@ def parse_config() -> Config:
                 for column in config_lint["required-columns"]
             ],
             disallowed_data_types=[
-                DisallowedType(
+                DisallowedDataType(
                     name=data_type["name"],
                     reason=data_type["reason"],
                     use_instead=data_type["use-instead"],

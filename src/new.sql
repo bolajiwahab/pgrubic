@@ -1,1 +1,1 @@
-CREATE TABLE card();
+CREATE TABLE tbl (first_name varchar);
