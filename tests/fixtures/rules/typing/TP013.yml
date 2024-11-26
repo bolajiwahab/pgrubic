@@ -1,0 +1,42 @@
+---
+rule: TP013
+
+
+test_fail_hstore_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (details hstore);
+  sql_fix: |
+    CREATE TABLE tbl (
+        details jsonb
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_hstore_existing_table_new_column:
+  sql_fail: |
+    ALTER TABLE account ADD COLUMN details hstore;
+  sql_fix: |
+    ALTER TABLE account
+        ADD COLUMN details jsonb;
+
+test_fail_hstore_existing_table_existing_column:
+  sql_fail: |
+    ALTER TABLE account ALTER COLUMN details TYPE hstore;
+  sql_fix: |
+    ALTER TABLE account
+        ALTER COLUMN details TYPE jsonb;
+
+test_pass_jsonb_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (details jsonb);
+
+test_pass_jsonb_existing_table_new_column:
+  sql_pass: |
+    ALTER TABLE account
+        ADD COLUMN details jsonb;
+
+test_pass_jsonb_existing_table_existing_column:
+  sql_pass: |
+    ALTER TABLE account
+        ALTER COLUMN details TYPE jsonb;

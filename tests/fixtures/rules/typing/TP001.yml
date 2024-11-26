@@ -1,0 +1,41 @@
+---
+rule: TP001
+
+test_fail_timestamp_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (created_at timestamp);
+  sql_fix: |
+    CREATE TABLE tbl (
+        created_at timestamptz
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_timestamp_existing_table_new_column:
+  sql_fail: |
+    ALTER TABLE account ADD COLUMN created_at timestamp;
+  sql_fix: |
+    ALTER TABLE account
+        ADD COLUMN created_at timestamptz;
+
+test_fail_timestamp_existing_table_existing_column:
+  sql_fail: |
+    ALTER TABLE account ALTER COLUMN created_at TYPE timestamp;
+  sql_fix: |
+    ALTER TABLE account
+        ALTER COLUMN created_at TYPE timestamptz;
+
+test_pass_timestamptz_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (created_at timestamptz);
+
+test_pass_timestamptz_existing_table_new_column:
+  sql_pass: |
+    ALTER TABLE account
+        ADD COLUMN created_at timestamptz;
+
+test_pass_timestamptz_existing_table_existing_column:
+  sql_pass: |
+    ALTER TABLE account
+        ALTER COLUMN created_at TYPE timestamptz;
