@@ -21,16 +21,16 @@ disallowed-data-types = [
 ]
 
 # required-columns = [
-#     { name = "created", data-type = "timestamptz" },
-#     { name = "updated", data-type = "timestamptz" },
+#     { name = "created_at", data-type = "timestamptz" },
+#     { name = "updated_at", data-type = "timestamptz" },
 # ]
 
 # exclude = ["*test.sql"]
 # timestamp-column-suffix = "_at"
 regex-partition = "[a-zA-Z0-9]+__[a-zA-Z0-9_]+__[a-zA-Z0-9_]+$"
-regex-index = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_idx$"
-regex-constraint-primary-key = "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_pkey$"
-regex-constraint-unique-key = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
+# regex-index = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_idx$"
+# regex-constraint-primary-key = "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_pkey$"
+# regex-constraint-unique-key = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
 regex-constraint-foreign-key = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_fkey$"
 regex-constraint-check = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"
 regex-constraint-exclusion = "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_exclusion$"

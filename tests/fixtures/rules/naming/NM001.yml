@@ -1,0 +1,23 @@
+---
+rule: NM001
+
+test_fail_invalid_index_name:
+  sql_fail: |
+    CREATE INDEX col_idx ON tbl (col);
+  config:
+    lint:
+      regex_index: "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_idx$"
+
+test_pass_valid_index_name:
+  sql_pass: |
+    CREATE INDEX tbl_col_idx ON tbl (col);
+  config:
+    lint:
+      regex_index: "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_idx$"
+
+test_pass_implied_index_name:
+  sql_pass: |
+    CREATE INDEX ON tbl (col);
+  config:
+    lint:
+      regex_index: "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_idx$"
