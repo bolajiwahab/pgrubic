@@ -1,0 +1,44 @@
+---
+rule: NM007
+
+test_fail_invalid_new_sequence:
+  sql_fail: |
+    CREATE SEQUENCE seq START 101;
+  config:
+    lint:
+      regex_sequence: "[a-zA-Z0-9].+_seq$"
+
+test_fail_invalid_existing_sequence:
+  sql_fail: |
+    ALTER SEQUENCE seq RENAME TO seq;
+  config:
+    lint:
+      regex_sequence: "[a-zA-Z0-9].+_seq$"
+
+test_pass_valid_new_sequence:
+  sql_pass: |
+    CREATE SEQUENCE tbl_col_seq START 101;
+  config:
+    lint:
+      regex_sequence: "[a-zA-Z0-9].+_seq$"
+
+test_pass_valid_existing_sequence:
+  sql_pass: |
+    ALTER SEQUENCE seq RENAME TO tbl_col_seq;
+  config:
+    lint:
+      regex_sequence: "[a-zA-Z0-9].+_seq$"
+
+test_pass_implied_sequence_name_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (col serial);
+  config:
+    lint:
+      regex_sequence: "[a-zA-Z0-9].+_seq$"
+
+test_pass_implied_sequence_name_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl ADD COLUMN tbl_id serial;
+  config:
+    lint:
+      regex_sequence: "[a-zA-Z0-9].+_seq$"

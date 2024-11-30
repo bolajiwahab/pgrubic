@@ -28,8 +28,8 @@ class SingleLetterIdentifier(CheckIdentifier):
         line: str,
         statement_location: int,
     ) -> None:
-        """Checks for identifiers prefix with pg_."""
-        if identifier and len(identifier) == 1:
+        """Checks for identifiers with single letter."""
+        if identifier and len(identifier.strip()) == 1:
             self.violations.add(
                 linter.Violation(
                     rule=self.code,

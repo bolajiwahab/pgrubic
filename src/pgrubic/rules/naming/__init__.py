@@ -246,3 +246,17 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker):
             line=self.line,
             statement_location=self.statement_location,
         )
+
+    def visit_RenameStmt(
+        self,
+        ancestors: visitors.Ancestor,
+        node: ast.RenameStmt,
+    ) -> None:
+        """Visit RenameStmt."""
+        self._check_identifier(
+            identifier=node.newname,
+            line_number=self.line_number,
+            column_offset=self.column_offset,
+            line=self.line,
+            statement_location=self.statement_location,
+        )

@@ -40,7 +40,7 @@ class PgPrefixIdentifier(CheckIdentifier):
         statement_location: int,
     ) -> None:
         """Checks for identifiers prefix with pg_."""
-        if identifier and identifier.startswith("pg_"):
+        if identifier and identifier.strip().startswith("pg_"):
             self.violations.add(
                 linter.Violation(
                     rule=self.code,

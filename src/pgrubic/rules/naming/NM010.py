@@ -48,11 +48,7 @@ class NonSnakeCaseIdentifier(CheckIdentifier):
         statement_location: int,
     ) -> None:
         """Check if identifier is not in snake case."""
-        if (
-            identifier
-            and identifier.replace("_", "").isalnum()
-            and not stream.is_simple_name(identifier)
-        ):
+        if identifier and not stream.is_simple_name(identifier):
             self.violations.add(
                 linter.Violation(
                     rule=self.code,

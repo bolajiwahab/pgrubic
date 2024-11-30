@@ -1,0 +1,41 @@
+---
+rule: NM015
+
+test_fail_timestamp_column_without_suffix_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (activated timestamptz);
+  sql_fix: |
+    CREATE TABLE tbl (
+        activated_at timestamptz
+    );
+  config:
+    lint:
+      timestamp_column_suffix: "_at"
+      required_columns: []
+
+test_fail_timestamp_column_without_suffix_existing_table:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN activated timestamptz;
+  sql_fix: |
+    ALTER TABLE tbl
+        ADD COLUMN activated_at timestamptz;
+  config:
+    lint:
+      timestamp_column_suffix: "_at"
+      required_columns: []
+
+test_pass_timestamp_column_without_suffix_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (activated_at timestamptz);
+  config:
+    lint:
+      timestamp_column_suffix: "_at"
+      required_columns: []
+
+test_pass_timestamp_column_without_suffix_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl ADD COLUMN activated_at timestamptz;
+  config:
+    lint:
+      timestamp_column_suffix: "_at"
+      required_columns: []

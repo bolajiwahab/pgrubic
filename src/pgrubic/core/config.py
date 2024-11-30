@@ -111,7 +111,7 @@ def _load_user_config() -> dict[str, typing.Any]:
 
 def _merge_config() -> dict[str, typing.Any]:
     """Merge default and user config."""
-    return dict(always_merger.merge(_load_user_config(), _load_default_config()))
+    return dict(always_merger.merge(_load_default_config(), _load_user_config()))
 
 
 def _get_config_file_absolute_path(

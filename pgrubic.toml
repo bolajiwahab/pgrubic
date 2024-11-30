@@ -1,5 +1,6 @@
 # include = ["*test.sql"]
 # exclude = []
+postgres-target-version = 14
 [lint]
 # select = ["UN*", "GN*", "TYP*", "CST*"]
 # select = ["GN*"]
@@ -40,3 +41,5 @@ languages = []
 
 [format]
 check = true
+
+# regex_constraint_check
