@@ -1,0 +1,6 @@
+---
+rule: US009
+
+test_fail_drop_schema:
+  sql_fail: |
+    DROP SCHEMA test;

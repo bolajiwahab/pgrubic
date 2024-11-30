@@ -1,0 +1,6 @@
+---
+rule: US003
+
+test_fail_column_rename:
+  sql_fail: |
+    ALTER TABLE tbl RENAME COLUMN id TO tbl_id;

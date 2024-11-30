@@ -1,0 +1,6 @@
+---
+rule: US001
+
+test_fail_drop_column:
+  sql_fail: |
+    ALTER TABLE tbl DROP COLUMN col;

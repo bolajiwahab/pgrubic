@@ -1,0 +1,7 @@
+---
+rule: US006
+
+test_fail_generated_column:
+  sql_fail: |
+    ALTER TABLE tbl
+        ADD COLUMN tbl_id bigint GENERATED ALWAYS AS (id / 10) STORED;

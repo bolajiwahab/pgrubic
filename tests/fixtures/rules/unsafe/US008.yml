@@ -1,0 +1,6 @@
+---
+rule: US008
+
+test_fail_drop_database:
+  sql_fail: |
+    DROP DATABASE test;

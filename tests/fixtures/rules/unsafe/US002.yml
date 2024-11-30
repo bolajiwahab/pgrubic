@@ -1,0 +1,6 @@
+---
+rule: US002
+
+test_fail_data_type_change:
+  sql_fail: |
+    ALTER TABLE tbl ALTER COLUMN col TYPE int;
