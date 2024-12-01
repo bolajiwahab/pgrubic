@@ -32,7 +32,10 @@ class ColumnRename(linter.BaseChecker):
         node: ast.RenameStmt,
     ) -> None:
         """Visit RenameStmt."""
-        if node.renameType == enums.ObjectType.OBJECT_COLUMN:
+        if (
+            node.renameType == enums.ObjectType.OBJECT_COLUMN
+            and node.newname != node.subname
+        ):
             self.violations.add(
                 linter.Violation(
                     rule=self.code,

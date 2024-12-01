@@ -1,0 +1,13 @@
+---
+rule: US016
+
+test_fail_non_concurrent_index_creation:
+  sql_fail: |
+    CREATE INDEX idx ON tbl(tbl_id);
+  sql_fix: |
+    CREATE INDEX CONCURRENTLY idx
+        ON tbl (tbl_id);
+
+test_pass_concurrent_index_creation:
+  sql_pass: |
+    CREATE INDEX CONCURRENTLY idx ON tbl(tbl_id);

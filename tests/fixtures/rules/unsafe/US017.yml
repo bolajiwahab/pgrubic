@@ -1,0 +1,6 @@
+---
+rule: US017
+
+test_fail_index_movement_to_tablespace:
+  sql_fail: |
+    ALTER INDEX idx SET TABLESPACE tblspc;

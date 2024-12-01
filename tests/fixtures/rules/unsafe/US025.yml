@@ -1,0 +1,14 @@
+---
+rule: US025
+
+test_fail_cluster:
+  sql_fail: |
+    CLUSTER;
+
+test_fail_cluster_table:
+  sql_fail: |
+    CLUSTER tbl;
+
+test_fail_cluster_using_index:
+  sql_fail: |
+    CLUSTER tbl USING tbl_ind;

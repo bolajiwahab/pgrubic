@@ -1,0 +1,12 @@
+---
+rule: US019
+
+test_fail_non_concurrent_index_drop:
+  sql_fail: |
+    DROP INDEX idx;
+  sql_fix: |
+    DROP INDEX CONCURRENTLY idx;
+
+test_pass_concurrent_index_drop:
+  sql_pass: |
+    DROP INDEX CONCURRENTLY idx;

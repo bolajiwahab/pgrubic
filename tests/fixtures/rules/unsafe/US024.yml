@@ -1,0 +1,10 @@
+---
+rule: US024
+
+test_fail_tables_movement_to_tablespace:
+  sql_fail: |
+    ALTER TABLE ALL IN TABLESPACE tblspc SET TABLESPACE tblspc2;
+
+test_pass_tables_movement_to_same_tablespace:
+  sql_pass: |
+    ALTER TABLE ALL IN TABLESPACE tblspc SET TABLESPACE tblspc;

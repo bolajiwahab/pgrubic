@@ -1,0 +1,46 @@
+---
+rule: US020
+
+test_fail_non_concurrent_index_reindex_index:
+  sql_fail: |
+    REINDEX INDEX idx;
+  sql_fix: |
+    REINDEX (CONCURRENTLY) INDEX idx;
+
+test_fail_non_concurrent_index_reindex_table:
+  sql_fail: |
+    REINDEX TABLE tbl;
+  sql_fix: |
+    REINDEX (CONCURRENTLY) TABLE tbl;
+
+test_fail_non_concurrent_index_reindex_schema:
+  sql_fail: |
+    REINDEX SCHEMA scm;
+  sql_fix: |
+    REINDEX (CONCURRENTLY) SCHEMA scm;
+
+test_fail_non_concurrent_index_reindex_database:
+  sql_fail: |
+    REINDEX DATABASE db;
+  sql_fix: |
+    REINDEX (CONCURRENTLY) DATABASE db;
+
+test_pass_concurrent_index_reindex_index:
+  sql_pass: |
+    REINDEX INDEX CONCURRENTLY idx;
+
+test_pass_concurrent_index_reindex_table:
+  sql_pass: |
+    REINDEX TABLE CONCURRENTLY tbl;
+
+test_pass_concurrent_index_reindex_schema:
+  sql_pass: |
+    REINDEX SCHEMA CONCURRENTLY scm;
+
+test_pass_concurrent_index_reindex_database:
+  sql_pass: |
+    REINDEX DATABASE CONCURRENTLY db;
+
+test_pass_concurrent_index_reindex_system:
+  sql_pass: |
+    REINDEX SYSTEM CONCURRENTLY sys;

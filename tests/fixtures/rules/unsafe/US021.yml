@@ -1,0 +1,6 @@
+---
+rule: US021
+
+test_fail_drop_table:
+  sql_fail: |
+    DROP TABLE test;

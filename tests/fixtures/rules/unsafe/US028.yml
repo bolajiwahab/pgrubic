@@ -1,0 +1,12 @@
+---
+rule: US028
+
+test_fail_non_concurrent_materialized_view_refresh:
+  sql_fail: |
+    REFRESH MATERIALIZED VIEW tbl;
+  sql_fix: |
+    REFRESH MATERIALIZED VIEW CONCURRENTLY tbl;
+
+test_pass_concurrent_materialized_view_refresh:
+  sql_pass: |
+    REFRESH MATERIALIZED VIEW CONCURRENTLY tbl;
