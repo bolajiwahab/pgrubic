@@ -1,0 +1,14 @@
+---
+rule: GN029
+
+test_fail_missing_replace_in_view:
+  sql_fail: |
+    CREATE VIEW test.card AS SELECT * FROM public.account;
+  sql_fix: |
+    CREATE OR REPLACE VIEW test.card AS
+    SELECT *
+      FROM public.account;
+
+test_pass_create_or_replace_in_view:
+  sql_pass: |
+    CREATE OR REPLACE VIEW test.card AS SELECT * FROM public.account;

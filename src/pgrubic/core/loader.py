@@ -19,7 +19,7 @@ from pgrubic.core import noqa, config, linter
 if typing.TYPE_CHECKING:
     from collections import abc  # pragma: no cover
 
-    from pglast import ast, visitors
+    from pglast import ast, visitors  # pragma: no cover
 
 
 def load_rules(config: config.Config) -> set[linter.BaseChecker]:

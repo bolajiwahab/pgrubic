@@ -1,32 +1,80 @@
 ---
 rule: SM001
 
-test_fail_schema_unqualified_table:
+test_fail_schema_unqualified_new_table:
   sql_fail: |
     CREATE TABLE card();
 
-test_fail_schema_unqualified_materialized_view:
+test_fail_schema_unqualified_existing_table:
+  sql_fail: |
+    ALTER TABLE card RENAME TO card;
+
+test_fail_schema_drop_unqualified_table:
+  sql_fail: |
+    DROP TABLE card;
+
+test_fail_schema_unqualified_new_materialized_view:
   sql_fail: |
     CREATE MATERIALIZED VIEW card AS SELECT * FROM public.account;
 
-test_fail_schema_unqualified_view:
+test_fail_schema_unqualified_existing_materialized_view:
+  sql_fail: |
+    ALTER MATERIALIZED VIEW card RENAME TO card;
+
+test_fail_schema_drop_unqualified_materialized_view:
+  sql_fail: |
+    DROP MATERIALIZED VIEW card;
+
+test_fail_schema_unqualified_new_view:
   sql_fail: |
     CREATE VIEW card AS SELECT * FROM public.account;
 
-test_fail_schema_unqualified_type:
+test_fail_schema_unqualified_existing_view:
+  sql_fail: |
+    ALTER VIEW card RENAME TO card;
+
+test_fail_drop_schema_unqualified_view:
+  sql_fail: |
+    ALTER VIEW card RENAME TO card;
+
+test_fail_schema_unqualified_new_type:
   sql_fail: |
     CREATE TYPE mood AS ENUM ('sad', 'ok');
 
-test_fail_schame_unqualified_function:
+test_fail_schema_unqualified_existing_type:
+  sql_fail: |
+    ALTER TYPE mood ADD VALUE 'sad';
+
+test_fail_drop_schema_unqualified_type:
+  sql_fail: |
+    DROP TYPE mood;
+
+test_fail_schame_unqualified_new_function:
   sql_fail: |
     CREATE FUNCTION dup(int) RETURNS TABLE(f1 int, f2 text) LANGUAGE SQL
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
 
-test_fail_schame_unqualified_procedure:
+test_fail_schame_unqualified_existing_function:
+  sql_fail: |
+    ALTER FUNCTION check_password(text) SET search_path = admin;
+
+test_fail_drop_schame_unqualified_function:
+  sql_fail: |
+    DROP FUNCTION check_password(text);
+
+test_fail_schame_unqualified_new_procedure:
   sql_fail: |
     CREATE OR REPLACE PROCEDURE dup(bigint)
     LANGUAGE sql
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+
+test_fail_schame_unqualified_existing_procedure:
+  sql_fail: |
+    ALTER PROCEDURE check_password(text) SET search_path = admin;
+
+test_fail_drop_schame_unqualified_procedure:
+  sql_fail: |
+    DROP PROCEDURE check_password(text);
 
 test_pass_schema_qualified_table:
   sql_pass: |

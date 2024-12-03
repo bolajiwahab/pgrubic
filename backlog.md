@@ -4,3 +4,5 @@
 - Usage of numbers in order by and group by - OrderByExpr
 
 - naming boolean columns
+
+- replace in view and trigger

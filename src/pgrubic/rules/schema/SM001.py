@@ -146,3 +146,22 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
     ) -> None:
         """Visit AlterFunctionStmt."""
         self._check_function_for_schema(node.func.objname)
+
+    def visit_ObjectWithArgs(
+        self,
+        ancestors: ast.Node,
+        node: ast.ObjectWithArgs,
+    ) -> None:
+        """Visit ObjectWithArgs."""
+        if len(node.objname) < SCHEMA_QUALIFIED_LENGTH:
+            self.violations.add(
+                linter.Violation(
+                    rule=self.code,
+                    line_number=self.line_number,
+                    column_offset=self.column_offset,
+                    line=self.line,
+                    statement_location=self.statement_location,
+                    description=f"Database object `{node.objname[0].sval}`"
+                    " should be schema qualified",
+                ),
+            )

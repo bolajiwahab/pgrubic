@@ -16,6 +16,10 @@ test_fail_disallowed_schema_table:
 test_fail_disallowed_schema_materialized_view:
   sql_fail: |
     CREATE MATERIALIZED VIEW test.card AS SELECT * FROM public.account;
+  sql_fix: |
+    CREATE MATERIALIZED VIEW app.card AS
+    SELECT *
+      FROM public.account;
   config:
     lint:
       disallowed_schemas:
@@ -26,6 +30,10 @@ test_fail_disallowed_schema_materialized_view:
 test_fail_disallowed_schema_view:
   sql_fail: |
     CREATE VIEW test.card AS SELECT * FROM public.account;
+  sql_fix: |
+    CREATE OR REPLACE VIEW app.card AS
+    SELECT *
+      FROM public.account;
   config:
     lint:
       disallowed_schemas:
@@ -36,6 +44,11 @@ test_fail_disallowed_schema_view:
 test_fail_disallowed_schema_type:
   sql_fail: |
     CREATE TYPE test.mood AS ENUM ('sad', 'ok');
+  sql_fix: |
+    CREATE TYPE app.mood AS ENUM (
+        'sad'
+      , 'ok'
+    );
   config:
     lint:
       disallowed_schemas:
@@ -45,7 +58,12 @@ test_fail_disallowed_schema_type:
 
 test_fail_disallowed_schema_function:
   sql_fail: |
-    CREATE FUNCTION test.dup(int) RETURNS TABLE(f1 int, f2 text) LANGUAGE SQL
+    CREATE FUNCTION test.dup(bigint) RETURNS TABLE(f1 bigint, f2 text) LANGUAGE SQL
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  sql_fix: |
+    CREATE OR REPLACE FUNCTION app.dup(bigint)
+    RETURNS TABLE (f1 bigint, f2 text)
+    LANGUAGE sql
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
   config:
     lint:
@@ -57,6 +75,10 @@ test_fail_disallowed_schema_function:
 test_fail_disallowed_schema_procedure:
   sql_fail: |
     CREATE OR REPLACE PROCEDURE test.dup(bigint)
+    LANGUAGE sql
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  sql_fix: |
+    CREATE OR REPLACE PROCEDURE app.dup(bigint)
     LANGUAGE sql
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
   config:
@@ -84,7 +106,7 @@ test_pass_schema_unqualified_type:
 
 test_pass_schame_unqualified_function:
   sql_pass: |
-    CREATE FUNCTION dup(int) RETURNS TABLE(f1 int, f2 text) LANGUAGE SQL
+    CREATE FUNCTION dup(bigint) RETURNS TABLE(f1 bigint, f2 text) LANGUAGE SQL
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
 
 test_pass_schame_unqualified_procedure:
@@ -126,7 +148,7 @@ test_pass_allowed_schema_type:
 
 test_pass_allowed_schema_function:
   sql_pass: |
-    CREATE FUNCTION public.dup(int) RETURNS TABLE(f1 int, f2 text) LANGUAGE SQL
+    CREATE FUNCTION public.dup(bigint) RETURNS TABLE(f1 bigint, f2 text) LANGUAGE SQL
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
   config:
     lint:

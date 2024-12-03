@@ -6,7 +6,7 @@ test_fail_invalid_check_constraint_name_new_table:
     CREATE TABLE tbl (tbl_id bigint, CONSTRAINT tbl_check CHECK (tbl_id > 10));
   config:
     lint:
-      regex_constraint_check_constraint: |
+      regex_constraint_check: |
         "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"
 
 test_fail_invalid_check_constraint_name_existing_table:
@@ -14,7 +14,7 @@ test_fail_invalid_check_constraint_name_existing_table:
     ALTER TABLE tbl ADD CONSTRAINT tbl_check CHECK (tbl_id > 10);
   config:
     lint:
-      regex_constraint_check_constraint: |
+      regex_constraint_check: |
         "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"
 
 test_pass_valid_check_constraint_name_new_table:
@@ -25,7 +25,7 @@ test_pass_valid_check_constraint_name_new_table:
     );
   config:
     lint:
-      regex_constraint_check_constraint: |
+      regex_constraint_check: |
         "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"
 
 test_pass_valid_check_constraint_name_existing_table:
@@ -33,7 +33,7 @@ test_pass_valid_check_constraint_name_existing_table:
     ALTER TABLE tbl ADD CONSTRAINT tbl_tbl_id_check CHECK (tbl_id > 10);
   config:
     lint:
-      regex_constraint_check_constraint: |
+      regex_constraint_check: |
         "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"
 
 test_pass_implied_check_constraint_name_new_table:
@@ -41,7 +41,7 @@ test_pass_implied_check_constraint_name_new_table:
     CREATE TABLE tbl (tbl_id bigint CHECK (tbl_id > 10));
   config:
     lint:
-      regex_constraint_check_constraint: |
+      regex_constraint_check: |
         "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"
 
 test_pass_implied_check_constraint_name_existing_table:
@@ -49,5 +49,5 @@ test_pass_implied_check_constraint_name_existing_table:
     ALTER TABLE tbl ADD CHECK (tbl_id > 10);
   config:
     lint:
-      regex_constraint_check_constraint: |
+      regex_constraint_check: |
         "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_check$"

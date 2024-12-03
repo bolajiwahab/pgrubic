@@ -17,16 +17,6 @@ def linter() -> core.Linter:
 
     core.BaseChecker.config = config
 
-    return core.Linter(config=config)
-
-
-@pytest.fixture(scope="module")
-def linter_new() -> core.Linter:
-    """Setup linter."""
-    config: core.Config = core.parse_config()
-
-    core.BaseChecker.config = config
-
     rules: set[core.BaseChecker] = core.load_rules(config=config)
 
     linter = core.Linter(config=config)

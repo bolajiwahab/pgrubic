@@ -7,7 +7,7 @@ test_fail_invalid_partition_name:
     FOR VALUES FROM ('2006-02-01') TO ('2006-03-01');
   config:
     lint:
-      regex_index: "[a-zA-Z0-9]+__[a-zA-Z0-9_]+__[a-zA-Z0-9_]+$"
+      regex_partition: "[a-zA-Z0-9]+__[a-zA-Z0-9_]+__[a-zA-Z0-9_]+$"
 
 test_pass_valid_partition_name:
   sql_pass: |
@@ -15,4 +15,4 @@ test_pass_valid_partition_name:
     FOR VALUES FROM ('2006-02-01') TO ('2006-03-01');
   config:
     lint:
-      regex_index: "[a-zA-Z0-9]+__[a-zA-Z0-9_]+__[a-zA-Z0-9_]+$"
+      regex_partition: "[a-zA-Z0-9]+__[a-zA-Z0-9_]+__[a-zA-Z0-9_]+$"

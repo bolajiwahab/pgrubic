@@ -3,14 +3,21 @@
 import os
 import typing
 import pathlib
-import functools
 import dataclasses
 
 import toml
 from deepmerge import always_merger
 
-from pgrubic import CONFIG_FILE, DEFAULT_CONFIG, CONFIG_PATH_ENVIRONMENT_VARIABLE
+from pgrubic import PROGRAM_NAME
 from pgrubic.core.logging import logger
+
+CONFIG_FILE: str = f"{PROGRAM_NAME}.toml"
+
+DEFAULT_CONFIG: pathlib.Path = (
+    pathlib.Path(__file__).resolve().parent.parent / CONFIG_FILE
+)
+
+CONFIG_PATH_ENVIRONMENT_VARIABLE: str = f"{PROGRAM_NAME.upper()}_CONFIG_PATH"
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
@@ -158,7 +165,6 @@ def _get_config_file_absolute_path(
     return None  # pragma: no cover
 
 
-@functools.lru_cache(maxsize=1)
 def parse_config() -> Config:
     """Parse config."""
     merged_config = _merge_config()

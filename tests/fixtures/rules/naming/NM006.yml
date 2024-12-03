@@ -7,7 +7,7 @@ test_fail_invalid_exclusion_constraint_name_new_table:
     CONSTRAINT tbl_exclusion EXCLUDE USING gist (tbl_id WITH &&));
   config:
     lint:
-      regex_constraint_exclusion_constraint: |
+      regex_constraint_exclusion: |
         "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_exclusion$"
 
 test_fail_invalid_exclusion_constraint_name_existing_table:
@@ -15,7 +15,7 @@ test_fail_invalid_exclusion_constraint_name_existing_table:
     ALTER TABLE tbl ADD CONSTRAINT tbl_exclusion EXCLUDE USING gist (tbl_id WITH &&);
   config:
     lint:
-      regex_constraint_exclusion_constraint: |
+      regex_constraint_exclusion: |
         "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_exclusion$"
 
 test_pass_valid_exclusion_constraint_name_new_table:
@@ -24,7 +24,7 @@ test_pass_valid_exclusion_constraint_name_new_table:
     CONSTRAINT tbl_tbl_id_exclusion EXCLUDE USING gist (tbl_id WITH &&));
   config:
     lint:
-      regex_constraint_exclusion_constraint: |
+      regex_constraint_exclusion: |
         "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_exclusion$"
 
 test_pass_valid_exclusion_constraint_name_existing_table:
@@ -33,7 +33,7 @@ test_pass_valid_exclusion_constraint_name_existing_table:
         ADD CONSTRAINT tbl_tbl_id_exclusion EXCLUDE USING gist (tbl_id WITH &&);
   config:
     lint:
-      regex_constraint_exclusion_constraint: |
+      regex_constraint_exclusion: |
         "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_exclusion$"
 
 test_pass_implied_exclusion_constraint_name_new_table:
@@ -41,7 +41,7 @@ test_pass_implied_exclusion_constraint_name_new_table:
     CREATE TABLE tbl (tbl_id bigint, EXCLUDE USING gist (tbl_id WITH &&));
   config:
     lint:
-      regex_constraint_exclusion_constraint: |
+      regex_constraint_exclusion: |
         "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_exclusion$"
 
 test_pass_implied_exclusion_constraint_name_existing_table:
@@ -49,5 +49,5 @@ test_pass_implied_exclusion_constraint_name_existing_table:
     ALTER TABLE tbl ADD EXCLUDE USING gist (tbl_id WITH &&);
   config:
     lint:
-      regex_constraint_exclusion_constraint: |
+      regex_constraint_exclusion: |
         "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_exclusion$"

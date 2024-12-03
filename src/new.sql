@@ -1,1 +1,3 @@
-ALTER TABLE tbl RENAME COLUMN id TO id;
+CREATE MATERIALIZED VIEW test.card AS SELECT * FROM public.account;
+
+create table tbl as select * from tbl;

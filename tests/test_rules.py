@@ -10,7 +10,7 @@ from pgrubic import core
 
 
 class RuleTestCase(typing.NamedTuple):
-    """Test case."""
+    """Rule test case."""
 
     rule: str
     sql_fail: str | None
@@ -26,7 +26,7 @@ class RuleTestCase(typing.NamedTuple):
     ),
 )
 def test_rules(
-    linter_new: core.Linter,
+    linter: core.Linter,
     rule: str,
     test_id: str,
     test_case: dict[str, str],
@@ -45,13 +45,13 @@ def test_rules(
     )
 
     # Apply overrides to global configuration
-    conftest.update_config(linter_new.config, config_overrides)
+    conftest.update_config(linter.config, config_overrides)
 
     if parsed_test_case.sql_fail:
         # Set fix flag
-        linter_new.config.lint.fix = bool(parsed_test_case.sql_fix)
+        linter.config.lint.fix = bool(parsed_test_case.sql_fix)
 
-        linting_result = linter_new.run(
+        linting_result = linter.run(
             source_file=f"{parsed_test_case.rule}.sql",
             source_code=parsed_test_case.sql_fail,
         )
@@ -64,7 +64,7 @@ def test_rules(
             assert linting_result.fixed_sql == parsed_test_case.sql_fix
 
     if parsed_test_case.sql_pass:
-        linting_result = linter_new.run(
+        linting_result = linter.run(
             source_file=f"{parsed_test_case.rule}.sql",
             source_code=parsed_test_case.sql_pass,
         )
