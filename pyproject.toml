@@ -154,7 +154,7 @@ legacy_tox_ini = """
         COVERAGE_FILE = .coverage
     commands =
         coverage erase
-        coverage run --source=src -m pytest -vv -s {posargs:tests}
+        coverage run --source=src -m pytest -vv {posargs:tests}
 
     [testenv:coverage]
     skip_install = false

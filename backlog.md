@@ -6,3 +6,5 @@
 - naming boolean columns
 
 - replace in view and trigger
+
+- tests for line number, offset
