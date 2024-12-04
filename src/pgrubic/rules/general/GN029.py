@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgrubic.core import linter
 
 
-class MissingReplaceInFunction(linter.BaseChecker):
+class MissingReplaceInView(linter.BaseChecker):
     """## **What it does**
     Checks for replace in view creation.
 
