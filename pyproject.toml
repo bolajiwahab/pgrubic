@@ -171,7 +171,7 @@ legacy_tox_ini = """
 
     [testenv:linting]
     deps = ruff
-    commands = ruff check {posargs}
+    commands = ruff check {posargs} --fix
 
     [testenv:formatting]
     deps = ruff

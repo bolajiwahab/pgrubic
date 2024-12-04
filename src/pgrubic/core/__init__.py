@@ -14,17 +14,17 @@ from pgrubic.core.logging import logger
 from pgrubic.core.formatter import Formatter
 
 __all__ = [
-    "Linter",
-    "Formatter",
     "BaseChecker",
+    "Config",
+    "Formatter",
+    "Linter",
     "ViolationStats",
-    "load_rules",
-    "load_formatters",
     "add_apply_fix_to_rule",
     "add_set_locations_to_rule",
     "config",
-    "parse_config",
     "filter_files",
-    "Config",
+    "load_formatters",
+    "load_rules",
     "logger",
+    "parse_config",
 ]
