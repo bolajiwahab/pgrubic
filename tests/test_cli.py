@@ -81,6 +81,23 @@ def test_cli_lint_complete_fix(tmp_path: pathlib.Path) -> None:
     assert result.exit_code == 0
 
 
+def test_cli_lint_verbose(tmp_path: pathlib.Path) -> None:
+    """Test cli lint verbose."""
+    runner = testing.CliRunner()
+
+    sql_fail: str = "SELECT a = NULL;"
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql_fail)
+
+    result = runner.invoke(cli, ["lint", str(file_fail), "--verbose"])
+
+    assert result.exit_code == 1
+
+
 def test_cli_lint_partial_fix(tmp_path: pathlib.Path) -> None:
     """Test cli lint partial fix."""
     runner = testing.CliRunner()
@@ -98,6 +115,26 @@ def test_cli_lint_partial_fix(tmp_path: pathlib.Path) -> None:
     assert result.exit_code == 1
 
 
+def test_cli_lint_ignore_noqa(tmp_path: pathlib.Path) -> None:
+    """Test cli lint ignore noqa."""
+    runner = testing.CliRunner()
+
+    sql_fail: str = """
+    -- noqa: GN024
+    SELECT a = NULL;
+    """
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql_fail)
+
+    result = runner.invoke(cli, ["lint", str(file_fail), "--ignore-noqa"])
+
+    assert result.exit_code == 1
+
+
 def test_cli_format_file(tmp_path: pathlib.Path) -> None:
     """Test cli format file."""
     runner = testing.CliRunner()
@@ -111,6 +148,23 @@ def test_cli_format_file(tmp_path: pathlib.Path) -> None:
     file_pass.write_text(sql_pass)
 
     result = runner.invoke(cli, ["format", str(file_pass)])
+
+    assert result.exit_code == 0
+
+
+def test_cli_format_file_verbose(tmp_path: pathlib.Path) -> None:
+    """Test cli format file."""
+    runner = testing.CliRunner()
+
+    sql_pass: str = "SELECT a = NULL;"
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    file_pass = directory / TEST_FILE
+    file_pass.write_text(sql_pass)
+
+    result = runner.invoke(cli, ["format", str(file_pass), "--verbose"])
 
     assert result.exit_code == 0
 
