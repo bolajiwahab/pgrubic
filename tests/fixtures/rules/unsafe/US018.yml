@@ -1,0 +1,10 @@
+---
+rule: US018
+
+test_fail_indexes_movement_to_tablespace:
+  sql_fail: |
+    ALTER INDEX ALL IN TABLESPACE tblspc SET TABLESPACE tblspc2;
+
+test_pass_indexes_movement_to_same_tablespace:
+  sql_pass: |
+    ALTER INDEX ALL IN TABLESPACE tblspc SET TABLESPACE tblspc;

@@ -1,0 +1,10 @@
+---
+rule: US026
+
+test_fail_vacuum_full:
+  sql_fail: |
+    VACUUM FULL tbl;
+
+test_pass_vacuum_without_full:
+  sql_pass: |
+    VACUUM tbl;

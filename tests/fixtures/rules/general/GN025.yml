@@ -1,0 +1,22 @@
+---
+rule: GN025
+
+test_fail_duplicate_indexes:
+  sql_fail: |
+    CREATE INDEX measurement_logdate_city_id_idx ON measurement (logdate, city_id);
+    CREATE INDEX measurement_city_id_logdate_idx ON measurement (logdate, city_id);
+
+test_fail_duplicate_indexes_unique_with_regular:
+  sql_fail: |
+    CREATE INDEX ON measurement (log_date);
+    CREATE UNIQUE INDEX ON measurement (log_date);
+
+test_pass_mixed_columns_no_duplicate_index:
+  sql_pass: |
+    CREATE INDEX city_id_logdate_idx ON tbl (city_id, logdate);
+    CREATE INDEX logdate_city_id_idx ON tbl (logdate, city_id);
+
+test_pass_no_duplicate_index:
+  sql_pass: |
+    CREATE INDEX idx_city_id ON measurement (city_id);
+    CREATE INDEX idx_logdate ON measurement (logdate);

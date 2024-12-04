@@ -1,0 +1,44 @@
+---
+rule: NM002
+
+test_fail_invalid_primary_key_name_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (tbl_id bigint, CONSTRAINT pkey_tbl PRIMARY KEY (tbl_id));
+  config:
+    lint:
+      regex_constraint_primary_key: "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_pkey$"
+
+test_fail_invalid_primary_key_name_existing_table:
+  sql_fail: |
+    ALTER TABLE tbl ADD CONSTRAINT pkey_tbl PRIMARY KEY (tbl_id);
+  config:
+    lint:
+      regex_constraint_primary_key: "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_pkey$"
+
+test_pass_valid_primary_key_name_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (tbl_id bigint, CONSTRAINT tbl_pkey PRIMARY KEY (tbl_id));
+  config:
+    lint:
+      regex_constraint_primary_key: "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_pkey$"
+
+test_pass_valid_primary_key_name_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl ADD CONSTRAINT tbl_pkey PRIMARY KEY (tbl_id);
+  config:
+    lint:
+      regex_constraint_primary_key: "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_pkey$"
+
+test_pass_implied_primary_key_name_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (tbl_id bigint PRIMARY KEY);
+  config:
+    lint:
+      regex_constraint_primary_key: "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_pkey$"
+
+test_pass_implied_primary_key_name_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl ADD PRIMARY KEY (tbl_id);
+  config:
+    lint:
+      regex_constraint_primary_key: "[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_pkey$"

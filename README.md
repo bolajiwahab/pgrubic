@@ -70,6 +70,15 @@ Pgrubic can also be used as a pre-commit hook:
 Pgrubic can be configured via the [`pgrubic.toml`] file in either the current directory or in the user's home directory.
 The following configuration options are available in the [`pgrubic.toml`] with the following defaults:
 ```
+# Include all files by default
+include = []
+
+# Exclude no files by default
+exclude = []
+
+# Target version 14 of PostgreSQL by default
+postgres-target-version = 14
+
 [lint]
 # Enable all rules by default
 select = []

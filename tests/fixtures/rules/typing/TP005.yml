@@ -1,0 +1,66 @@
+---
+rule: TP005
+
+test_fail_varchar_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (last_name varchar);
+  sql_fix: |
+    CREATE TABLE tbl (
+        last_name text
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_varchar_with_length_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (last_name varchar(0));
+  sql_fix: |
+    CREATE TABLE tbl (
+        last_name text
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_varchar_existing_table_new_column:
+  sql_fail: |
+    ALTER TABLE account ADD COLUMN last_name varchar;
+  sql_fix: |
+    ALTER TABLE account
+        ADD COLUMN last_name text;
+
+test_fail_varchar_with_length_existing_table_new_column:
+  sql_fail: |
+    ALTER TABLE account ADD COLUMN last_name varchar(0);
+  sql_fix: |
+    ALTER TABLE account
+        ADD COLUMN last_name text;
+
+test_fail_varchar_with_length_existing_table_existing_column:
+  sql_fail: |
+    ALTER TABLE account ALTER COLUMN last_name TYPE varchar(0);
+  sql_fix: |
+    ALTER TABLE account
+        ALTER COLUMN last_name TYPE text;
+
+test_fail_varchar_existing_table_existing_column:
+  sql_fail: |
+    ALTER TABLE account ALTER COLUMN last_name TYPE varchar;
+  sql_fix: |
+    ALTER TABLE account
+        ALTER COLUMN last_name TYPE text;
+
+test_pass_text_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (last_name text);
+
+test_pass_text_existing_table_new_column:
+  sql_pass: |
+    ALTER TABLE account
+        ADD COLUMN last_name text;
+
+test_pass_text_existing_table_existing_column:
+  sql_pass: |
+    ALTER TABLE account
+        ALTER COLUMN last_name TYPE text;

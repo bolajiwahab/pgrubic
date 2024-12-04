@@ -1,0 +1,44 @@
+---
+rule: NM003
+
+test_fail_invalid_unique_key_name_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (tbl_id bigint, CONSTRAINT key_tbl UNIQUE (tbl_id));
+  config:
+    lint:
+      regex_constraint_unique_key: "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
+
+test_fail_invalid_unique_key_name_existing_table:
+  sql_fail: |
+    ALTER TABLE tbl ADD CONSTRAINT key_tbl UNIQUE (tbl_id);
+  config:
+    lint:
+      regex_constraint_unique_key: "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
+
+test_pass_valid_unique_key_name_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (tbl_id bigint, CONSTRAINT tbl_tbl_id_key UNIQUE (tbl_id));
+  config:
+    lint:
+      regex_constraint_unique_key: "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
+
+test_pass_valid_unique_key_name_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl ADD CONSTRAINT tbl_tbl_id_key UNIQUE (tbl_id);
+  config:
+    lint:
+      regex_constraint_unique_key: "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
+
+test_pass_implied_unique_key_name_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (tbl_id bigint UNIQUE);
+  config:
+    lint:
+      regex_constraint_unique_key: "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"
+
+test_pass_implied_unique_key_name_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl ADD UNIQUE (tbl_id);
+  config:
+    lint:
+      regex_constraint_unique_key: "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_key$"

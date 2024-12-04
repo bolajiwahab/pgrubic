@@ -1,0 +1,6 @@
+---
+rule: US007
+
+test_fail_drop_tablespace:
+  sql_fail: |
+    DROP TABLESPACE test;

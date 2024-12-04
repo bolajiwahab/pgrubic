@@ -35,9 +35,10 @@ class DisallowedDataType(linter.BaseChecker):
             if node.names[-1].sval == data_type.name:
                 self.violations.add(
                     linter.Violation(
+                        rule=self.code,
                         line_number=self.line_number,
                         column_offset=self.column_offset,
-                        statement=self.statement,
+                        line=self.line,
                         statement_location=self.statement_location,
                         description=f"Data type '{node.names[-1].sval}' is disallowed"
                         f" in config with reason: '{data_type.reason}', use"
@@ -47,7 +48,7 @@ class DisallowedDataType(linter.BaseChecker):
 
                 self._fix(node, data_type)
 
-    def _fix(self, node: ast.TypeName, data_type: config.DisallowedType) -> None:
+    def _fix(self, node: ast.TypeName, data_type: config.DisallowedDataType) -> None:
         """Fix violation."""
         node.names = (
             {

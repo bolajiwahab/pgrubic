@@ -1,0 +1,105 @@
+---
+rule: TP014
+
+test_pass_select_disallowed_data_type:
+  sql_fail: |
+    SELECT a::point FROM public.card;
+  config:
+    lint:
+      disallowed_data_types:
+        - name: point
+          reason: deprecated
+          use_instead: text
+
+test_fail_disallowed_data_type_table:
+  sql_fail: |
+    CREATE TABLE tbl (location point);
+  sql_fix: |
+    CREATE TABLE tbl (
+        location text
+    );
+  config:
+    lint:
+      disallowed_data_types:
+        - name: point
+          reason: deprecated
+          use_instead: text
+
+test_fail_disallowed_data_type_function_args:
+  sql_fail: |
+    CREATE FUNCTION test.dup(point) RETURNS TABLE(f1 text, f2 text) LANGUAGE SQL
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  sql_fix: |
+    CREATE OR REPLACE FUNCTION test.dup(text)
+    RETURNS TABLE (f1 text, f2 text)
+    LANGUAGE sql
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  config:
+    lint:
+      disallowed_data_types:
+        - name: point
+          reason: deprecated
+          use_instead: text
+
+test_fail_disallowed_data_type_function_return:
+  sql_fail: |
+    CREATE FUNCTION test.dup(bigint) RETURNS TABLE(f1 point, f2 text) LANGUAGE SQL
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  sql_fix: |
+    CREATE OR REPLACE FUNCTION test.dup(bigint)
+    RETURNS TABLE (f1 text, f2 text)
+    LANGUAGE sql
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  config:
+    lint:
+      disallowed_data_types:
+        - name: point
+          reason: deprecated
+          use_instead: text
+
+test_fail_disallowed_data_type_procedure:
+  sql_fail: |
+    CREATE OR REPLACE PROCEDURE test.dup(point)
+    LANGUAGE sql
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  sql_fix: |
+    CREATE OR REPLACE PROCEDURE test.dup(text)
+    LANGUAGE sql
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  config:
+    lint:
+      disallowed_data_types:
+        - name: point
+          reason: deprecated
+          use_instead: text
+
+test_pass_allowed_data_type_table:
+  sql_pass: |
+    CREATE TABLE public.card(location point);
+  config:
+    lint:
+      disallowed_data_types: []
+
+test_pass_allowed_data_type_function:
+  sql_pass: |
+    CREATE FUNCTION public.dup(bigint) RETURNS TABLE(f1 point, f2 text) LANGUAGE SQL
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  config:
+    lint:
+      disallowed_data_types: []
+
+test_pass_allowed_data_type_procedure:
+  sql_pass: |
+    CREATE PROCEDURE public.dup(bigint)
+    LANGUAGE sql
+    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  config:
+    lint:
+      disallowed_data_types: []
+
+test_pass_select_allowed_data_type:
+  sql_pass: |
+    SELECT a::text FROM public.card;
+  config:
+    lint:
+      disallowed_data_types: []

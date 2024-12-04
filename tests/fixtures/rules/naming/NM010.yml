@@ -1,0 +1,318 @@
+---
+rule: NM010
+
+test_fail_new_schema:
+  sql_fail: |
+    CREATE SCHEMA "Tbl";
+
+test_fail_existing_schema:
+  sql_fail: |
+    ALTER SCHEMA tbl RENAME TO "Tbl";
+
+test_fail_new_table:
+  sql_fail: |
+    CREATE TABLE "Tbl" ();
+
+test_fail_new_table_as_select:
+  sql_fail: |
+    CREATE TABLE "Tbl" AS SELECT * FROM tbl;
+
+test_fail_existing_table:
+  sql_fail: |
+    ALTER TABLE tbl RENAME TO "Tbl";
+
+test_fail_new_column_new_table:
+  sql_fail: |
+    CREATE TABLE tbl ("Tbl_id" bigint);
+
+test_fail_new_column_existing_table:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN "Tbl_id" bigint;
+
+test_fail_existing_column_existing_table:
+  sql_fail: |
+    ALTER TABLE tbl RENAME COLUMN tbl_id TO "Tbl_id";
+
+test_fail_new_view:
+  sql_fail: |
+    CREATE VIEW "Tbl" AS SELECT * FROM tbl;
+
+test_fail_existing_view:
+  sql_fail: |
+    ALTER VIEW tbl RENAME TO "Tbl";
+
+test_fail_new_materialized_view:
+  sql_fail: |
+    CREATE MATERIALIZED VIEW "Tbl" AS SELECT * FROM tbl;
+
+test_fail_existing_materialized_view:
+  sql_fail: |
+    ALTER MATERIALIZED VIEW tbl RENAME TO "Tbl";
+
+test_fail_new_index:
+  sql_fail: |
+    CREATE INDEX "Tbl" ON tbl (tbl_id);
+
+test_fail_existing_index:
+  sql_fail: |
+    ALTER INDEX tbl RENAME TO "Tbl";
+
+test_fail_new_constraint:
+  sql_fail: |
+    ALTER TABLE tbl ADD CONSTRAINT "Tbl" PRIMARY KEY (tbl_id);
+
+test_fail_existing_constraint:
+  sql_fail: |
+    ALTER TABLE tbl RENAME CONSTRAINT tbl_pkey TO "Tbl";
+
+test_fail_new_function:
+  sql_fail: |
+    CREATE FUNCTION "Tbl"() RETURNS int AS 'SELECT 1' LANGUAGE SQL;
+
+test_fail_existing_function:
+  sql_fail: |
+    ALTER FUNCTION tbl RENAME TO "Tbl";
+
+test_fail_new_procedure:
+  sql_fail: |
+    CREATE PROCEDURE "Tbl"() AS 'SELECT 1' LANGUAGE SQL;
+
+test_fail_existing_procedure:
+  sql_fail: |
+    ALTER PROCEDURE tbl RENAME TO "Tbl";
+
+test_fail_new_trigger:
+  sql_fail: |
+    CREATE TRIGGER "Tbl_trig"
+    BEFORE INSERT ON tbl FOR EACH ROW EXECUTE PROCEDURE tbl_trigger();
+
+test_fail_existing_trigger:
+  sql_fail: |
+    ALTER TRIGGER tbl_trig ON tbl RENAME TO "Tbl_trig";
+
+test_fail_new_rule:
+  sql_fail: |
+    CREATE RULE "Notify_me" AS
+        ON UPDATE TO tbl
+        DO ALSO NOTIFY tbl;
+
+test_fail_existing_rule:
+  sql_fail: |
+    ALTER RULE notify_me ON tbl RENAME TO "Notify_me";
+
+test_fail_new_sequence:
+  sql_fail: |
+    CREATE SEQUENCE "Seq";
+
+test_fail_existing_sequence:
+  sql_fail: |
+    ALTER SEQUENCE seq RENAME TO "Seq";
+
+test_fail_new_database:
+  sql_fail: |
+    CREATE DATABASE "Tbl";
+
+test_fail_existing_database:
+  sql_fail: |
+    ALTER DATABASE tbl RENAME TO "Tbl";
+
+test_fail_new_role:
+  sql_fail: |
+    CREATE ROLE "Tbl";
+
+test_fail_existing_role:
+  sql_fail: |
+    ALTER ROLE tbl RENAME TO "Tbl";
+
+test_fail_new_tablespace:
+  sql_fail: |
+    CREATE TABLESPACE "Tbl" LOCATION 'directory_path';
+
+test_fail_existing_tablespace:
+  sql_fail: |
+    ALTER TABLESPACE tbl RENAME TO "Tbl";
+
+test_fail_new_enum:
+  sql_fail: |
+    CREATE TYPE "Tbl" AS ENUM ('a', 'b', 'c');
+
+test_fail_existing_enum:
+  sql_fail: |
+    ALTER TYPE tbl RENAME TO "Tbl";
+
+test_fail_new_composite_type:
+  sql_fail: |
+    CREATE TYPE "Tbl" AS (
+        a int,
+        b text
+    );
+
+test_fail_existing_composite_type:
+  sql_fail: |
+    ALTER TYPE tbl RENAME TO "Tbl";
+
+test_fail_select_into:
+  sql_fail: |
+    SELECT * INTO "Tbl" FROM tbl;
+
+test_fail_space:
+  sql_fail: |
+    CREATE TABLE " Tbl" ();
+
+test_pass_new_schema:
+  sql_pass: |
+    CREATE SCHEMA tbl;
+
+test_pass_existing_schema:
+  sql_pass: |
+    ALTER SCHEMA tbl RENAME TO tbl;
+
+test_pass_new_table:
+  sql_pass: |
+    CREATE TABLE tbl ();
+
+test_pass_new_table_as_select:
+  sql_pass: |
+    CREATE TABLE tbl AS SELECT * FROM tbl;
+
+test_pass_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl RENAME TO tbl;
+
+test_pass_new_column_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (tbl_id bigint);
+
+test_pass_new_column_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl ADD COLUMN tbl_id bigint;
+
+test_pass_existing_column_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl RENAME COLUMN tbl_id TO tbl_id;
+
+test_pass_new_view:
+  sql_pass: |
+    CREATE VIEW "tbl" AS SELECT * FROM tbl;
+
+test_pass_existing_view:
+  sql_pass: |
+    ALTER VIEW tbl RENAME TO tbl;
+
+test_pass_new_materialized_view:
+  sql_pass: |
+    CREATE MATERIALIZED VIEW "tbl" AS SELECT * FROM tbl;
+
+test_pass_existing_materialized_view:
+  sql_pass: |
+    ALTER MATERIALIZED VIEW tbl RENAME TO tbl;
+
+test_pass_new_index:
+  sql_pass: |
+    CREATE INDEX "tbl" ON tbl (tbl_id);
+
+test_pass_existing_index:
+  sql_pass: |
+    ALTER INDEX tbl RENAME TO tbl;
+
+test_pass_new_constraint:
+  sql_pass: |
+    ALTER TABLE tbl ADD CONSTRAINT tbl_pkey PRIMARY KEY (tbl_id);
+
+test_pass_existing_constraint:
+  sql_pass: |
+    ALTER TABLE tbl RENAME CONSTRAINT tbl_pkey TO tbl_pkey;
+
+test_pass_new_function:
+  sql_pass: |
+    CREATE FUNCTION tbl () RETURNS int AS 'SELECT 1' LANGUAGE SQL;
+
+test_pass_existing_function:
+  sql_pass: |
+    ALTER FUNCTION tbl RENAME TO tbl;
+
+test_pass_new_procedure:
+  sql_pass: |
+    CREATE PROCEDURE tbl () AS 'SELECT 1' LANGUAGE SQL;
+
+test_pass_existing_procedure:
+  sql_pass: |
+    ALTER PROCEDURE tbl RENAME TO tbl;
+
+test_pass_new_trigger:
+  sql_pass: |
+    CREATE TRIGGER tbl_trig
+    BEFORE INSERT ON tbl FOR EACH ROW EXECUTE PROCEDURE tbl_trigger();
+
+test_pass_existing_trigger:
+  sql_pass: |
+    ALTER TRIGGER tbl_trig ON tbl RENAME TO tbl_trig;
+
+test_pass_new_rule:
+  sql_pass: |
+    CREATE RULE notify_me AS
+        ON UPDATE TO tbl
+        DO ALSO NOTIFY tbl;
+
+test_pass_existing_rule:
+  sql_pass: |
+    ALTER RULE notify_me ON tbl RENAME TO notify_me;
+
+test_pass_new_sequence:
+  sql_pass: |
+    CREATE SEQUENCE tbl;
+
+test_pass_existing_sequence:
+  sql_pass: |
+    ALTER SEQUENCE seq RENAME TO tbl;
+
+test_pass_new_database:
+  sql_pass: |
+    CREATE DATABASE tbl;
+
+test_pass_existing_database:
+  sql_pass: |
+    ALTER DATABASE tbl RENAME TO tbl;
+
+test_pass_new_role:
+  sql_pass: |
+    CREATE ROLE tbl;
+
+test_pass_existing_role:
+  sql_pass: |
+    ALTER ROLE tbl RENAME TO tbl;
+
+test_pass_new_tablespace:
+  sql_pass: |
+    CREATE TABLESPACE tbl LOCATION 'directory_path';
+
+test_pass_existing_tablespace:
+  sql_pass: |
+    ALTER TABLESPACE tbl RENAME TO tbl;
+
+test_pass_new_enum:
+  sql_pass: |
+    CREATE TYPE tbl AS ENUM ('a', 'b', 'c');
+
+test_pass_existing_enum:
+  sql_pass: |
+    ALTER TYPE tbl RENAME TO tbl;
+
+test_pass_new_composite_type:
+  sql_pass: |
+    CREATE TYPE tbl AS (
+        a int,
+        b text
+    );
+
+test_pass_existing_composite_type:
+  sql_pass: |
+    ALTER TYPE tbl RENAME TO tbl;
+
+test_pass_select_into:
+  sql_pass: |
+    SELECT * INTO tbl FROM tbl;
+
+test_pass_new_extension:
+  sql_pass: |
+    CREATE EXTENSION "Tbl";

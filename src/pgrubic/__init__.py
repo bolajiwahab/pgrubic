@@ -20,12 +20,8 @@ RULES_DIRECTORY: pathlib.Path = PARENT_DIRECTORY / "rules/"
 
 FORMATTERS_DIRECTORY: pathlib.Path = PARENT_DIRECTORY / "formatters/"
 
-CONFIG_FILE: str = f"{PROGRAM_NAME}.toml"
 
-DEFAULT_CONFIG: pathlib.Path = pathlib.Path(__file__).resolve().parent / CONFIG_FILE
-
-
-def get_full_qualified_name(node: tuple[typing.Any]) -> str:
+def get_fully_qualified_name(node: tuple[typing.Any]) -> str:
     """Get fully qualified type name."""
     if isinstance(node, ast.String):
         return str(node.sval)

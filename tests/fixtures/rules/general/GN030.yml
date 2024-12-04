@@ -1,0 +1,19 @@
+---
+rule: GN030
+
+test_fail_missing_replace_in_trigger:
+  sql_fail: |
+    CREATE TRIGGER dup_trigger
+    BEFORE INSERT OR UPDATE ON tbl FOR EACH ROW EXECUTE PROCEDURE dup();
+  # we should write a formatter (override) for this
+  sql_fix: |
+    CREATE OR REPLACE TRIGGER dup_trigger
+      BEFORE INSERT OR UPDATE
+      ON tbl
+      FOR EACH ROW
+        EXECUTE PROCEDURE dup();
+
+test_pass_create_or_replace_in_trigger:
+  sql_pass: |
+    CREATE OR REPLACE TRIGGER dup_trigger
+    BEFORE INSERT OR UPDATE ON tbl FOR EACH ROW EXECUTE PROCEDURE dup();

@@ -17,7 +17,7 @@ class TimestampWithoutTimezone(linter.BaseChecker):
     describes. By default it will display times in your current timezone, but you can
     use at time zone to display it in other time zones. Because it stores a point in
     time, it will do the right thing with arithmetic involving timestamps entered in
-    different timezones - including between timestamps from the same location on
+    different timezones - including between timestamps from the same statement_location on
     different sides of a daylight savings time change.
 
     timestamp (also known as timestamp without time zone) does not do any of that,
@@ -50,9 +50,10 @@ class TimestampWithoutTimezone(linter.BaseChecker):
         if node.typeName.names[-1].sval == "timestamp":
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description="Prefer timestamp with timezone over timestamp without timezone",  # noqa: E501
                 ),

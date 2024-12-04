@@ -1,0 +1,82 @@
+---
+rule: TP007
+
+test_fail_smallserial_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (tbl_id smallserial);
+  sql_fix: |
+    CREATE TABLE tbl (
+        tbl_id bigint GENERATED ALWAYS AS IDENTITY
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_smallserial_existing_table_new_column:
+  sql_fail: |
+    ALTER TABLE account ADD COLUMN tbl_id smallserial;
+  sql_fix: |
+    ALTER TABLE account
+        ADD COLUMN tbl_id bigint GENERATED ALWAYS AS IDENTITY;
+
+test_fail_serial_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (tbl_id serial);
+  sql_fix: |
+    CREATE TABLE tbl (
+        tbl_id bigint GENERATED ALWAYS AS IDENTITY
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_serial_existing_table_new_column:
+  sql_fail: |
+    ALTER TABLE account ADD COLUMN tbl_id serial;
+  sql_fix: |
+    ALTER TABLE account
+        ADD COLUMN tbl_id bigint GENERATED ALWAYS AS IDENTITY;
+
+test_fail_bigserial_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (tbl_id bigserial);
+  sql_fix: |
+    CREATE TABLE tbl (
+        tbl_id bigint GENERATED ALWAYS AS IDENTITY
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_bigserial_existing_table_new_column:
+  sql_fail: |
+    ALTER TABLE account ADD COLUMN tbl_id bigserial;
+  sql_fix: |
+    ALTER TABLE account
+        ADD COLUMN tbl_id bigint GENERATED ALWAYS AS IDENTITY;
+
+test_pass_smallserial_existing_table_existing_column:
+  sql_pass: |
+    ALTER TABLE account ALTER COLUMN tbl_id TYPE smallserial;
+
+test_pass_serial_existing_table_existing_column:
+  sql_pass: |
+    ALTER TABLE account ALTER COLUMN tbl_id TYPE serial;
+
+test_pass_bigserial_existing_table_existing_column:
+  sql_pass: |
+    ALTER TABLE account ALTER COLUMN tbl_id TYPE bigserial;
+
+test_pass_generated_always_identity_column_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (tbl_id bigint GENERATED ALWAYS AS IDENTITY);
+
+test_pass_bigint GENERATED ALWAYS AS IDENTITY_existing_table_new_column:
+  sql_pass: |
+    ALTER TABLE account
+        ADD COLUMN tbl_id bigint GENERATED ALWAYS AS IDENTITY;
+
+test_pass_generated_always_identity_column_existing_table_existing_column:
+  sql_pass: |
+    ALTER TABLE account
+        ALTER COLUMN tbl_id ADD GENERATED ALWAYS AS IDENTITY;

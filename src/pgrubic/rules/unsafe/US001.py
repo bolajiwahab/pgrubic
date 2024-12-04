@@ -42,9 +42,10 @@ class DropColumn(linter.BaseChecker):
         if node.subtype == enums.AlterTableType.AT_DropColumn:
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description="Drop column detected",
                 ),

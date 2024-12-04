@@ -33,9 +33,10 @@ class DuplicateColumn(linter.BaseChecker):
         for column in duplicate_columns:
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description=f"Column `{column}` specified more than once",
                 ),

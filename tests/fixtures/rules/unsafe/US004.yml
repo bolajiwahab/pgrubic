@@ -1,0 +1,18 @@
+---
+rule: US004
+
+test_fail_auto_increment_smallserial:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN id smallserial;
+
+test_fail_auto_increment_serial:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN id serial;
+
+test_fail_auto_increment_bigserial:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN id bigserial;
+
+test_pass_auto_increment_default:
+  sql_pass: |
+    ALTER TABLE tbl ALTER COLUMN id SET DEFAULT nextval('tbl_id_seq');

@@ -1,0 +1,10 @@
+---
+rule: GN005
+
+test_fail_index_elements_more_than_three:
+  sql_fail: |
+    CREATE INDEX ON music (id, age, name, email);
+
+test_pass_three_elements_index:
+  sql_pass: |
+    CREATE INDEX ON music (id, age, name);

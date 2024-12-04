@@ -1,0 +1,6 @@
+---
+rule: US029
+
+test_fail_truncate_table:
+  sql_fail: |
+    TRUNCATE TABLE tbl;

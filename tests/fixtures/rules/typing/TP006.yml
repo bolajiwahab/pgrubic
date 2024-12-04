@@ -1,0 +1,41 @@
+---
+rule: TP006
+
+test_fail_money_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (amount money);
+  sql_fix: |
+    CREATE TABLE tbl (
+        amount numeric
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_money_existing_table_new_column:
+  sql_fail: |
+    ALTER TABLE account ADD COLUMN amount money;
+  sql_fix: |
+    ALTER TABLE account
+        ADD COLUMN amount numeric;
+
+test_fail_money_existing_table_existing_column:
+  sql_fail: |
+    ALTER TABLE account ALTER COLUMN amount TYPE money;
+  sql_fix: |
+    ALTER TABLE account
+        ALTER COLUMN amount TYPE numeric;
+
+test_pass_numeric_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (amount numeric);
+
+test_pass_numeric_existing_table_new_column:
+  sql_pass: |
+    ALTER TABLE account
+        ADD COLUMN amount numeric;
+
+test_pass_numeric_existing_table_existing_column:
+  sql_pass: |
+    ALTER TABLE account
+        ALTER COLUMN amount TYPE numeric;

@@ -1,0 +1,10 @@
+---
+rule: TP018
+
+test_fail_mismatch_column_in_data_type_change:
+  sql_fail: |
+    ALTER TABLE tbl ALTER COLUMN user_id TYPE uuid USING account_id::uuid;
+
+test_pass_numeric_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl ALTER COLUMN user_id TYPE uuid USING user_id::uuid;

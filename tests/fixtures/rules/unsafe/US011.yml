@@ -1,0 +1,10 @@
+---
+rule: US011
+
+test_fail_not_null_on_new_column_volatile_default:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN created_at timestamptz NOT NULL DEFAULT now();
+
+test_pass_not_null_on_new_column_volatile_default:
+  sql_pass: |
+    ALTER TABLE tbl ADD COLUMN tbl_id bigint NOT NULL DEFAULT 1;

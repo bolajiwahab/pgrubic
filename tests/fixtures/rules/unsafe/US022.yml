@@ -1,0 +1,10 @@
+---
+rule: US022
+
+test_fail_rename_table:
+  sql_fail: |
+    ALTER TABLE tbl RENAME TO tbl_old;
+
+test_pass_rename_table_same_name:
+  sql_pass: |
+    ALTER TABLE tbl RENAME TO tbl;

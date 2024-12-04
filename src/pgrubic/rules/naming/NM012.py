@@ -28,16 +28,17 @@ class SpecialCharacterInIdentifier(CheckIdentifier):
         identifier: str,
         line_number: int,
         column_offset: int,
-        statement: str,
+        line: str,
         statement_location: int,
     ) -> None:
         """Checks for identifiers with special characters."""
         if identifier and not identifier.replace("_", "").isalnum():
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=line_number,
                     column_offset=column_offset,
-                    statement=statement,
+                    line=line,
                     statement_location=statement_location,
                     description=f"Special characters in identifier `{identifier}`",
                 ),

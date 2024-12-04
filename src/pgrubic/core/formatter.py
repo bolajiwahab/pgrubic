@@ -59,6 +59,7 @@ class Formatter:
                 semicolon_after_last_statement=False,
                 remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
                 comma_at_eoln=not (config.format.comma_at_beginning),
+                special_functions=True,
             )(statement.text)
 
             if config.format.new_line_before_semicolon:

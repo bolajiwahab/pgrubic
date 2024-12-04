@@ -1,0 +1,6 @@
+---
+rule: US023
+
+test_fail_table_movement_to_tablespace:
+  sql_fail: |
+    ALTER TABLE tbl SET TABLESPACE tblspc;

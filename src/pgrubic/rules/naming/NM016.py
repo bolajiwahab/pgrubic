@@ -45,9 +45,10 @@ class DateColumnWithoutSuffix(linter.BaseChecker):
         ):
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description="Date column name should be suffixed with"
                     f" `{self.config.lint.date_column_suffix}`",

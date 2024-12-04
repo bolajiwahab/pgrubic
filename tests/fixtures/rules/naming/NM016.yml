@@ -1,0 +1,43 @@
+---
+rule: NM016
+
+test_fail_timestamp_column_without_suffix_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (activated date);
+  sql_fix: |
+    CREATE TABLE tbl (
+        activated_date date
+    );
+  config:
+    lint:
+      date_column_suffix: "_date"
+      required_columns: []
+
+test_fail_timestamp_column_without_suffix_existing_table:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN activated date;
+  sql_fix: |
+    ALTER TABLE tbl
+        ADD COLUMN activated_date date;
+  config:
+    lint:
+      date_column_suffix: "_date"
+      required_columns: []
+
+test_pass_timestamp_column_without_suffix_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (
+        activated_date date
+    );
+  config:
+    lint:
+      date_column_suffix: "_date"
+      required_columns: []
+
+test_pass_timestamp_column_without_suffix_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl ADD COLUMN activated_date date;
+  config:
+    lint:
+      date_column_suffix: "_date"
+      required_columns: []

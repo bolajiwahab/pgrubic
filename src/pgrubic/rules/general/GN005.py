@@ -37,9 +37,10 @@ class IndexElementsMoreThanThree(linter.BaseChecker):
         if len(node.indexParams) > max_index_elements:
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description=f"Index elements more than {max_index_elements}",
                 ),

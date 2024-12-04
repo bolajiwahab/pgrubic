@@ -1,0 +1,48 @@
+---
+rule: NM004
+
+test_fail_invalid_foreign_key_name_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (tbl_id bigint, CONSTRAINT tbl_fkey FOREIGN KEY (tbl_id)
+    REFERENCES tbl (tbl));
+  config:
+    lint:
+      regex_constraint_foreign_key: "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_fkey$"
+
+test_fail_invalid_foreign_key_name_existing_table:
+  sql_fail: |
+    ALTER TABLE tbl ADD CONSTRAINT tbl_fkey FOREIGN KEY (tbl_id)
+    REFERENCES tbl (tbl);
+  config:
+    lint:
+      regex_constraint_foreign_key: "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_fkey$"
+
+test_pass_valid_foreign_key_name_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (tbl_id bigint, CONSTRAINT tbl_tbl_id_fkey
+    FOREIGN KEY (tbl_id) REFERENCES tbl (tbl));
+  config:
+    lint:
+      regex_constraint_foreign_key: "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_fkey$"
+
+test_pass_valid_foreign_key_name_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl ADD CONSTRAINT tbl_tbl_id_fkey FOREIGN KEY (tbl_id)
+    REFERENCES tbl (tbl);
+  config:
+    lint:
+      regex_constraint_foreign_key: "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_fkey$"
+
+test_pass_implied_foreign_key_name_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (tbl_id bigint REFERENCES tbl(tbl));
+  config:
+    lint:
+      regex_constraint_foreign_key: "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_fkey$"
+
+test_pass_implied_foreign_key_name_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl ADD FOREIGN KEY (tbl_id) REFERENCES tbl(tbl);
+  config:
+    lint:
+      regex_constraint_foreign_key: "[a-zA-Z0-9]+_[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*_fkey$"

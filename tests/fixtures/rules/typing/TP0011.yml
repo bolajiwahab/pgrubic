@@ -1,0 +1,66 @@
+---
+rule: TP011
+
+test_fail_float_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (retry_count float);
+  sql_fix: |
+    CREATE TABLE tbl (
+        retry_count numeric
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_float_existing_table_new_column:
+  sql_fail: |
+    ALTER TABLE account ADD COLUMN retry_count float;
+  sql_fix: |
+    ALTER TABLE account
+        ADD COLUMN retry_count numeric;
+
+test_fail_float_existing_table_existing_column:
+  sql_fail: |
+    ALTER TABLE account ALTER COLUMN retry_count TYPE float;
+  sql_fix: |
+    ALTER TABLE account
+        ALTER COLUMN retry_count TYPE numeric;
+
+test_fail_double_precision_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (retry_count double precision);
+  sql_fix: |
+    CREATE TABLE tbl (
+        retry_count numeric
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_double_precision_existing_table_new_column:
+  sql_fail: |
+    ALTER TABLE account ADD COLUMN retry_count double precision;
+  sql_fix: |
+    ALTER TABLE account
+        ADD COLUMN retry_count numeric;
+
+test_fail_double_precision_existing_table_existing_column:
+  sql_fail: |
+    ALTER TABLE account ALTER COLUMN retry_count TYPE double precision;
+  sql_fix: |
+    ALTER TABLE account
+        ALTER COLUMN retry_count TYPE numeric;
+
+test_pass_numeric_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (retry_count numeric);
+
+test_pass_numeric_existing_table_new_column:
+  sql_pass: |
+    ALTER TABLE account
+        ADD COLUMN retry_count numeric;
+
+test_pass_numeric_existing_table_existing_column:
+  sql_pass: |
+    ALTER TABLE account
+        ALTER COLUMN retry_count TYPE numeric;

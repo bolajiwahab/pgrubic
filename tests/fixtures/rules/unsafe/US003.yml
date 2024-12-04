@@ -1,0 +1,10 @@
+---
+rule: US003
+
+test_fail_column_rename:
+  sql_fail: |
+    ALTER TABLE tbl RENAME COLUMN id TO tbl_id;
+
+test_pass_column_rename_same_name:
+  sql_pass: |
+    ALTER TABLE tbl RENAME COLUMN id TO id;

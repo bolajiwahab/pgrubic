@@ -1,0 +1,34 @@
+---
+rule: GN021
+
+test_fail_null_constraint_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (age bigint NULL);
+  sql_fix: |
+    CREATE TABLE tbl (
+        age bigint
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_null_constraint_existing_table:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN age bigint NULL;
+  sql_fix: |
+    ALTER TABLE tbl
+        ADD COLUMN age bigint;
+
+test_pass_not_null_constraint_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (age bigint NOT NULL);
+
+test_pass_no_null_constraint_new_column:
+  sql_pass: |
+    ALTER TABLE account
+        ALTER COLUMN time SET NOT NULL;
+
+test_pass_no_null_constraint_existing_column:
+  sql_pass: |
+    ALTER TABLE account
+        ADD COLUMN time timestamptz NOT NULL;

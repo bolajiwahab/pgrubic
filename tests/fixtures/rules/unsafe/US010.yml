@@ -1,0 +1,6 @@
+---
+rule: US010
+
+test_fail_not_null_on_existing_column:
+  sql_fail: |
+    ALTER TABLE tbl ALTER COLUMN tbl_id SET NOT NULL;

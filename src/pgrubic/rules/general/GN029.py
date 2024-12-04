@@ -1,45 +1,53 @@
-"""Checker for usage of AStar."""
+"""Checker for missing replace in view."""
 
 from pglast import ast, visitors
 
 from pgrubic.core import linter
 
 
-class AStar(linter.BaseChecker):
+class MissingReplaceInView(linter.BaseChecker):
     """## **What it does**
-    Checks for usage of asterisk (*) in column references.
+    Checks for replace in view creation.
 
     ## **Why not?**
-    Specifying the columns in a query explicitly greatly improves clarity and readability.
-    This approach helps developers quickly grasp the purpose of the query and fosters
-    better collaboration.
+    `CREATE OR REPLACE VIEW` simplifies the process of modifying existing functions,
+    as you don't need to manually drop and recreate them.
 
-    Also, using (SELECT *) complicates code maintenance. When the table structure
-    changes, such as adding, renaming, or removing columns, queries with SELECT * can
-    fail unexpectedly or silently return incorrect results.
-    By explicitly listing the necessary columns, you ensure the code is more resilient to
-    changes in the database schema.
+    If you drop and then recreate a view, the new view is not the same entity as
+    the old; you will have to drop existing rules, views, triggers, etc. that refer to the
+    old view. Use CREATE OR REPLACE VIEW to change a view definition without
+    breaking objects that refer to the view. It also maintains data integrity and
+    consistency.
 
     ## **When should you?**
-    Almost Never.
+    If you don't need to modify an existing view.
 
     ## **Use instead:**
-    Name Columns Explicitly.
+    CREATE OR REPLACE VIEW.
     """
 
-    def visit_A_Star(
+    is_auto_fixable: bool = True
+
+    def visit_ViewStmt(
         self,
         ancestors: visitors.Ancestor,
-        node: ast.A_Star,
+        node: ast.ViewStmt,
     ) -> None:
-        """Visit A_Star."""
-        if ancestors.find_nearest(ast.SelectStmt):
+        """Visit ViewStmt."""
+        if not node.replace:
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
-                    description="Asterisk in column reference is discouraged",
+                    description="Prefer create or replace for view",
                 ),
             )
+
+            self._fix(node)
+
+    def _fix(self, node: ast.ViewStmt) -> None:
+        """Fix violation."""
+        node.replace = True

@@ -40,9 +40,10 @@ class InvalidPartitionName(linter.BaseChecker):
         ):
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description=f"Partition `{node.relation.relname}` does not follow"
                     f" naming convention `{self.config.lint.regex_partition}`",

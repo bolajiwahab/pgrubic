@@ -1,0 +1,41 @@
+---
+rule: TP009
+
+test_fail_int_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (retry_count int);
+  sql_fix: |
+    CREATE TABLE tbl (
+        retry_count bigint
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_int_existing_table_new_column:
+  sql_fail: |
+    ALTER TABLE account ADD COLUMN retry_count int;
+  sql_fix: |
+    ALTER TABLE account
+        ADD COLUMN retry_count bigint;
+
+test_fail_int_existing_table_existing_column:
+  sql_fail: |
+    ALTER TABLE account ALTER COLUMN retry_count TYPE int;
+  sql_fix: |
+    ALTER TABLE account
+        ALTER COLUMN retry_count TYPE bigint;
+
+test_pass_bigint_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (retry_count bigint);
+
+test_pass_bigint_existing_table_new_column:
+  sql_pass: |
+    ALTER TABLE account
+        ADD COLUMN retry_count bigint;
+
+test_pass_bigint_existing_table_existing_column:
+  sql_pass: |
+    ALTER TABLE account
+        ALTER COLUMN retry_count TYPE bigint;

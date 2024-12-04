@@ -36,7 +36,7 @@ class KeywordIdentifier(CheckIdentifier):
         identifier: str,
         line_number: int,
         column_offset: int,
-        statement: str,
+        line: str,
         statement_location: int,
     ) -> None:
         """Check for keywords used as identifiers."""
@@ -49,12 +49,13 @@ class KeywordIdentifier(CheckIdentifier):
             .union(keywords.TYPE_FUNC_NAME_KEYWORDS)
         )
 
-        if identifier and identifier.lower() in full_keywords:
+        if identifier and identifier.strip().lower() in full_keywords:
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=line_number,
                     column_offset=column_offset,
-                    statement=statement,
+                    line=line,
                     statement_location=statement_location,
                     description=f"Keyword `{identifier}` used as an identifier",
                 ),

@@ -1,0 +1,19 @@
+---
+rule: US027
+
+test_fail_non_concurrent_partition_detachment:
+  sql_fail: |
+    ALTER TABLE tbl DETACH PARTITION tbl_y2006m02;
+  sql_fix: |
+    ALTER TABLE tbl
+        DETACH PARTITION tbl_y2006m02 CONCURRENTLY;
+
+test_pass_non_concurrent_partition_detachment_version_before_14:
+  sql_pass: |
+    ALTER TABLE tbl DETACH PARTITION tbl_y2006m02;
+  config:
+    postgres_target_version: 13
+
+test_pass_concurrent_partition_detachment:
+  sql_pass: |
+    ALTER TABLE tbl DETACH PARTITION tbl_y2006m02 CONCURRENTLY;

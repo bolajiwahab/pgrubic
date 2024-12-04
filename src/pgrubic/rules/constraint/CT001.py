@@ -35,16 +35,19 @@ class CascadeUpdate(linter.BaseChecker):
         ):
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description="Cascade update in foreign key constraint",
                 ),
             )
 
-            self._fix(node)
+            self._fix(ancestors=ancestors, node=node)
 
-    def _fix(self, node: ast.Constraint) -> None:
+    def _fix(self, ancestors: visitors.Ancestor, node: ast.Constraint) -> None:
         """Fix violation."""
         node.fk_upd_action = enums.FKCONSTR_ACTION_RESTRICT
+        if ancestors.find_nearest(ast.AlterTableCmd):
+            node.skip_validation = True

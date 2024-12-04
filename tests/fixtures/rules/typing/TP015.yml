@@ -1,0 +1,47 @@
+---
+rule: TP015
+
+test_fail_wrongly_typed_required_column_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (age bigint, music text, created_at bigint NOT NULL);
+  sql_fix: |
+    CREATE TABLE tbl (
+        age bigint
+      , music text
+      , created_at timestamptz NOT NULL
+    );
+  config:
+    lint:
+      required_columns:
+        - name: created_at
+          data_type: timestamptz
+
+test_fail_wrongly_typed_required_column_existing_table:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN created_at bigint NOT NULL;
+  sql_fix: |
+    ALTER TABLE tbl
+        ADD COLUMN created_at timestamptz NOT NULL;
+  config:
+    lint:
+      required_columns:
+        - name: created_at
+          data_type: timestamptz
+
+test_pass_rightly_typed_required_column_new_table:
+  sql_pass: |
+    CREATE TABLE music (age bigint, music text, created_at timestamptz);
+  config:
+    lint:
+      required_columns:
+        - name: created_at
+          data_type: timestamptz
+
+test_pass_rightly_typed_required_column_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl ADD COLUMN created_at timestamptz NOT NULL;
+  config:
+    lint:
+      required_columns:
+        - name: created_at
+          data_type: timestamptz

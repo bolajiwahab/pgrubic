@@ -1,0 +1,26 @@
+---
+rule: GN016
+
+test_fail_constant_generated_column_new_table:
+  sql_fail: |
+    CREATE TABLE people (
+        height_cm numeric,
+        height_in numeric GENERATED ALWAYS AS (2.54) STORED
+    );
+
+test_fail_constant_generated_column_existing_table:
+  sql_fail: |
+    ALTER TABLE people
+        ADD COLUMN height_in numeric GENERATED ALWAYS AS (2.54) STORED;
+
+test_pass_generated_column_new_table:
+  sql_pass: |
+    CREATE TABLE people (
+        height_cm numeric,
+        height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED
+    );
+
+test_pass_constant_generated_column_existing_table:
+  sql_pass: |
+    ALTER TABLE people
+        ADD COLUMN height_in numeric GENERATED ALWAYS AS (height_cm / 2.54) STORED;

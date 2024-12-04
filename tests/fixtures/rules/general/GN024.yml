@@ -1,0 +1,26 @@
+---
+rule: GN024
+
+test_fail_equality_comparison_with_null:
+  sql_fail: |
+    SELECT a = NULL;
+  sql_fix: |
+    SELECT a IS NULL;
+
+test_fail_inequality_comparison_with_null:
+  sql_fail: |
+    SELECT NULL != a;
+  sql_fix: |
+    SELECT a IS NOT NULL;
+
+test_pass_is_null:
+  sql_pass: |
+    SELECT a IS NULL;
+
+test_pass_is_not_null:
+  sql_pass: |
+    SELECT a IS NOT NULL;
+
+test_pass_comparison_with_stringified_null:
+  sql_pass: |
+    SELECT a = 'NULL';

@@ -1,0 +1,31 @@
+---
+rule: TP017
+
+test_fail_nullable_boolean_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (is_active boolean);
+  sql_fix: |
+    CREATE TABLE tbl (
+        is_active boolean NOT NULL
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_nullable_boolean_existing_table:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN is_active boolean;
+  sql_fix: |
+    ALTER TABLE tbl
+        ADD COLUMN is_active boolean NOT NULL;
+
+test_pass_numeric_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (is_active boolean NOT NULL);
+  config:
+    lint:
+      required_columns: []
+
+test_pass_numeric_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl ADD COLUMN is_active boolean NOT NULL;

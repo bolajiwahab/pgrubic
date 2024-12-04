@@ -1,0 +1,14 @@
+---
+rule: GN004
+
+test_fail_no_primary_key:
+  sql_fail: |
+    CREATE TABLE music (age bigint);
+
+test_pass_inline_primary_key:
+  sql_pass: |
+    CREATE TABLE music (age bigint PRIMARY KEY);
+
+test_pass_named_primary_key:
+  sql_pass: |
+    CREATE TABLE music (age bigint, CONSTRAINT music_pkey PRIMARY KEY (age));

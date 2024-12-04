@@ -1,0 +1,31 @@
+---
+rule: TP016
+
+test_fail_numeric_with_precision_and_scale_new_table:
+  sql_fail: |
+    CREATE TABLE tbl (amount numeric(9, 2));
+  sql_fix: |
+    CREATE TABLE tbl (
+        amount numeric
+    );
+  config:
+    lint:
+      required_columns: []
+
+test_fail_numeric_with_precision_existing_table:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN amount numeric(9, 2);
+  sql_fix: |
+    ALTER TABLE tbl
+        ADD COLUMN amount numeric;
+
+test_pass_numeric_new_table:
+  sql_pass: |
+    CREATE TABLE tbl (amount numeric);
+  config:
+    lint:
+      required_columns: []
+
+test_pass_numeric_existing_table:
+  sql_pass: |
+    ALTER TABLE tbl ADD COLUMN amount numeric;

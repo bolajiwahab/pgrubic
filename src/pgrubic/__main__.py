@@ -1,8 +1,11 @@
 """Entry point."""
 
 import sys
+import typing
 import difflib
+import logging
 import pathlib
+from collections import abc
 
 import click
 from rich.syntax import Syntax
@@ -10,6 +13,13 @@ from rich.console import Console
 
 from pgrubic import PROGRAM_NAME, core
 from pgrubic.core import noqa
+
+T = typing.TypeVar("T")
+
+
+def common_options(func: abc.Callable[..., T]) -> abc.Callable[..., T]:
+    """Decorator to add common options to each subcommand."""
+    return click.option("--verbose", is_flag=True, help="Enable verbose logging.")(func)
 
 
 @click.group(
@@ -34,13 +44,32 @@ def cli() -> None:
     default=None,
     help="Fix lint violations automatically.",
 )
+@click.option(
+    "--ignore-noqa",
+    is_flag=True,
+    default=None,
+    help="Whether to ignore noqa directives.",
+)
+@common_options
 @click.argument("paths", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
-def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
+def lint(
+    paths: tuple[pathlib.Path, ...],
+    *,
+    verbose: bool,
+    fix: bool,
+    ignore_noqa: bool,
+) -> None:
     """Lint SQL files."""
+    if verbose:
+        core.logger.setLevel(logging.INFO)
+
     config: core.Config = core.parse_config()
 
     if fix:
         config.lint.fix = fix
+
+    if ignore_noqa:
+        config.lint.ignore_noqa = ignore_noqa
 
     linter: core.Linter = core.Linter(config=config)
 
@@ -51,7 +80,8 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
     for rule in rules:
         linter.checkers.add(rule())
 
-    violations: core.ViolationMetric = core.ViolationMetric()
+    total_violations = 0
+    fixable_violations = 0
 
     # Use the current working directory if no paths are specified
     if not paths:
@@ -67,31 +97,33 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
         with source_file.open("r", encoding="utf-8") as sf:
             source_code: str = sf.read()
 
-        _violations: core.ViolationMetric = linter.run(
+        lint_result = linter.run(
             source_file=str(source_file),
             source_code=source_code,
         )
 
-        violations.total += _violations.total
-        violations.fixed_total += _violations.fixed_total
-        violations.fixable_auto_total += _violations.fixable_auto_total
-        violations.fixable_manual_total += _violations.fixable_manual_total
+        violations = linter.get_violation_stats(
+            lint_result.violations,
+        )
 
-    if violations.total > 0:
+        total_violations += violations.total
+        fixable_violations += violations.fixable
+
+    if total_violations > 0:
         if config.lint.fix is True:
             sys.stdout.write(
-                f"Found {violations.total} violations"
-                f" ({violations.fixed_total} fixed,"
-                f" {violations.fixable_manual_total} remaining).\n",
+                f"Found {total_violations} violations"
+                f" ({fixable_violations} fixed,"
+                f" {total_violations - fixable_violations} remaining).\n",
             )
 
-            if violations.fixable_manual_total > 0:
+            if (total_violations - fixable_violations) > 0:
                 sys.exit(1)
 
         else:
             sys.stdout.write(
-                f"Found {violations.total} violations.\n"
-                f"{violations.fixable_auto_total} fixes available.\n",
+                f"Found {total_violations} violations.\n"
+                f"{fixable_violations} fixes available.\n",
             )
 
             sys.exit(1)
@@ -102,7 +134,7 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
     "--check",
     is_flag=True,
     default=None,
-    help="Check if any files would have been modified",
+    help="Check if any files would have been modified.",
 )
 @click.option(
     "--diff",
@@ -110,20 +142,27 @@ def lint(paths: tuple[pathlib.Path, ...], *, fix: bool) -> None:
     default=None,
     help="""
     Report the difference between the current file and
-    how the formatted file would look like""",
+    how the formatted file would look like.""",
 )
+@common_options
 @click.argument("paths", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
 def format_sql_file(
     paths: tuple[pathlib.Path, ...],
     *,
     check: bool,
     diff: bool,
+    verbose: bool,
 ) -> None:
     """Format SQL files."""
+    if verbose:
+        core.logger.setLevel(logging.INFO)
+
     console = Console()
     config: core.Config = core.parse_config()
+
     if check:
         config.format.check = check
+
     if diff:
         config.format.diff = diff
 

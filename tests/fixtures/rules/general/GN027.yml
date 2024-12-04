@@ -1,0 +1,18 @@
+---
+rule: GN027
+
+test_fail_yoda_condition:
+  sql_fail: |
+    SELECT * FROM measurement WHERE 10 = city_id;
+  sql_fix: |
+    SELECT *
+      FROM measurement
+     WHERE city_id = 10;
+
+test_pass_yoda_condition_with_constants:
+  sql_pass: |
+    SELECT * FROM measurement WHERE 10 = 10;
+
+test_pass_normal_condition:
+  sql_pass: |
+    SELECT * FROM measurement WHERE city_id = 10;

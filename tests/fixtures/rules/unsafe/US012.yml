@@ -1,0 +1,16 @@
+---
+rule: US012
+
+test_fail_validate_foreign_key_constraint_on_existing_rows:
+  sql_fail: |
+    ALTER TABLE tbl
+        ADD CONSTRAINT fkey FOREIGN KEY(tbl_id) REFERENCES tbl(id);
+  sql_fix: |
+    ALTER TABLE tbl
+        ADD CONSTRAINT fkey
+            FOREIGN KEY (tbl_id) REFERENCES tbl (id) NOT VALID;
+
+test_pass_not_valid_foreign_key_constraint_on_existing_rows:
+  sql_pass: |
+    ALTER TABLE tbl
+        ADD CONSTRAINT fkey FOREIGN KEY (tbl_id) REFERENCES tbl (id) NOT VALID;

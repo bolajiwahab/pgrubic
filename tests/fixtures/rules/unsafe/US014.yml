@@ -1,0 +1,11 @@
+---
+rule: US014
+
+test_fail_validate_check_constraint_on_existing_rows:
+  sql_fail: |
+    ALTER TABLE tbl ADD CONSTRAINT unq UNIQUE(tbl_id);
+
+test_pass_not_valid_check_constraint_on_existing_rows:
+  sql_pass: |
+    ALTER TABLE tbl
+        ADD CONSTRAINT unq UNIQUE USING INDEX unq;

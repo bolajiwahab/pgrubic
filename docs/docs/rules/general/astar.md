@@ -1,5 +1,5 @@
-# astar (GN029)
+# astar (GN028)
 
 Automatic fix is not available
 
-::: pgrubic.rules.general.GN029.AStar
+::: pgrubic.rules.general.GN028.AStar

@@ -10,7 +10,7 @@ class DeleteWithoutWhereClause(linter.BaseChecker):
     Checks for **DELETE** without a **WHERE** clause.
 
     ## **Why not?**
-    Executing a **DELETE** statement without a **WHERE** clause will remove all the rows
+    Executing a **DELETE** line without a **WHERE** clause will remove all the rows
     in the table which is most likely an accidental mistake and not what you want.
 
     ## **When should you?**
@@ -29,9 +29,10 @@ class DeleteWithoutWhereClause(linter.BaseChecker):
         if not node.whereClause:
             self.violations.add(
                 linter.Violation(
+                    rule=self.code,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
-                    statement=self.statement,
+                    line=self.line,
                     statement_location=self.statement_location,
                     description="Found DELETE without a WHERE clause",
                 ),

@@ -1,5 +1,6 @@
 """Configuration."""
 
+import os
 import typing
 import pathlib
 import dataclasses
@@ -7,7 +8,16 @@ import dataclasses
 import toml
 from deepmerge import always_merger
 
-from pgrubic import CONFIG_FILE, DEFAULT_CONFIG
+from pgrubic import PROGRAM_NAME
+from pgrubic.core.logging import logger
+
+CONFIG_FILE: str = f"{PROGRAM_NAME}.toml"
+
+DEFAULT_CONFIG: pathlib.Path = (
+    pathlib.Path(__file__).resolve().parent.parent / CONFIG_FILE
+)
+
+CONFIG_PATH_ENVIRONMENT_VARIABLE: str = f"{PROGRAM_NAME.upper()}_CONFIG_PATH"
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
@@ -20,8 +30,8 @@ class DisallowedSchema:
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
-class DisallowedType:
-    """Representation of disallowed type."""
+class DisallowedDataType:
+    """Representation of disallowed data type."""
 
     name: str
     reason: str
@@ -49,7 +59,7 @@ class Lint:
     allowed_languages: list[str]
     required_columns: list[Column]
     disallowed_schemas: list[DisallowedSchema]
-    disallowed_data_types: list[DisallowedType]
+    disallowed_data_types: list[DisallowedDataType]
 
     fix: bool
 
@@ -86,6 +96,8 @@ class Config:
     include: list[str]
     exclude: list[str]
 
+    postgres_target_version: int
+
     lint: Lint
     format: Format
 
@@ -96,8 +108,8 @@ def _load_default_config() -> dict[str, typing.Any]:
 
 
 def _load_user_config() -> dict[str, typing.Any]:
-    """Load config from from absolute path config file."""
-    config_file_absolute_path = _get_config_file_absolute_path(CONFIG_FILE)
+    """Load config from absolute path config file."""
+    config_file_absolute_path = _get_config_file_absolute_path()
 
     if config_file_absolute_path:
         return dict(toml.load(config_file_absolute_path))
@@ -107,25 +119,48 @@ def _load_user_config() -> dict[str, typing.Any]:
 
 def _merge_config() -> dict[str, typing.Any]:
     """Merge default and user config."""
-    return dict(always_merger.merge(_load_user_config(), _load_default_config()))
+    return dict(always_merger.merge(_load_default_config(), _load_user_config()))
 
 
-def _get_config_file_absolute_path(config_file: str) -> pathlib.Path | None:
+def _get_config_file_absolute_path(
+    config_file: str = CONFIG_FILE,
+) -> pathlib.Path | None:
     """Get the absolute path of the config file.
-    We use the first config file we find upwards.
+    If CONFIG_PATH_ENVIRONMENT_VARIABLE environment variable is set, we try to use that
+    else, we use the first config file that we find upwards from the current working
+    directory.
     """
+    env_config_path = os.getenv(CONFIG_PATH_ENVIRONMENT_VARIABLE)
+
+    if env_config_path:
+        config_file_absolute_path = pathlib.Path(env_config_path) / config_file
+        if pathlib.Path.exists(config_file_absolute_path):
+            logger.info(
+                """Using settings from "%s\"""",
+                config_file_absolute_path,
+            )
+            return config_file_absolute_path
+
     current_directory = pathlib.Path.cwd()
 
     # Traverse upwards through the directory tree
     while current_directory != current_directory.parent:
         # Check if the configuration file exists
-        config_absolute_path = current_directory / config_file
+        config_file_absolute_path = current_directory / config_file
 
-        if pathlib.Path.exists(config_absolute_path):
-            return config_absolute_path
+        if pathlib.Path.exists(config_file_absolute_path):
+            logger.info(
+                """Using settings from "%s\"""",
+                config_file_absolute_path,
+            )
+            return config_file_absolute_path
 
         # Move up one directory
         current_directory = current_directory.parent  # pragma: no cover
+
+    logger.info(
+        """Using default settings""",
+    )
 
     return None  # pragma: no cover
 
@@ -139,6 +174,7 @@ def parse_config() -> Config:
     return Config(
         include=merged_config["include"],
         exclude=merged_config["exclude"],
+        postgres_target_version=merged_config["postgres-target-version"],
         lint=Lint(
             select=config_lint["select"],
             ignore=config_lint["ignore"],
@@ -166,7 +202,7 @@ def parse_config() -> Config:
                 for column in config_lint["required-columns"]
             ],
             disallowed_data_types=[
-                DisallowedType(
+                DisallowedDataType(
                     name=data_type["name"],
                     reason=data_type["reason"],
                     use_instead=data_type["use-instead"],
