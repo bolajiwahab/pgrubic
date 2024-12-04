@@ -4,18 +4,20 @@
 
 | Name                                         |    Stmts |     Miss |    Cover |   Missing |
 |--------------------------------------------- | -------: | -------: | -------: | --------: |
-| src/pgrubic/\_\_init\_\_.py                  |       21 |        0 |     100% |           |
-| src/pgrubic/\_\_main\_\_.py                  |       75 |        0 |     100% |           |
-| src/pgrubic/core/\_\_init\_\_.py             |        6 |        0 |     100% |           |
-| src/pgrubic/core/config.py                   |       78 |        0 |     100% |           |
+| src/pgrubic/\_\_init\_\_.py                  |       19 |        0 |     100% |           |
+| src/pgrubic/\_\_main\_\_.py                  |       90 |        0 |     100% |           |
+| src/pgrubic/core/\_\_init\_\_.py             |        8 |        0 |     100% |           |
+| src/pgrubic/core/cache.py                    |        0 |        0 |     100% |           |
+| src/pgrubic/core/config.py                   |       92 |        0 |     100% |           |
 | src/pgrubic/core/errors.py                   |        0 |        0 |     100% |           |
 | src/pgrubic/core/filters.py                  |       12 |        0 |     100% |           |
 | src/pgrubic/core/formatter.py                |       33 |        0 |     100% |           |
-| src/pgrubic/core/linter.py                   |      111 |        0 |     100% |           |
-| src/pgrubic/core/loader.py                   |       53 |        0 |     100% |           |
-| src/pgrubic/core/noqa.py                     |      106 |        0 |     100% |           |
+| src/pgrubic/core/linter.py                   |      110 |        0 |     100% |           |
+| src/pgrubic/core/loader.py                   |       56 |        0 |     100% |           |
+| src/pgrubic/core/logging.py                  |        4 |        0 |     100% |           |
+| src/pgrubic/core/noqa.py                     |      105 |        0 |     100% |           |
 | src/pgrubic/rules/\_\_init\_\_.py            |        0 |        0 |     100% |           |
-| src/pgrubic/rules/constraint/CT001.py        |       10 |        0 |     100% |           |
+| src/pgrubic/rules/constraint/CT001.py        |       12 |        0 |     100% |           |
 | src/pgrubic/rules/constraint/CT002.py        |       10 |        0 |     100% |           |
 | src/pgrubic/rules/constraint/CT003.py        |       10 |        0 |     100% |           |
 | src/pgrubic/rules/constraint/CT004.py        |        6 |        0 |     100% |           |
@@ -47,8 +49,9 @@
 | src/pgrubic/rules/general/GN025.py           |       10 |        0 |     100% |           |
 | src/pgrubic/rules/general/GN026.py           |        6 |        0 |     100% |           |
 | src/pgrubic/rules/general/GN027.py           |       13 |        0 |     100% |           |
-| src/pgrubic/rules/general/GN028.py           |       12 |        0 |     100% |           |
-| src/pgrubic/rules/general/GN029.py           |        6 |        0 |     100% |           |
+| src/pgrubic/rules/general/GN028.py           |        6 |        0 |     100% |           |
+| src/pgrubic/rules/general/GN029.py           |       10 |        0 |     100% |           |
+| src/pgrubic/rules/general/GN030.py           |       10 |        0 |     100% |           |
 | src/pgrubic/rules/general/\_\_init\_\_.py    |       10 |        0 |     100% |           |
 | src/pgrubic/rules/naming/NM001.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/naming/NM002.py            |        7 |        0 |     100% |           |
@@ -56,7 +59,7 @@
 | src/pgrubic/rules/naming/NM004.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/naming/NM005.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/naming/NM006.py            |        7 |        0 |     100% |           |
-| src/pgrubic/rules/naming/NM007.py            |        7 |        0 |     100% |           |
+| src/pgrubic/rules/naming/NM007.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/naming/NM008.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/naming/NM009.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/naming/NM010.py            |        7 |        0 |     100% |           |
@@ -66,8 +69,8 @@
 | src/pgrubic/rules/naming/NM014.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/naming/NM015.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/naming/NM016.py            |       10 |        0 |     100% |           |
-| src/pgrubic/rules/naming/\_\_init\_\_.py     |       39 |        0 |     100% |           |
-| src/pgrubic/rules/schema/SM001.py            |       26 |        0 |     100% |           |
+| src/pgrubic/rules/naming/\_\_init\_\_.py     |       41 |        0 |     100% |           |
+| src/pgrubic/rules/schema/SM001.py            |       29 |        0 |     100% |           |
 | src/pgrubic/rules/schema/SM002.py            |       28 |        0 |     100% |           |
 | src/pgrubic/rules/schema/\_\_init\_\_.py     |        0 |        0 |     100% |           |
 | src/pgrubic/rules/security/ST001.py          |        6 |        0 |     100% |           |
@@ -87,7 +90,7 @@
 | src/pgrubic/rules/typing/TP012.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/typing/TP013.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/typing/TP014.py            |       11 |        0 |     100% |           |
-| src/pgrubic/rules/typing/TP015.py            |       17 |        0 |     100% |           |
+| src/pgrubic/rules/typing/TP015.py            |       18 |        0 |     100% |           |
 | src/pgrubic/rules/typing/TP016.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/typing/TP017.py            |       12 |        0 |     100% |           |
 | src/pgrubic/rules/typing/TP018.py            |        7 |        0 |     100% |           |
@@ -118,11 +121,11 @@
 | src/pgrubic/rules/unsafe/US024.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US025.py            |        5 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US026.py            |        7 |        0 |     100% |           |
-| src/pgrubic/rules/unsafe/US027.py            |       10 |        0 |     100% |           |
+| src/pgrubic/rules/unsafe/US027.py            |       11 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US028.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US029.py            |        5 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-|                                    **TOTAL** | **1451** |    **0** | **100%** |           |
+|                                    **TOTAL** | **1505** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
