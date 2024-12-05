@@ -45,5 +45,7 @@ class MismatchColumnInDataTypeChange(linter.BaseChecker):
                     description=f"Column `{alter_table_cmd.node.name}` in data type"
                     f" change does not match column `{node.fields[-1].sval}`"
                     " in USING clause",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Use the right column in the USING clause",
                 ),
             )

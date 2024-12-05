@@ -43,6 +43,8 @@ class SqlAsciiEncoding(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="SQL_ASCII encoding detected",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Use UTF8",
                 ),
             )
 

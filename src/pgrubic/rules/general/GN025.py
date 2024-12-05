@@ -52,6 +52,8 @@ class DuplicateIndex(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Duplicate index detected",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Remove duplicate indexes",
                 ),
             )
 

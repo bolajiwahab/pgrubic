@@ -54,6 +54,8 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
                     statement_location=self.statement_location,
                     description=f"Database object `{function_name[0].sval}`"
                     " should be schema qualified",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Schema-qualify the object",
                 ),
             )
 

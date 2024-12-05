@@ -49,5 +49,7 @@ class ColumnDataTypeChange(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Column data type change is not safe",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Use a new column with the new type",
                 ),
             )

@@ -48,5 +48,8 @@ class DropColumn(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Drop column detected",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Keep the column as nullable"
+                    " or drop it once it is no longer being used",
                 ),
             )

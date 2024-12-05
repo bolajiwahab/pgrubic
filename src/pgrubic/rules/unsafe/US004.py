@@ -6,7 +6,13 @@ from pgrubic.core import linter
 
 
 class AddingAutoIncrementColumn(linter.BaseChecker):
-    """Adding auto increment column."""
+    """## **What it does**
+    Checks for adding of auto increment column.
+
+    ## **Why is this bad?**
+
+    Adding auto increment column is not safe.
+    """
 
     def visit_ColumnDef(
         self,
@@ -25,5 +31,6 @@ class AddingAutoIncrementColumn(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Adding auto increment column is not safe",
+                    auto_fixable=self.is_auto_fixable,
                 ),
             )

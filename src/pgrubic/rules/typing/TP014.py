@@ -43,6 +43,8 @@ class DisallowedDataType(linter.BaseChecker):
                         description=f"Data type '{node.names[-1].sval}' is disallowed"
                         f" in config with reason: '{data_type.reason}', use"
                         f" '{data_type.use_instead}' instead",
+                        auto_fixable=self.is_auto_fixable,
+                        help=f"Use '{data_type.use_instead}' instead",
                     ),
                 )
 

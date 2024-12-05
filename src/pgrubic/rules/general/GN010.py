@@ -20,7 +20,7 @@ class TableColumnConflict(linter.BaseChecker):
     Alsmost never.
 
     ## **Use instead:**
-    Resolve the conflict.
+    Resolve the name conflict.
     """
 
     def _register_violation(
@@ -41,6 +41,8 @@ class TableColumnConflict(linter.BaseChecker):
                 statement_location=statement_location,
                 description=f"Table name `{table_name}` conflicts with the"
                 " name of its column(s)",
+                auto_fixable=self.is_auto_fixable,
+                help="Resolve the name conflict",
             ),
         )
 

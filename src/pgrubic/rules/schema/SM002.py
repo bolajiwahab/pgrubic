@@ -51,6 +51,8 @@ class DisallowedSchema(linter.BaseChecker):
                             description=f"Schema '{node.schemaname}' is disallowed in"
                             f" config with reason: '{schema.reason}'"
                             f", use '{schema.use_instead}' instead",
+                            auto_fixable=self.is_auto_fixable,
+                            help="Do not use disallowed schema",
                         ),
                     )
 

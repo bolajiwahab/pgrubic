@@ -55,5 +55,7 @@ class InvalidForeignKeyName(linter.BaseChecker):
                     description=f"Foreign key constraint"
                     f" `{node.conname}` does not follow naming convention"
                     f" `{self.config.lint.regex_constraint_foreign_key}`",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Name your foreign key according to the set naming convention",
                 ),
             )

@@ -42,5 +42,6 @@ class RemoveConstraint(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description=f"Constraint `{node.name}` removal detected",
+                    auto_fixable=self.is_auto_fixable,
                 ),
             )

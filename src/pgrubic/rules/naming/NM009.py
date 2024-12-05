@@ -47,5 +47,7 @@ class InvalidPartitionName(linter.BaseChecker):
                     statement_location=self.statement_location,
                     description=f"Partition `{node.relation.relname}` does not follow"
                     f" naming convention `{self.config.lint.regex_partition}`",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Name your partition according to the set naming convention",
                 ),
             )

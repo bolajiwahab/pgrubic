@@ -78,5 +78,7 @@ class MissingPrimaryKey(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description=f"Table `{node.relation.relname}` missing a primary key",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Define a primary key",
                 ),
             )

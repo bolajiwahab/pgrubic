@@ -49,5 +49,7 @@ class PgPrefixIdentifier(CheckIdentifier):
                     line=line,
                     statement_location=statement_location,
                     description="Identifier should not use prefix `pg_`",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Remove prefix `pg_` from identifier",
                 ),
             )

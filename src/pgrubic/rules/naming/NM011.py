@@ -58,5 +58,7 @@ class KeywordIdentifier(CheckIdentifier):
                     line=line,
                     statement_location=statement_location,
                     description=f"Keyword `{identifier}` used as an identifier",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Choose a name that is not a keyword",
                 ),
             )

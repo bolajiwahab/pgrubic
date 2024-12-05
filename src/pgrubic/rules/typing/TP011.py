@@ -42,6 +42,8 @@ class Float(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Prefer numeric over float",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Use numeric",
                 ),
             )
 
