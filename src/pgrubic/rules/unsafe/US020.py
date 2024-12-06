@@ -1,4 +1,4 @@
-"""Unsafe index operations."""
+"""Non concurrent reindex."""
 
 import typing
 
@@ -10,6 +10,21 @@ from pgrubic.core import linter
 class NonConcurrentReindex(linter.BaseChecker):
     """Non concurrent reindex."""
 
+    """## **What it does**
+    Checks non-concurrent reindex.
+
+    ## **Why not?**
+    Reindexing in non-concurrent mode will locks out writes (but not reads) on
+    the table until it is done. This will cause downtime if the table is concurrently
+    being written by other clients.
+
+    ## **When should you?**
+    If the table is empty.
+    If the table is not empty but is not being concurrently written.
+
+    ## **Use instead:**
+    Reindex in concurrent mode: **REINDEX .. CONCURRENTLY ..**.
+    """
     is_auto_fixable: bool = True
 
     def visit_ReindexStmt(
@@ -34,6 +49,8 @@ class NonConcurrentReindex(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Non concurrent reindex",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Reindex in concurrent mode",
                 ),
             )
 

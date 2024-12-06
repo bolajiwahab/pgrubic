@@ -8,6 +8,23 @@ from pgrubic.core import linter
 class VacuumFull(linter.BaseChecker):
     """Vacuum full."""
 
+    """## **What it does**
+    Checks vacuum full.
+
+    ## **Why not?**
+    When a table is being vacuumed with the **FULL** option, an **ACCESS EXCLUSIVE** lock
+    is acquired on it, preventing any other database operations (both reads and writes)
+    from operating on the table until the **VACUUM FULL** is finished.
+    This will cause downtime if the table is concurrently being accessed by other clients.
+
+    ## **When should you?**
+    If the table is empty.
+    If the table is not empty but is not being concurrently accessed.
+
+    ## **Use instead:**
+    Have a look at pg_repack as an alternative.
+    """
+
     def visit_VacuumStmt(
         self,
         ancestors: visitors.Ancestor,
@@ -25,5 +42,7 @@ class VacuumFull(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Vacuum full found",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Have a look at pg_repack as an alternative",
                 ),
             )

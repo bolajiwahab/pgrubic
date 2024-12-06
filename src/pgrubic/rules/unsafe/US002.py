@@ -7,7 +7,7 @@ from pgrubic.core import linter
 
 class ColumnDataTypeChange(linter.BaseChecker):
     """## **What it does**
-    Checks for column data type change.
+    Checks column data type change.
 
     ## **Why not?**
     Changing a column's data type requires an **ACCESS EXCLUSIVE** lock on the table,
@@ -28,7 +28,7 @@ class ColumnDataTypeChange(linter.BaseChecker):
     been made aware of the new type.
 
     ## **Use instead:**
-    1. Create a new column with the new type.
+    1. Create a new column with the new type, nullable.
     2. Start writing data to the new column.
     3. Copy all data from the old column to the new column.
     4. Migrate clients to the new column.

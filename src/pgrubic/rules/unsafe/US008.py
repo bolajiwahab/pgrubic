@@ -6,7 +6,19 @@ from pgrubic.core import linter
 
 
 class DropDatabase(linter.BaseChecker):
-    """Drop database."""
+    """## **What it does**
+    Checks dropping of database.
+
+    ## **Why not?**
+    Not only that mistakenly dropping a database can cause data loss, applications that
+    rely on the data will break.
+
+    ## **When should you?**
+    If you really want to drop the database.
+
+    ## **Use instead:**
+    No suggestions.
+    """
 
     def visit_DropdbStmt(
         self,
@@ -22,5 +34,6 @@ class DropDatabase(linter.BaseChecker):
                 line=self.line,
                 statement_location=self.statement_location,
                 description="Drop database detected",
+                auto_fixable=self.is_auto_fixable,
             ),
         )

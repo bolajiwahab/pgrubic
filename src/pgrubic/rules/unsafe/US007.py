@@ -6,7 +6,19 @@ from pgrubic.core import linter
 
 
 class DropTablespace(linter.BaseChecker):
-    """Checks for drop tablespace."""
+    """## **What it does**
+    Checks dropping of tablespace.
+
+    ## **Why not?**
+    Not only that mistakenly dropping a tablespace can cause data loss, applications that
+    rely on the data will break.
+
+    ## **When should you?**
+    If you really want to drop the tablespace.
+
+    ## **Use instead:**
+    No suggestions.
+    """
 
     def visit_DropTableSpaceStmt(
         self,
@@ -22,5 +34,6 @@ class DropTablespace(linter.BaseChecker):
                 line=self.line,
                 statement_location=self.statement_location,
                 description="Drop tablespace detected",
+                auto_fixable=self.is_auto_fixable,
             ),
         )

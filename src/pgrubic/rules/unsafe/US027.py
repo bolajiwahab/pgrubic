@@ -6,7 +6,26 @@ from pgrubic.core import linter
 
 
 class NonConcurrentDetachPartition(linter.BaseChecker):
-    """Detach partition."""
+    """## **What it does**
+    Checks non-concurrent detach partition.
+
+    ## **Why not?**
+    Detaching a partition in non-concurrent mode acquires an **ACCESS EXCLUSIVE** lock on
+    both the partition and the parent table, blocking other accesses to all partitions
+    until the **DETACH PARTITION** is completed.
+    This will cause downtime if the partitions are concurrently being accessed by other
+    clients.
+
+    Concurrent mode, **CONCURRENTLY** is a new feature from PostgreSQL 14.
+
+    ## **When should you?**
+    If the partitioned table is empty.
+    If the partitioned table is not empty but is not being concurrently accessed.
+
+    ## **Use instead:**
+    From PostgreSQL 14, detach the partition in concurrent mode:
+        **ALTER TABLE .. DETACH PARTITION .. CONCURRENTLY**
+    """
 
     is_auto_fixable: bool = True
 
@@ -29,6 +48,8 @@ class NonConcurrentDetachPartition(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Non concurrent detach partition",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Detach the partition in concurrent mode",
                 ),
             )
 

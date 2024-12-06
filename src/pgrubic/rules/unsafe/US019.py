@@ -6,7 +6,21 @@ from pgrubic.core import linter
 
 
 class NonConcurrentIndexDrop(linter.BaseChecker):
-    """Non concurrent index drop."""
+    """## **What it does**
+    Checks non-concurrent index drop.
+
+    ## **Why not?**
+    Dropping an index in non-concurrent mode acquires an **ACCESS EXCLUSIVE** lock on the
+    table, blocking other accesses until the index drop is completed.
+    This will cause downtime if the table is concurrently being accessed by other clients.
+
+    ## **When should you?**
+    If the table is empty.
+    If the table is not empty but is not being concurrently accessed.
+
+    ## **Use instead:**
+    Drop the index in concurrent mode: **DROP INDEX CONCURRENTLY ..**.
+    """
 
     is_auto_fixable: bool = True
 
@@ -25,6 +39,8 @@ class NonConcurrentIndexDrop(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Non concurrent index drop",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Drop the index in concurrent mode",
                 ),
             )
 

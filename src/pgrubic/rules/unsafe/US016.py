@@ -1,4 +1,4 @@
-"""Non concurrent index creation."""
+"""Non-concurrent index creation."""
 
 from pglast import ast, visitors
 
@@ -6,7 +6,21 @@ from pgrubic.core import linter
 
 
 class NonConcurrentIndexCreation(linter.BaseChecker):
-    """Non concurrent index creation."""
+    """## **What it does**
+    Checks non-concurrent index creation.
+
+    ## **Why not?**
+    Creating an index in non-concurrent mode will locks out writes (but not reads) on the
+    table until it is done. This will cause downtime if the table is concurrently being
+    written by other clients.
+
+    ## **When should you?**
+    If the table is empty.
+    If the table is not empty but is not being concurrently written.
+
+    ## **Use instead:**
+    Create the index in concurrent mode: **CREATE .. INDEX CONCURRENTLY ON ..**.
+    """
 
     is_auto_fixable: bool = True
 
@@ -25,6 +39,8 @@ class NonConcurrentIndexCreation(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Non concurrent index creation",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Create the index in concurrent mode",
                 ),
             )
 
