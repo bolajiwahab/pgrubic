@@ -41,6 +41,8 @@ class CurrentTime(linter.BaseChecker):
                     statement_location=self.statement_location,
                     description="Prefer functions that return timestamptz"
                     " instead of timetz",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Use functions that return timestamptz",
                 ),
             )
 

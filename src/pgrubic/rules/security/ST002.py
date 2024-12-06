@@ -44,5 +44,8 @@ class ProceduralLanguageWhitelist(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description=f"Language '{node.plname}' is not allowed",
+                    auto_fixable=self.is_auto_fixable,
+                    help="If you want to allow this language, add the language to the"
+                    " allowed languages list",
                 ),
             )

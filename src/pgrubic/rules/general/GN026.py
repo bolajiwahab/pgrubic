@@ -64,5 +64,7 @@ class NotIn(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="NOT IN detected",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Use NOT EXISTS instead",
                 ),
             )

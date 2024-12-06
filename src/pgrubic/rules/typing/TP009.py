@@ -37,6 +37,8 @@ class Integer(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Prefer bigint over integer",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Use bigint",
                 ),
             )
 

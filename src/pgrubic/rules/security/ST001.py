@@ -44,5 +44,8 @@ class ExtensionWhitelist(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description=f"Extension '{node.extname}' is not allowed",
+                    auto_fixable=self.is_auto_fixable,
+                    help="If you want to allow this extension, add the extension to the"
+                    " allowed extensions list",
                 ),
             )

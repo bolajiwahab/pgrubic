@@ -22,12 +22,13 @@ class UnloggedTable(linter.BaseChecker):
     shutdown.
 
     ## **Use instead:**
-    Use a regular table instead.
+    Use a regular table.
     """
 
     is_auto_fixable: bool = True
 
     description: str = "Prefer regular table to unlogged table"
+    help: str = "Use regular table"
 
     def visit_CreateStmt(
         self,
@@ -44,6 +45,8 @@ class UnloggedTable(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description=self.description,
+                    auto_fixable=self.is_auto_fixable,
+                    help=self.help,
                 ),
             )
 
@@ -68,6 +71,8 @@ class UnloggedTable(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description=self.description,
+                    auto_fixable=self.is_auto_fixable,
+                    help=self.help,
                 ),
             )
 

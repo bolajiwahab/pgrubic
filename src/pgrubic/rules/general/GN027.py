@@ -47,6 +47,8 @@ class YodaCondition(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Yoda conditions are discouraged",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Use natural condition",
                 ),
             )
 

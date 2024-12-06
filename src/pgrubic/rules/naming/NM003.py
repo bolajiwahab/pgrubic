@@ -50,5 +50,7 @@ class InvalidUniqueKeyName(linter.BaseChecker):
                     description=f"Unique key constraint"
                     f" `{node.conname}` does not follow naming convention"
                     f" `{self.config.lint.regex_constraint_unique_key}`",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Name your unique key according to the set naming convention",
                 ),
             )

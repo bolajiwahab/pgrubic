@@ -7,7 +7,7 @@ from pgrubic.core import linter
 
 class ColumnRename(linter.BaseChecker):
     """## **What it does**
-    Checks for renaming of column.
+    Checks renaming of column.
 
     ## **Why not?**
     Renaming a column can easily break applications that rely on the column.
@@ -20,7 +20,7 @@ class ColumnRename(linter.BaseChecker):
     clients to a new column.
 
     ## **Use instead:**
-    1. Create a new column with the new name.
+    1. Create a new column with the new name, nullable.
     2. Start writing data to the new column.
     3. Copy all data from the old column to the new column.
     4. Migrate clients to the new column.
@@ -44,5 +44,7 @@ class ColumnRename(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Column rename is not safe",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Create a new column with the new name",
                 ),
             )

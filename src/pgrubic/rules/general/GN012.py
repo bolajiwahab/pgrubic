@@ -41,5 +41,7 @@ class RequiredColumnRemoval(linter.BaseChecker):
                             statement_location=self.statement_location,
                             description=f"Column `{node.name}` is marked as required"
                             " in config",
+                            auto_fixable=self.is_auto_fixable,
+                            help="Leave the required column",
                         ),
                     )

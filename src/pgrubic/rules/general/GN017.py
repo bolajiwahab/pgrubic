@@ -51,6 +51,8 @@ class IdColumn(linter.BaseChecker):
                     statement_location=self.statement_location,
                     description="Use descriptive name for column instead of"
                     f" `{node.colname}`",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Use a more descriptive name",
                 ),
             )
 

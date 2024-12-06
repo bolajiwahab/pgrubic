@@ -6,7 +6,22 @@ from pgrubic.core import linter
 
 
 class IndexesMovementToTablespace(linter.BaseChecker):
-    """Indexes movement to tablespace."""
+    """## **What it does**
+    Checks indexes movement to a different tablespace.
+
+    ## **Why not?**
+    Moving indexes to a different tablespace acquires an **ACCESS EXCLUSIVE** lock on the
+    respective tables, blocking other accesses until the movement is completed.
+    This will cause downtime if the tables are concurrently being accessed by other
+    clients.
+
+    ## **When should you?**
+    If the tables are empty.
+    If the tables are not empty but is not being concurrently accessed.
+
+    ## **Use instead:**
+    Have a look at pg_repack as an alternative.
+    """
 
     def visit_AlterTableMoveAllStmt(
         self,
@@ -26,5 +41,7 @@ class IndexesMovementToTablespace(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Indexes movement to tablespace",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Have a look at pg_repack as an alternative",
                 ),
             )

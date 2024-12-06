@@ -53,6 +53,8 @@ class NullableBooleanField(linter.BaseChecker):
                         line=self.line,
                         statement_location=self.statement_location,
                         description="Boolean field should be not be nullable",
+                        auto_fixable=self.is_auto_fixable,
+                        help="Add not null constraint",
                     ),
                 )
 

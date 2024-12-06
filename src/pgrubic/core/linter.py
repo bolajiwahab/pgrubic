@@ -20,7 +20,7 @@ class Violation(typing.NamedTuple):
     line: str
     statement_location: int
     description: str
-    auto_fixable: bool = False
+    auto_fixable: bool
     help: str | None = None
 
 

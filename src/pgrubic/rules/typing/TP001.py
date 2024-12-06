@@ -55,7 +55,10 @@ class TimestampWithoutTimezone(linter.BaseChecker):
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
-                    description="Prefer timestamp with timezone over timestamp without timezone",  # noqa: E501
+                    description="Prefer timestamp with timezone over"
+                    " timestamp without timezone",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Use timestamptz",
                 ),
             )
 

@@ -39,5 +39,7 @@ class MultiColumnPartitioning(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Prefer partitioning by one key",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Use sub-partitioning",
                 ),
             )

@@ -6,7 +6,27 @@ from pgrubic.core import linter
 
 
 class UniqueConstraintCreatingNewIndex(linter.BaseChecker):
-    """Unique constraint creating new index."""
+    """## **What it does**
+    Checks unique constraint creating new index.
+
+    ## **Why not?**
+    Unique constraint is supported by a unique index in the background.
+    Adding a unique constraint to an already populated table will create a unique index
+    in non-concurrent mode, scanning and validating that there are no violating records
+    in the table. This causes the table to be locked, in which no other operations can be
+    performed on the table for the duration of the validation. This will cause downtime if
+    the table is concurrently being accessed by other clients.
+
+    ## **When should you?**
+    If the table is empty.
+    If the table is not empty but is not being concurrently accessed.
+
+    ## **Use instead:**
+    1. Create a unique index in concurrent mode:
+        **CREATE UNIQUE INDEX CONCURRENTLY .. ON .. (..)**.
+    2. Add the unique constraint using the index created in step 1:
+        **ALTER TABLE .. ADD CONSTRAINT .. UNIQUE USING INDEX ..**
+    """
 
     def visit_Constraint(
         self,
@@ -27,5 +47,7 @@ class UniqueConstraintCreatingNewIndex(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Unique constraint creating new index",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Create a unique index in concurrent mode, then add the unique constraint using the index",  # noqa: E501
                 ),
             )

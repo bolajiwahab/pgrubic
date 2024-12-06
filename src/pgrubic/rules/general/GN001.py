@@ -24,7 +24,7 @@ class TableInheritance(linter.BaseChecker):
     rows. Even then you ought to be wary of caveats while working with parent table.
 
     ## **Use instead:**
-    Don't use table inheritance. If you think you want to, use foreign keys instead.
+    Don't use table inheritance. Use declarative partitioning.
     """
 
     def visit_CreateStmt(
@@ -42,5 +42,7 @@ class TableInheritance(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Table inheritance detected",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Use declarative partitioning",
                 ),
             )

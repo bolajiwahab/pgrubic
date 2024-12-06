@@ -6,7 +6,21 @@ from pgrubic.core import linter
 
 
 class TruncateTable(linter.BaseChecker):
-    """Truncate table."""
+    """## **What it does**
+    Checks truncating of table.
+
+    ## **Why not?**
+    Truncating a table can easily break applications that rely on the data in the table.
+
+    If any part of the application code, database procedures, views, or reports use
+    the data, truncating it will cause errors and potentially disrupt business operations.
+
+    ## **When should you?**
+    If the data in the table is no longer needed by clients, probably a test data.
+
+    ## **Use instead:**
+    No suggestions.
+    """
 
     def visit_TruncateStmt(
         self,
@@ -22,5 +36,6 @@ class TruncateTable(linter.BaseChecker):
                 line=self.line,
                 statement_location=self.statement_location,
                 description="Truncate table detected",
+                auto_fixable=self.is_auto_fixable,
             ),
         )

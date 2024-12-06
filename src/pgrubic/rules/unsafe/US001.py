@@ -7,7 +7,7 @@ from pgrubic.core import linter
 
 class DropColumn(linter.BaseChecker):
     """## **What it does**
-    Checks for dropping of column.
+    Checks dropping of column.
 
     ## **Why not?**
     Not only that mistakenly dropping a column can cause data loss, applications that rely
@@ -48,5 +48,8 @@ class DropColumn(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Drop column detected",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Keep the column as nullable"
+                    " or drop it once it is no longer being used",
                 ),
             )

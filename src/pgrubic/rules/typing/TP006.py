@@ -49,6 +49,8 @@ class Money(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Prefer numeric to money",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Use numeric",
                 ),
             )
 

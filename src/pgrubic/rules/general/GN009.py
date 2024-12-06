@@ -39,5 +39,7 @@ class DuplicateColumn(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description=f"Column `{column}` specified more than once",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Remove duplicate columns",
                 ),
             )

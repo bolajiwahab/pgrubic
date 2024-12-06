@@ -42,6 +42,8 @@ class NullConstraint(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="NULL constraints are redundant",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Remove the NULL constraint",
                 ),
             )
 

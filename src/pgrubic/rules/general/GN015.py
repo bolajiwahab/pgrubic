@@ -24,7 +24,7 @@ class DropCascade(linter.BaseChecker):
     Almost never.
 
     ## **Use instead:**
-    Restrict
+    Remove the cascade or use restrict
     """
 
     is_auto_fixable: bool = True
@@ -46,6 +46,8 @@ class DropCascade(linter.BaseChecker):
                 line=line,
                 statement_location=statement_location,
                 description=f"Drop cascade on `{object_name}` detected",
+                auto_fixable=self.is_auto_fixable,
+                help="Remove the cascade or use restrict",
             ),
         )
 
