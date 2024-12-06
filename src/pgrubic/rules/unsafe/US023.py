@@ -6,7 +6,21 @@ from pgrubic.core import linter
 
 
 class TableMovementToTablespace(linter.BaseChecker):
-    """Table movement to tablespace."""
+    """## **What it does**
+    Checks table movement to a tablespace.
+
+    ## **Why not?**
+    Moving a table to a different tablespace acquires an **ACCESS EXCLUSIVE** lock on the
+    table, blocking other accesses until the movement is completed.
+    This will cause downtime if the table is concurrently being accessed by other clients.
+
+    ## **When should you?**
+    If the table is empty.
+    If the table is not empty but is not being concurrently accessed.
+
+    ## **Use instead:**
+    Have a look at pg_repack as an alternative.
+    """
 
     def visit_AlterTableCmd(
         self,
