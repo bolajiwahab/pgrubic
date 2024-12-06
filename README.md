@@ -40,7 +40,7 @@
 | src/pgrubic/rules/general/GN016.py           |        6 |        0 |     100% |           |
 | src/pgrubic/rules/general/GN017.py           |       14 |        0 |     100% |           |
 | src/pgrubic/rules/general/GN018.py           |        6 |        0 |     100% |           |
-| src/pgrubic/rules/general/GN019.py           |       17 |        0 |     100% |           |
+| src/pgrubic/rules/general/GN019.py           |       18 |        0 |     100% |           |
 | src/pgrubic/rules/general/GN020.py           |       10 |        0 |     100% |           |
 | src/pgrubic/rules/general/GN021.py           |       11 |        0 |     100% |           |
 | src/pgrubic/rules/general/GN022.py           |        6 |        0 |     100% |           |
@@ -70,8 +70,8 @@
 | src/pgrubic/rules/naming/NM015.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/naming/NM016.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/naming/\_\_init\_\_.py     |       41 |        0 |     100% |           |
-| src/pgrubic/rules/schema/SM001.py            |       29 |        0 |     100% |           |
-| src/pgrubic/rules/schema/SM002.py            |       28 |        0 |     100% |           |
+| src/pgrubic/rules/schema/SM001.py            |       30 |        0 |     100% |           |
+| src/pgrubic/rules/schema/SM002.py            |       29 |        0 |     100% |           |
 | src/pgrubic/rules/schema/\_\_init\_\_.py     |        0 |        0 |     100% |           |
 | src/pgrubic/rules/security/ST001.py          |        6 |        0 |     100% |           |
 | src/pgrubic/rules/security/ST002.py          |        6 |        0 |     100% |           |
@@ -114,18 +114,18 @@
 | src/pgrubic/rules/unsafe/US017.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US018.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US019.py            |       10 |        0 |     100% |           |
-| src/pgrubic/rules/unsafe/US020.py            |       13 |        0 |     100% |           |
+| src/pgrubic/rules/unsafe/US020.py            |       14 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US021.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US022.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US023.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US024.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US025.py            |        5 |        0 |     100% |           |
-| src/pgrubic/rules/unsafe/US026.py            |        7 |        0 |     100% |           |
+| src/pgrubic/rules/unsafe/US026.py            |        8 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US027.py            |       11 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US028.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US029.py            |        5 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-|                                    **TOTAL** | **1505** |    **0** | **100%** |           |
+|                                    **TOTAL** | **1510** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
