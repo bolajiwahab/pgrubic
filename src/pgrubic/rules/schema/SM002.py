@@ -24,6 +24,8 @@ class DisallowedSchema(linter.BaseChecker):
 
     is_auto_fixable: bool = True
 
+    help: str = "Do not use disallowed schema"
+
     def visit_RangeVar(
         self,
         ancestors: visitors.Ancestor,
@@ -52,7 +54,7 @@ class DisallowedSchema(linter.BaseChecker):
                             f" config with reason: '{schema.reason}'"
                             f", use '{schema.use_instead}' instead",
                             auto_fixable=self.is_auto_fixable,
-                            help="Do not use disallowed schema",
+                            help=self.help,
                         ),
                     )
 
@@ -88,6 +90,8 @@ class DisallowedSchema(linter.BaseChecker):
                         description=f"Schema '{schema_name}' is disallowed in"
                         f" config with reason: '{schema.reason}'"
                         f", use '{schema.use_instead}' instead",
+                        auto_fixable=self.is_auto_fixable,
+                        help=self.help,
                     ),
                 )
 
@@ -123,6 +127,8 @@ class DisallowedSchema(linter.BaseChecker):
                         description=f"Schema '{schema_name}' is disallowed in"
                         f" config with reason: '{schema.reason}'"
                         f", use '{schema.use_instead}' instead",
+                        auto_fixable=self.is_auto_fixable,
+                        help=self.help,
                     ),
                 )
 

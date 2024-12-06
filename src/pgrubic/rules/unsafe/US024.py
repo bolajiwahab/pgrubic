@@ -26,5 +26,7 @@ class TablesMovementToTablespace(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Tables movement to tablespace",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Have a look at pg_repack as an alternative",
                 ),
             )

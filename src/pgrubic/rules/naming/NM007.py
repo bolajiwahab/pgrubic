@@ -68,5 +68,7 @@ class InvalidSequenceName(linter.BaseChecker):
                     statement_location=self.statement_location,
                     description=f"Sequence `{node.newname}` does not follow"
                     f" naming convention `{self.config.lint.regex_sequence}`",
+                    auto_fixable=self.is_auto_fixable,
+                    help="Name your sequence according to the set naming convention",
                 ),
             )
