@@ -28,7 +28,7 @@ regex-sequence = "^.+$"
 [format]
 include = []
 exclude = []
-comma-at-beginning = false
+comma-at-beginning = true
 new-line-before-semicolon = false
 remove-pg-catalog-from-functions = true
 lines-between-statements = 1

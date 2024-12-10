@@ -147,6 +147,9 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+# pgrubic
+.pgrubic_cache
+
 # Pyre type checker
 .pyre/
 
