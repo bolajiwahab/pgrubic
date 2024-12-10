@@ -19,7 +19,7 @@ def linter() -> core.Linter:
 
     rules: set[core.BaseChecker] = core.load_rules(config=config)
 
-    linter = core.Linter(config=config)
+    linter = core.Linter(config=config, formatters=core.load_formatters)
 
     for rule in rules:
         linter.checkers.add(rule())
@@ -33,6 +33,15 @@ def formatter() -> core.Formatter:
     config: core.Config = core.parse_config()
 
     return core.Formatter(config=config, formatters=core.load_formatters)
+
+
+@pytest.fixture
+def cache(tmp_path: pathlib.Path) -> core.Cache:
+    """Initialize cache."""
+    config: core.Config = core.parse_config()
+    config.cache_dir = tmp_path
+
+    return core.Cache(config=config)
 
 
 class TestCaseType(enum.StrEnum):

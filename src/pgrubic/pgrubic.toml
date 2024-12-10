@@ -1,3 +1,4 @@
+cache-dir = ".pgrubic_cache"
 include = []
 exclude = []
 postgres-target-version = 14

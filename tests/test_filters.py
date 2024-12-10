@@ -5,8 +5,8 @@ import pathlib
 from pgrubic import core
 
 
-def test_filter_lint_source_paths(tmp_path: pathlib.Path, linter: core.Linter) -> None:
-    """Test filter lint source paths."""
+def test_filter_lint_sources(tmp_path: pathlib.Path, linter: core.Linter) -> None:
+    """Test filter lint sources."""
     linter.config.lint.include = [
         "*.sql",
         "*.txt",
@@ -21,7 +21,7 @@ def test_filter_lint_source_paths(tmp_path: pathlib.Path, linter: core.Linter) -
     directory = tmp_path / "sub"
     directory.mkdir()
 
-    paths: tuple[pathlib.Path, ...] = (
+    sources: tuple[pathlib.Path, ...] = (
         pathlib.Path("test.sql"),
         pathlib.Path("test.py"),
         pathlib.Path("test.txt"),
@@ -35,23 +35,23 @@ def test_filter_lint_source_paths(tmp_path: pathlib.Path, linter: core.Linter) -
         pathlib.Path("alters.sql"),
     )
 
-    for path in paths:
-        file_fail = directory / path
+    for source in sources:
+        file_fail = directory / source
         file_fail.write_text(sql_fail)
 
-    source_paths_filtered_length = 9
+    sources_filtered_length = 9
 
-    paths = core.filter_files(
-        paths=(directory,),
+    sources_to_be_formatted = core.filter_sources(
+        sources=(directory,),
         include=linter.config.lint.include,
         exclude=linter.config.lint.exclude,
     )
 
-    assert len(paths) == source_paths_filtered_length
+    assert len(sources_to_be_formatted) == sources_filtered_length
 
 
-def test_filter_format_source_paths(tmp_path: pathlib.Path, linter: core.Linter) -> None:
-    """Test filter format source paths."""
+def test_filter_format_sources(tmp_path: pathlib.Path, linter: core.Linter) -> None:
+    """Test filter format sources."""
     linter.config.format.include = [
         "*.sql",
         "*.txt",
@@ -66,7 +66,7 @@ def test_filter_format_source_paths(tmp_path: pathlib.Path, linter: core.Linter)
     directory = tmp_path / "sub"
     directory.mkdir()
 
-    paths: tuple[pathlib.Path, ...] = (
+    sources: tuple[pathlib.Path, ...] = (
         pathlib.Path("test.sql"),
         pathlib.Path("test.py"),
         pathlib.Path("test.txt"),
@@ -80,16 +80,16 @@ def test_filter_format_source_paths(tmp_path: pathlib.Path, linter: core.Linter)
         pathlib.Path("alters.sql"),
     )
 
-    for path in paths:
+    for path in sources:
         file_fail = directory / path
         file_fail.write_text(sql_fail)
 
-    source_paths_filtered_length = 9
+    sources_filtered_length = 9
 
-    paths = core.filter_files(
-        paths=(directory,),
+    sources_to_be_formatted = core.filter_sources(
+        sources=(directory,),
         include=linter.config.format.include,
         exclude=linter.config.format.exclude,
     )
 
-    assert len(paths) == source_paths_filtered_length
+    assert len(sources_to_be_formatted) == sources_filtered_length

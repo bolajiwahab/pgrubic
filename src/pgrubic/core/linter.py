@@ -8,7 +8,7 @@ from colorama import Fore, Style
 from caseconverter import kebabcase
 
 from pgrubic import DOCUMENTATION_URL
-from pgrubic.core import noqa, config, loader, formatter
+from pgrubic.core import noqa, config, formatter
 
 
 class Violation(typing.NamedTuple):
@@ -102,11 +102,10 @@ class Linter:
     def __init__(
         self,
         config: config.Config,
-        # rules: typing.Any,
         formatters: typing.Callable[
             [],
             set[typing.Callable[[], None]],
-        ] = loader.load_formatters,
+        ],
     ) -> None:
         """Initialize variables."""
         self.checkers: set[BaseChecker] = set()

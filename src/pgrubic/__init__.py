@@ -3,22 +3,36 @@
 import enum
 import typing
 import pathlib
+import tomllib
+import importlib.metadata
 
 from pglast import ast
 
-PROGRAM_NAME: str = "pgrubic"
+PACKAGE_NAME: typing.Final[str] = "pgrubic"
 
-DOCUMENTATION_URL: str = "https://bolajiwahab.github.io/pgrubic"
+DOCUMENTATION_URL: typing.Final[str] = "https://bolajiwahab.github.io/pgrubic"
 
-RULES_BASE_MODULE: str = f"{PROGRAM_NAME}/rules/"
+PACKAGE_DIRECTORY: typing.Final[pathlib.Path] = pathlib.Path(__file__).resolve().parent
 
-FORMATTERS_BASE_MODULE: str = f"{PROGRAM_NAME}/formatters/"
+SOURCE_DIRECTORY: typing.Final[pathlib.Path] = PACKAGE_DIRECTORY.parent
 
-PARENT_DIRECTORY: pathlib.Path = pathlib.Path(__file__).resolve().parent
+PROJECT_DIRECTORY: typing.Final[pathlib.Path] = SOURCE_DIRECTORY.parent
 
-RULES_DIRECTORY: pathlib.Path = PARENT_DIRECTORY / "rules/"
+RULES_DIRECTORY: typing.Final[pathlib.Path] = PACKAGE_DIRECTORY / "rules/"
 
-FORMATTERS_DIRECTORY: pathlib.Path = PARENT_DIRECTORY / "formatters/"
+FORMATTERS_DIRECTORY: typing.Final[pathlib.Path] = PACKAGE_DIRECTORY / "formatters/"
+
+pyproject_file = pathlib.Path(PROJECT_DIRECTORY / "pyproject.toml")
+if pyproject_file.exists():
+    with pathlib.Path(PROJECT_DIRECTORY / "pyproject.toml").open("rb") as f:
+        pyproject_config = tomllib.load(f)
+        __version__: str = pyproject_config["project"]["version"]
+else:
+    __version__ = importlib.metadata.version(PACKAGE_NAME)  # pragma: no cover
+
+RULES_BASE_MODULE: typing.Final[str] = f"{PACKAGE_NAME}/rules/"
+
+FORMATTERS_BASE_MODULE: typing.Final[str] = f"{PACKAGE_NAME}/formatters/"
 
 
 def get_fully_qualified_name(node: tuple[typing.Any]) -> str:

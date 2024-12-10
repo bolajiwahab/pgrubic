@@ -77,10 +77,8 @@ class Formatter:
 
     def format(self, *, source_file: str, source_code: str) -> str:
         """Format source code."""
-        source_file = pathlib.Path(source_file).name
-
         return self.run(
-            source_file=source_file,
+            source_file=str(pathlib.Path(source_file).resolve()),
             source_code=source_code,
             config=self.config,
         )

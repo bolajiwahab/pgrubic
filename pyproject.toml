@@ -30,6 +30,7 @@ dependencies = [
   "click==8.1.7",
   "rich==13.9.2",
   "deepmerge==2.0",
+  "msgpack==1.1.0",
 ]
 
 [project.optional-dependencies]
@@ -186,6 +187,7 @@ legacy_tox_ini = """
         types-click
         rich
         types-PyYAML
+        msgpack-types
     commands = mypy {posargs:src} {posargs:tests} {posargs:docs}
 
     [testenv:docbuild]
