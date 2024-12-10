@@ -3,6 +3,7 @@
 import os
 import typing
 import pathlib
+from unittest.mock import patch
 
 from pgrubic import core
 
@@ -189,3 +190,25 @@ def test_source_invalidated_in_cache_by_config(
     )
 
     assert len(sources_to_be_formatted) == 1
+
+
+def test_cache_directory_from_environment_variable(tmp_path: pathlib.Path) -> None:
+    """Test cache directory from environment variable."""
+    config = core.parse_config()
+    config.cache_dir = pathlib.Path(core.cache.DEFAULT_CACHE_DIR)
+
+    with patch.dict(
+        "os.environ",
+        {core.cache.CACHE_DIR_ENVIRONMENT_VARIABLE: str(tmp_path)},
+    ):
+        cache = core.Cache(config=config)
+        assert cache.config.cache_dir == tmp_path
+
+    config.cache_dir = pathlib.Path()
+
+    with patch.dict(
+        "os.environ",
+        {core.cache.CACHE_DIR_ENVIRONMENT_VARIABLE: str(tmp_path)},
+    ):
+        cache = core.Cache(config=config)
+        assert cache.config.cache_dir != tmp_path

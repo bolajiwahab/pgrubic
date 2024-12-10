@@ -1,5 +1,6 @@
 """Caching of formatted files."""
 
+import os
 import typing
 import hashlib
 import pathlib
@@ -8,9 +9,14 @@ import tempfile
 import msgpack
 
 import pgrubic
+from pgrubic import PACKAGE_NAME
 from pgrubic.core import config
 
 CACHE_FILE_NAME_LENGTH: typing.Final[int] = 20
+
+CACHE_DIR_ENVIRONMENT_VARIABLE: typing.Final[str] = f"{PACKAGE_NAME.upper()}_CACHE_DIR"
+
+DEFAULT_CACHE_DIR: typing.Final[str] = ".pgrubic_cache"
 
 
 class FileData(typing.NamedTuple):
@@ -31,7 +37,15 @@ class Cache:
     ) -> None:
         """Initialize variables."""
         self.config = config
-        self.cache_dir = config.cache_dir / pgrubic.__version__
+        if (
+            os.getenv(CACHE_DIR_ENVIRONMENT_VARIABLE)
+            and str(self.config.cache_dir) == DEFAULT_CACHE_DIR
+        ):
+            self.config.cache_dir = pathlib.Path(
+                os.environ[CACHE_DIR_ENVIRONMENT_VARIABLE],
+            )
+
+        self.cache_dir = config.cache_dir.resolve() / pgrubic.__version__
         self.cache_file = (
             self.cache_dir
             / hashlib.sha256(b"formatter.cache").hexdigest()[:CACHE_FILE_NAME_LENGTH]

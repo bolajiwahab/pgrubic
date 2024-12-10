@@ -11,13 +11,15 @@ from deepmerge import always_merger
 from pgrubic import PACKAGE_NAME
 from pgrubic.core.logger import logger
 
-CONFIG_FILE: str = f"{PACKAGE_NAME}.toml"
+CONFIG_FILE: typing.Final[str] = f"{PACKAGE_NAME}.toml"
 
-DEFAULT_CONFIG: pathlib.Path = (
+DEFAULT_CONFIG: typing.Final[pathlib.Path] = (
     pathlib.Path(__file__).resolve().parent.parent / CONFIG_FILE
 )
 
-CONFIG_PATH_ENVIRONMENT_VARIABLE: str = f"{PACKAGE_NAME.upper()}_CONFIG_PATH"
+CONFIG_PATH_ENVIRONMENT_VARIABLE: typing.Final[str] = (
+    f"{PACKAGE_NAME.upper()}_CONFIG_PATH"
+)
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
