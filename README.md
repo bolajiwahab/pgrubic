@@ -4,17 +4,17 @@
 
 | Name                                         |    Stmts |     Miss |    Cover |   Missing |
 |--------------------------------------------- | -------: | -------: | -------: | --------: |
-| src/pgrubic/\_\_init\_\_.py                  |       19 |        0 |     100% |           |
-| src/pgrubic/\_\_main\_\_.py                  |       90 |        0 |     100% |           |
-| src/pgrubic/core/\_\_init\_\_.py             |        8 |        0 |     100% |           |
-| src/pgrubic/core/cache.py                    |        0 |        0 |     100% |           |
-| src/pgrubic/core/config.py                   |       92 |        0 |     100% |           |
+| src/pgrubic/\_\_init\_\_.py                  |       28 |        0 |     100% |           |
+| src/pgrubic/\_\_main\_\_.py                  |       88 |        0 |     100% |           |
+| src/pgrubic/core/\_\_init\_\_.py             |        9 |        0 |     100% |           |
+| src/pgrubic/core/cache.py                    |       58 |        0 |     100% |           |
+| src/pgrubic/core/config.py                   |       93 |        0 |     100% |           |
 | src/pgrubic/core/errors.py                   |        0 |        0 |     100% |           |
-| src/pgrubic/core/filters.py                  |       12 |        0 |     100% |           |
-| src/pgrubic/core/formatter.py                |       33 |        0 |     100% |           |
+| src/pgrubic/core/filters.py                  |       16 |        0 |     100% |           |
+| src/pgrubic/core/formatter.py                |       32 |        0 |     100% |           |
 | src/pgrubic/core/linter.py                   |      110 |        0 |     100% |           |
 | src/pgrubic/core/loader.py                   |       56 |        0 |     100% |           |
-| src/pgrubic/core/logging.py                  |        4 |        0 |     100% |           |
+| src/pgrubic/core/logger.py                   |        4 |        0 |     100% |           |
 | src/pgrubic/core/noqa.py                     |      105 |        0 |     100% |           |
 | src/pgrubic/rules/\_\_init\_\_.py            |        0 |        0 |     100% |           |
 | src/pgrubic/rules/constraint/CT001.py        |       12 |        0 |     100% |           |
@@ -125,7 +125,7 @@
 | src/pgrubic/rules/unsafe/US028.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US029.py            |        5 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-|                                    **TOTAL** | **1510** |    **0** | **100%** |           |
+|                                    **TOTAL** | **1580** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
