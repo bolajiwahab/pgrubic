@@ -28,7 +28,7 @@ if pyproject_file.exists():
         pyproject_config = tomllib.load(f)
         __version__: str = pyproject_config["project"]["version"]
 else:
-    __version__ = importlib.metadata.version(PACKAGE_NAME)
+    __version__ = importlib.metadata.version(PACKAGE_NAME)  # pragma: no cover
 
 RULES_BASE_MODULE: typing.Final[str] = f"{PACKAGE_NAME}/rules/"
 

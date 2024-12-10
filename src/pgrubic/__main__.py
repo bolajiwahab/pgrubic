@@ -70,7 +70,7 @@ def lint(
     if ignore_noqa:
         config.lint.ignore_noqa = ignore_noqa
 
-    linter: core.Linter = core.Linter(config=config)
+    linter: core.Linter = core.Linter(config=config, formatters=core.load_formatters)
 
     core.BaseChecker.config = config
 
@@ -183,6 +183,8 @@ def format_sql_file(
         sources=typing.cast(tuple[pathlib.Path, ...], included_sources),
     )
 
+    changes_detected = False
+
     for source in sources_to_be_formatted:
         source_file = source.resolve()
         source_code = source.read_text(encoding="utf-8")
@@ -191,6 +193,9 @@ def format_sql_file(
             source_file=str(source_file),
             source_code=source.read_text(encoding="utf-8"),
         )
+
+        if formatted_source_code != source_code and not changes_detected:
+            changes_detected = True
 
         if config.format.diff:
             diff_unified = difflib.unified_diff(
@@ -213,7 +218,7 @@ def format_sql_file(
 
     cache.write(sources=typing.cast(tuple[pathlib.Path, ...], included_sources))
 
-    if sources_to_be_formatted and (config.format.check or config.format.diff):
+    if changes_detected and (config.format.check or config.format.diff):
         sys.exit(1)
 
 

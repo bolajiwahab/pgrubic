@@ -26,6 +26,7 @@ class Cache:
 
     def __init__(
         self,
+        *,
         config: config.Config,
     ) -> None:
         """Initialize variables."""
