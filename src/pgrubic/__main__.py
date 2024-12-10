@@ -11,8 +11,7 @@ import click
 from rich.syntax import Syntax
 from rich.console import Console
 
-from pgrubic import PROGRAM_NAME, core
-from pgrubic.core import noqa
+from pgrubic import PACKAGE_NAME, core
 
 T = typing.TypeVar("T")
 
@@ -26,10 +25,10 @@ def common_options(func: abc.Callable[..., T]) -> abc.Callable[..., T]:
     context_settings={"help_option_names": ["-h", "--help"]},
     epilog=f"""
 Examples:\n
-   {PROGRAM_NAME} lint .\n
-   {PROGRAM_NAME} lint *.sql\n
-   {PROGRAM_NAME} lint example.sql\n
-   {PROGRAM_NAME} format src/queries\n
+   {PACKAGE_NAME} lint .\n
+   {PACKAGE_NAME} lint *.sql\n
+   {PACKAGE_NAME} lint example.sql\n
+   {PACKAGE_NAME} format src/queries\n
 """,
 )
 @click.version_option()
@@ -51,9 +50,9 @@ def cli() -> None:
     help="Whether to ignore noqa directives.",
 )
 @common_options
-@click.argument("paths", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
+@click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
 def lint(
-    paths: tuple[pathlib.Path, ...],
+    sources: tuple[pathlib.Path, ...],
     *,
     verbose: bool,
     fix: bool,
@@ -83,23 +82,20 @@ def lint(
     total_violations = 0
     fixable_violations = 0
 
-    # Use the current working directory if no paths are specified
-    if not paths:
-        paths = (pathlib.Path.cwd(),)
+    # Use the current working directory if no sources are specified
+    if not sources:
+        sources = (pathlib.Path.cwd(),)
 
-    source_files = core.filter_files(
-        paths=paths,
+    included_sources: set[pathlib.Path] = core.filter_sources(
+        sources=sources,
         include=config.lint.include,
         exclude=config.lint.exclude,
     )
 
-    for source_file in source_files:
-        with source_file.open("r", encoding="utf-8") as sf:
-            source_code: str = sf.read()
-
+    for source in included_sources:
         lint_result = linter.run(
-            source_file=str(source_file),
-            source_code=source_code,
+            source_file=str(source.resolve()),
+            source_code=source.read_text(encoding="utf-8"),
         )
 
         violations = linter.get_violation_stats(
@@ -145,9 +141,9 @@ def lint(
     how the formatted file would look like.""",
 )
 @common_options
-@click.argument("paths", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
+@click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
 def format_sql_file(
-    paths: tuple[pathlib.Path, ...],
+    sources: tuple[pathlib.Path, ...],
     *,
     check: bool,
     diff: bool,
@@ -171,36 +167,32 @@ def format_sql_file(
         formatters=core.load_formatters,
     )
 
-    # Use the current working directory if no paths are specified
-    if not paths:
-        paths = (pathlib.Path.cwd(),)
+    # Use the current working directory if no sources are specified
+    if not sources:
+        sources = (pathlib.Path.cwd(),)
 
-    source_files = core.filter_files(
-        paths=paths,
+    included_sources = core.filter_sources(
+        sources=sources,
         include=config.format.include,
         exclude=config.format.exclude,
     )
 
-    files_requiring_formatting: list[pathlib.Path] = []
+    cache = core.Cache(config=config)
 
-    for source_file in source_files:
-        with source_file.open("r", encoding="utf-8") as sf:
-            source_code: str = sf.read()
-            source_code = (
-                source_code
-                if source_code.endswith(noqa.NEW_LINE)
-                else source_code + noqa.NEW_LINE
-            )
+    sources_to_be_formatted = cache.filter_sources(
+        sources=typing.cast(tuple[pathlib.Path, ...], included_sources),
+    )
+
+    for source in sources_to_be_formatted:
+        source_file = source.resolve()
+        source_code = source.read_text(encoding="utf-8")
 
         formatted_source_code = formatter.format(
             source_file=str(source_file),
-            source_code=source_code,
+            source_code=source.read_text(encoding="utf-8"),
         )
 
-        if formatted_source_code != source_code and config.format.check:
-            files_requiring_formatting.append(source_file)
-
-        if formatted_source_code != source_code and config.format.diff:
+        if config.format.diff:
             diff_unified = difflib.unified_diff(
                 source_code.splitlines(keepends=True),
                 formatted_source_code.splitlines(keepends=True),
@@ -211,8 +203,6 @@ def format_sql_file(
             diff_output = "".join(diff_unified)
             console.print(Syntax(diff_output, "diff", theme="ansi_dark"))
 
-            files_requiring_formatting.append(source_file)
-
         if (
             formatted_source_code != source_code
             and not config.format.check
@@ -221,7 +211,9 @@ def format_sql_file(
             with source_file.open("w", encoding="utf-8") as sf:
                 sf.write(formatted_source_code)
 
-    if len(files_requiring_formatting) > 0:
+    cache.write(sources=typing.cast(tuple[pathlib.Path, ...], included_sources))
+
+    if sources_to_be_formatted and (config.format.check or config.format.diff):
         sys.exit(1)
 
 

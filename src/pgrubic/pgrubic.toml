@@ -1,3 +1,4 @@
+cache-dir = ".pgrubic_cache"
 include = []
 exclude = []
 postgres-target-version = 14
@@ -27,7 +28,7 @@ regex-sequence = "^.+$"
 [format]
 include = []
 exclude = []
-comma-at-beginning = true
+comma-at-beginning = false
 new-line-before-semicolon = false
 remove-pg-catalog-from-functions = true
 lines-between-statements = 1

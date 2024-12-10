@@ -8,16 +8,16 @@ import dataclasses
 import toml
 from deepmerge import always_merger
 
-from pgrubic import PROGRAM_NAME
-from pgrubic.core.logging import logger
+from pgrubic import PACKAGE_NAME
+from pgrubic.core.logger import logger
 
-CONFIG_FILE: str = f"{PROGRAM_NAME}.toml"
+CONFIG_FILE: str = f"{PACKAGE_NAME}.toml"
 
 DEFAULT_CONFIG: pathlib.Path = (
     pathlib.Path(__file__).resolve().parent.parent / CONFIG_FILE
 )
 
-CONFIG_PATH_ENVIRONMENT_VARIABLE: str = f"{PROGRAM_NAME.upper()}_CONFIG_PATH"
+CONFIG_PATH_ENVIRONMENT_VARIABLE: str = f"{PACKAGE_NAME.upper()}_CONFIG_PATH"
 
 
 @dataclasses.dataclass(kw_only=True, frozen=True)
@@ -93,6 +93,8 @@ class Format:
 class Config:
     """Representation of config."""
 
+    cache_dir: pathlib.Path
+
     include: list[str]
     exclude: list[str]
 
@@ -133,7 +135,7 @@ def _get_config_file_absolute_path(
     env_config_path = os.getenv(CONFIG_PATH_ENVIRONMENT_VARIABLE)
 
     if env_config_path:
-        config_file_absolute_path = pathlib.Path(env_config_path) / config_file
+        config_file_absolute_path = pathlib.Path(env_config_path).resolve() / config_file
         if pathlib.Path.exists(config_file_absolute_path):
             logger.info(
                 """Using settings from "%s\"""",
@@ -172,6 +174,7 @@ def parse_config() -> Config:
     config_format = merged_config["format"]
 
     return Config(
+        cache_dir=pathlib.Path(merged_config["cache-dir"]),
         include=merged_config["include"],
         exclude=merged_config["exclude"],
         postgres_target_version=merged_config["postgres-target-version"],

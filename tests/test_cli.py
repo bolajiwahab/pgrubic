@@ -139,7 +139,7 @@ def test_cli_format_file(tmp_path: pathlib.Path) -> None:
     """Test cli format file."""
     runner = testing.CliRunner()
 
-    sql_pass: str = "SELECT a = NULL;"
+    sql_pass: str = "SELECT a = NULL;\n"
 
     directory = tmp_path / "sub"
     directory.mkdir()
@@ -156,7 +156,7 @@ def test_cli_format_file_verbose(tmp_path: pathlib.Path) -> None:
     """Test cli format file."""
     runner = testing.CliRunner()
 
-    sql_pass: str = "SELECT a = NULL;"
+    sql_pass: str = "SELECT a = NULL;\n"
 
     directory = tmp_path / "sub"
     directory.mkdir()
@@ -173,7 +173,7 @@ def test_cli_format_directory(tmp_path: pathlib.Path) -> None:
     """Test cli format directory."""
     runner = testing.CliRunner()
 
-    sql_pass: str = "SELECT a = NULL;"
+    sql_pass: str = "SELECT a = NULL;\n"
 
     directory = tmp_path / "sub"
     directory.mkdir()

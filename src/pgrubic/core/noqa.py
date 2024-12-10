@@ -7,7 +7,7 @@ import dataclasses
 from pglast import parser
 from colorama import Fore, Style
 
-from pgrubic import PROGRAM_NAME
+from pgrubic import PACKAGE_NAME
 
 A_STAR: str = "*"
 ASCII_SEMI_COLON: str = "ASCII_59"
@@ -156,11 +156,11 @@ def _extract_file_ignore(source_file: str, source_code: str) -> list[NoQaDirecti
 
             comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
 
-            if comment.strip().startswith(f"{PROGRAM_NAME}: noqa"):
+            if comment.strip().startswith(f"{PACKAGE_NAME}: noqa"):
                 rules = _get_rules_from_inline_comment(
                     comment,
                     token.start,
-                    section=f"{PROGRAM_NAME}: noqa",
+                    section=f"{PACKAGE_NAME}: noqa",
                 )
 
                 file_ignores.extend(

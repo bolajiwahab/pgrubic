@@ -1,6 +1,7 @@
 """Core functionalities."""
 
 from pgrubic.core import config
+from pgrubic.core.cache import Cache
 from pgrubic.core.config import Config, parse_config
 from pgrubic.core.linter import Linter, BaseChecker, ViolationStats
 from pgrubic.core.loader import (
@@ -9,20 +10,21 @@ from pgrubic.core.loader import (
     add_apply_fix_to_rule,
     add_set_locations_to_rule,
 )
-from pgrubic.core.filters import filter_files
-from pgrubic.core.logging import logger
+from pgrubic.core.logger import logger
+from pgrubic.core.filters import filter_sources
 from pgrubic.core.formatter import Formatter
 
 __all__ = [
     "BaseChecker",
     "Config",
+    "Cache",
     "Formatter",
     "Linter",
     "ViolationStats",
     "add_apply_fix_to_rule",
     "add_set_locations_to_rule",
     "config",
-    "filter_files",
+    "filter_sources",
     "load_formatters",
     "load_rules",
     "logger",
