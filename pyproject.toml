@@ -157,6 +157,33 @@ legacy_tox_ini = """
         coverage erase
         coverage run --source=src -m pytest -vv {posargs:tests}
 
+    [testenv:tests-linux]
+    platform = linux
+    skip_install = false
+    deps = {[testenv:tests]deps}
+    setenv =
+        COVERAGE_FILE = .coverage
+    commands =
+        {[testenv:tests]commands}
+
+    [testenv:tests-windows]
+    platform = win32
+    skip_install = false
+    deps = {[testenv:tests]deps}
+    setenv =
+        COVERAGE_FILE = .coverage
+    commands =
+        {[testenv:tests]commands}
+
+    [testenv:tests-macos]
+    platform = darwin
+    skip_install = false
+    deps = {[testenv:tests]deps}
+    setenv =
+        COVERAGE_FILE = .coverage
+    commands =
+        {[testenv:tests]commands}
+
     [testenv:coverage]
     skip_install = false
     deps = {[testenv:tests]deps}

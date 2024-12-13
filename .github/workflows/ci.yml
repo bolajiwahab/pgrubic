@@ -16,15 +16,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jobs: [
-          "linting",
-          "isort",
-          "formatting",
-          "typing",
-          "docbuild",
-          "ensure-docs-up-to-date",
-          "tests",
-        ]
+        jobs:
+          - linting
+          - isort
+          - formatting
+          - typing
+          - docbuild
+          - ensure-docs-up-to-date
     name: ${{ matrix.jobs }}
     steps:
       - uses: actions/checkout@v4
@@ -36,6 +34,48 @@ jobs:
         run: pip install tox
       - name: Run ${{ matrix.jobs }}
         run: tox -e ${{ matrix.jobs }}
+
+  tests-windows:
+    runs-on: windows-latest
+    name: tests-windows
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install tox
+      - name: Run tests
+        run: tox -e tests-windows
+
+  tests-linux:
+    runs-on: ubuntu-latest
+    name: tests-linux
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install tox
+      - name: Run tests
+        run: tox -e tests-linux
+
+  tests-macos:
+    runs-on: macos-latest
+    name: tests-macos
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install tox
+      - name: Run tests
+        run: tox -e tests-macos
 
   coverage:
     runs-on: ubuntu-latest

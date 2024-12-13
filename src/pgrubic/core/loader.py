@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import typing
 import fnmatch
 import inspect
@@ -30,7 +31,7 @@ def load_rules(config: config.Config) -> set[linter.BaseChecker]:
         module = importlib.import_module(
             str(RULES_BASE_MODULE / path.relative_to(RULES_DIRECTORY))
             .replace(".py", "")
-            .replace("/", "."),
+            .replace(os.path.sep, "."),
         )
 
         for _, rule in inspect.getmembers(
@@ -70,7 +71,7 @@ def load_formatters() -> set[typing.Callable[[], None]]:
         module = importlib.import_module(
             str(FORMATTERS_BASE_MODULE / path.relative_to(FORMATTERS_DIRECTORY))
             .replace(".py", "")
-            .replace("/", "."),
+            .replace(os.path.sep, "."),
         )
 
         for _, formatter in inspect.getmembers(
