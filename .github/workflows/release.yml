@@ -27,8 +27,8 @@ jobs:
       - name: Verify tag source branch
         run: |
           current_branch=$(git symbolic-ref --short HEAD)
-          if [ "$current_branch" != "master" ]; then
-          echo "Tags must originate from the master branch."
+          if [ "$current_branch" != "main" ]; then
+          echo "Tags must originate from the main branch."
           exit 1
           fi
 
