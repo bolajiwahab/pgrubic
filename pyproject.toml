@@ -96,6 +96,7 @@ known-first-party = ["pgrubic"]
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
   "S101", # asserts allowed in tests...
+  "S105", # We are using a variable called "sql_pass"
 ]
 "*formatters/**/*.py" = [
   "PLR0915",
