@@ -16,14 +16,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jobs:
+        job:
           - linting
           - isort
           - formatting
           - typing
           - docbuild
           - ensure-docs-up-to-date
-    name: ${{ matrix.jobs }}
+    name: ${{ matrix.job }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -32,18 +32,24 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: pip install tox
-      - name: Run ${{ matrix.jobs }}
-        run: tox -e ${{ matrix.jobs }}
+      - name: Run ${{ matrix.job }}
+        run: tox -e ${{ matrix.job }}
 
   tests-windows:
     runs-on: windows-latest
-    name: tests-windows
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - 3.12
+          - 3.13
+    name: tests-windows-python-${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: pip install tox
       - name: Run tests
@@ -51,13 +57,19 @@ jobs:
 
   tests-linux:
     runs-on: ubuntu-latest
-    name: tests-linux
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - 3.12
+          - 3.13
+    name: tests-linux-python-${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: pip install tox
       - name: Run tests
@@ -65,13 +77,19 @@ jobs:
 
   tests-macos:
     runs-on: macos-latest
-    name: tests-macos
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - 3.12
+          - 3.13
+    name: tests-macos-python-${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: pip install tox
       - name: Run tests
