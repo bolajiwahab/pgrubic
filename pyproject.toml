@@ -16,8 +16,8 @@ maintainers = [{ name = "Bolaji Wahab", email = "bolajiwahab23@gmail.com" }]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Environment :: Console",
-  "Intended Audience :: Developers :: Engineers :: DBAs",
-  "Programming Language :: Python :: 3.12",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3.12 Python :: 3.13",
   "Programming Language :: SQL",
   "Topic :: Utilities :: PostgreSQL Linter",
 ]
@@ -131,7 +131,6 @@ legacy_tox_ini = """
     [tox]
     min_version = 4.0
     env_list =
-        py312
         isort
         linting
         yamllint
@@ -143,6 +142,7 @@ legacy_tox_ini = """
 
     [testenv]
     skip_install = true
+    basepython = py312
     deps =
     commands =
 

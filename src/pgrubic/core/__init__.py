@@ -16,14 +16,14 @@ from pgrubic.core.formatter import Formatter
 
 __all__ = [
     "BaseChecker",
-    "Config",
     "Cache",
-    "cache",
+    "Config",
     "Formatter",
     "Linter",
     "ViolationStats",
     "add_apply_fix_to_rule",
     "add_set_locations_to_rule",
+    "cache",
     "config",
     "filter_sources",
     "load_formatters",
