@@ -142,7 +142,6 @@ legacy_tox_ini = """
 
     [testenv]
     skip_install = true
-    basepython = py312
     deps =
     commands =
 
