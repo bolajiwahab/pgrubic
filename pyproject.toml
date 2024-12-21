@@ -10,6 +10,7 @@ name = "pgrubic"
 version = "0.1.0"
 description = "PostgreSQL linter for schema migrations and design best practices"
 readme = { file = "README.md", content-type = "text/markdown" }
+license = {file = "LICENSE"}
 requires-python = ">=3.12"
 authors = [{ name = "Bolaji Wahab", email = "bolajiwahab23@gmail.com" }]
 maintainers = [{ name = "Bolaji Wahab", email = "bolajiwahab23@gmail.com" }]
@@ -17,9 +18,18 @@ classifiers = [
   "Development Status :: 4 - Beta",
   "Environment :: Console",
   "Intended Audience :: Developers",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+  "Operating System :: MacOS :: MacOS X",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: Microsoft :: Windows",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Programming Language :: SQL",
-  "Topic :: Utilities :: PostgreSQL Linter",
+  "Topic :: Database",
+  "Topic :: Utilities",
+  "Topic :: Software Development :: Quality Assurance"
 ]
 keywords = ["pgrubic", "sql", "postgres", "postgresql", "linter"]
 dependencies = [
@@ -54,10 +64,10 @@ doc = [
 
 [project.urls]
 Homepage = "https://github.com/bolajiwahab/pgrubic"
-Documentation = "https://github.com/bolajiwahab/pgrubic/blob/master/README.md"
+Documentation = "https://github.com/bolajiwahab/pgrubic/blob/main/README.md"
 Repository = "https://github.com/bolajiwahab/pgrubic"
 "Issue Tracker" = "https://github.com/bolajiwahab/pgrubic/issues"
-Changelog = "https://github.com/bolajiwahab/pgrubic/blob/master/CHANGELOG.md"
+Changelog = "https://github.com/bolajiwahab/pgrubic/blob/main/CHANGELOG.md"
 
 [project.scripts]
 pgrubic = "pgrubic.__main__:cli"
