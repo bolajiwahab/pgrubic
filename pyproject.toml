@@ -10,10 +10,10 @@ name = "pgrubic"
 version = "0.1.0"
 description = "PostgreSQL linter for schema migrations and design best practices"
 readme = { file = "README.md", content-type = "text/markdown" }
+license = {file = "LICENSE"}
 requires-python = ">=3.12"
 authors = [{ name = "Bolaji Wahab", email = "bolajiwahab23@gmail.com" }]
 maintainers = [{ name = "Bolaji Wahab", email = "bolajiwahab23@gmail.com" }]
-license = "GPLv3+"
 classifiers = [
   "Development Status :: 4 - Beta",
   "Environment :: Console",
@@ -64,10 +64,10 @@ doc = [
 
 [project.urls]
 Homepage = "https://github.com/bolajiwahab/pgrubic"
-Documentation = "https://github.com/bolajiwahab/pgrubic/blob/master/README.md"
+Documentation = "https://github.com/bolajiwahab/pgrubic/blob/main/README.md"
 Repository = "https://github.com/bolajiwahab/pgrubic"
 "Issue Tracker" = "https://github.com/bolajiwahab/pgrubic/issues"
-Changelog = "https://github.com/bolajiwahab/pgrubic/blob/master/CHANGELOG.md"
+Changelog = "https://github.com/bolajiwahab/pgrubic/blob/main/CHANGELOG.md"
 
 [project.scripts]
 pgrubic = "pgrubic.__main__:cli"
