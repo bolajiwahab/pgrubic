@@ -9,14 +9,17 @@ from pgrubic.formatters.ddl import IF_EXISTS, IF_NOT_EXISTS
 def into_clause(node: ast.IntoClause, output: stream.RawStream) -> None:
     """Printer for IntoClause."""
     output.print_node(node.rel)
+
     if node.colNames:
         output.space()
         with output.expression(need_parens=True):
             output.print_name(node.colNames, ",")
+
     if node.accessMethod:
         output.newline()
         output.writes("USING")
         output.print_name(node.accessMethod)
+
     if node.options:
         output.newline()
         output.write("WITH")
@@ -26,6 +29,7 @@ def into_clause(node: ast.IntoClause, output: stream.RawStream) -> None:
             output.space(4)
             output.print_list(node.options)
             output.newline()
+
     if node.onCommit != enums.OnCommitAction.ONCOMMIT_NOOP:
         output.space()
         output.write("ON COMMIT")
@@ -36,6 +40,7 @@ def into_clause(node: ast.IntoClause, output: stream.RawStream) -> None:
             output.write("DELETE ROWS")
         elif node.onCommit == enums.OnCommitAction.ONCOMMIT_DROP:
             output.write("DROP")
+
     if node.tableSpaceName:
         output.newline()
         output.write("TABLESPACE")
@@ -63,17 +68,22 @@ def create_table_as_stmt(node: ast.CreateTableAsStmt, output: stream.RawStream) 
     """Printer for CreateTableAsStmt."""
     output.writes("CREATE")
     output.space()
+
     if node.into.rel.relpersistence == enums.RELPERSISTENCE_TEMP:
         output.writes("TEMPORARY")
     elif node.into.rel.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
         output.writes("UNLOGGED")
+
     output.writes(printers.ddl.OBJECT_NAMES[node.objtype])
+
     if node.if_not_exists:
         output.writes(IF_NOT_EXISTS)
+
     output.print_node(node.into)
     output.swrite("AS")
     output.newline()
     output.print_node(node.query)
+
     if node.into.skipData:
         output.newline()
         output.space(2)
@@ -88,11 +98,14 @@ def create_foreign_table_stmt(
     """Printer for CreateForeignTableStmt."""
     output.print_node(node.base)
     output.newline()
+
     if node.base.partbound:
         output.space(4)
+
     output.write("SERVER")
     output.space()
     output.print_name(node.servername)
+
     if node.options:
         output.newline()
         if node.base.partbound:
@@ -114,27 +127,34 @@ def create_stmt(
 ) -> None:
     """Printer for CreateStmt."""
     output.writes("CREATE")
+
     if isinstance(node.ancestors[0], ast.CreateForeignTableStmt):
         output.writes("FOREIGN")
     elif node.relation.relpersistence == enums.RELPERSISTENCE_TEMP:
         output.writes("TEMPORARY")
     elif node.relation.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
         output.writes("UNLOGGED")
+
     output.writes("TABLE")
+
     if node.if_not_exists:
         output.writes(IF_NOT_EXISTS)
+
     output.print_node(node.relation)
+
     if node.ofTypename:
         output.space()
         output.write("OF")
         output.space()
         output.print_name(node.ofTypename)
+
     if node.partbound:
         output.newline()
         output.space(4)
         output.write("PARTITION OF")
         output.space()
         output.print_list(node.inhRelations)
+
     if node.tableElts:
         output.space()
         with output.expression(need_parens=True):
@@ -147,20 +167,24 @@ def create_stmt(
     elif not node.ofTypename:
         output.space()
         output.write("()")
+
     if node.inhRelations and not node.partbound:
         output.newline()
         output.write("INHERITS")
         output.space()
         with output.expression(need_parens=True):
             output.print_list(node.inhRelations)
+
     if node.partbound:
         output.newline()
         output.space(4)
         output.print_node(node.partbound)
+
     if node.partspec:
         output.newline()
         output.writes("PARTITION BY")
         output.print_node(node=node.partspec)
+
     if node.oncommit != enums.OnCommitAction.ONCOMMIT_NOOP:
         output.newline()
         output.write("ON COMMIT")
@@ -171,10 +195,12 @@ def create_stmt(
             output.write("DELETE ROWS")
         elif node.oncommit == enums.OnCommitAction.ONCOMMIT_DROP:
             output.write("DROP")
+
     if node.accessMethod:
         output.newline()
         output.writes("USING")
         output.print_name(node.accessMethod)
+
     if node.options:
         output.newline()
         output.write("WITH")
@@ -184,6 +210,7 @@ def create_stmt(
             output.space(4)
             output.print_list(node.options)
             output.newline()
+
     if node.tablespacename:
         output.newline()
         output.write("TABLESPACE")
@@ -197,8 +224,10 @@ def alter_table_stmt(node: ast.AlterTableStmt, output: stream.RawStream) -> None
     output.write("ALTER")
     output.space()
     output.writes(printers.ddl.OBJECT_NAMES[node.objtype])
+
     if node.missing_ok:
         output.write(IF_EXISTS)
+
     output.space()
     output.print_node(node.relation)
     output.newline()

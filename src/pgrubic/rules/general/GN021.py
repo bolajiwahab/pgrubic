@@ -17,6 +17,7 @@ class NullConstraint(linter.BaseChecker):
     the default behavior that the column might be null. The NULL constraint is not present
     in the SQL standard and should not be used in portable applications.
     (It was only added to PostgreSQL to be compatible with some other database systems.)
+    Since it is the default for any column, its presence is simply noise.
 
     ## **When should you?**
     Almost Never.

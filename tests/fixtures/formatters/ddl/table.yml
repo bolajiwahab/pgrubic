@@ -233,10 +233,16 @@ create_table_inheritance:
     )
     INHERITS (cities, states);
 
-alter_table_more_than_one_command:
+alter_table:
   sql: |
-    ALTER TABLE IF EXISTS mood DROP COLUMN col, DROP COLUMN col2;
+    ALTER TABLE IF EXISTS mood ADD COLUMN col int, DROP COLUMN col2;
   expected: |
     ALTER TABLE IF EXISTS mood
-        DROP COLUMN col
+        ADD COLUMN col integer
       , DROP COLUMN col2;
+
+drop_table:
+  sql: |
+    DROP TABLE IF EXISTS mood;
+  expected: |
+    DROP TABLE IF EXISTS mood;
