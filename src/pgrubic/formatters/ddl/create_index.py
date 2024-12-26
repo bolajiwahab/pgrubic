@@ -27,13 +27,13 @@ def index_stmt(node: ast.IndexStmt, output: stream.RawStream) -> None:
     output.newline()
     with output.push_indent(4):
         output.write("ON")
-        output.space(1)
+        output.space()
         output.print_node(node.relation)
         if node.accessMethod != "btree":
             output.write("USING")
-            output.space(1)
+            output.space()
             output.print_name(node.accessMethod)
-        output.space(1)
+        output.space()
         output.swrite("(")
         output.print_list(node.indexParams, standalone_items=False)
         output.swrite(")")
@@ -47,18 +47,18 @@ def index_stmt(node: ast.IndexStmt, output: stream.RawStream) -> None:
         if node.options:
             output.newline()
             output.write("WITH")
-            output.space(1)
+            output.space()
             with output.expression(need_parens=True):
                 output.print_list(node.options)
         if node.tableSpace:
             output.newline()
             output.write("TABLESPACE")
-            output.space(1)
+            output.space()
             output.print_name(node.tableSpace)
         if node.whereClause:
             output.newline()
             output.write("WHERE")
-            output.space(1)
+            output.space()
             output.print_node(node.whereClause)
         if node.nulls_not_distinct:
             output.newline()
