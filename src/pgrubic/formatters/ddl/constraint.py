@@ -1,4 +1,4 @@
-"""Formatter for CONSTRAINT."""
+"""Formatter for constraint."""
 
 from pglast import ast, enums, stream, printers
 
@@ -12,9 +12,8 @@ def constraint(node: ast.Constraint, output: stream.RawStream) -> None:
         output.swrite("CONSTRAINT")
         output.space()
         output.print_name(node.conname)
-        output.newline()
-        output.indent(8)
 
+    # Print the constraint definition
     printers.ddl.constr_type_printer(node.contype, node, output)
 
     if node.indexname:
@@ -32,30 +31,27 @@ def constraint(node: ast.Constraint, output: stream.RawStream) -> None:
             output.print_name(node.keys, ",")
 
     if node.including:
-        output.newline()
+        output.space()
         output.write("INCLUDE")
         output.space()
         with output.expression(need_parens=True):
             output.print_list(node.including, ",", are_names=True)
 
     if node.deferrable:
-        output.newline()
-        output.swrite("DEFERRABLE")
+        output.space()
+        output.write("DEFERRABLE")
         if node.initdeferred:
             output.swrite("INITIALLY DEFERRED")
 
     if node.options:
-        output.newline()
+        output.space()
         output.write("WITH")
         output.space()
         with output.expression(need_parens=True):
-            output.newline()
-            output.space(4)
             output.print_list(node.options)
-            output.newline()
 
     if node.indexspace:
-        output.newline()
+        output.space()
         output.writes("USING INDEX TABLESPACE")
         output.print_name(node.indexspace)
 

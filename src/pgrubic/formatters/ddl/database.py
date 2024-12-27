@@ -1,4 +1,4 @@
-"""Formatter for DATABASE Statements."""
+"""Formatter for database."""
 
 from pglast import ast, stream, printers
 

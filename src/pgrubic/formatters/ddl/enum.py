@@ -1,4 +1,4 @@
-"""Formatter for ALTER ENUM Statements."""
+"""Formatter for enum."""
 
 from pglast import ast, stream, printers
 

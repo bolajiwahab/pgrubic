@@ -1,4 +1,4 @@
-"""Formatter for TABLE statements."""
+"""Formatter for table."""
 
 from pglast import ast, enums, stream, printers
 
@@ -156,11 +156,15 @@ def create_stmt(
         output.print_list(node.inhRelations)
 
     if node.tableElts:
+        # move table constraints to the end
+        columns = [x for x in node.tableElts if not isinstance(x, ast.Constraint)] + [
+            x for x in node.tableElts if isinstance(x, ast.Constraint)
+        ]
         output.space()
         with output.expression(need_parens=True):
             output.newline()
             output.space(4)
-            output.print_list(node.tableElts)
+            output.print_list(columns)
             output.newline()
     elif node.partbound:
         output.write("")

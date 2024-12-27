@@ -1,4 +1,4 @@
-"""Formatter for CREATE VIEW statement."""
+"""Formatter for view."""
 
 from pglast import ast, enums, stream, printers
 
