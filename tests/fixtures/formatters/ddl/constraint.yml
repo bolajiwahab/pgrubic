@@ -74,3 +74,11 @@ add_not_null_constraint:
   expected: |
     ALTER TABLE orders
         ALTER COLUMN total SET NOT NULL;
+
+drop_constraint:
+  sql: |
+    ALTER TABLE orders
+    DROP CONSTRAINT pk_my_table;
+  expected: |
+    ALTER TABLE orders
+        DROP CONSTRAINT pk_my_table;

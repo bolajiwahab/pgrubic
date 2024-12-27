@@ -1,4 +1,4 @@
-"""Formatters for DELETE statements."""
+"""Formatters for delete."""
 
 from pglast import ast, stream, printers
 
@@ -16,18 +16,21 @@ def delete_stmt(node: ast.DeleteStmt, output: stream.RawStream) -> None:
         output.write("DELETE FROM")
         output.space()
         output.print_node(node.relation)
+
         if node.usingClause:
             output.newline()
             output.space()
             output.write("USING")
             output.space()
             output.print_list(node.usingClause)
+
         if node.whereClause:
             output.newline()
             output.space()
             output.write("WHERE")
             output.space()
             output.print_node(node.whereClause)
+
         if node.returningList:
             output.newline()
             output.write("RETURNING")

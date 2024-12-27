@@ -17,18 +17,21 @@ def into_clause(node: ast.IntoClause, output: stream.RawStream) -> None:
 
     if node.accessMethod:
         output.newline()
+        output.space()
         output.writes("USING")
         output.print_name(node.accessMethod)
 
     if node.options:
         output.newline()
+        output.space(2)
         output.write("WITH")
         output.space()
         with output.expression(need_parens=True):
             output.newline()
-            output.space(4)
+            output.space(6)
             output.print_list(node.options)
             output.newline()
+            output.space(2)
 
     if node.onCommit != enums.OnCommitAction.ONCOMMIT_NOOP:
         output.space()
@@ -202,18 +205,21 @@ def create_stmt(
 
     if node.accessMethod:
         output.newline()
+        output.space()
         output.writes("USING")
         output.print_name(node.accessMethod)
 
     if node.options:
         output.newline()
+        output.space(2)
         output.write("WITH")
         output.space()
         with output.expression(need_parens=True):
             output.newline()
-            output.space(4)
+            output.space(6)
             output.print_list(node.options)
             output.newline()
+            output.space(2)
 
     if node.tablespacename:
         output.newline()

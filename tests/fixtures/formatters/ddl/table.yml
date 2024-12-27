@@ -3,14 +3,17 @@ formatter: TABLE
 
 create_table:
   sql: |
-    CREATE TABLE IF NOT EXISTS mood () USING heap WITH (fillfactor = 10)
+    CREATE TABLE IF NOT EXISTS mood (a text, b text) USING heap WITH (fillfactor = 10)
     TABLESPACE pg_default;
   expected: |
-    CREATE TABLE IF NOT EXISTS mood ()
-    USING heap
-    WITH (
-        fillfactor = 10
+    CREATE TABLE IF NOT EXISTS mood (
+        a text
+      , b text
     )
+     USING heap
+      WITH (
+          fillfactor = 10
+      )
     TABLESPACE pg_default;
 
 create_temporary_table:
@@ -126,14 +129,14 @@ create_foreign_table_partition:
 
 create_table_ctas:
   sql: |
-    CREATE TABLE mood USING heap WITH (fillfactor = 10)
+    CREATE TABLE mood (a, b) USING heap WITH (fillfactor = 10)
     TABLESPACE pg_default AS SELECT * FROM tbl;
   expected: |
-    CREATE TABLE mood
-    USING heap
-    WITH (
-        fillfactor = 10
-    )
+    CREATE TABLE mood (a, b)
+     USING heap
+      WITH (
+          fillfactor = 10
+      )
     TABLESPACE pg_default AS
     SELECT *
       FROM tbl;
@@ -246,3 +249,20 @@ drop_table:
     DROP TABLE IF EXISTS mood;
   expected: |
     DROP TABLE IF EXISTS mood;
+
+create_materialized_view:
+  sql: |
+    CREATE MATERIALIZED VIEW mv(a, b) USING heap
+    WITH (
+        fillfactor = 10
+    )
+    TABLESPACE pg_default AS SELECT * FROM tbl;
+  expected: |
+    CREATE MATERIALIZED VIEW mv (a, b)
+     USING heap
+      WITH (
+          fillfactor = 10
+      )
+    TABLESPACE pg_default AS
+    SELECT *
+      FROM tbl;

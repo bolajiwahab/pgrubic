@@ -17,9 +17,8 @@ def common_table_expr(node: ast.CommonTableExpr, output: stream.RawStream) -> No
     """Printer for CommonTableExpr."""
     output.print_name(node.ctename)
     if node.aliascolnames:
+        output.space()
         with output.expression(need_parens=True):
-            if len(node.aliascolnames) > 1:
-                output.space(2)
             output.print_name(node.aliascolnames, ",")
         output.indent(amount=-1, relative=False)
         output.newline()

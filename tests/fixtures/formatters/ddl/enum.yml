@@ -45,3 +45,9 @@ alter_enum_rename_value:
   expected: |
     ALTER TYPE colors
         RENAME VALUE 'purple' TO 'mauve';
+
+drop_enum:
+  sql: |
+    DROP TYPE colors;
+  expected: |
+    DROP TYPE colors;
