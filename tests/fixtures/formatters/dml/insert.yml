@@ -1,0 +1,123 @@
+---
+formatter: INSERT
+
+insert_no_explict_columns:
+  sql: |
+    INSERT INTO public.films VALUES
+    ('Pulp Fiction', 'Quentin Tarantino');
+  expected: |
+    INSERT INTO public.films
+    VALUES ('Pulp Fiction', 'Quentin Tarantino');
+
+insert_values:
+  sql: |
+    INSERT INTO public.films (title, description) OVERRIDING SYSTEM VALUE
+    VALUES
+    ('Pulp Fiction', 'Quentin Tarantino'),
+    ('The Green Mile', 'Frank Darabont'),
+    ('Inglourious Basterds', 'Quentin Tarantino') RETURNING title, description;
+  expected: |
+    INSERT INTO public.films (title, description) OVERRIDING SYSTEM VALUE
+    VALUES ('Pulp Fiction', 'Quentin Tarantino')
+         , ('The Green Mile', 'Frank Darabont')
+         , ('Inglourious Basterds', 'Quentin Tarantino')
+    RETURNING title, description;
+
+insert_select:
+  sql: |
+    INSERT INTO public.films (title, description) OVERRIDING USER VALUE
+    SELECT title, description FROM public.films;
+  expected: |
+    INSERT INTO public.films (title, description) OVERRIDING USER VALUE
+    SELECT title
+         , description
+      FROM public.films;
+
+insert_default:
+  sql: |
+    INSERT INTO films DEFAULT VALUES;
+  expected: |
+    INSERT INTO films DEFAULT VALUES;
+
+insert_on_conflict_do_nothing:
+  sql: |
+    INSERT INTO public.films (title, description) VALUES
+    ('Pulp Fiction', 'Quentin Tarantino')
+    ON CONFLICT (title, description) WHERE title = 'Pulp Fiction'
+    DO NOTHING RETURNING *;
+  expected: |
+    INSERT INTO public.films (title, description)
+    VALUES ('Pulp Fiction', 'Quentin Tarantino')
+        ON CONFLICT (title, description)
+     WHERE title = 'Pulp Fiction'
+        DO NOTHING
+    RETURNING *;
+
+insert_on_conflict_do_update:
+  sql: |
+    INSERT INTO public.films (title, description)
+    SELECT title, description FROM public.films
+    WHERE title = 'Pulp Fiction'
+    ON CONFLICT (title) WHERE title = 'Pulp Fiction'
+    DO UPDATE SET description = excluded.description,
+    title = excluded.title WHERE title = 'Pulp Fiction'
+    RETURNING *;
+  expected: |
+    INSERT INTO public.films (title, description)
+    SELECT title
+         , description
+      FROM public.films
+     WHERE title = 'Pulp Fiction'
+        ON CONFLICT (title)
+     WHERE title = 'Pulp Fiction'
+        DO UPDATE SET description = excluded.description
+                    , title = excluded.title
+            WHERE title = 'Pulp Fiction'
+    RETURNING *;
+
+insert_naked_on_conflict:
+  sql: |
+    INSERT INTO public.films (title, description) VALUES
+    ('Pulp Fiction', 'Quentin Tarantino')
+    ON CONFLICT DO NOTHING RETURNING *;
+  expected: |
+    INSERT INTO public.films (title, description)
+    VALUES ('Pulp Fiction', 'Quentin Tarantino')
+        ON CONFLICT
+        DO NOTHING
+    RETURNING *;
+
+insert_on_conflict_constraint:
+  sql: |
+    INSERT INTO public.films (title, description) VALUES
+    ('Pulp Fiction', 'Quentin Tarantino')
+    ON CONFLICT ON CONSTRAINT distributors_pkey DO NOTHING RETURNING *;
+  expected: |
+    INSERT INTO public.films (title, description)
+    VALUES ('Pulp Fiction', 'Quentin Tarantino')
+        ON CONFLICT ON CONSTRAINT distributors_pkey
+        DO NOTHING
+    RETURNING *;
+
+insert_cte:
+  sql: |
+    WITH films AS (
+        SELECT * FROM public.films
+    ), films2 AS (
+        SELECT * FROM public.films
+    )
+    INSERT INTO public.films (title, description) VALUES
+    ('Pulp Fiction', 'Quentin Tarantino')
+    RETURNING *;
+  expected: |
+    WITH films AS (
+        SELECT *
+          FROM public.films
+    )
+    , films2 AS (
+        SELECT *
+          FROM public.films
+    )
+    INSERT INTO public.films (title, description)
+    VALUES ('Pulp Fiction', 'Quentin Tarantino')
+    RETURNING *;

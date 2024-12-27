@@ -1,0 +1,57 @@
+---
+formatter: VIEW
+
+create_temporary_view_local_check_option:
+  sql: |
+    CREATE OR REPLACE TEMPORARY VIEW test.card(a, b) AS
+    SELECT a, b FROM public.account
+    WHERE a = 1
+    WITH LOCAL CHECK OPTION;
+  expected: |
+    CREATE OR REPLACE TEMPORARY VIEW test.card (a, b) AS
+    SELECT a
+         , b
+      FROM public.account
+     WHERE a = 1
+      WITH LOCAL CHECK OPTION;
+
+create_temporary_view_cascaded_check_option:
+  sql: |
+    CREATE OR REPLACE TEMPORARY VIEW test.card(a, b) AS SELECT a, b FROM public.account
+    WHERE a = 1
+    WITH CASCADED CHECK OPTION;
+  expected: |
+    CREATE OR REPLACE TEMPORARY VIEW test.card (a, b) AS
+    SELECT a
+         , b
+      FROM public.account
+     WHERE a = 1
+      WITH CHECK OPTION;
+
+create_unlogged_view:
+  sql: |
+    CREATE OR REPLACE UNLOGGED VIEW test.card AS SELECT * FROM public.account;
+  expected: |
+    CREATE OR REPLACE UNLOGGED VIEW test.card AS
+    SELECT *
+      FROM public.account;
+
+create_recursive_view:
+  sql: |
+    CREATE OR REPLACE RECURSIVE VIEW test.card(a, b) AS SELECT * FROM public.account;
+  expected: |
+    CREATE OR REPLACE VIEW test.card (a, b) AS
+    WITH RECURSIVE card (a, b)
+      AS (
+        SELECT *
+          FROM public.account
+    )
+    SELECT a
+         , b
+      FROM card;
+
+drop_view:
+  sql: |
+    DROP VIEW test.card;
+  expected: |
+    DROP VIEW test.card;
