@@ -150,10 +150,7 @@ def _extract_file_ignore(source_file: str, source_code: str) -> list[NoQaDirecti
     file_ignores: list[NoQaDirective] = []
 
     for token in parser.scan(source_code):
-        if token.name == "SQL_COMMENT":
-            if token.start != 0:
-                break
-
+        if token.start == 0 and token.name == "SQL_COMMENT":
             comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
 
             if comment.strip().startswith(f"{PACKAGE_NAME}: noqa"):
@@ -173,6 +170,8 @@ def _extract_file_ignore(source_file: str, source_code: str) -> list[NoQaDirecti
                     )
                     for rule in rules
                 )
+        else:
+            break
 
     return file_ignores
 
