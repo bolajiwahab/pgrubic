@@ -9,6 +9,7 @@ import toml
 from deepmerge import always_merger
 
 from pgrubic import PACKAGE_NAME
+from pgrubic.core import errors
 from pgrubic.core.logger import logger
 
 CONFIG_FILE: typing.Final[str] = f"{PACKAGE_NAME}.toml"
@@ -175,64 +176,68 @@ def parse_config() -> Config:
     config_lint = merged_config["lint"]
     config_format = merged_config["format"]
 
-    return Config(
-        cache_dir=pathlib.Path(merged_config["cache-dir"]),
-        include=merged_config["include"],
-        exclude=merged_config["exclude"],
-        postgres_target_version=merged_config["postgres-target-version"],
-        lint=Lint(
-            select=config_lint["select"],
-            ignore=config_lint["ignore"],
-            include=config_lint["include"] or merged_config["include"],
-            exclude=config_lint["exclude"] or merged_config["exclude"],
-            ignore_noqa=config_lint["ignore-noqa"],
-            allowed_extensions=config_lint["allowed-extensions"],
-            allowed_languages=config_lint["allowed-languages"],
-            fix=config_lint["fix"],
-            timestamp_column_suffix=config_lint["timestamp-column-suffix"],
-            date_column_suffix=config_lint["date-column-suffix"],
-            regex_partition=config_lint["regex-partition"],
-            regex_index=config_lint["regex-index"],
-            regex_constraint_primary_key=config_lint["regex-constraint-primary-key"],
-            regex_constraint_unique_key=config_lint["regex-constraint-unique-key"],
-            regex_constraint_foreign_key=config_lint["regex-constraint-foreign-key"],
-            regex_constraint_check=config_lint["regex-constraint-check"],
-            regex_constraint_exclusion=config_lint["regex-constraint-exclusion"],
-            regex_sequence=config_lint["regex-sequence"],
-            required_columns=[
-                Column(
-                    name=column["name"],
-                    data_type=column["data-type"],
-                )
-                for column in config_lint["required-columns"]
-            ],
-            disallowed_data_types=[
-                DisallowedDataType(
-                    name=data_type["name"],
-                    reason=data_type["reason"],
-                    use_instead=data_type["use-instead"],
-                )
-                for data_type in config_lint["disallowed-data-types"]
-            ],
-            disallowed_schemas=[
-                DisallowedSchema(
-                    name=schema["name"],
-                    reason=schema["reason"],
-                    use_instead=schema["use-instead"],
-                )
-                for schema in config_lint["disallowed-schemas"]
-            ],
-        ),
-        format=Format(
-            include=config_format["include"] or merged_config["include"],
-            exclude=config_format["exclude"] or merged_config["exclude"],
-            comma_at_beginning=config_format["comma-at-beginning"],
-            new_line_before_semicolon=config_format["new-line-before-semicolon"],
-            lines_between_statements=config_format["lines-between-statements"],
-            remove_pg_catalog_from_functions=config_format[
-                "remove-pg-catalog-from-functions"
-            ],
-            diff=config_format["diff"],
-            check=config_format["check"],
-        ),
-    )
+    try:
+        return Config(
+            cache_dir=pathlib.Path(merged_config["cache-dir"]),
+            include=merged_config["include"],
+            exclude=merged_config["exclude"],
+            postgres_target_version=merged_config["target-postgres-version"],
+            lint=Lint(
+                select=config_lint["select"],
+                ignore=config_lint["ignore"],
+                include=config_lint["include"] or merged_config["include"],
+                exclude=config_lint["exclude"] or merged_config["exclude"],
+                ignore_noqa=config_lint["ignore-noqa"],
+                allowed_extensions=config_lint["allowed-extensions"],
+                allowed_languages=config_lint["allowed-languages"],
+                fix=config_lint["fix"],
+                timestamp_column_suffix=config_lint["timestamp-column-suffix"],
+                date_column_suffix=config_lint["date-column-suffix"],
+                regex_partition=config_lint["regex-partition"],
+                regex_index=config_lint["regex-index"],
+                regex_constraint_primary_key=config_lint["regex-constraint-primary-key"],
+                regex_constraint_unique_key=config_lint["regex-constraint-unique-key"],
+                regex_constraint_foreign_key=config_lint["regex-constraint-foreign-key"],
+                regex_constraint_check=config_lint["regex-constraint-check"],
+                regex_constraint_exclusion=config_lint["regex-constraint-exclusion"],
+                regex_sequence=config_lint["regex-sequence"],
+                required_columns=[
+                    Column(
+                        name=column["name"],
+                        data_type=column["data-type"],
+                    )
+                    for column in config_lint["required-columns"]
+                ],
+                disallowed_data_types=[
+                    DisallowedDataType(
+                        name=data_type["name"],
+                        reason=data_type["reason"],
+                        use_instead=data_type["use-instead"],
+                    )
+                    for data_type in config_lint["disallowed-data-types"]
+                ],
+                disallowed_schemas=[
+                    DisallowedSchema(
+                        name=schema["name"],
+                        reason=schema["reason"],
+                        use_instead=schema["use-instead"],
+                    )
+                    for schema in config_lint["disallowed-schemas"]
+                ],
+            ),
+            format=Format(
+                include=config_format["include"] or merged_config["include"],
+                exclude=config_format["exclude"] or merged_config["exclude"],
+                comma_at_beginning=config_format["comma-at-beginning"],
+                new_line_before_semicolon=config_format["new-line-before-semicolon"],
+                lines_between_statements=config_format["lines-between-statements"],
+                remove_pg_catalog_from_functions=config_format[
+                    "remove-pg-catalog-from-functions"
+                ],
+                diff=config_format["diff"],
+                check=config_format["check"],
+            ),
+        )
+    except KeyError as error:
+        msg = "Missing config key"
+        raise errors.MissingConfigError({msg: error.args[0]}) from error
