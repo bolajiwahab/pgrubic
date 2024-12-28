@@ -91,6 +91,9 @@ markdown_extensions:
 nav:
   - Overview: index.md
   - Tutorial: tutorial.md
+  - Linter: linter.md
+  - Formatter: formatter.md
+  - Configuring pgrubic: configuration.md
   - Rules: rules.md
 
 # not_in_nav: |

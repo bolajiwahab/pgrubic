@@ -1,16 +1,24 @@
 ## Pgrubic
+[![pgrubic](https://img.shields.io/badge/pgrubic-purple.svg)](https://github.com/bolajiwahab/pgrubic/)
+[![PyPI - Version](https://img.shields.io/pypi/v/pgrubic)](https://pypi.org/project/pgrubic/)
+[![PyPI - Status](https://img.shields.io/pypi/status/pgrubic)](https://pypi.org/project/pgrubic/)
+[![PyPI - License](https://img.shields.io/pypi/l/pgrubic)](https://github.com/bolajiwahab/pgrubic/blob/main/LICENSE)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pgrubic)](https://pypi.org/project/pgrubic/)
 [![CI](https://github.com/bolajiwahab/pgrubic/actions/workflows/ci.yml/badge.svg)](https://github.com/bolajiwahab/pgrubic/actions/workflows/ci.yml)
 [![Coverage badge](https://github.com/bolajiwahab/pgrubic/raw/python-coverage-comment-action-data/badge.svg)](https://github.com/bolajiwahab/pgrubic/tree/python-coverage-comment-action-data)
 [![DOC](https://github.com/bolajiwahab/pgrubic/actions/workflows/doc.yml/badge.svg)](https://github.com/bolajiwahab/pgrubic/actions/workflows/doc.yml)
 [![release](https://github.com/bolajiwahab/pgrubic/actions/workflows/release.yml/badge.svg)](https://github.com/bolajiwahab/pgrubic/actions/workflows/release.yml)
-[![PyPI Downloads](https://static.pepy.tech/badge/pgrubic)](https://pepy.tech/projects/pgrubic)
+![PyPI Total Downloads](https://img.shields.io/pepy/dt/pgrubic)
+[![CodeQL](https://github.com/bolajiwahab/pgrubic/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/bolajiwahab/pgrubic/actions/workflows/github-code-scanning/codeql)
 
 Pgrubic is a PostgreSQL linter and formatter for schema migrations and design best practices.
 
 ## Features
-- Over 100+ rules.
-- Automatic violation correction (e.g., automatically add `concurrently` to index create statements).
-- River style code formatting.
+- Over 100+ rules
+- Automatic violation correction (e.g., automatically add `concurrently` to index create statements)
+- River style code formatting
+- Python 3.12+ compatibility
+- Automatic caching to avoid reformatting unchanged files
 
 ## Getting Started
 For more, see the [documentation](https://bolajiwahab.github.io/pgrubic/).
@@ -196,7 +204,7 @@ We welcome and greatly appreciate contributions. If you would like to contribute
 Encountering issues? Take a look at the existing GitHub [issues](https://github.com/bolajiwahab/pgrubic/issues), and don't hesitate to open a new one.
 
 ## Acknowledgments
-Pgrubic is influenced by a number of tools such as [Strong Migrations](https://github.com/ankane/strong_migrations), [squabble](https://github.com/erik/squabble),
+Pgrubic is influenced by a number of similar tools such as [Strong Migrations](https://github.com/ankane/strong_migrations), [squabble](https://github.com/erik/squabble),
 [squawk](https://github.com/sbdchd/squawk), [pgextwlist](https://github.com/dimitri/pgextwlist), [Don't_Do_This](https://wiki.postgresql.org/wiki/Don't_Do_This)
 and [schemalint](https://github.com/kristiandupont/schemalint).
 
