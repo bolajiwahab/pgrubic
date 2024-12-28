@@ -34,7 +34,9 @@ class TableColumnConflict(linter.BaseChecker):
         """Register the violation."""
         self.violations.add(
             linter.Violation(
-                rule=self.code,
+                rule_code=self.code,
+                rule_name=self.name,
+                rule_category=self.category,
                 line_number=line_number,
                 column_offset=column_offset,
                 line=line,

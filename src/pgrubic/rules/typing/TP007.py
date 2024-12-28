@@ -49,7 +49,9 @@ class Serial(linter.BaseChecker):
         ) and node.typeName.names[-1].sval in ["smallserial", "serial", "bigserial"]:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,

@@ -239,5 +239,5 @@ def parse_config() -> Config:
             ),
         )
     except KeyError as error:
-        msg = "Missing config key"
-        raise errors.MissingConfigError({msg: error.args[0]}) from error
+        msg = "Missing config key: "
+        raise errors.MissingConfigError(msg + error.args[0]) from error

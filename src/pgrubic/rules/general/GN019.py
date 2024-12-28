@@ -39,7 +39,9 @@ class UnloggedTable(linter.BaseChecker):
         if node.relation.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
@@ -65,7 +67,9 @@ class UnloggedTable(linter.BaseChecker):
         if node.subtype == enums.AlterTableType.AT_SetUnLogged:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,

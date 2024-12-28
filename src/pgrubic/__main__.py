@@ -229,7 +229,8 @@ def format_sql_file(
     if not config.format.check and not config.format.diff:
         cache.write(sources=typing.cast(tuple[pathlib.Path, ...], included_sources))
         sys.stdout.write(
-            f"{formatted_sources} file(s) reformatted\n",
+            f"{formatted_sources} file(s) reformatted, "
+            f"{len(included_sources) - formatted_sources} file(s) left unchanged\n",
         )
 
     if formatted_sources != 0 and (config.format.check or config.format.diff):

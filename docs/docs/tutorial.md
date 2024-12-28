@@ -68,7 +68,7 @@ We can also format our SQL with `pgrubic format`:
 ```console
 $ pgrubic format
 
-1 file(s) reformatted
+1 file(s) reformatted, 0 file(s) left unchanged
 ```
 
 Checking diff with `git diff` produces the following:

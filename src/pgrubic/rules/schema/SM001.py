@@ -31,7 +31,9 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         if len(node.typeName) < SCHEMA_QUALIFIED_LENGTH:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
@@ -51,7 +53,9 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         if len(function_name) < SCHEMA_QUALIFIED_LENGTH:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
@@ -86,7 +90,9 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         ):
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
@@ -113,7 +119,9 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
             ):
                 self.violations.add(
                     linter.Violation(
-                        rule=self.code,
+                        rule_code=self.code,
+                        rule_name=self.name,
+                        rule_category=self.category,
                         line_number=self.line_number,
                         column_offset=self.column_offset,
                         line=self.line,
@@ -166,7 +174,9 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         if len(node.objname) < SCHEMA_QUALIFIED_LENGTH:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
