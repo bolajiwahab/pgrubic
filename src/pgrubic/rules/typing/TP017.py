@@ -47,12 +47,14 @@ class NullableBooleanField(linter.BaseChecker):
             if not is_not_null:
                 self.violations.add(
                     linter.Violation(
-                        rule=self.code,
+                        rule_code=self.code,
+                        rule_name=self.name,
+                        rule_category=self.category,
                         line_number=self.line_number,
                         column_offset=self.column_offset,
                         line=self.line,
                         statement_location=self.statement_location,
-                        description="Boolean field should be not be nullable",
+                        description="Boolean field should not be nullable",
                         auto_fixable=self.is_auto_fixable,
                         help="Add not null constraint",
                     ),

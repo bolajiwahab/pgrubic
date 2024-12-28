@@ -27,7 +27,6 @@ def test_extract_star_ignore_from_inline_comments() -> None:
 def test_extract_ignores() -> None:
     """Test extract ignores from inline comments."""
     source_code: str = """-- pgrubic: noqa: NM016, GN001
-    -- noqa: NM016, GN001
     CREATE TABLE tbl (activated date);
     """
 
