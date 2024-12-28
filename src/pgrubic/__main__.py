@@ -40,13 +40,13 @@ def cli() -> None:
 @click.option(
     "--fix",
     is_flag=True,
-    default=None,
+    default=False,
     help="Fix lint violations automatically.",
 )
 @click.option(
     "--ignore-noqa",
     is_flag=True,
-    default=None,
+    default=False,
     help="Whether to ignore noqa directives.",
 )
 @common_options
@@ -140,16 +140,22 @@ def lint(
 @click.option(
     "--check",
     is_flag=True,
-    default=None,
+    default=False,
     help="Check if any files would have been modified.",
 )
 @click.option(
     "--diff",
     is_flag=True,
-    default=None,
+    default=False,
     help="""
     Report the difference between the current file and
     how the formatted file would look like.""",
+)
+@click.option(
+    "--no-cache",
+    is_flag=True,
+    default=False,
+    help="Whether to read the cache.",
 )
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
@@ -158,6 +164,7 @@ def format_sql_file(
     *,
     check: bool,
     diff: bool,
+    no_cache: bool,
     verbose: bool,
 ) -> None:
     """Format SQL files."""
@@ -189,13 +196,17 @@ def format_sql_file(
 
     cache = core.Cache(config=config)
 
-    sources_to_be_formatted = cache.filter_sources(
-        sources=typing.cast(tuple[pathlib.Path, ...], included_sources),
+    sources_to_reformat = (
+        cache.filter_sources(
+            sources=typing.cast(tuple[pathlib.Path, ...], included_sources),
+        )
+        if not no_cache
+        else included_sources
     )
 
-    formatted_sources: int = 0
+    changes_detected = False
 
-    for source in sources_to_be_formatted:
+    for source in sources_to_reformat:
         source_file = source.resolve()
         source_code = source.read_text(encoding="utf-8")
 
@@ -204,8 +215,8 @@ def format_sql_file(
             source_code=source_code,
         )
 
-        if formatted_source_code != source_code:
-            formatted_sources += 1
+        if formatted_source_code != source_code and not changes_detected:
+            changes_detected = True
 
         if config.format.diff:
             diff_unified = difflib.unified_diff(
@@ -218,22 +229,18 @@ def format_sql_file(
             diff_output = "".join(diff_unified)
             console.print(Syntax(diff_output, "diff", theme="ansi_dark"))
 
-        if (
-            formatted_source_code != source_code
-            and not config.format.check
-            and not config.format.diff
-        ):
+        if not config.format.check and not config.format.diff:
             with source_file.open("w", encoding="utf-8") as sf:
                 sf.write(formatted_source_code)
 
     if not config.format.check and not config.format.diff:
         cache.write(sources=typing.cast(tuple[pathlib.Path, ...], included_sources))
         sys.stdout.write(
-            f"{formatted_sources} file(s) reformatted, "
-            f"{len(included_sources) - formatted_sources} file(s) left unchanged\n",
+            f"{len(sources_to_reformat)} file(s) reformatted, "
+            f"{len(included_sources) - len(sources_to_reformat)} file(s) left unchanged\n",  # noqa: E501
         )
 
-    if formatted_sources != 0 and (config.format.check or config.format.diff):
+    if changes_detected and (config.format.check or config.format.diff):
         sys.exit(1)
 
 
