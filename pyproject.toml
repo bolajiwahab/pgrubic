@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pgrubic"
 version = "0.1.0"
-description = "PostgreSQL linter for schema migrations and design best practices"
+description = "PostgreSQL linter and formatter for schema migrations and design best practices"
 readme = { file = "README.md", content-type = "text/markdown" }
 license = {file = "LICENSE"}
 requires-python = ">=3.12"
