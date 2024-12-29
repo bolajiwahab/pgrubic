@@ -258,3 +258,36 @@ def test_cli_format_diff(tmp_path: pathlib.Path) -> None:
     assert len(result.output) > 0
 
     assert result.exit_code == 1
+
+
+def test_cli_format_no_cache(tmp_path: pathlib.Path) -> None:
+    """Test cli format with no cache."""
+    runner = testing.CliRunner()
+
+    sql: str = "SELECT a = NULL; SELECT * FROM example;"
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql)
+
+    result = runner.invoke(cli, ["format", str(file_fail)])
+
+    assert result.output == "1 file(s) reformatted, 0 file(s) left unchanged\n"
+
+    assert result.exit_code == 0
+
+    # with cache read
+    result = runner.invoke(cli, ["format", str(file_fail)])
+
+    assert result.output == "0 file(s) reformatted, 1 file(s) left unchanged\n"
+
+    assert result.exit_code == 0
+
+    # without cache
+    result = runner.invoke(cli, ["format", str(file_fail), "--no-cache"])
+
+    assert result.output == "1 file(s) reformatted, 0 file(s) left unchanged\n"
+
+    assert result.exit_code == 0
