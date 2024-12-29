@@ -24,8 +24,8 @@ class NullComparison(linter.BaseChecker):
     ## **Use instead:**
     To check whether a value is or is not null, use the predicates:
 
-        expression IS NULL
-        expression IS NOT NULL
+    - expression IS NULL
+    - expression IS NOT NULL
     """
 
     is_auto_fixable: bool = True

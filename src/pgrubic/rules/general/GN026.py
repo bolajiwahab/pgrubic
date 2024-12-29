@@ -23,10 +23,10 @@ class NotIn(linter.BaseChecker):
     any value of bar.x is null
     ```
 
-    This happens because col IN (1,null) returns TRUE if col=1, and NULL otherwise (i.e.
-    it can never return FALSE). Since NOT (TRUE) is FALSE, but NOT (NULL) is still NULL,
-    there is no way that NOT (col IN (1,null)) (which is the same thing as col NOT IN
-    (1,null)) can return TRUE under any circumstances.
+        This happens because col IN (1,null) returns TRUE if col=1, and NULL otherwise
+        (i.e. it can never return FALSE). Since NOT (TRUE) is FALSE, but NOT (NULL) is
+        still NULL, there is no way that NOT (col IN (1,null)) (which is the same thing
+        as col NOT IN (1,null)) can return TRUE under any circumstances.
 
     2. Because of point 1 above, NOT IN (SELECT ...) does not optimize very well.
     In particular, the planner can't transform it into an anti-join, and so it becomes

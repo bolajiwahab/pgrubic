@@ -5,10 +5,13 @@ This tutorial will guide you through the process of integrating pgrubic's linter
 ## Getting Started
 
 ## Installation
+**pgrubic** can be installed using pip:
+
 ```console
-pip install pgrubic
+$ pip install pgrubic
 ```
-**<span style="color:red">Pgrubic is only supported on Python 3.12+</span>**.
+
+Please note **<span style="color:red">pgrubic is only supported on Python 3.12+</span>**.
 
 ## Usage
 We can use **pgrubic** from the command line to lint and format SQL files.
@@ -44,7 +47,7 @@ $ pgrubic lint --fix
 Found 1 violation(s) (1 fixed, 0 remaining)
 ```
 
-Checking diff with `git diff` produces the following:
+Checking **diff** with `git diff` produces the following:
 
 ```diff
 --- a/V1__init.sql
@@ -57,7 +60,7 @@ Checking diff with `git diff` produces the following:
 +    ADD COLUMN foo boolean DEFAULT FALSE NOT NULL;
 ```
 
-**pgrubic** runs in the current directory by default, but we can also pass specific paths to it:
+**pgrubic** runs in the current directory by default, but we can also give it specific paths:
 
 ```console
 $ pgrubic lint migrations/V1__init.sql
@@ -71,7 +74,7 @@ $ pgrubic format
 1 file(s) reformatted, 0 file(s) left unchanged
 ```
 
-Checking diff with `git diff` produces the following:
+Checking **diff** with `git diff` produces the following:
 
 ```diff
 --- a/V1__init.sql
@@ -165,11 +168,12 @@ Found 1 violation(s)
 ```
 
 For the full list of all supported settings, see [_Settings_](settings.md).
-### Rule Selection
+
+### Selecting Rules
 
 **pgrubic** supports [over 100 lint rules](rules.md) across **typing**, **general**, **constraint**, **unsafe migrations**, **naming**, **schema** and **security**. All rules are enabled by default.
 
-If you are introducing the linter for the first time, you might want to streamline the set of rules that are enabled. In order to select/deselect specific rules, we can use the `select` or `ignore` option in the `[lint]` section of the `pgrubic.toml` config file.
+If you are introducing the linter for the first time, you might want to streamline the set of rules that are enabled. In order to `select/deselect` specific rules, we can use the `select` or `ignore` option in the `[lint]` section of the `pgrubic.toml` config file.
 <details open>
 <summary><strong>pgrubic.toml</strong></summary>
 
@@ -295,4 +299,43 @@ Found 0 violation(s)
 - To ignore all violations in a file for multiple rules, we can add `-- pgrubic: noqa: {rule_code(s)}` to the beginning of the file, with the rule codes separated by a comma. For example, `-- pgrubic: noqa: TP017, SM001`.
 - To ignore all violations in a file for all rules, we can add `-- pgrubic: noqa` to the beginning of the file.
 
-For further instructions on ignoring violations, please see [_Ignoring violations_](linter.md#ignoring-violations).
+For more guides on ignoring violations, please see [_Ignoring violations_](linter.md#ignoring-violations).
+
+## Rolling out
+When introducing a new linter, most of the time, we may want to ignore all existing violations, especially on existing large codebases in order to streamline the roll-out process and instead focus on enforcing the linter going forward.
+
+**pgrubic** supports this roll-out strategy via the command-line `--add-file-level-general-noqa` flag. When set, it will automatically add a `-- pgrubic: noqa` directive to the beginning of each SQL file to ignore all existing violations:
+
+```console
+$ pgrubic lint --add-file-level-general-noqa
+File-level general noqa directive added to 1 file(s)
+```
+
+Checking **diff** with `git diff` produces the following:
+
+```diff
+--- a/V1__init.sql
++++ b/V1__init.sql
+@@ -1,3 +1,4 @@
++-- pgrubic: noqa
+ ALTER TABLE public.example
+     ADD COLUMN bar boolean DEFAULT FALSE NOT NULL;
+```
+
+## Pre-commit
+
+**pgrubic** comes with two pre-commit hooks:
+
+- **pgrubic-lint**: lint changed files.
+- **pgrubic-format**: format changed files.
+
+Create a file named `.pre-commit-config.yaml` at the root of your git project. The file should look like this:
+```yaml
+- repo: https://github.com/bolajiwahab/pgrubic
+  # The version of pgrubic to use.
+  rev: 0.1.0
+  hooks:
+    - id: pgrubic-lint
+    - id: pgrubic-format
+```
+To know more about pre-commit hooks, see [pre-commit](https://pre-commit.com/).

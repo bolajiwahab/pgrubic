@@ -12,39 +12,31 @@ plugins:
         python:
           paths: [../src]
           options:
-            # allow_inspection: false
             show_bases: false
             show_source: false
-            # members: false
-            # show_submodules: true
             show_labels: false
             inherited_members: true
             group_by_category: true
-            # show_if_no_docstring: true
-            # show_root_headings: true
-            # show_root_toc_entry: true
-            # show_signature_annotations: false
-            # members:
-            # - code
-            # - name
             filters:
               - "!^_"
               - "!^__"
               - "!^visit"
               - "!^is_fix_applicable"
   - search
-# - social
 
 theme:
   name: material
-  logo: ../assets/pgrubic.png
-  favicon: ../assets/pgrubic.png
+  logo: assets/logo.png
+  favicon: assets/favicon.png
   features:
-    # - navigation.tabs
     - navigation.sections
     - navigation.indexes
     - navigation.expand
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
     - toc.integrate
+    - toc.follow
     - navigation.top
     - search.suggest
     - search.highlight
@@ -58,18 +50,21 @@ theme:
     repo: fontawesome/brands/git-alt
   language: en
   palette:
-    - scheme: default
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
       toggle:
-        icon: material/toggle-switch-off-outline
+        icon: material/lightbulb
         name: Switch to dark mode
       primary: teal
-      accent: purple
-    - scheme: slate
+      accent: blue
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
       toggle:
-        icon: material/toggle-switch
+        icon: material/lightbulb-outline
         name: Switch to light mode
       primary: teal
-      accent: lime
+      accent: blue
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -89,12 +84,14 @@ markdown_extensions:
       emoji_generator: !!python/name:materialx.emoji.to_svg
 
 nav:
-  - Overview: index.md
+  - Introduction: index.md
   - Tutorial: tutorial.md
   - Linter: linter.md
   - Formatter: formatter.md
   - Configuring pgrubic: configuration.md
   - Rules: rules.md
+
+site_url: http://127.0.0.1:8000
 
 # not_in_nav: |
 #   ./rules/unsafe/.*

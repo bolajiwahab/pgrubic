@@ -11,7 +11,7 @@
 [![PyPI Total Downloads](https://img.shields.io/pepy/dt/pgrubic)](https://pepy.tech/projects/pgrubic)
 [![CodeQL](https://github.com/bolajiwahab/pgrubic/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/bolajiwahab/pgrubic/actions/workflows/github-code-scanning/codeql)
 
-PostgreSQL linter and formatter for schema migrations and design best practices.
+A PostgreSQL linter and formatter for schema migrations and design best practices.
 
 ## Features
 - Over 100+ rules
@@ -19,3 +19,9 @@ PostgreSQL linter and formatter for schema migrations and design best practices.
 - River style code formatting
 - Python 3.12+ compatibility
 - Automatic caching to avoid reformatting unchanged files
+
+## Requirements
+Pgrubic is built upon the shoulders of:
+
+- [pglast](https://github.com/pglast/pglast) - Python bindings to libpg_query
+- [libpg_query](https://github.com/pganalyze/libpg_query) - PostgreSQL parser outside of the server environment
