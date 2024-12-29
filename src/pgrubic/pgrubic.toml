@@ -34,3 +34,4 @@ remove-pg-catalog-from-functions = true
 lines-between-statements = 1
 check = false
 diff = false
+no-cache = false

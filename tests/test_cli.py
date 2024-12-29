@@ -81,6 +81,23 @@ def test_cli_lint_complete_fix(tmp_path: pathlib.Path) -> None:
     assert result.exit_code == 0
 
 
+def test_cli_lint_with_add_file_level_general_noqa(tmp_path: pathlib.Path) -> None:
+    """Test cli lint with add_file_level_general_noqa."""
+    runner = testing.CliRunner()
+
+    sql_fail: str = "SELECT a = NULL;"
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql_fail)
+
+    result = runner.invoke(cli, ["lint", str(file_fail), "--add-file-level-general-noqa"])
+
+    assert result.exit_code == 0
+
+
 def test_cli_lint_verbose(tmp_path: pathlib.Path) -> None:
     """Test cli lint verbose."""
     runner = testing.CliRunner()

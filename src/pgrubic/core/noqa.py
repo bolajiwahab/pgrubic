@@ -2,6 +2,7 @@
 
 import sys
 import typing
+import pathlib
 import dataclasses
 
 from pglast import parser
@@ -271,3 +272,29 @@ def report_unused_ignores(
                 f" {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL}"
                 f" (unused: {Fore.RED}{Style.BRIGHT}{ignore.rule}{Style.RESET_ALL})\n",
             )
+
+
+def add_file_level_general_ignore(sources: set[pathlib.Path]) -> int:
+    """Add file-level general noqa directive to the begining of each source."""
+    sources_modified = 0
+
+    for source in sources:
+        skip = False
+        source_code = source.read_text()
+
+        for token in parser.scan(source_code):
+            if token.start == 0 and token.name == "SQL_COMMENT":
+                comment = (
+                    source_code[token.start : (token.end + 1)].split("--")[-1].strip()
+                )
+
+                if comment.strip() == f"{PACKAGE_NAME}: noqa":
+                    skip = True
+                    break
+
+        if not skip:
+            source.write_text(f"-- {PACKAGE_NAME}: noqa\n{source_code}")
+            sources_modified += 1
+            continue
+
+    return sources_modified

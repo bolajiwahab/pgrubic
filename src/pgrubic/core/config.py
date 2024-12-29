@@ -90,6 +90,7 @@ class Format:
     remove_pg_catalog_from_functions: bool
     diff: bool
     check: bool
+    no_cache: bool
 
 
 @dataclasses.dataclass(kw_only=True)
@@ -236,6 +237,7 @@ def parse_config() -> Config:
                 ],
                 diff=config_format["diff"],
                 check=config_format["check"],
+                no_cache=config_format["no-cache"],
             ),
         )
     except KeyError as error:

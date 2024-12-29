@@ -12,6 +12,7 @@ from rich.syntax import Syntax
 from rich.console import Console
 
 from pgrubic import PACKAGE_NAME, core
+from pgrubic.core import noqa
 
 T = typing.TypeVar("T")
 
@@ -49,25 +50,30 @@ def cli() -> None:
     default=False,
     help="Whether to ignore noqa directives.",
 )
+@click.option(
+    "--add-file-level-general-noqa",
+    is_flag=True,
+    default=False,
+    help="Whether to add file-level noqa directives.",
+)
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
-def lint(
+def lint(  # noqa: C901
     sources: tuple[pathlib.Path, ...],
     *,
     verbose: bool,
     fix: bool,
     ignore_noqa: bool,
+    add_file_level_general_noqa: bool,
 ) -> None:
     """Lint SQL files."""
     core.logger.setLevel(logging.INFO if verbose else logging.WARNING)
 
     config: core.Config = core.parse_config()
 
-    if fix:
-        config.lint.fix = fix
-
-    if ignore_noqa:
-        config.lint.ignore_noqa = ignore_noqa
+    for key, value in [("fix", fix), ("ignore_noqa", ignore_noqa)]:
+        if value:
+            setattr(config.lint, key, value)
 
     linter: core.Linter = core.Linter(config=config, formatters=core.load_formatters)
 
@@ -90,6 +96,12 @@ def lint(
         include=config.lint.include,
         exclude=config.lint.exclude,
     )
+
+    if add_file_level_general_noqa:
+        sources_modified = noqa.add_file_level_general_ignore(included_sources)
+        sys.stdout.write(
+            f"File-level general noqa directive added to {sources_modified} file(s)\n",
+        )
 
     for source in included_sources:
         source_file = source.resolve()
@@ -116,24 +128,24 @@ def lint(
             with source_file.open("w", encoding="utf-8") as sf:
                 sf.write(lint_result.fixed_sql)
 
-    # if total_violations > 0:
-    if config.lint.fix:
-        sys.stdout.write(
-            f"Found {total_violations} violation(s)"
-            f" ({fixable_violations} fixed,"
-            f" {total_violations - fixable_violations} remaining)\n",
-        )
+    if total_violations > 0:
+        if config.lint.fix:
+            sys.stdout.write(
+                f"Found {total_violations} violation(s)"
+                f" ({fixable_violations} fixed,"
+                f" {total_violations - fixable_violations} remaining)\n",
+            )
 
-        if (total_violations - fixable_violations) > 0:
+            if (total_violations - fixable_violations) > 0:
+                sys.exit(1)
+
+        else:
+            sys.stdout.write(
+                f"Found {total_violations} violation(s)\n"
+                f"{fixable_violations} fix(es) available\n",
+            )
+
             sys.exit(1)
-
-    else:
-        sys.stdout.write(
-            f"Found {total_violations} violation(s)\n"
-            f"{fixable_violations} fix(es) available\n",
-        )
-
-        sys.exit(1)
 
 
 @cli.command(name="format")
@@ -159,7 +171,7 @@ def lint(
 )
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
-def format_sql_file(
+def format_sql_file(  # noqa: C901
     sources: tuple[pathlib.Path, ...],
     *,
     check: bool,
@@ -171,13 +183,12 @@ def format_sql_file(
     core.logger.setLevel(logging.INFO if verbose else logging.WARNING)
 
     console = Console()
+
     config: core.Config = core.parse_config()
 
-    if check:
-        config.format.check = check
-
-    if diff:
-        config.format.diff = diff
+    for key, value in [("check", check), ("diff", diff), ("no_cache", no_cache)]:
+        if value:
+            setattr(config.format, key, value)
 
     formatter: core.Formatter = core.Formatter(
         config=config,
@@ -196,13 +207,12 @@ def format_sql_file(
 
     cache = core.Cache(config=config)
 
-    sources_to_reformat = (
-        cache.filter_sources(
-            sources=typing.cast(tuple[pathlib.Path, ...], included_sources),
+    sources_to_reformat = included_sources
+
+    if not config.format.no_cache:
+        sources_to_reformat = cache.filter_sources(
+            sources=included_sources,
         )
-        if not no_cache
-        else included_sources
-    )
 
     changes_detected = False
 
