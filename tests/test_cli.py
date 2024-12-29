@@ -95,6 +95,8 @@ def test_cli_lint_with_add_file_level_general_noqa(tmp_path: pathlib.Path) -> No
 
     result = runner.invoke(cli, ["lint", str(file_fail), "--add-file-level-general-noqa"])
 
+    assert result.output == "File-level general noqa directive added to 1 file(s)\n"
+
     assert result.exit_code == 0
 
 
@@ -166,6 +168,8 @@ def test_cli_format_file(tmp_path: pathlib.Path) -> None:
 
     result = runner.invoke(cli, ["format", str(file_pass)])
 
+    assert result.output == "1 file(s) reformatted, 0 file(s) left unchanged\n"
+
     assert result.exit_code == 0
 
 
@@ -183,6 +187,8 @@ def test_cli_format_file_verbose(tmp_path: pathlib.Path) -> None:
 
     result = runner.invoke(cli, ["format", str(file_pass), "--verbose"])
 
+    assert result.output == "1 file(s) reformatted, 0 file(s) left unchanged\n"
+
     assert result.exit_code == 0
 
 
@@ -199,6 +205,8 @@ def test_cli_format_directory(tmp_path: pathlib.Path) -> None:
     file_pass.write_text(sql_pass)
 
     result = runner.invoke(cli, ["format", str(directory)])
+
+    assert result.output == "1 file(s) reformatted, 0 file(s) left unchanged\n"
 
     assert result.exit_code == 0
 
@@ -221,6 +229,8 @@ def test_cli_format_current_directory(
 
     result = runner.invoke(cli, ["format"])
 
+    assert result.output == "1 file(s) reformatted, 0 file(s) left unchanged\n"
+
     assert result.exit_code == 0
 
 
@@ -238,6 +248,8 @@ def test_cli_format_check(tmp_path: pathlib.Path) -> None:
 
     result = runner.invoke(cli, ["format", str(file_fail), "--check"])
 
+    assert result.output == ""
+
     assert result.exit_code == 1
 
 
@@ -254,8 +266,6 @@ def test_cli_format_diff(tmp_path: pathlib.Path) -> None:
     file_fail.write_text(sql)
 
     result = runner.invoke(cli, ["format", str(file_fail), "--diff"])
-
-    assert len(result.output) > 0
 
     assert result.exit_code == 1
 

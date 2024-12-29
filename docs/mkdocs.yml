@@ -26,8 +26,8 @@ plugins:
 
 theme:
   name: material
-  logo: assets/logo.png
-  favicon: assets/favicon.png
+  logo: ../assets/logo.png
+  favicon: ../assets/logo.png
   features:
     - navigation.sections
     - navigation.indexes
@@ -90,8 +90,6 @@ nav:
   - Formatter: formatter.md
   - Configuring pgrubic: configuration.md
   - Rules: rules.md
-
-site_url: http://127.0.0.1:8000
 
 # not_in_nav: |
 #   ./rules/unsafe/.*
