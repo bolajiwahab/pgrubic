@@ -12,7 +12,7 @@ class CascadeUpdate(linter.BaseChecker):
     ## **Why not?**
     In theory primary key should be static so changes that need cascading should not
     need to happen. If you find yourself needing this sort of cascaded updates then that
-    is perhaps a "code smell" in your database design.
+    is perhaps a **code smell** in your database design.
 
     ## **When should you?**
     Almost never.

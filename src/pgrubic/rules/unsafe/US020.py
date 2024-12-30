@@ -8,8 +8,6 @@ from pgrubic.core import linter
 
 
 class NonConcurrentReindex(linter.BaseChecker):
-    """Non concurrent reindex."""
-
     """## **What it does**
     Checks non-concurrent reindex.
 
@@ -25,6 +23,7 @@ class NonConcurrentReindex(linter.BaseChecker):
     ## **Use instead:**
     Reindex in concurrent mode: **REINDEX .. CONCURRENTLY ..**.
     """
+
     is_auto_fixable: bool = True
 
     def visit_ReindexStmt(

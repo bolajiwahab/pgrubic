@@ -14,10 +14,10 @@ class DisallowedDataType(linter.BaseChecker):
 
     ## **When should you?**
     Never. If a data type is intended to be used, it should not be in the
-    disallowed_data_types.
+    config **disallowed_data_types**.
 
     ## **Use instead:**
-    Data types that are not in the disallowed_data_types.
+    Allowed data types.
 
     ## **Configuration**
     `disallowed_data_types`: List of disallowed data types.

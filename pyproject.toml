@@ -233,6 +233,7 @@ legacy_tox_ini = """
         # Hence it fails with import errors.
         pip install -e .
         python docs/rule_docs_generator.py
+        python docs/settings_doc_generator.py
 
     [testenv:ensure-docs-up-to-date]
     allowlist_externals = ./tools/ensure_up_to_date_docs.sh

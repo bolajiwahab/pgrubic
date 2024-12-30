@@ -23,7 +23,7 @@ class NullConstraint(linter.BaseChecker):
     Almost Never.
 
     ## **Use instead:**
-    Leave out NULL constraints.
+    Leave out **NULL** constraints.
     """
 
     is_auto_fixable: bool = True

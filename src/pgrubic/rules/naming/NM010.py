@@ -35,7 +35,7 @@ class NonSnakeCaseIdentifier(CheckIdentifier):
     > select character_name as "Character Name" from foo.
 
     ## **Use instead:**
-    Stick to using a-z, 0-9 and underscore for names and you never have to worry about
+    Stick to using **a-z, 0-9 and underscore** for names and you never have to worry about
     quoting them.
     """
 

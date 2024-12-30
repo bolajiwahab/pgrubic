@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgrubic.core import linter
 
 
-class AStar(linter.BaseChecker):
+class Asterisk(linter.BaseChecker):
     """## **What it does**
     Checks for usage of asterisk (*) in column references.
 

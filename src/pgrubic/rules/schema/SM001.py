@@ -15,7 +15,7 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
     Explicitly specifying schema improves code readability and improves clarity.
 
     ## **When should you?**
-    If you really want to not specify schema.
+    If you really do not want to specify schema.
 
     ## **Use instead:**
     Specify schema.

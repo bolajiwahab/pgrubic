@@ -35,9 +35,10 @@ class NonConcurrentDetachPartition(linter.BaseChecker):
         node: ast.PartitionCmd,
     ) -> None:
         """Visit PartitionCmd."""
-        detach_partition_concurrently_version = 14
+        detach_partition_concurrently_postgres_version = 14
         if (
-            self.config.postgres_target_version >= detach_partition_concurrently_version
+            self.config.lint.postgres_target_version
+            >= detach_partition_concurrently_postgres_version
             and not node.concurrent
         ):
             self.violations.add(

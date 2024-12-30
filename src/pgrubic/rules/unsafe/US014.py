@@ -1,21 +1,21 @@
-"""Unique constraint creating new index."""
+"""Unique key creating index."""
 
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
 
 
-class UniqueConstraintCreatingNewIndex(linter.BaseChecker):
+class UniqueKeyConstraintCreatingIndex(linter.BaseChecker):
     """## **What it does**
-    Checks unique constraint creating new index.
+    Checks unique key constraint creating index.
 
     ## **Why not?**
-    Unique constraint is supported by a unique index in the background.
-    Adding a unique constraint to an already populated table will create a unique index
-    in non-concurrent mode, scanning and validating that there are no violating records
-    in the table. This causes the table to be locked, in which no other operations can be
-    performed on the table for the duration of the validation. This will cause downtime if
-    the table is concurrently being accessed by other clients.
+    Unique key constraint is supported by a unique index in the background.
+    Adding a unique key constraint to an already populated table will create a
+    unique index in non-concurrent mode, scanning and validating that there are no
+    violating records in the table. This causes the table to be locked, in which no other
+    operations can be performed on the table for the duration of the validation.
+    This will cause downtime if the table is concurrently being accessed by other clients.
 
     ## **When should you?**
     If the table is empty.
@@ -48,8 +48,8 @@ class UniqueConstraintCreatingNewIndex(linter.BaseChecker):
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
-                    description="Unique constraint creating new index",
+                    description="Unique key constraint creating index",
                     auto_fixable=self.is_auto_fixable,
-                    help="Create a unique index in concurrent mode, then add the unique constraint using the index",  # noqa: E501
+                    help="Create a unique index in concurrent mode, then add the unique key constraint using the index",  # noqa: E501
                 ),
             )

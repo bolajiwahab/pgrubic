@@ -88,10 +88,10 @@ include = []
 # Exclude no files by default
 exclude = []
 
+[lint]
 # Target version 14 of PostgreSQL by default
 postgres-target-version = 14
 
-[lint]
 # Enable all rules by default
 select = []
 
@@ -179,6 +179,9 @@ check = false
 
 # Report if SQL files would have been modified, returning a non-zero exit code as well the difference between the current file and how the formatted file would look like
 diff = false
+
+# Whether to read the cache.
+no-cache = false
 ```
 
 Some configuration options can be supplied via CLI arguments such as `--check`, `--diff`, `--fix`.

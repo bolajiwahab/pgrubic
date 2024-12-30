@@ -19,8 +19,8 @@ class IndexElementsMoreThanThree(linter.BaseChecker):
     ## **When should you?**
     If you really need to.
 
-    See https://www.postgresql.org/docs/current/indexes-bitmap-scans.html for some
-    discussion of the merits of different index configurations.
+    See [indexes-bitmap-scans](https://www.postgresql.org/docs/current/indexes-bitmap-scans.html)
+    for some discussion of the merits of different index configurations.
 
     ## **Use instead:**
     Keep your index elements at most three.

@@ -14,7 +14,7 @@ class NullComparison(linter.BaseChecker):
     Comparing NULL to NULL with = returns NULL, not true.
     Comparing a value to NULL returns neither true nor false, but NULL.
 
-    Do not write expression = NULL because NULL is not “equal to” NULL.
+    Do not write expression = NULL because NULL is not equal to NULL.
     (The null value represents an unknown value, and it is not known whether two unknown
     values are equal.)
 

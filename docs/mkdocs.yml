@@ -35,6 +35,7 @@ theme:
     - navigation.instant
     - navigation.instant.progress
     - navigation.tracking
+    - navigation.footer
     - toc.integrate
     - toc.follow
     - navigation.top
@@ -50,6 +51,15 @@ theme:
     repo: fontawesome/brands/git-alt
   language: en
   palette:
+
+    - media: "(prefers-color-scheme)"
+      scheme: default
+      toggle:
+        icon: material/lightbulb-auto
+        name: Switch to light mode
+      primary: teal
+      accent: blue
+
     - media: "(prefers-color-scheme: light)"
       scheme: default
       toggle:
@@ -62,11 +72,13 @@ theme:
       scheme: slate
       toggle:
         icon: material/lightbulb-outline
-        name: Switch to light mode
+        name: Switch to system preference
       primary: teal
       accent: blue
 
 markdown_extensions:
+  - toc:
+      permalink: "#"
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
@@ -81,16 +93,30 @@ markdown_extensions:
   - attr_list
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 nav:
   - Introduction: index.md
   - Tutorial: tutorial.md
+  - Rules: rules.md
+  - Settings: settings.md
   - Linter: linter.md
   - Formatter: formatter.md
   - Configuring pgrubic: configuration.md
-  - Rules: rules.md
 
 # not_in_nav: |
+  # ./settings/Config/.*
 #   ./rules/unsafe/.*
 #   ./rules/convention/.*
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/bolajiwahab
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/wahab-bolaji
+    - icon: fontawesome/brands/dev
+      link: https://dev.to/bolajiwahab
+
+extra_css:
+  - css/extra.css
