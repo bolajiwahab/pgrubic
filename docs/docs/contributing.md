@@ -88,7 +88,7 @@ To add a new rule, you need to:
 7. Add the violation of the rule to the violations list.
 8. Implement fix to the rule if needed. The fix should not trigger violation of another rule.
 9. Implement proper testing for the rule.
-10. Update the generated documentation through:
+10. Update the generated documentation for rules through:
 
 ```bash
 tox -e docbuild
@@ -100,7 +100,7 @@ Test files are located in `/pgrubic/tests` directory.
 To test a rule, you need to:
 
 1. Create a fixture for the rule in e.g. `/pgrubic/tests/fixtures/rules/{rule_category}/{rule_code}.yml`.
-2. Inside the file, write the necessary tests including violations and non-violations tests.
+2. Inside the file, write the necessary tests including, violations and non-violations tests.
 3. To run the tests for all rules, use:
 
 ```bash
@@ -130,7 +130,26 @@ To add a new formatter, you need to:
 2. Create a new file with a name matching the object tag e.g. `table` or use the right existing file
 3. Inside the file, implement the formatter
 
-### Documentation
+### Testing
+
+Test files are located in `/pgrubic/tests` directory.
+To test a rule, you need to:
+
+1. Create a fixture for the formatter in e.g. `/pgrubic/tests/fixtures/formatters/{rule_category}/{formatter}.yml`.
+2. Inside the file, write the necessary tests, including the input SQL and expected output.
+3. To run the tests for all formatters, use:
+
+```bash
+tox -e tests -- tests/test_formatters.py
+```
+
+4. To run specific test, for example, use:
+
+```bash
+tox -e tests -- "tests/test_formatters.py::test_formatters[VIEW-VIEW_drop_view-test_case94]"
+```
+
+## Documentation
 
 To update the documentation, use:
 

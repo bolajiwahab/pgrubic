@@ -103,7 +103,7 @@ nav:
   - Configuring pgrubic: configuration.md
   - Linter: linter.md
   - Formatter: formatter.md
-  - The command line interface: cli.md
+  - Command line interface: cli.md
   - Rolling out: tutorial/#rolling-out
   - Pre commit: tutorial/#pre-commit
   - Contributing: contributing.md
