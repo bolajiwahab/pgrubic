@@ -79,9 +79,13 @@ Pgrubic can also be used as a pre-commit hook:
     - id: pgrubic-format
 ```
 ## Configuration
-Pgrubic can be configured via the [`pgrubic.toml`] file in either the current directory or in the user's home directory.
+Pgrubic can be configured via the [`pgrubic.toml`] file in either the current directory, up to the root directory or the path set by the `PGRUBIC_CONFIG_PATH` environment variable.
+
 The following configuration options are available in the [`pgrubic.toml`] with the following defaults:
-```
+```toml
+# Path to the cache directory
+cache-dir = ".pgrubic_cache"
+
 # Include all files by default
 include = []
 
@@ -174,10 +178,10 @@ remove-pg-catalog-from-functions = true
 # Separate statements by a certain number by of new line, 1 by default
 lines-between-statements = 1
 
-# Check if SQL files would have been modified, returning a non-zero exit code
+# Check if files would have been modified, returning a non-zero exit code
 check = false
 
-# Report if SQL files would have been modified, returning a non-zero exit code as well the difference between the current file and how the formatted file would look like
+# Report if files would have been modified, returning a non-zero exit code as well the difference between the current file and how the formatted file would look like
 diff = false
 
 # Whether to read the cache.

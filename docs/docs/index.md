@@ -1,4 +1,5 @@
 # **pgrubic**
+
 [![pgrubic](https://img.shields.io/badge/pgrubic-purple.svg)](https://github.com/bolajiwahab/pgrubic/)
 [![PyPI - Version](https://img.shields.io/pypi/v/pgrubic)](https://pypi.org/project/pgrubic/)
 [![PyPI - Status](https://img.shields.io/pypi/status/pgrubic)](https://pypi.org/project/pgrubic/)
@@ -14,6 +15,7 @@
 A PostgreSQL linter and formatter for schema migrations and design best practices.
 
 ## Features
+
 - Over 100+ rules
 - Automatic violation correction (e.g., automatically add `concurrently` to index create statements)
 - River style code formatting
@@ -21,6 +23,7 @@ A PostgreSQL linter and formatter for schema migrations and design best practice
 - Automatic caching to avoid reformatting unchanged files
 
 ## Requirements
+
 Pgrubic is built upon the shoulders of:
 
 - [pglast](https://github.com/pglast/pglast) - Python bindings to libpg_query

@@ -100,9 +100,14 @@ nav:
   - Tutorial: tutorial.md
   - Rules: rules.md
   - Settings: settings.md
+  - Configuring pgrubic: configuration.md
   - Linter: linter.md
   - Formatter: formatter.md
-  - Configuring pgrubic: configuration.md
+  - The command line interface: cli.md
+  - Rolling out: tutorial/#rolling-out
+  - Pre commit: tutorial/#pre-commit
+  - Contributing: contributing.md
+  - License: license.md
 
 # not_in_nav: |
   # ./settings/Config/.*

@@ -5,15 +5,17 @@ This tutorial will guide you through the process of integrating pgrubic's linter
 ## Getting Started
 
 ## Installation
+
 **pgrubic** can be installed using pip:
 
 ```console
-$ pip install pgrubic
+pip install pgrubic
 ```
 
 Please note **<span style="color:red">pgrubic is only supported on Python 3.12+</span>**.
 
 ## Usage
+
 We can use **pgrubic** from the command line to lint and format SQL files.
 For example, say you have a project structure like the following:
 
@@ -22,6 +24,7 @@ migrations
   └── sql
     └── V1__init.sql
 ```
+
 where `V1__init.sql` contains the following SQL statements:
 
 ```sql
@@ -63,7 +66,7 @@ Checking **diff** with `git diff` produces the following:
 **pgrubic** runs in the current directory by default, but we can also give it specific paths:
 
 ```console
-$ pgrubic lint migrations/V1__init.sql
+pgrubic lint migrations/V1__init.sql
 ```
 
 We can also format our SQL with `pgrubic format`:
@@ -137,11 +140,10 @@ check_for_nullable_boolean_field(
 ```
 
 ## Configuration
+
 We have been using the default configuration. The configuration can also be customized.
 
-**pgrubic** can be configured via the `pgrubic.toml` file in either the current directory or in the user's home directory. For a more complete overview, see [_Configuring pgrubic_](configuration.md).
-
-**pgrubic** uses **pgrubic.toml** file for configuration.
+**pgrubic** uses **pgrubic.toml** file for configuration. For a more complete overview, see [_Configuring pgrubic_](configuration.md).
 
 To override the default configuration, let's create `pgrubic.toml` in our project's root directory:
 
@@ -154,6 +156,7 @@ required-columns = [
     { name = "foo", data-type = "text" }
 ]
 ```
+
 </details>
 
 Running **pgrubic** again, produces the following output:
@@ -186,6 +189,7 @@ ignore = [
     "TP015",
 ]
 ```
+
 </details>
 
 Running **pgrubic** again, produces the following output:
@@ -199,9 +203,11 @@ Found 0 violation(s)
 Then over time, you may choose to enable additional rules.
 
 ### Ignoring violations
+
 Every lint rule has a unique code and this code can be used to ignore violations of specific rule(s).
 
 #### Ignore violations of single rule
+
 A lint rule can be ignored by adding a `-- noqa: {rule_code}` comment to the violating SQL statement.
 For example, to ignore violations of rule `TP017`, let's add a new file `migrations/V2__init.sql` with the following SQL statement:
 
@@ -224,6 +230,7 @@ ignore = [
     "TP015",
 ]
 ```
+
 </details>
 
 Running **pgrubic**, produces the following output:
@@ -260,6 +267,7 @@ Found 1 violation(s)
 ```
 
 #### Ignoring violations of multiple lint rules
+
 We can also ignore multiple lint rules at the same time. This is achieved by adding `-- noqa: {rule_code(s)}`, with the rule codes separated by a comma. For example,
 `-- noqa: TP017, SM001`.
 
@@ -279,8 +287,10 @@ Found 0 violation(s)
 ```
 
 #### Ignoring all violations
+
 To ignore all lint violations, we can add plain `-- noqa` to the SQL statement.
 Let's update the `noqa` comment in the `migrations/V2__init.sql` file:
+
 ```sql
 -- noqa
 ALTER TABLE public.example ADD COLUMN foo boolean DEFAULT false;
@@ -295,6 +305,7 @@ Found 0 violation(s)
 ```
 
 #### Ignoring violations in entire file
+
 - To ignore all violations in a file for a specific rule, we can add `-- pgrubic: noqa: {rule_code}` to the beginning of the file.
 - To ignore all violations in a file for multiple rules, we can add `-- pgrubic: noqa: {rule_code(s)}` to the beginning of the file, with the rule codes separated by a comma. For example, `-- pgrubic: noqa: TP017, SM001`.
 - To ignore all violations in a file for all rules, we can add `-- pgrubic: noqa` to the beginning of the file.
@@ -302,6 +313,7 @@ Found 0 violation(s)
 For more guides on ignoring violations, please see [_Ignoring violations_](linter.md#ignoring-violations).
 
 ## Rolling out
+
 When introducing a new linter, most of the time, we may want to ignore all existing violations, especially on existing large codebases in order to streamline the roll-out process and instead focus on enforcing the linter going forward.
 
 **pgrubic** supports this roll-out strategy via the command-line `--add-file-level-general-noqa` flag. When set, it will automatically add a `-- pgrubic: noqa` directive to the beginning of each SQL file to ignore all existing violations:
@@ -330,6 +342,7 @@ Checking **diff** with `git diff` produces the following:
 - **pgrubic-format**: format changed files.
 
 Create a file named `.pre-commit-config.yaml` at the root of your git project. The file should look like this:
+
 ```yaml
 - repo: https://github.com/bolajiwahab/pgrubic
   # The version of pgrubic to use.
@@ -338,4 +351,5 @@ Create a file named `.pre-commit-config.yaml` at the root of your git project. T
     - id: pgrubic-lint
     - id: pgrubic-format
 ```
+
 To know more about pre-commit hooks, see [pre-commit](https://pre-commit.com/).
