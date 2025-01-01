@@ -251,7 +251,7 @@ def format_sql_file(  # noqa: C901
                 sf.write(formatted_source_code)
 
     if not config.format.check and not config.format.diff:
-        cache.write(sources=typing.cast(tuple[pathlib.Path, ...], included_sources))
+        cache.write(sources=included_sources)
         sys.stdout.write(
             f"{len(sources_to_reformat)} file(s) reformatted, "
             f"{len(included_sources) - len(sources_to_reformat)} file(s) left unchanged\n",  # noqa: E501

@@ -278,7 +278,7 @@ fix = true
 ### **fixable**
 List of rule aliases or prefixes to consider fixable. It can be the exact code of a rule
 or an entire category of rules, for example, `TP017`, `TP`. All rules are considered
-fixable by default.
+fixable by default. Please note that **unfixable** takes precedence over **fixable**.
 
 **Type**: `list[str]`
 

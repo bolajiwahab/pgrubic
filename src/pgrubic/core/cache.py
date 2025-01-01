@@ -108,7 +108,7 @@ class Cache:
 
         return sources_to_be_formatted
 
-    def write(self, sources: tuple[pathlib.Path, ...]) -> None:
+    def write(self, sources: set[pathlib.Path]) -> None:
         """Generate the cache data for sources and write a new cache file."""
         file_data: dict[str, FileData] = {
             str(source.resolve()): self._get_file_data(source) for source in sources
