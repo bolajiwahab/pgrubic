@@ -1,6 +1,6 @@
 # Tutorial
 
-This tutorial will guide you through the process of integrating pgrubic's linter and formatter into your project, both via CLI and as a library with a direct API for custom usage.
+This tutorial will guide you through the process of integrating pgrubic's linter and formatter into your project, both via CLI and as a library.
 
 ## Getting Started
 
@@ -143,7 +143,7 @@ check_for_nullable_boolean_field(
 
 We have been using the default configuration. The configuration can also be customized.
 
-**pgrubic** uses **pgrubic.toml** file for configuration. For a more complete overview, see [_Configuring pgrubic_](configuration.md).
+**pgrubic** uses **pgrubic.toml** file for configuration. For a more complete overview, see [Configuring pgrubic](configuration.md).
 
 To override the default configuration, let's create `pgrubic.toml` in our project's root directory:
 
@@ -174,20 +174,17 @@ For the full list of all supported settings, see [_Settings_](settings.md).
 
 ### Selecting Rules
 
-**pgrubic** supports [over 100 lint rules](rules.md) across **typing**, **general**, **constraint**, **unsafe migrations**, **naming**, **schema** and **security**. All rules are enabled by default.
+**pgrubic** supports [over 100 lint rules](rules.md) across **typing**, **general**, **constraint**, **unsafe migrations**, **naming**, **schema** and **security**. Please note that all rules are enabled by default.
 
-If you are introducing the linter for the first time, you might want to streamline the set of rules that are enabled. In order to `select/deselect` specific rules, we can use the `select` or `ignore` option in the `[lint]` section of the `pgrubic.toml` config file.
+If you are introducing the linter for the first time, you might want to streamline the set of rules that are enabled. In order to enable or disable specific rules, we can use [**lint.select**](settings.md#select) and [**lint.ignore**](settings.md#ignore) settings.
 <details open>
+
 <summary><strong>pgrubic.toml</strong></summary>
 
 ```toml
 [lint]
-select = [
-    "TP017",
-]
-ignore = [
-    "TP015",
-]
+select = ["TP017"]
+ignore = ["TP015"]
 ```
 
 </details>
@@ -310,7 +307,7 @@ Found 0 violation(s)
 - To ignore all violations in a file for multiple rules, we can add `-- pgrubic: noqa: {rule_code(s)}` to the beginning of the file, with the rule codes separated by a comma. For example, `-- pgrubic: noqa: TP017, SM001`.
 - To ignore all violations in a file for all rules, we can add `-- pgrubic: noqa` to the beginning of the file.
 
-For more guides on ignoring violations, please see [_Ignoring violations_](linter.md#ignoring-violations).
+For more on ignoring violations, please see [Ignoring violations](linter.md#ignoring-violations).
 
 ## Rolling out
 

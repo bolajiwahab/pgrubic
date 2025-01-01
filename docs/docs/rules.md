@@ -82,7 +82,7 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 | SM001 | [schema-unqualified-object](rules/schema/schema-unqualified-object.md) | :white_check_mark: | :x:                |
 | SM002 | [disallowed-schema](rules/schema/disallowed-schema.md)                 | :white_check_mark: | :white_check_mark: |
 
-## security (SM)
+## security (ST)
 
 |   Code  |                      Name                                                      |      Stable        | Auto fix |
 | --------| -------------------------------------------------------------------------------|------------------- |----------|

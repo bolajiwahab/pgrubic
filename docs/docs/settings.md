@@ -73,8 +73,8 @@ postgres-target-version = 12
 </details>
 
 ### **select**
-List of linting rules or prefixes to enable. It can be the exact code of a rule or
-an entire category of rules, for example, `TP017`, `TP`.
+List of rule aliases or prefixes to enable. It can be the exact code of a rule or
+an entire category of rules, for example, `TP017`, `TP`. All rules are enabled by default.
 Can be used in combination with `ignore` to streamline rules selection.
 
 **Type**: `list[str]`
@@ -92,9 +92,10 @@ select = ["TP"]
 </details>
 
 ### **ignore**
-List of linting rules or prefixes to disable. It can be the exact code of a rule or
+List of rule aliases or prefixes to disable. It can be the exact code of a rule or
 an entire category of rules, for example, `TP017`, `TP`.
 Can be used in combination with `select` to streamline rules selection.
+Please note that **ignore** takes precedence over **select**.
 
 **Type**: `list[str]`
 
@@ -257,7 +258,8 @@ disallowed-data-types = [
 </details>
 
 ### **fix**
-Whether to automatically fix violations. Overridden by the `--fix` command-line flag.
+Whether to automatically fix fixable violations.
+Overridden by the `--fix` command-line flag.
 
 **Type**: `bool`
 
@@ -270,6 +272,43 @@ Whether to automatically fix violations. Overridden by the `--fix` command-line 
 ```toml
 [lint]
 fix = true
+```
+</details>
+
+### **fixable**
+List of rule aliases or prefixes to consider fixable. It can be the exact code of a rule
+or an entire category of rules, for example, `TP017`, `TP`. All rules are considered
+fixable by default.
+
+**Type**: `list[str]`
+
+**Default**: `[]`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+[lint]
+fixable = ["TP"]
+```
+</details>
+
+### **unfixable**
+List of rule aliases or prefixes to consider unfixable. It can be the exact code of a rule
+or an entire category of rules, for example, `TP017`, `TP`.
+
+**Type**: `list[str]`
+
+**Default**: `[]`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+[lint]
+unfixable = ["TP017"]
 ```
 </details>
 
