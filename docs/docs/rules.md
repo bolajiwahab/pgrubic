@@ -12,7 +12,7 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 
 ## constraint (CT)
 
-|   Code  |                      Name                                                        |      Stable        | Auto fix |
+|   Code  |                      Name                                                        |      Stable        | Auto-fixable |
 | --------| ---------------------------------------------------------------------------------|------------------- |--------------------|
 | CT001 | [cascade-update](rules/constraint/cascade-update.md)                               | :white_check_mark: | :white_check_mark: |
 | CT002 | [cascade-delete](rules/constraint/cascade-delete.md)                               | :white_check_mark: | :white_check_mark: |
@@ -21,7 +21,7 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 
 ## general (GN)
 
-|   Code  |                      Name                                                       |      Stable        | Auto fix |
+|   Code  |                      Name                                                       |      Stable        | Auto-fixable |
 | --------| --------------------------------------------------------------------------------|------------------- |--------------------|
 | GN001 | [table-inheritance](rules/general/table-inheritance.md)                           | :white_check_mark: | :x:                |
 | GN002 | [create-rule](rules/general/create-rule.md)                                       | :white_check_mark: | :x:                |
@@ -56,7 +56,7 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 
 ## naming (NM)
 
-|   Code  |                      Name                                                            |      Stable        | Auto fix           |
+|   Code  |                      Name                                                            |      Stable        | Auto-fixable           |
 | --------| -------------------------------------------------------------------------------------|------------------- |--------------------|
 | NM001 | [invalid-index-name](rules/naming/invalid-index-name.md)                               | :white_check_mark: | :x:                |
 | NM002 | [invalid-primary-key-name](rules/naming/invalid-primary-key-name.md)                   | :white_check_mark: | :x:                |
@@ -77,21 +77,21 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 
 ## schema (SM)
 
-|   Code  |                      Name                                            |      Stable        | Auto fix           |
+|   Code  |                      Name                                            |      Stable        | Auto-fixable           |
 | --------| ---------------------------------------------------------------------|------------------- |--------------------|
 | SM001 | [schema-unqualified-object](rules/schema/schema-unqualified-object.md) | :white_check_mark: | :x:                |
 | SM002 | [disallowed-schema](rules/schema/disallowed-schema.md)                 | :white_check_mark: | :white_check_mark: |
 
 ## security (ST)
 
-|   Code  |                      Name                                                      |      Stable        | Auto fix |
+|   Code  |                      Name                                                      |      Stable        | Auto-fixable |
 | --------| -------------------------------------------------------------------------------|------------------- |----------|
 | ST001 | [extension-whitelist](rules/security/extension-whitelist.md)                     | :white_check_mark: | :x:      |
 | ST002 | [procedural-language-whitelist](rules/security/procedural-language-whitelist.md) | :white_check_mark: | :x:      |
 
 ## typing (TP)
 
-|   Code  |                      Name                                                                      |      Stable        | Auto fix |
+|   Code  |                      Name                                                                      |      Stable        | Auto-fixable |
 | --------| -----------------------------------------------------------------------------------------------|------------------- |--------------------|
 | TP001 | [timestamp-without-timezone](rules/typing/timestamp-without-timezone.md)                         | :white_check_mark: | :white_check_mark: |
 | TP002 | [time-with-time-zone](rules/typing/time-with-time-zone.md)                                       | :white_check_mark: | :white_check_mark: |
@@ -113,7 +113,7 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 
 ## unsafe (US)
 
-|   Code  |                      Name                                                                                                        |      Stable        | Auto fix  |
+|   Code  |                      Name                                                                                                        |      Stable        | Auto-fixable  |
 | --------| ---------------------------------------------------------------------------------------------------------------------------------|------------------- |-----------|
 | US001 | [drop-column](rules/unsafe/drop-column.md)                                                                                         | :white_check_mark: | :x:       |
 | US002 | [column-data-type-change](rules/unsafe/column-data-type-change.md)                                                                 | :white_check_mark: | :x:       |

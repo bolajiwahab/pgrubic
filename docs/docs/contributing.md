@@ -9,8 +9,8 @@ For significant changes, such as new rules, please consider creating an [issue](
 
 To contribute, you will need:
 
-- Python 3.12 or higher.
-- tox for running tests and other environments.
+- Python 3.12 or higher
+- tox for running tests and other environments
 
 ## Project Structure
 
@@ -52,28 +52,28 @@ To contribute, you will need:
 
 Pgrubic has two components:
 
-1. The Linter - The linter loads the rules and check SQL files against the rules.
-2. The Formatter - The formatter formats SQL files.
+1. **The Linter:** The linter loads the rules and check SQL files against the rules.
+2. **The Formatter:** The formatter formats SQL files.
 
 ## Rules
 
 There are currently 7 categories of rules:
 
-1. Constraint - Rules about constraints.
-2. General - Rules about general design practices.
-3. Naming - Rules about naming conventions.
-4. Schema - Rules about schemas.
-5. Security - Rules about security such as extensions and procedural languages.
-6. Typing - Rules about typing.
-7. Unsafe - Rules about unsafe migrations.
+1. **Constraint:** Rules about constraints.
+2. **General:** Rules about general design practices.
+3. **Naming:** Rules about naming conventions.
+4. **Schema:** Rules about schemas.
+5. **Security:** Rules about security such as extensions and procedural languages.
+6. **Typing:** Rules about typing.
+7. **Unsafe:** Rules about unsafe migrations.
 
 Rules use visitor pattern. This allows for traversing an Abstract Syntax Tree (AST) and applying specific checks at each node type. When implementing new rules, keep the following in mind:
 
-- The rule should inherit from the base checker.
-- Documentation is provided through the docstring of the rule.
-- The rule should implement a set of particular named method(s), specifically `visit_XYZ` where XYZ is the name of the AST node it is visiting.
-- The rule should add necessary violation to the violations list.
-- Fixes must not have side effects, in the sense that such fixes should not trigger violation of another rule.
+- The rule should inherit from the base checker
+- Documentation is provided through the docstring of the rule
+- The rule should implement a set of particular named method(s), specifically `visit_XYZ` where XYZ is the name of the AST node it is visiting
+- The rule should add necessary violation to the violations list
+- Fixes must not have side effects, in the sense that such fixes should not trigger violation of another rule
 
 ### Adding a new rule
 
@@ -117,18 +117,18 @@ tox -e tests -- "tests/test_rules.py::test_rules[US028-US028_test_pass_concurren
 
 Formatters are categorized into two:
 
-- DDL - for DDL statements such as CREATE, ALTER, DROP, etc. These formatters are located in `/pgrubic/src/pgrubic/core/formatters/ddl/`.
-- DML - for DML statements such as INSERT, UPDATE, etc. These formatters are located in `/pgrubic/src/pgrubic/core/formatters/dml/`.
+1. **DDL:** for DDL statements such as CREATE, ALTER, DROP, etc. These formatters are located in `/pgrubic/src/pgrubic/core/formatters/ddl/`.
+2. **DML:** for DML statements such as INSERT, UPDATE, etc. These formatters are located in `/pgrubic/src/pgrubic/core/formatters/dml/`.
 
-We try to have a single file for a specific object type such as table, index, etc.
+We try to have a file per a specific object type such as table, index, etc.
 
 ### Adding a new formatter
 
 To add a new formatter, you need to:
 
-1. Identify the correct category
-2. Create a new file with a name matching the object tag e.g. `table` or use the right existing file
-3. Inside the file, implement the formatter
+- Identify the correct category
+- Create a new file with a name matching the object tag e.g. `table` or use the right existing file
+- Inside the file, implement the formatter
 
 ### Testing
 

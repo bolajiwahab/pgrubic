@@ -32,7 +32,7 @@ For more, see the [documentation](https://bolajiwahab.github.io/pgrubic/).
 pip install pgrubic
 ```
 
-**<span style="color:red">Pgrubic is only supported on Python 3.12+</span>**.
+**<span style="color:red">Pgrubic is only supported on Python 3.12 or higher</span>**.
 
 ## Usage
 

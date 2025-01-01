@@ -45,7 +45,7 @@ be enabled by default when you upgrade
 
 ## Fixing violations
 
-There are linting rules whose violations the linter is able to fix on its own, these are called **fixable** violations. See [**Auto fix**](rules.md) to know whether a rule supports fixing.
+There are linting rules whose violations the linter is able to fix on its own, these are called **fixable** violations. See [**Auto-fixable**](rules.md) to know whether a rule supports fixing.
 for more about fixable violations.
 
 to determine whether a rule supports fixing, see Rules
@@ -84,3 +84,5 @@ Similar to several other linter, pgrubic linter provides various ways to ignore 
 - To ignore multiple rule violations in a file, add `-- pgrubic: noqa: {code1}, {code2}, ...` directive to the top of the file e.g `-- pgrubic: noqa: TP017, SM001`
 - To ignore all violations in a file, use `-- pgrubic: noqa` directive to the top of the file
 - To ignore a rule completely, add its code to [**lint.ignore**](settings.md#ignore) setting
+
+See [**Rolling out**](/tutorial/#rolling-out) for additioanl resources on ignoring violations.

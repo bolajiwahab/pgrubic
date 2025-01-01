@@ -12,7 +12,7 @@ This tutorial will guide you through the process of integrating pgrubic's linter
 pip install pgrubic
 ```
 
-Please note **<span style="color:red">pgrubic is only supported on Python 3.12+</span>**.
+Please note **<span style="color:red">pgrubic is only supported on Python 3.12 or higher</span>**.
 
 ## Usage
 
@@ -34,8 +34,8 @@ ALTER TABLE public.example ADD COLUMN foo boolean DEFAULT false;
 
 Let's run the pgrubic linter over the project with `pgrubic lint`:
 
-```console
-$ pgrubic lint
+```bash
+pgrubic lint
 migrations/V1__init.sql:2:39: TP017: Boolean field should not be nullable
 2 | ALTER TABLE public.example ADD COLUMN foo boolean DEFAULT false;
                                           ^
@@ -45,8 +45,8 @@ Found 1 violation(s)
 
 **pgrubic** identified a **nullable** boolean field, which is most likely an oversight as boolean is either true or false. This is a fixable violation, so we can resolve the violation automatically by running `pgrubic check --fix`:
 
-```console
-$ pgrubic lint --fix
+```bash
+pgrubic lint --fix
 Found 1 violation(s) (1 fixed, 0 remaining)
 ```
 
@@ -72,7 +72,7 @@ pgrubic lint migrations/V1__init.sql
 We can also format our SQL with `pgrubic format`:
 
 ```console
-$ pgrubic format
+pgrubic format
 
 1 file(s) reformatted, 0 file(s) left unchanged
 ```
@@ -162,7 +162,7 @@ required-columns = [
 Running **pgrubic** again, produces the following output:
 
 ```console
-$ pgrubic lint
+pgrubic lint
 migrations/V1__init.sql:4:16: TP015: Column 'foo' expected type is 'text', found 'boolean'
 4 |     ADD COLUMN foo boolean DEFAULT FALSE NOT NULL;
                    ^
@@ -192,7 +192,7 @@ ignore = ["TP015"]
 Running **pgrubic** again, produces the following output:
 
 ```console
-$ pgrubic lint
+pgrubic lint
 Found 0 violation(s)
 0 fix(es) available, 0 fix(es) enabled
 ```
@@ -233,7 +233,7 @@ ignore = [
 Running **pgrubic**, produces the following output:
 
 ```console
-$ pgrubic lint
+pgrubic lint
 migrations/V2__init.sql:1:13: SM001: Database object `example` should be schema qualified
 1 | ALTER TABLE example ADD COLUMN foo boolean DEFAULT false;
                 ^
@@ -255,7 +255,7 @@ ALTER TABLE public.example ADD COLUMN foo boolean DEFAULT false;
 Running **pgrubic** again, produces the following output:
 
 ```console
-$ pgrubic lint
+pgrubic lint
 migrations/V2__init.sql:2:13: SM001: Database object `example` should be schema qualified
 2 | ALTER TABLE example ADD COLUMN foo boolean DEFAULT false;
                 ^
@@ -278,7 +278,7 @@ ALTER TABLE public.example ADD COLUMN foo boolean DEFAULT false;
 Running **pgrubic** again, produces the following output:
 
 ```console
-$ pgrubic lint
+pgrubic lint
 Found 0 violation(s)
 0 fix(es) available, 0 fix(es) enabled
 ```
@@ -296,18 +296,18 @@ ALTER TABLE public.example ADD COLUMN foo boolean DEFAULT false;
 Running **pgrubic** again, produces the following output:
 
 ```console
-$ pgrubic lint
+pgrubic lint
 Found 0 violation(s)
 0 fix(es) available, 0 fix(es) enabled
 ```
 
 #### Ignoring violations in entire file
 
-- To ignore all violations in a file for a specific rule, we can add `-- pgrubic: noqa: {rule_code}` to the beginning of the file.
-- To ignore all violations in a file for multiple rules, we can add `-- pgrubic: noqa: {rule_code(s)}` to the beginning of the file, with the rule codes separated by a comma. For example, `-- pgrubic: noqa: TP017, SM001`.
-- To ignore all violations in a file for all rules, we can add `-- pgrubic: noqa` to the beginning of the file.
+- To ignore all violations in a file for a specific rule, we can add `-- pgrubic: noqa: {rule_code}` to the beginning of the file
+- To ignore all violations in a file for multiple rules, we can add `-- pgrubic: noqa: {rule_code(s)}` to the beginning of the file, with the rule codes separated by a comma. For example, `-- pgrubic: noqa: TP017, SM001`
+- To ignore all violations in a file for all rules, we can add `-- pgrubic: noqa` to the beginning of the file
 
-For more on ignoring violations, please see [Ignoring violations](linter.md#ignoring-violations).
+For more on ignoring violations, please see [Ignoring violations](linter.md#Ignoring-violations).
 
 ## Rolling out
 
@@ -316,7 +316,7 @@ When introducing a new linter, most of the time, we may want to ignore all exist
 **pgrubic** supports this roll-out strategy via the command-line `--add-file-level-general-noqa` flag. When set, it will automatically add a `-- pgrubic: noqa` directive to the beginning of each SQL file to ignore all existing violations:
 
 ```console
-$ pgrubic lint --add-file-level-general-noqa
+pgrubic lint --add-file-level-general-noqa
 File-level general noqa directive added to 1 file(s)
 ```
 
