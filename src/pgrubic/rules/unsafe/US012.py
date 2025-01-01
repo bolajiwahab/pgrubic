@@ -48,7 +48,8 @@ class ValidatingForeignKeyConstraintOnExistingRows(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Validating foreign key constraint on existing rows",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Add the foreign key constraint without validation and validate it in a separate transaction",  # noqa: E501
                 ),
             )

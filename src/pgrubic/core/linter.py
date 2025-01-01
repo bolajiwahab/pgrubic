@@ -2,6 +2,7 @@
 
 import sys
 import typing
+import fnmatch
 
 from pglast import ast, parser, stream, visitors
 from colorama import Fore, Style
@@ -22,7 +23,8 @@ class Violation(typing.NamedTuple):
     line: str
     statement_location: int
     description: str
-    auto_fixable: bool
+    is_auto_fixable: bool
+    is_fix_enabled: bool
     help: str | None = None
 
 
@@ -36,8 +38,9 @@ class LintResult(typing.NamedTuple):
 class ViolationStats(typing.NamedTuple):
     """Violation Stats."""
 
-    total: int = 0
-    fixable: int = 0
+    total: int
+    auto_fixable: int
+    fix_enabled: int
 
 
 class BaseChecker(visitors.Visitor):  # type: ignore[misc]
@@ -79,15 +82,35 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
         """Visit the node."""
 
     @property
-    def is_fix_applicable(self) -> bool:
-        """Check if fix can be applied."""
-        if not self.config.lint.fix:
-            return False
-
+    def is_fix_enabled(self) -> bool:
+        """Check if fix is enabled according to config."""
+        # if a rule is not auto fixable, there is no need to check
+        # if its fix is enabled, in which case, we return False
         if not self.is_auto_fixable:
             return False
 
-        # if the violation has been suppressed by noqa, there is no need to fix it
+        return not (
+            self.config.lint.fixable
+            and not any(
+                fnmatch.fnmatch(self.code, pattern + "*")
+                for pattern in self.config.lint.fixable
+            )
+            or any(
+                fnmatch.fnmatch(self.code, pattern + "*")
+                for pattern in self.config.lint.unfixable
+            )
+        )
+
+    @property
+    def is_fix_applicable(self) -> bool:
+        """Check if fix can be applied."""
+        if not self.is_auto_fixable:
+            return False
+
+        if not self.is_fix_enabled:
+            return False
+
+        # if the violation has been suppressed by noqa, there is no need to try to fix it
         for inline_ignore in self.inline_ignores:
             if (
                 (
@@ -156,7 +179,8 @@ class Linter:
         """Get violation stats."""
         return ViolationStats(
             total=len(violations),
-            fixable=sum(1 for violation in violations if violation.auto_fixable),
+            auto_fixable=sum(1 for violation in violations if violation.is_auto_fixable),
+            fix_enabled=sum(1 for violation in violations if violation.is_fix_enabled),
         )
 
     @staticmethod

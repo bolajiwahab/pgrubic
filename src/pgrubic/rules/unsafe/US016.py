@@ -41,7 +41,8 @@ class NonConcurrentIndexCreation(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Non concurrent index creation",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Create the index in concurrent mode",
                 ),
             )

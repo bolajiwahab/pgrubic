@@ -43,7 +43,8 @@ class TableColumnConflict(linter.BaseChecker):
                 statement_location=statement_location,
                 description=f"Table name `{table_name}` conflicts with the"
                 " name of its column(s)",
-                auto_fixable=self.is_auto_fixable,
+                is_auto_fixable=self.is_auto_fixable,
+                is_fix_enabled=self.is_fix_enabled,
                 help="Resolve the name conflict",
             ),
         )

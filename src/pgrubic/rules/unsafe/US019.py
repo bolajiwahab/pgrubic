@@ -41,7 +41,8 @@ class NonConcurrentIndexDrop(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Non concurrent index drop",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Drop the index in concurrent mode",
                 ),
             )

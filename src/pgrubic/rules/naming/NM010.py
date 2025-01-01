@@ -59,7 +59,8 @@ class NonSnakeCaseIdentifier(CheckIdentifier):
                     line=line,
                     statement_location=statement_location,
                     description=f"Identifier `{identifier}` should be in snake case",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Use snake case for identifiers",
                 ),
             )

@@ -61,7 +61,8 @@ class NotNullConstraintOnNewColumnWithVolatileDefault(linter.BaseChecker):
                         line=self.line,
                         statement_location=self.statement_location,
                         description="Not null constraint on new column with volatile default",  # noqa: E501
-                        auto_fixable=self.is_auto_fixable,
+                        is_auto_fixable=self.is_auto_fixable,
+                        is_fix_enabled=self.is_fix_enabled,
                         help="Split the operation into multiple steps",
                     ),
                 )

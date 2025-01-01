@@ -40,7 +40,7 @@ migrations/V1__init.sql:2:39: TP017: Boolean field should not be nullable
 2 | ALTER TABLE public.example ADD COLUMN foo boolean DEFAULT false;
                                           ^
 Found 1 violation(s)
-1 fix(es) available
+1 fix(es) available, 1 fix(es) enabled
 ```
 
 **pgrubic** identified a **nullable** boolean field, which is most likely an oversight as boolean is either true or false. This is a fixable violation, so we can resolve the violation automatically by running `pgrubic check --fix`:
@@ -167,7 +167,7 @@ migrations/V1__init.sql:4:16: TP015: Column 'foo' expected type is 'text', found
 4 |     ADD COLUMN foo boolean DEFAULT FALSE NOT NULL;
                    ^
 Found 1 violation(s)
-1 fix(es) available
+1 fix(es) available, 1 fix(es) enabled
 ```
 
 For the full list of all supported settings, see [_Settings_](settings.md).
@@ -194,7 +194,7 @@ Running **pgrubic** again, produces the following output:
 ```console
 $ pgrubic lint
 Found 0 violation(s)
-0 fix(es) available
+0 fix(es) available, 0 fix(es) enabled
 ```
 
 Then over time, you may choose to enable additional rules.
@@ -242,7 +242,7 @@ migrations/V2__init.sql:1:13: SM001: Database object `example` should be schema 
 1 | ALTER TABLE example ADD COLUMN foo boolean DEFAULT false;
                                    ^
 Found 2 violation(s)
-1 fix(es) available
+1 fix(es) available, 1 fix(es) enabled
 ```
 
 To ignore the violation from `TP017`, let's add `-- noqa: TP017` to the SQL statement:
@@ -260,7 +260,7 @@ migrations/V2__init.sql:2:13: SM001: Database object `example` should be schema 
 2 | ALTER TABLE example ADD COLUMN foo boolean DEFAULT false;
                 ^
 Found 1 violation(s)
-0 fix(es) available
+0 fix(es) available, 0 fix(es) enabled
 ```
 
 #### Ignoring violations of multiple lint rules
@@ -280,7 +280,7 @@ Running **pgrubic** again, produces the following output:
 ```console
 $ pgrubic lint
 Found 0 violation(s)
-0 fix(es) available
+0 fix(es) available, 0 fix(es) enabled
 ```
 
 #### Ignoring all violations
@@ -298,7 +298,7 @@ Running **pgrubic** again, produces the following output:
 ```console
 $ pgrubic lint
 Found 0 violation(s)
-0 fix(es) available
+0 fix(es) available, 0 fix(es) enabled
 ```
 
 #### Ignoring violations in entire file

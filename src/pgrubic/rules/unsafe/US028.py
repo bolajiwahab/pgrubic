@@ -45,7 +45,8 @@ class NonConcurrentRefreshMaterializedView(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Non concurrent refresh materialized view",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Refresh the materialized view in concurrent mode",
                 ),
             )

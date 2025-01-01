@@ -55,7 +55,8 @@ class PrimaryKeyConstraintCreatingIndex(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Primary key constraint creating index",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Create a unique index in concurrent mode, have the primary key column(s) as NOT NULL, then add the primary key constraint using the index",  # noqa: E501
                 ),
             )

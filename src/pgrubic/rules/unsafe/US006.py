@@ -44,7 +44,8 @@ class AddingStoredGeneratedColumn(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Adding stored generated column is not safe",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="A trigger might be a safer option",
                 ),
             )

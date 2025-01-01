@@ -49,7 +49,8 @@ class UniqueKeyConstraintCreatingIndex(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Unique key constraint creating index",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Create a unique index in concurrent mode, then add the unique key constraint using the index",  # noqa: E501
                 ),
             )

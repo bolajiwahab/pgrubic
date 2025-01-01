@@ -44,7 +44,8 @@ class SelectInto(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Use CREATE TABLE AS instead of SELECT INTO",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Use CREATE TABLE AS",
                 ),
             )

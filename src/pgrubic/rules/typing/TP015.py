@@ -57,7 +57,8 @@ class WronglyTypedRequiredColumn(linter.BaseChecker):
                             description=f"Column '{node.colname}' expected type is"
                             f" '{column.data_type}', found"
                             f" '{prettified_type}'",
-                            auto_fixable=self.is_auto_fixable,
+                            is_auto_fixable=self.is_auto_fixable,
+                            is_fix_enabled=self.is_fix_enabled,
                             help="Use the right data type for the required column",
                         ),
                     )

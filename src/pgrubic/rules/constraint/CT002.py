@@ -49,7 +49,8 @@ class CascadeDelete(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Cascade delete in foreign key constraint",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Handle the deletes manually",
                 ),
             )

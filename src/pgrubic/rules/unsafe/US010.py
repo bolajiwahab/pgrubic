@@ -44,7 +44,8 @@ class NotNullConstraintOnExistingColumn(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description=f"Not null constraint on existing column `{node.name}`",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Add a supporting check constraint",
                 ),
             )

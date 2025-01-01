@@ -55,7 +55,8 @@ class DisallowedSchema(linter.BaseChecker):
                             description=f"Schema '{node.schemaname}' is disallowed in"
                             f" config with reason: '{schema.reason}'"
                             f", use '{schema.use_instead}' instead",
-                            auto_fixable=self.is_auto_fixable,
+                            is_auto_fixable=self.is_auto_fixable,
+                            is_fix_enabled=self.is_fix_enabled,
                             help=self.help,
                         ),
                     )
@@ -94,7 +95,8 @@ class DisallowedSchema(linter.BaseChecker):
                         description=f"Schema '{schema_name}' is disallowed in"
                         f" config with reason: '{schema.reason}'"
                         f", use '{schema.use_instead}' instead",
-                        auto_fixable=self.is_auto_fixable,
+                        is_auto_fixable=self.is_auto_fixable,
+                        is_fix_enabled=self.is_fix_enabled,
                         help=self.help,
                     ),
                 )
@@ -133,7 +135,8 @@ class DisallowedSchema(linter.BaseChecker):
                         description=f"Schema '{schema_name}' is disallowed in"
                         f" config with reason: '{schema.reason}'"
                         f", use '{schema.use_instead}' instead",
-                        auto_fixable=self.is_auto_fixable,
+                        is_auto_fixable=self.is_auto_fixable,
+                        is_fix_enabled=self.is_fix_enabled,
                         help=self.help,
                     ),
                 )

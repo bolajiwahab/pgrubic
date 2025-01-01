@@ -51,7 +51,8 @@ class InvalidCheckConstraintName(linter.BaseChecker):
                     description=f"Check constraint"
                     f" `{node.conname}` does not follow naming convention"
                     f" `{self.config.lint.regex_constraint_check}`",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Name your check constraint according to the set naming"
                     " convention",
                 ),

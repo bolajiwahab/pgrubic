@@ -45,7 +45,8 @@ class IndexElementsMoreThanThree(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description=f"Index elements more than {max_index_elements}",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Keep index elements at most three",
                 ),
             )

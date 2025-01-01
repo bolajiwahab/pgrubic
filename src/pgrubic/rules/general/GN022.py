@@ -37,7 +37,8 @@ class UpdateWithoutWhereClause(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Found UPDATE without a WHERE clause",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Add WHERE clause",
                 ),
             )

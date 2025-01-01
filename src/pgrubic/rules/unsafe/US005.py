@@ -62,7 +62,8 @@ class AddingAutoIncrementIdentityColumn(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Adding auto increment identity column is not safe",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Split the operation into multiple steps",
                 ),
             )

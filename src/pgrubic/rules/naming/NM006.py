@@ -51,7 +51,8 @@ class InvalidExclusionConstraintName(linter.BaseChecker):
                     description=f"Exclusion constraint"
                     f" `{node.conname}` does not follow naming convention"
                     f" `{self.config.lint.regex_constraint_exclusion}`",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Name your exclusion constraint according to the set naming"
                     " convention",
                 ),

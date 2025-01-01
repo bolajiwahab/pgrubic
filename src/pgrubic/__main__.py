@@ -26,15 +26,19 @@ def common_options(func: abc.Callable[..., T]) -> abc.Callable[..., T]:
     context_settings={"help_option_names": ["-h", "--help"]},
     epilog=f"""
 Examples:\n
+   {PACKAGE_NAME} lint\n
    {PACKAGE_NAME} lint .\n
    {PACKAGE_NAME} lint *.sql\n
    {PACKAGE_NAME} lint example.sql\n
-   {PACKAGE_NAME} format src/queries\n
+   {PACKAGE_NAME} format file.sql\n
+   {PACKAGE_NAME} format migrations/\n
 """,
 )
 @click.version_option()
 def cli() -> None:
-    """Pgrubic: PostgreSQL linter for schema migrations and design best practices."""
+    """Pgrubic: PostgreSQL linter and formatter for schema migrations
+    and design best practices.
+    """
 
 
 @cli.command()
@@ -85,7 +89,8 @@ def lint(  # noqa: C901
         linter.checkers.add(rule())
 
     total_violations = 0
-    fixable_violations = 0
+    auto_fixable_violations = 0
+    fix_enabled_violations = 0
 
     # Use the current working directory if no sources are specified
     if not sources:
@@ -122,7 +127,8 @@ def lint(  # noqa: C901
         )
 
         total_violations += violations.total
-        fixable_violations += violations.fixable
+        auto_fixable_violations += violations.auto_fixable
+        fix_enabled_violations += violations.fix_enabled
 
         if lint_result.fixed_sql:
             with source_file.open("w", encoding="utf-8") as sf:
@@ -132,17 +138,18 @@ def lint(  # noqa: C901
         if config.lint.fix:
             sys.stdout.write(
                 f"Found {total_violations} violation(s)"
-                f" ({fixable_violations} fixed,"
-                f" {total_violations - fixable_violations} remaining)\n",
+                f" ({fix_enabled_violations} fixed,"
+                f" {total_violations - fix_enabled_violations} remaining)\n",
             )
 
-            if (total_violations - fixable_violations) > 0:
+            if (total_violations - fix_enabled_violations) > 0:
                 sys.exit(1)
 
         else:
             sys.stdout.write(
                 f"Found {total_violations} violation(s)\n"
-                f"{fixable_violations} fix(es) available\n",
+                f"{auto_fixable_violations} fix(es) available, {fix_enabled_violations} fix(es) enabled\n"  # noqa: E501
+                f"Use with '--fix' to auto fix the violations\n",
             )
 
             sys.exit(1)

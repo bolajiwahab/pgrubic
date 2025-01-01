@@ -49,7 +49,8 @@ class MissingReplaceInView(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Prefer create or replace for view",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Use create or replace",
                 ),
             )

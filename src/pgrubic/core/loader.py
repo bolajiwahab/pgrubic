@@ -46,12 +46,13 @@ def load_rules(config: config.Config) -> set[linter.BaseChecker]:
                 and (
                     not config.lint.select
                     or any(
-                        fnmatch.fnmatch(rule.code, pattern)
+                        fnmatch.fnmatch(rule.code, pattern + "*")
                         for pattern in config.lint.select
                     )
                 )
                 and not any(
-                    fnmatch.fnmatch(rule.code, pattern) for pattern in config.lint.ignore
+                    fnmatch.fnmatch(rule.code, pattern + "*")
+                    for pattern in config.lint.ignore
                 )
             ):
                 rules.add(rule)
@@ -149,6 +150,9 @@ def apply_fix(
         *args: typing.Any,
         **kwargs: typing.Any,
     ) -> typing.Any:
+        if not self.config.lint.fix:
+            return None
+
         if not self.is_fix_applicable:
             return None
 

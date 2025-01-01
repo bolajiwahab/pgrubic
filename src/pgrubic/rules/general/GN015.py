@@ -48,7 +48,8 @@ class DropCascade(linter.BaseChecker):
                 line=line,
                 statement_location=statement_location,
                 description=f"Drop cascade on `{object_name}` detected",
-                auto_fixable=self.is_auto_fixable,
+                is_auto_fixable=self.is_auto_fixable,
+                is_fix_enabled=self.is_fix_enabled,
                 help="Remove the cascade or use restrict",
             ),
         )

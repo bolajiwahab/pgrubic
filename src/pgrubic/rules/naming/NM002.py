@@ -57,7 +57,8 @@ class InvalidPrimaryKeyName(linter.BaseChecker):
                     description=f"Primary key constraint"
                     f" `{node.conname}` does not follow naming convention"
                     f" `{self.config.lint.regex_constraint_primary_key}`",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Name your primary key according to the set naming convention",
                 ),
             )

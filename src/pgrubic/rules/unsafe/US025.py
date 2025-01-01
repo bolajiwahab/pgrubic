@@ -39,7 +39,8 @@ class Cluster(linter.BaseChecker):
                 line=self.line,
                 statement_location=self.statement_location,
                 description="Cluster found",
-                auto_fixable=self.is_auto_fixable,
+                is_auto_fixable=self.is_auto_fixable,
+                is_fix_enabled=self.is_fix_enabled,
                 help="Have a look at pg_repack as an alternative",
             ),
         )

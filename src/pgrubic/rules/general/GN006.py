@@ -39,7 +39,8 @@ class CreateEnum(linter.BaseChecker):
                 line=self.line,
                 statement_location=self.statement_location,
                 description="Prefer mapping table to enum",
-                auto_fixable=self.is_auto_fixable,
+                is_auto_fixable=self.is_auto_fixable,
+                is_fix_enabled=self.is_fix_enabled,
                 help="Use mapping table",
             ),
         )

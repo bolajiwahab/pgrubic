@@ -42,7 +42,8 @@ class ConstantGeneratedColumn(linter.BaseChecker):
                     description=f"Generated column"
                     f" `{ancestors.find_nearest(ast.ColumnDef).node.colname}`"
                     " should not be a constant",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Use an expression for the generated column",
                 ),
             )

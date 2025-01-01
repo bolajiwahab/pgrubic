@@ -46,7 +46,8 @@ class InvalidIndexName(linter.BaseChecker):
                     statement_location=self.statement_location,
                     description=f"Index `{node.idxname}` does not follow naming"
                     f" convention `{self.config.lint.regex_index}`",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Name your index according to the set naming convention",
                 ),
             )

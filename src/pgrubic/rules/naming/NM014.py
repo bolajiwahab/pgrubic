@@ -41,7 +41,8 @@ class SingleLetterIdentifier(CheckIdentifier):
                     statement_location=statement_location,
                     description=f"Single letter identifier `{identifier}`"
                     " is not descriptive enough",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Use a more descriptive name",
                 ),
             )

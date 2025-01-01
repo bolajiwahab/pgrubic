@@ -60,7 +60,8 @@ class TimestampColumnWithoutSuffix(linter.BaseChecker):
                     statement_location=self.statement_location,
                     description="Timestamp column name should be suffixed with"
                     f" `{self.config.lint.timestamp_column_suffix}`",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Add the set suffix to the timestamp column",
                 ),
             )

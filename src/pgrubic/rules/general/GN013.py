@@ -57,7 +57,8 @@ class NullableRequiredColumn(linter.BaseChecker):
                             statement_location=self.statement_location,
                             description=f"Column `{node.colname}` is marked as required"
                             " in config",
-                            auto_fixable=self.is_auto_fixable,
+                            is_auto_fixable=self.is_auto_fixable,
+                            is_fix_enabled=self.is_fix_enabled,
                             help="Set the required column as Not Null",
                         ),
                     )

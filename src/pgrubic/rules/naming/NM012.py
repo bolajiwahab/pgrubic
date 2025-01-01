@@ -43,7 +43,8 @@ class SpecialCharacterInIdentifier(CheckIdentifier):
                     line=line,
                     statement_location=statement_location,
                     description=f"Special characters in identifier `{identifier}`",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Remove special characters from the identifier",
                 ),
             )

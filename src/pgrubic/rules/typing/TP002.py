@@ -44,7 +44,8 @@ class TimeWithTimeZone(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Prefer timestamp with timezone over time with timezone",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Use timestamptz",
                 ),
             )

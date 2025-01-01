@@ -40,7 +40,8 @@ class TimestampWithTimezoneWithPrecision(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Prefer entire timestamp with timezone",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Use timestamptz without precision",
                 ),
             )

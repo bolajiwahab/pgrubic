@@ -46,7 +46,8 @@ class ColumnRename(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Column rename is not safe",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Create a new column with the new name",
                 ),
             )
