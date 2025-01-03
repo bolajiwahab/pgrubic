@@ -21,6 +21,8 @@ A PostgreSQL linter and formatter for schema migrations and design best practice
 - River style code formatting
 - Python 3.12+ compatibility
 - Automatic caching to avoid reformatting unchanged files
+- Automatic caching to avoid reformatting unchanged files
+- Violations suppression, statement level, and file level
 
 ## Requirements
 
