@@ -41,8 +41,7 @@ create_recursive_view:
     CREATE OR REPLACE RECURSIVE VIEW test.card(a, b) AS SELECT * FROM public.account;
   expected: |
     CREATE OR REPLACE VIEW test.card (a, b) AS
-    WITH RECURSIVE card (a, b)
-      AS (
+    WITH RECURSIVE card (a, b) AS (
         SELECT *
           FROM public.account
     )
