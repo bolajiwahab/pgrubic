@@ -10,13 +10,22 @@ class CurrentTime(linter.BaseChecker):
     Checks for use of **CURRENT_TIME** function.
 
     ## **Why not?**
-    It returns a value of type timetz, for which see [TYP002](www.placeholder.com).
+    It returns a value of type **time with time zone**.
+
+    The manual has more to say about this type:
+
+    > The type time with time zone is defined by the SQL standard, but the definition
+    > exhibits properties which lead to questionable usefulness. In most cases,
+    > a combination of date, time, timestamp without time zone, and
+    > timestamp with time zone should provide a complete range of date/time
+    > functionality required by any application.
 
     ## **When should you?**
     Never.
 
     ## **Use instead:**
     Do not use the CURRENT_TIME function. Use whichever of these is appropriate:
+
     - CURRENT_TIMESTAMP or now() if you want a timestamp with time zone,
     - LOCALTIMESTAMP if you want a timestamp without time zone,
     - CURRENT_DATE if you want a date,
@@ -34,14 +43,17 @@ class CurrentTime(linter.BaseChecker):
         if node.op == enums.SQLValueFunctionOp.SVFOP_CURRENT_TIME:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Prefer functions that return timestamptz"
                     " instead of timetz",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Use functions that return timestamptz",
                 ),
             )

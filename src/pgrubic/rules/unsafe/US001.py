@@ -42,13 +42,16 @@ class DropColumn(linter.BaseChecker):
         if node.subtype == enums.AlterTableType.AT_DropColumn:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Drop column detected",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Keep the column as nullable"
                     " or drop it once it is no longer being used",
                 ),

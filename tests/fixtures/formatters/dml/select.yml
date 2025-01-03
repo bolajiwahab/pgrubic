@@ -4,7 +4,8 @@ formatter: SELECT
 simple_select:
   sql: |
     SELECT a, b, c FROM films WHERE date_prod >= '2002-01-01'
-      AND id = 1 AND genre = 'action' OR id = 2 ORDER BY date_prod DESC LIMIT 100
+      AND id = 1 AND genre = 'action' OR id = 2 AND NOT genre = 'comedy'
+      ORDER BY date_prod DESC LIMIT 100
       OFFSET 5 ROWS;
   expected: |
     SELECT a
@@ -14,7 +15,8 @@ simple_select:
      WHERE (date_prod >= '2002-01-01'
        AND id = 1
        AND genre = 'action')
-        OR id = 2
+        OR (id = 2
+       AND NOT genre = 'comedy')
      ORDER BY date_prod DESC
      LIMIT 100
     OFFSET 5;
@@ -169,11 +171,120 @@ select_with_using:
 select_with_subquery:
   sql: |
     SELECT * FROM users u
-    WHERE u.id IN (SELECT o.user_id FROM orders o);
+    WHERE EXISTS (SELECT 1 FROM orders o WHERE u.id = o.user_id);
   expected: |
     SELECT *
       FROM users AS u
-     WHERE u.id IN (
-              SELECT o.user_id
+     WHERE EXISTS (
+              SELECT 1
                 FROM orders AS o
+               WHERE u.id = o.user_id
+           );
+
+select_with_cte:
+  sql: |
+    WITH cte AS (SELECT id FROM orders)
+    SELECT * FROM users u
+    WHERE u.id IN (SELECT id FROM cte);
+  expected: |
+    WITH cte AS (
+        SELECT id
+          FROM orders
+    )
+    SELECT *
+      FROM users AS u
+     WHERE u.id IN (
+              SELECT id
+                FROM cte
+           );
+
+select_with_recursive_cte_with_search:
+  sql: |
+    WITH RECURSIVE search_tree(id, link, data) AS (
+        SELECT t.id, t.link, t.data
+        FROM tree t
+      UNION ALL
+        SELECT t.id, t.link, t.data
+        FROM tree t, search_tree st
+        WHERE t.id = st.link
+    ) SEARCH DEPTH FIRST BY id SET ordercol
+    SELECT * FROM search_tree ORDER BY ordercol;
+  expected: |
+    WITH RECURSIVE search_tree (id, link, data) AS (
+        SELECT t.id
+             , t.link
+             , t.data
+          FROM tree AS t
+         UNION ALL
+        SELECT t.id
+             , t.link
+             , t.data
+          FROM tree AS t, search_tree AS st
+         WHERE t.id = st.link
+    ) SEARCH DEPTH FIRST BY id SET ordercol
+    SELECT *
+      FROM search_tree
+     ORDER BY ordercol;
+
+select_with_recursive_cte_with_cycle:
+  sql: |
+    WITH RECURSIVE search_graph(id, link, data, depth) AS (
+        SELECT g.id, g.link, g.data, 1
+        FROM graph g
+      UNION ALL
+        SELECT g.id, g.link, g.data, sg.depth + 1
+        FROM graph g, search_graph sg
+        WHERE g.id = sg.link
+    ) CYCLE id SET is_cycle USING path
+    SELECT * FROM search_graph;
+  expected: |
+    WITH RECURSIVE search_graph (id, link, data, depth) AS (
+        SELECT g.id
+             , g.link
+             , g.data
+             , 1
+          FROM graph AS g
+         UNION ALL
+        SELECT g.id
+             , g.link
+             , g.data
+             , sg.depth + 1
+          FROM graph AS g, search_graph AS sg
+         WHERE g.id = sg.link
+    ) CYCLE id SET is_cycle TO TRUE DEFAULT FALSE USING path
+    SELECT *
+      FROM search_graph;
+
+select_where_all:
+  sql: |
+    SELECT * FROM employees WHERE
+    salary > ALL(
+      select
+        salary
+      from
+        managers
+    );
+  expected: |
+    SELECT *
+      FROM employees
+     WHERE salary > ALL (
+              SELECT salary
+                FROM managers
+           );
+
+select_where_any:
+  sql: |
+    SELECT * FROM employees WHERE
+    salary > ANY(
+      select
+        salary
+      from
+        managers
+    );
+  expected: |
+    SELECT *
+      FROM employees
+     WHERE salary > ANY (
+              SELECT salary
+                FROM managers
            );

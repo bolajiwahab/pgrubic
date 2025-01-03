@@ -1,0 +1,50 @@
+---
+formatter: INDEX
+
+create_index:
+  sql: |
+    CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS
+    idx_orders ON orders USING btree (id ASC NULLS LAST)
+    INCLUDE (name)
+    NULLS NOT DISTINCT
+    WITH (fillfactor = 90, deduplicate_items = off)
+    TABLESPACE pg_default
+    WHERE name IS NOT NULL;
+  expected: |
+    CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS idx_orders
+        ON orders (id ASC NULLS LAST) INCLUDE (name)
+     NULLS NOT DISTINCT
+      WITH (fillfactor = 90, deduplicate_items = off)
+    TABLESPACE pg_default
+     WHERE name IS NOT NULL;
+
+create_index_btree:
+  sql: |
+    CREATE INDEX idx_gin ON t_hash USING gin (md5 gin_trgm_ops);
+  expected: |
+    CREATE INDEX idx_gin
+        ON t_hash USING gin (md5 gin_trgm_ops);
+
+reindex_index:
+  sql: |
+    REINDEX INDEX CONCURRENTLY idx_orders;
+  expected: |
+    REINDEX (CONCURRENTLY) INDEX idx_orders;
+
+reindex_table:
+  sql: |
+    REINDEX TABLE CONCURRENTLY orders;
+  expected: |
+    REINDEX (CONCURRENTLY) TABLE orders;
+
+reindex_database:
+  sql: |
+    REINDEX DATABASE CONCURRENTLY postgres;
+  expected: |
+    REINDEX (CONCURRENTLY) DATABASE postgres;
+
+drop_index_concurrently:
+  sql: |
+    DROP INDEX CONCURRENTLY IF EXISTS idx_orders;
+  expected: |
+    DROP INDEX CONCURRENTLY IF EXISTS idx_orders;

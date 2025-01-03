@@ -12,7 +12,7 @@ class CascadeUpdate(linter.BaseChecker):
     ## **Why not?**
     In theory primary key should be static so changes that need cascading should not
     need to happen. If you find yourself needing this sort of cascaded updates then that
-    is perhaps a "code smell" in your database design.
+    is perhaps a **code smell** in your database design.
 
     ## **When should you?**
     Almost never.
@@ -35,13 +35,16 @@ class CascadeUpdate(linter.BaseChecker):
         ):
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Cascade update in foreign key constraint",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Handle the updates manually",
                 ),
             )

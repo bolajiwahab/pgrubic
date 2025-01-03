@@ -32,14 +32,17 @@ class SingleLetterIdentifier(CheckIdentifier):
         if identifier and len(identifier.strip()) == 1:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=line_number,
                     column_offset=column_offset,
                     line=line,
                     statement_location=statement_location,
                     description=f"Single letter identifier `{identifier}`"
                     " is not descriptive enough",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Use a more descriptive name",
                 ),
             )

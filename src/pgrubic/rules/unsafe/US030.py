@@ -37,7 +37,9 @@ class MismatchColumnInDataTypeChange(linter.BaseChecker):
         ):
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
@@ -45,7 +47,8 @@ class MismatchColumnInDataTypeChange(linter.BaseChecker):
                     description=f"Column `{alter_table_cmd.node.name}` in data type"
                     f" change does not match column `{node.fields[-1].sval}`"
                     " in USING clause",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Use the right column in the USING clause",
                 ),
             )

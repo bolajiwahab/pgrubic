@@ -6,8 +6,7 @@ test_fail_validate_check_constraint_on_existing_rows:
     ALTER TABLE tbl ADD CONSTRAINT chk CHECK(tbl_id > 0);
   sql_fix: |
     ALTER TABLE tbl
-        ADD CONSTRAINT chk
-            CHECK (tbl_id > 0) NOT VALID;
+        ADD CONSTRAINT chk CHECK (tbl_id > 0) NOT VALID;
 
 test_pass_not_valid_check_constraint_on_existing_rows:
   sql_pass: |

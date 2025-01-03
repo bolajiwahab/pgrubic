@@ -8,7 +8,7 @@ from pgrubic.core import linter
 
 class DropCascade(linter.BaseChecker):
     """## **What it does**
-    Checks for usage of cascade update.
+    Checks for usage of cascade in drop statements.
 
     ## **Why not?**
     Database schema should follow the principle of least surprise which
@@ -24,7 +24,7 @@ class DropCascade(linter.BaseChecker):
     Almost never.
 
     ## **Use instead:**
-    Remove the cascade or use restrict
+    Remove the **cascade** or use **restrict**
     """
 
     is_auto_fixable: bool = True
@@ -40,13 +40,16 @@ class DropCascade(linter.BaseChecker):
         """Register violation."""
         self.violations.add(
             linter.Violation(
-                rule=self.code,
+                rule_code=self.code,
+                rule_name=self.name,
+                rule_category=self.category,
                 line_number=line_number,
                 column_offset=column_offset,
                 line=line,
                 statement_location=statement_location,
                 description=f"Drop cascade on `{object_name}` detected",
-                auto_fixable=self.is_auto_fixable,
+                is_auto_fixable=self.is_auto_fixable,
+                is_fix_enabled=self.is_fix_enabled,
                 help="Remove the cascade or use restrict",
             ),
         )

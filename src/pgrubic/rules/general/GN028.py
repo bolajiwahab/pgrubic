@@ -5,7 +5,7 @@ from pglast import ast, visitors
 from pgrubic.core import linter
 
 
-class AStar(linter.BaseChecker):
+class Asterisk(linter.BaseChecker):
     """## **What it does**
     Checks for usage of asterisk (*) in column references.
 
@@ -36,13 +36,16 @@ class AStar(linter.BaseChecker):
         if ancestors.find_nearest(ast.SelectStmt):
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Asterisk in column reference is discouraged",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Name columns explicitly",
                 ),
             )

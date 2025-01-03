@@ -10,11 +10,12 @@ class SqlAsciiEncoding(linter.BaseChecker):
     Checks for SQL_ASCII encoding.
 
     ## **Why not?**
-    SQL_ASCII means "no conversions" for the purpose of all encoding conversion functions.
-    That is to say, the original bytes are simply treated as being in the new encoding,
-    subject to validity checks, without any regard for what they mean. Unless extreme care
-    is taken, an SQL_ASCII database will usually end up storing a mixture of many
-    different encodings with no way to recover the original characters reliably.
+    SQL_ASCII means **no conversions** for the purpose of all encoding conversion
+    functions. That is to say, the original bytes are simply treated as being in
+    the new encoding, subject to validity checks, without any regard for what they mean.
+    Unless extreme care is taken, an SQL_ASCII database will usually end up storing a
+    mixture of many different encodings with no way to recover the original characters
+    reliably.
 
     ## **When should you?**
     If your input data is already in a hopeless mixture of unlabelled encodings, such as
@@ -23,7 +24,7 @@ class SqlAsciiEncoding(linter.BaseChecker):
     UTF8 and assume non-UTF8 data is in some specific encoding such as WIN1252.
 
     ## **Use instead:**
-    UTF8.
+    UTF8
     """
 
     is_auto_fixable: bool = True
@@ -37,13 +38,16 @@ class SqlAsciiEncoding(linter.BaseChecker):
         if node.defname == "encoding" and node.arg.sval.lower() == "sql_ascii":
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description="SQL_ASCII encoding detected",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Use UTF8",
                 ),
             )

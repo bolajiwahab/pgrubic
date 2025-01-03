@@ -57,7 +57,7 @@ def test_rules(
         )
 
         assert any(
-            violation.rule == rule for violation in linting_result.violations
+            violation.rule_code == rule for violation in linting_result.violations
         ), f"Test failed: No violations found for rule: `{rule}` in `{test_id}`"
 
         if parsed_test_case.sql_fix:
@@ -70,5 +70,5 @@ def test_rules(
         )
 
         assert not any(
-            violation.rule == rule for violation in linting_result.violations
+            violation.rule_code == rule for violation in linting_result.violations
         ), f"""Test failed: Violations found for rule: `{rule}` in `{test_id}` which should pass"""  # noqa: E501

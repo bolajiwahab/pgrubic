@@ -99,7 +99,7 @@ class Cache:
         new_file_hash = self._hash_digest(resolved_source)
         return new_file_hash != cached_version.hashed_content
 
-    def filter_sources(self, sources: tuple[pathlib.Path, ...]) -> set[pathlib.Path]:
+    def filter_sources(self, sources: set[pathlib.Path]) -> set[pathlib.Path]:
         """Return sources that need to be formatted."""
         sources_to_be_formatted: set[pathlib.Path] = set()
         for source in sources:
@@ -108,7 +108,7 @@ class Cache:
 
         return sources_to_be_formatted
 
-    def write(self, sources: tuple[pathlib.Path, ...]) -> None:
+    def write(self, sources: set[pathlib.Path]) -> None:
         """Generate the cache data for sources and write a new cache file."""
         file_data: dict[str, FileData] = {
             str(source.resolve()): self._get_file_data(source) for source in sources

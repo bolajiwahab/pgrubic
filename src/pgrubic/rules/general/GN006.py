@@ -31,13 +31,16 @@ class CreateEnum(linter.BaseChecker):
         """Visit CreateEnumStmt."""
         self.violations.add(
             linter.Violation(
-                rule=self.code,
+                rule_code=self.code,
+                rule_name=self.name,
+                rule_category=self.category,
                 line_number=self.line_number,
                 column_offset=self.column_offset,
                 line=self.line,
                 statement_location=self.statement_location,
                 description="Prefer mapping table to enum",
-                auto_fixable=self.is_auto_fixable,
+                is_auto_fixable=self.is_auto_fixable,
+                is_fix_enabled=self.is_fix_enabled,
                 help="Use mapping table",
             ),
         )

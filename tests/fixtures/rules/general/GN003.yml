@@ -6,7 +6,7 @@ test_fail_ascii_encoding:
     CREATE DATABASE music ENCODING SQL_ASCII TEMPLATE template0 connection limit 10;
   sql_fix: |
     CREATE DATABASE music
-      WITH ENCODING = 'utf8'
+      WITH ENCODING = 'UTF8'
            TEMPLATE = 'template0'
            CONNECTION LIMIT = 10;
 

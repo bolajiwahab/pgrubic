@@ -14,10 +14,10 @@ class DisallowedDataType(linter.BaseChecker):
 
     ## **When should you?**
     Never. If a data type is intended to be used, it should not be in the
-    disallowed_data_types.
+    config **disallowed_data_types**.
 
     ## **Use instead:**
-    Data types that are not in the disallowed_data_types.
+    Allowed data types.
 
     ## **Configuration**
     `disallowed_data_types`: List of disallowed data types.
@@ -35,7 +35,9 @@ class DisallowedDataType(linter.BaseChecker):
             if node.names[-1].sval == data_type.name:
                 self.violations.add(
                     linter.Violation(
-                        rule=self.code,
+                        rule_code=self.code,
+                        rule_name=self.name,
+                        rule_category=self.category,
                         line_number=self.line_number,
                         column_offset=self.column_offset,
                         line=self.line,
@@ -43,7 +45,8 @@ class DisallowedDataType(linter.BaseChecker):
                         description=f"Data type '{node.names[-1].sval}' is disallowed"
                         f" in config with reason: '{data_type.reason}', use"
                         f" '{data_type.use_instead}' instead",
-                        auto_fixable=self.is_auto_fixable,
+                        is_auto_fixable=self.is_auto_fixable,
+                        is_fix_enabled=self.is_fix_enabled,
                         help=f"Use '{data_type.use_instead}' instead",
                     ),
                 )

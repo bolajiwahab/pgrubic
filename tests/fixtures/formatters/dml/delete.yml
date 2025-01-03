@@ -1,0 +1,34 @@
+---
+formatter: DELETE
+
+delete:
+  sql: |
+    DELETE FROM users u using orders o
+    WHERE u.id = o.user_id
+    AND u.id IN (SELECT id FROM orders)
+    RETURNING u.id, o.user_id;
+  expected: |
+    DELETE FROM users AS u
+     USING orders AS o
+     WHERE u.id = o.user_id
+       AND u.id IN (
+              SELECT id
+                FROM orders
+           )
+    RETURNING u.id, o.user_id;
+
+delete_with_cte:
+  sql: |
+    WITH cte AS (SELECT id FROM orders)
+    DELETE FROM users u
+    WHERE u.id IN (SELECT id FROM cte);
+  expected: |
+    WITH cte AS (
+        SELECT id
+          FROM orders
+    )
+    DELETE FROM users AS u
+     WHERE u.id IN (
+              SELECT id
+                FROM cte
+           );

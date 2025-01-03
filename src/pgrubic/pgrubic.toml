@@ -1,8 +1,8 @@
 cache-dir = ".pgrubic_cache"
 include = []
 exclude = []
-postgres-target-version = 14
 [lint]
+target-postgres-version = 14
 select = []
 ignore = []
 include = []
@@ -12,6 +12,8 @@ disallowed-schemas = []
 allowed-extensions = []
 allowed-languages = []
 fix = false
+fixable = []
+unfixable = []
 disallowed-data-types = []
 required-columns = []
 timestamp-column-suffix = "_at"
@@ -34,3 +36,4 @@ remove-pg-catalog-from-functions = true
 lines-between-statements = 1
 check = false
 diff = false
+no-cache = false

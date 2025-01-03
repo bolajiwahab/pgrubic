@@ -19,8 +19,7 @@ test_fail_on_update_cascade_existing_table:
             FOREIGN KEY (author_id) REFERENCES authors (author_id) ON DELETE CASCADE;
   sql_fix: |
     ALTER TABLE books
-        ADD CONSTRAINT distfk
-            FOREIGN KEY (author_id) REFERENCES authors (author_id) ON DELETE RESTRICT NOT VALID;
+        ADD CONSTRAINT distfk FOREIGN KEY (author_id) REFERENCES authors (author_id) ON DELETE RESTRICT NOT VALID;
 
 test_pass_on_update_no_action_new_table:
   sql_pass: |

@@ -6,19 +6,17 @@ from pglast import ast, enums, stream, printers
 @printers.node_printer(ast.SubLink, override=True)
 def sub_link(node: ast.SubLink, output: stream.RawStream) -> None:
     """Printer for SubLink."""
-    slt = enums.SubLinkType
-
-    if node.subLinkType == slt.EXISTS_SUBLINK:
+    if node.subLinkType == enums.SubLinkType.EXISTS_SUBLINK:
         output.write("EXISTS")
         output.space()
-    elif node.subLinkType == slt.ALL_SUBLINK:
+    elif node.subLinkType == enums.SubLinkType.ALL_SUBLINK:
         output.print_node(node.testexpr)
         output.space()
         output.write(printers.dml.get_string_value(node.operName))
         output.space()
         output.write("ALL")
         output.space()
-    elif node.subLinkType == slt.ANY_SUBLINK:
+    elif node.subLinkType == enums.SubLinkType.ANY_SUBLINK:
         output.print_node(node.testexpr)
         if node.operName:
             output.space()
@@ -30,13 +28,13 @@ def sub_link(node: ast.SubLink, output: stream.RawStream) -> None:
             output.space()
             output.write("IN")
             output.space()
-    elif node.subLinkType == slt.EXPR_SUBLINK:
+    elif node.subLinkType == enums.SubLinkType.EXPR_SUBLINK:
         pass
-    elif node.subLinkType == slt.ARRAY_SUBLINK:
+    elif node.subLinkType == enums.SubLinkType.ARRAY_SUBLINK:
         output.write("ARRAY")
     elif node.subLinkType in (
-        slt.MULTIEXPR_SUBLINK,
-        slt.ROWCOMPARE_SUBLINK,
+        enums.SubLinkType.MULTIEXPR_SUBLINK,
+        enums.SubLinkType.ROWCOMPARE_SUBLINK,
     ):
         msg = f"SubLink of type {node.subLinkType} not supported yet"
         raise NotImplementedError(msg)
@@ -199,41 +197,3 @@ def select_stmt(node: ast.SelectStmt, output: stream.RawStream) -> None:
 
         if node.withClause:
             output.dedent()
-
-
-@printers.node_printer(ast.IntoClause, override=True)
-def into_clause(node: ast.IntoClause, output: stream.RawStream) -> None:
-    """Printer for IntoClause."""
-    output.print_node(node.rel)
-    if node.colNames:
-        output.space()
-        with output.expression(need_parens=True):
-            output.print_name(node.colNames, ",")
-    with output.push_indent(2):
-        if node.accessMethod:
-            output.write("USING")
-            output.space()
-            output.print_name(node.accessMethod)
-            output.newline()
-        if node.options:
-            output.write("WITH")
-            output.space()
-            with output.expression(need_parens=True):
-                output.print_list(node.options)
-            output.newline()
-        if node.onCommit != enums.OnCommitAction.ONCOMMIT_NOOP:
-            output.space(2)
-            output.write("ON COMMIT")
-            output.space()
-            if node.onCommit == enums.OnCommitAction.ONCOMMIT_PRESERVE_ROWS:
-                output.write("PRESERVE ROWS")
-            elif node.onCommit == enums.OnCommitAction.ONCOMMIT_DELETE_ROWS:
-                output.write("DELETE ROWS")
-            elif node.onCommit == enums.OnCommitAction.ONCOMMIT_DROP:
-                output.write("DROP")
-            output.newline()
-        if node.tableSpaceName:
-            output.write("TABLESPACE")
-            output.space()
-            output.print_name(node.tableSpaceName)
-            output.newline()
