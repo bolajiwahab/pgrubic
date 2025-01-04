@@ -33,7 +33,7 @@ classifiers = [
 ]
 keywords = ["pgrubic", "sql", "postgres", "postgresql", "linter"]
 dependencies = [
-  "pglast==7.1",
+  "pglast==7.2",
   "case-converter==1.1.0",
   "colorama==0.4.6",
   "toml==0.10.2",
