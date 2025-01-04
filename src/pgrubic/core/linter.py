@@ -298,8 +298,6 @@ class Linter:
         if parser.parse_sql(fixed_source_code) != parser.parse_sql(source_code):
             fix = fixed_source_code
 
-            sys.stdout.write(fix)
-
         noqa.report_unused_ignores(
             source_file=source_file,
             inline_ignores=inline_ignores,

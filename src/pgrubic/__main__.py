@@ -148,9 +148,13 @@ def lint(  # noqa: C901
         else:
             sys.stdout.write(
                 f"Found {total_violations} violation(s)\n"
-                f"{auto_fixable_violations} fix(es) available, {fix_enabled_violations} fix(es) enabled\n"  # noqa: E501
-                f"Use with '--fix' to auto fix the violations\n",
+                f"{auto_fixable_violations} fix(es) available, {fix_enabled_violations} fix(es) enabled\n",  # noqa: E501
             )
+
+            if auto_fixable_violations > 0:
+                sys.stdout.write(
+                    "Use with '--fix' to auto fix the violations\n",
+                )
 
             sys.exit(1)
 
