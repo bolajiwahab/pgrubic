@@ -37,7 +37,7 @@ class YodaCondition(linter.BaseChecker):
                 node.lexpr,
                 ast.A_Const,
             )
-            and not isinstance(node.rexpr, ast.A_Const)
+            and isinstance(node.rexpr, ast.ColumnRef)
         ):
             self.violations.add(
                 linter.Violation(

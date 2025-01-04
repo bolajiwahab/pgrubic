@@ -11,8 +11,8 @@ class IdColumn(linter.BaseChecker):
 
     ## **Why not?**
     The name "id" does not provide much information about what the column represents in
-    the context of the table as it is so genric. Using a more descriptive name can improve
-    clarity, readability, and maintainability of the database schema.
+    the context of the table as it is so generic. Using a more descriptive name can
+    improve clarity, readability, and maintainability of the database schema.
 
     ## **When should you?**
     Almost never.
@@ -31,16 +31,11 @@ class IdColumn(linter.BaseChecker):
         """Visit ColumnDef."""
         if (
             (
-                isinstance(
-                    abs(ancestors).node,
-                    ast.AlterTableCmd,
-                )
-                and (abs(ancestors).node.subtype == enums.AlterTableType.AT_AddColumn)
+                ancestors.find_nearest(ast.AlterTableCmd)
+                and ancestors.find_nearest(ast.AlterTableCmd).node.subtype
+                == enums.AlterTableType.AT_AddColumn
             )
-            or isinstance(
-                abs(ancestors).node,
-                ast.CreateStmt,
-            )
+            or ancestors.find_nearest(ast.CreateStmt)
         ) and node.colname.lower() == "id":
             self.violations.add(
                 linter.Violation(
@@ -63,13 +58,10 @@ class IdColumn(linter.BaseChecker):
 
     def _fix(self, ancestors: visitors.Ancestor, node: ast.ColumnDef) -> None:
         """Fix violation."""
-        if isinstance(
-            abs(ancestors).node,
-            ast.AlterTableCmd,
-        ):
+        if ancestors.find_nearest(ast.AlterTableCmd):
             table = ancestors.parent.parent.node.relation.relname
 
-        if isinstance(abs(ancestors).node, ast.CreateStmt):
+        if ancestors.find_nearest(ast.CreateStmt):
             table = ancestors.parent.node.relation.relname
 
         node.colname = table + "_" + node.colname
