@@ -523,15 +523,17 @@ items, such as list of columns in which each column is on a separate line.
 For example, when `true`:
 ```sql
 select column1
-        , column2
-        , column3
+     , column2
+     , column3
+     , .......
 ```
 
 when `false`:
 ```sql
 select column1,
-        column2,
-        column3
+       column2,
+       column3,
+       .......
 ```
 
 **Type**: `bool`

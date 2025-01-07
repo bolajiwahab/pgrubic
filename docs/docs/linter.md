@@ -43,6 +43,8 @@ explicitly enable the specific rules you want enabled since new rules would othe
 be enabled by default when you upgrade
 - [**lint.ignore**](settings.md#ignore) takes precedence over [**lint.select**](settings.md#select)
 
+For the full list of all supported settings, see [**settings**](settings.md#lint).
+
 ## Fixing violations
 
 There are linting rules whose violations the linter is able to fix on its own, these are called **fixable** violations. See [**Auto-fixable**](rules.md) to know whether a rule supports fixing.
@@ -55,6 +57,8 @@ to determine whether a rule supports fixing, see Rules
 ```bash
 pgrubic lint --fix
 ```
+
+Please note that fixes are formatted.
 
 ## Disabling fixes
 
@@ -75,7 +79,7 @@ will enable fixes for all the rules with the prefix `TP`, which falls under the 
 
 ## Ignoring Violations
 
-Similar to several other linter, pgrubic linter provides various ways to ignore violations.
+Similar to several other linters, the pgrubic linter provides various ways to ignore violations.
 
 - To ignore a specific rule violation in a statement, add `-- noqa: {code}` directive to the top of the statement e.g `-- noqa: TP017`
 - To ignore multiple rule violations in a statement, add `-- noqa: {code1}, {code2}, ...` directive to the top of the statement e.g `-- noqa: TP017, SM001`
@@ -86,3 +90,7 @@ Similar to several other linter, pgrubic linter provides various ways to ignore 
 - To ignore a rule completely, add its code to [**lint.ignore**](settings.md#ignore) setting
 
 See [**Rolling out**](tutorial.md#rolling-out) for additional resources on ignoring violations.
+
+### Unused suppression comments
+
+**pgrubic** will automatically warn about ununsed suppression comments.

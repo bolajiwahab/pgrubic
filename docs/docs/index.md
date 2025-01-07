@@ -18,7 +18,8 @@ A PostgreSQL linter and formatter for schema migrations and design best practice
 
 - Over 100+ rules
 - Automatic violation correction (e.g., automatically add `concurrently` to index create statements)
-- River style code formatting
+- River style code formatting for DML statements
+- Almost identical stying with **pg_dump** for DDL statements
 - Python 3.12+ compatibility
 - Automatic caching to avoid reformatting unchanged files
 - Automatic caching to avoid reformatting unchanged files

@@ -129,4 +129,4 @@ diff = false
 no-cache = false
 ```
 
-To learn more about each setting, see [Settings](settings.md).
+To learn more about each setting, see [**settings**](settings.md).

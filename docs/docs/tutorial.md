@@ -170,7 +170,7 @@ Found 1 violation(s)
 1 fix(es) available, 1 fix(es) enabled
 ```
 
-For the full list of all supported settings, see [_Settings_](settings.md).
+For the full list of all supported settings, see [**settings**](settings.md).
 
 ### Selecting Rules
 
