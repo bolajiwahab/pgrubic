@@ -1,21 +1,39 @@
 # Repository Coverage
 
-
+[Full report](https://htmlpreview.github.io/?https://github.com/bolajiwahab/pgrubic/blob/python-coverage-comment-action-data/htmlcov/index.html)
 
 | Name                                         |    Stmts |     Miss |    Cover |   Missing |
 |--------------------------------------------- | -------: | -------: | -------: | --------: |
 | src/pgrubic/\_\_init\_\_.py                  |       28 |        0 |     100% |           |
-| src/pgrubic/\_\_main\_\_.py                  |       88 |        0 |     100% |           |
+| src/pgrubic/\_\_main\_\_.py                  |      104 |        0 |     100% |           |
 | src/pgrubic/core/\_\_init\_\_.py             |        9 |        0 |     100% |           |
 | src/pgrubic/core/cache.py                    |       64 |        0 |     100% |           |
-| src/pgrubic/core/config.py                   |       93 |        0 |     100% |           |
-| src/pgrubic/core/errors.py                   |        0 |        0 |     100% |           |
+| src/pgrubic/core/config.py                   |      101 |        0 |     100% |           |
+| src/pgrubic/core/errors.py                   |        2 |        0 |     100% |           |
 | src/pgrubic/core/filters.py                  |       16 |        0 |     100% |           |
 | src/pgrubic/core/formatter.py                |       32 |        0 |     100% |           |
-| src/pgrubic/core/linter.py                   |      110 |        0 |     100% |           |
-| src/pgrubic/core/loader.py                   |       57 |        0 |     100% |           |
+| src/pgrubic/core/linter.py                   |      121 |        0 |     100% |           |
+| src/pgrubic/core/loader.py                   |       59 |        0 |     100% |           |
 | src/pgrubic/core/logger.py                   |        4 |        0 |     100% |           |
-| src/pgrubic/core/noqa.py                     |      105 |        0 |     100% |           |
+| src/pgrubic/core/noqa.py                     |      121 |        0 |     100% |           |
+| src/pgrubic/formatters/\_\_init\_\_.py       |        0 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/\_\_init\_\_.py   |        2 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/column.py         |       31 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/constraint.py     |       48 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/database.py       |       39 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/enum.py           |       44 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/index.py          |       62 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/rename.py         |       34 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/table.py          |      181 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/view.py           |       30 |        0 |     100% |           |
+| src/pgrubic/formatters/dml/\_\_init\_\_.py   |        0 |        0 |     100% |           |
+| src/pgrubic/formatters/dml/boolean.py        |       17 |        0 |     100% |           |
+| src/pgrubic/formatters/dml/cte.py            |       35 |        0 |     100% |           |
+| src/pgrubic/formatters/dml/delete.py         |       31 |        0 |     100% |           |
+| src/pgrubic/formatters/dml/insert.py         |       77 |        0 |     100% |           |
+| src/pgrubic/formatters/dml/join.py           |       62 |        0 |     100% |           |
+| src/pgrubic/formatters/dml/select.py         |      193 |        0 |     100% |           |
+| src/pgrubic/formatters/dml/update.py         |       36 |        0 |     100% |           |
 | src/pgrubic/rules/\_\_init\_\_.py            |        0 |        0 |     100% |           |
 | src/pgrubic/rules/constraint/CT001.py        |       12 |        0 |     100% |           |
 | src/pgrubic/rules/constraint/CT002.py        |       10 |        0 |     100% |           |
@@ -50,8 +68,9 @@
 | src/pgrubic/rules/general/GN026.py           |        6 |        0 |     100% |           |
 | src/pgrubic/rules/general/GN027.py           |       13 |        0 |     100% |           |
 | src/pgrubic/rules/general/GN028.py           |        6 |        0 |     100% |           |
-| src/pgrubic/rules/general/GN029.py           |       10 |        0 |     100% |           |
+| src/pgrubic/rules/general/GN029.py           |       11 |        0 |     100% |           |
 | src/pgrubic/rules/general/GN030.py           |       10 |        0 |     100% |           |
+| src/pgrubic/rules/general/GN031.py           |       22 |        0 |     100% |           |
 | src/pgrubic/rules/general/\_\_init\_\_.py    |       10 |        0 |     100% |           |
 | src/pgrubic/rules/naming/NM001.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/naming/NM002.py            |        7 |        0 |     100% |           |
@@ -93,7 +112,6 @@
 | src/pgrubic/rules/typing/TP015.py            |       18 |        0 |     100% |           |
 | src/pgrubic/rules/typing/TP016.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/typing/TP017.py            |       12 |        0 |     100% |           |
-| src/pgrubic/rules/typing/TP018.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/typing/\_\_init\_\_.py     |        0 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US001.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US002.py            |        6 |        0 |     100% |           |
@@ -114,18 +132,19 @@
 | src/pgrubic/rules/unsafe/US017.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US018.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US019.py            |       10 |        0 |     100% |           |
-| src/pgrubic/rules/unsafe/US020.py            |       14 |        0 |     100% |           |
+| src/pgrubic/rules/unsafe/US020.py            |       13 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US021.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US022.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US023.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US024.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US025.py            |        5 |        0 |     100% |           |
-| src/pgrubic/rules/unsafe/US026.py            |        8 |        0 |     100% |           |
+| src/pgrubic/rules/unsafe/US026.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US027.py            |       11 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US028.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US029.py            |        5 |        0 |     100% |           |
+| src/pgrubic/rules/unsafe/US030.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-|                                    **TOTAL** | **1587** |    **0** | **100%** |           |
+|                                    **TOTAL** | **2585** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
@@ -134,11 +153,22 @@ Below are examples of the badges you can use in your main branch `README` file.
 
 ### Direct image
 
-[![Coverage badge](https://github.com/bolajiwahab/pgrubic/raw/python-coverage-comment-action-data/badge.svg)](https://github.com/bolajiwahab/pgrubic/tree/python-coverage-comment-action-data)
+[![Coverage badge](https://raw.githubusercontent.com/bolajiwahab/pgrubic/python-coverage-comment-action-data/badge.svg)](https://htmlpreview.github.io/?https://github.com/bolajiwahab/pgrubic/blob/python-coverage-comment-action-data/htmlcov/index.html)
 
 This is the one to use if your repository is private or if you don't want to customize anything.
 
+### [Shields.io](https://shields.io) Json Endpoint
 
+[![Coverage badge](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bolajiwahab/pgrubic/python-coverage-comment-action-data/endpoint.json)](https://htmlpreview.github.io/?https://github.com/bolajiwahab/pgrubic/blob/python-coverage-comment-action-data/htmlcov/index.html)
+
+Using this one will allow you to [customize](https://shields.io/endpoint) the look of your badge.
+It won't work with private repositories. It won't be refreshed more than once per five minutes.
+
+### [Shields.io](https://shields.io) Dynamic Badge
+
+[![Coverage badge](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=coverage&query=%24.message&url=https%3A%2F%2Fraw.githubusercontent.com%2Fbolajiwahab%2Fpgrubic%2Fpython-coverage-comment-action-data%2Fendpoint.json)](https://htmlpreview.github.io/?https://github.com/bolajiwahab/pgrubic/blob/python-coverage-comment-action-data/htmlcov/index.html)
+
+This one will always be the same color. It won't work for private repos. I'm not even sure why we included it.
 
 ## What is that?
 
