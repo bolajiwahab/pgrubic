@@ -50,7 +50,6 @@ A list of file patterns to exclude from the linting and formatting process.
 exclude = ["test*.sql"]
 ```
 </details>
-
 ## Lint
 
 ### **postgres-target-version**
@@ -481,7 +480,6 @@ Regular expression to match sequence names.
 regex-sequence = r"^[a-z0-9_]+$"
 ```
 </details>
-
 ## Format
 
 ### **include**

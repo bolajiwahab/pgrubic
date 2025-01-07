@@ -307,7 +307,7 @@ Found 0 violation(s)
 - To ignore all violations in a file for multiple rules, we can add `-- pgrubic: noqa: {rule_code(s)}` to the beginning of the file, with the rule codes separated by a comma. For example, `-- pgrubic: noqa: TP017, SM001`
 - To ignore all violations in a file for all rules, we can add `-- pgrubic: noqa` to the beginning of the file
 
-For more on ignoring violations, please see [Ignoring violations](linter.md#Ignoring-violations).
+For more on ignoring violations, please see [Ignoring violations](linter.md#ignoring-violations).
 
 ## Rolling out
 

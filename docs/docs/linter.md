@@ -85,4 +85,4 @@ Similar to several other linter, pgrubic linter provides various ways to ignore 
 - To ignore all violations in a file, use `-- pgrubic: noqa` directive to the top of the file
 - To ignore a rule completely, add its code to [**lint.ignore**](settings.md#ignore) setting
 
-See [**Rolling out**](/tutorial/#rolling-out) for additioanl resources on ignoring violations.
+See [**Rolling out**](tutorial.md#rolling-out) for additional resources on ignoring violations.
