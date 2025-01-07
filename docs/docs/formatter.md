@@ -33,6 +33,7 @@ The formatter is opinionated, with few configuration options. For example, the f
 [format]
 comma-at-beginning = true
 ```
+
 </details>
 
 will add comma as a prefix as opposed to a suffix when formatting a list of
