@@ -1,0 +1,37 @@
+---
+rule: GN031
+
+test_fail_stringified_null:
+  sql_fail: |
+    SELECT 'NULL', 'null';
+  sql_fix: |
+    SELECT NULL
+         , NULL;
+
+test_fail_stringified_null_in_expression_column_left:
+  sql_fail: |
+    SELECT 'NULL' != a;
+  sql_fix: |
+    SELECT a IS NOT NULL;
+
+test_fail_stringified_null_in_expression_column_right:
+  sql_fail: |
+    SELECT a = 'NULL';
+  sql_fix: |
+    SELECT a IS NULL;
+
+test_fail_stringified_null_in_expression_string_left:
+  sql_fail: |
+    SELECT 'NULL' != 'a';
+  sql_fix: |
+    SELECT 'a' IS NOT NULL;
+
+test_fail_stringified_null_in_expression_string_right:
+  sql_fail: |
+    SELECT 'a' = 'NULL';
+  sql_fix: |
+    SELECT 'a' IS NULL;
+
+test_pass_non_null_value:
+  sql_pass: |
+    SELECT 'null_a', 'NULL_b';
