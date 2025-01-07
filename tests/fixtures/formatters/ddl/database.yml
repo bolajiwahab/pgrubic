@@ -25,3 +25,10 @@ drop_database:
     WITH (
         FORCE
     );
+
+rename_database:
+  sql: |
+    ALTER DATABASE music RENAME TO music2;
+  expected: |
+    ALTER DATABASE music
+        RENAME TO music2;

@@ -266,3 +266,10 @@ create_materialized_view:
     TABLESPACE pg_default AS
     SELECT *
       FROM tbl;
+
+rename_table:
+  sql: |
+    ALTER TABLE IF EXISTS mood RENAME TO mood2;
+  expected: |
+    ALTER TABLE IF EXISTS mood
+        RENAME TO mood2;

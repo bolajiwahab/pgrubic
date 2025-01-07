@@ -20,7 +20,7 @@ def update_stmt(node: ast.UpdateStmt, output: stream.RawStream) -> None:
         output.space(3)
         output.write("SET")
         output.space()
-        output.print_list(node.targetList)
+        output.print_list(node.targetList, standalone_items=False)
 
         if node.fromClause:
             output.newline()
@@ -40,7 +40,7 @@ def update_stmt(node: ast.UpdateStmt, output: stream.RawStream) -> None:
                 output.newline()
                 output.write("RETURNING")
                 output.space()
-                output.print_list(node.returningList, standalone_items=False)
+                output.print_list(node.returningList)
 
         if node.withClause:
             output.dedent()

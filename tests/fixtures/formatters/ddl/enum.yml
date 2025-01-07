@@ -51,3 +51,10 @@ drop_enum:
     DROP TYPE colors;
   expected: |
     DROP TYPE colors;
+
+rename_enum:
+  sql: |
+    ALTER TYPE colors RENAME TO colors2;
+  expected: |
+    ALTER TYPE colors
+        RENAME TO colors2;

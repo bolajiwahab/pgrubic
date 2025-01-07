@@ -26,8 +26,8 @@ update_with_subquery:
     UPDATE users
        SET name = 'John Doe'
      WHERE id IN (
-              SELECT id
-                FROM orders
+               SELECT id
+                 FROM orders
            );
 
 update_with_join:
@@ -52,6 +52,6 @@ update_with_cte:
     UPDATE users
        SET name = 'John Doe'
      WHERE id IN (
-              SELECT id
-                FROM cte
+               SELECT id
+                 FROM cte
            );

@@ -82,3 +82,11 @@ drop_constraint:
   expected: |
     ALTER TABLE orders
         DROP CONSTRAINT pk_my_table;
+
+rename_constraint:
+  sql: |
+    ALTER TABLE orders
+    RENAME CONSTRAINT pk_my_table TO pk_new_table;
+  expected: |
+    ALTER TABLE orders
+        RENAME CONSTRAINT pk_my_table TO pk_new_table;

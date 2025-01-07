@@ -107,3 +107,17 @@ def test_new_line_before_semicolon(
     )
 
     assert linting_result.fixed_sql == "SELECT a IS NULL\n;\n"
+
+
+def test_fix_enabledment(
+    linter: core.Linter,
+) -> None:
+    """Test fix enabledment."""
+    linter.config.lint.fix = True
+    linter.config.lint.fixable = ["GN024"]
+    linting_result = linter.run(
+        source_file=SOURCE_FILE,
+        source_code="SELECT a = NULL;",
+    )
+
+    assert linting_result.fixed_sql == "SELECT a IS NULL\n;\n"
