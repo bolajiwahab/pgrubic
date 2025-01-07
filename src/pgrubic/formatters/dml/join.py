@@ -11,7 +11,11 @@ def join_expr(node: ast.JoinExpr, output: stream.RawStream) -> None:
         if node.jointype in (enums.JoinType.JOIN_RIGHT, enums.JoinType.JOIN_INNER)
         else -5
     )
-    with output.push_indent(amount=indent):
+
+    if node.isNatural:
+        indent -= 1
+
+    with output.push_indent(indent):
         with output.expression(bool(node.alias)):
             output.print_node(node.larg)
             output.newline()
@@ -20,21 +24,20 @@ def join_expr(node: ast.JoinExpr, output: stream.RawStream) -> None:
                 output.write("NATURAL")
                 output.space()
 
-            jt = enums.JoinType
-            if node.jointype == jt.JOIN_INNER:
+            if node.jointype == enums.JoinType.JOIN_INNER:
                 if not node.usingClause and not node.quals and not node.isNatural:
                     output.write("CROSS")
                     output.space()
                 else:
                     output.write("INNER")
                     output.space()
-            elif node.jointype == jt.JOIN_LEFT:
+            elif node.jointype == enums.JoinType.JOIN_LEFT:
                 output.write("LEFT")
                 output.space()
-            elif node.jointype == jt.JOIN_FULL:
+            elif node.jointype == enums.JoinType.JOIN_FULL:
                 output.write("FULL")
                 output.space()
-            elif node.jointype == jt.JOIN_RIGHT:
+            elif node.jointype == enums.JoinType.JOIN_RIGHT:
                 output.write("RIGHT")
                 output.space()
 
@@ -43,12 +46,9 @@ def join_expr(node: ast.JoinExpr, output: stream.RawStream) -> None:
 
             if isinstance(node.rarg, ast.JoinExpr):
                 output.indent(3, relative=False)
-                # need this for:
-                # tests/test_printers_roundtrip.py::test_pg_regress_corpus[join.sql] -
-                # AssertionError: Statement “select * from   int8_tbl x cross join
-                # (int4_tbl x cross join lateral (select x.f1) ss)”
-                # from libpg_query/test/sql/postgres_regress/join.sql at line 1998
+                # TODO: This needs to be fixed to handle nested JOIN expressions properly  # noqa: TD002, FIX002, TD003, E501
                 with output.expression(not bool(node.rarg.alias)):
+                    output.indent(4)
                     output.print_node(node.rarg)
                 output.newline()
             else:
@@ -66,18 +66,19 @@ def join_expr(node: ast.JoinExpr, output: stream.RawStream) -> None:
                     output.print_node(node.join_using_alias)
             elif node.quals:
                 output.newline()
-                (
+                if node.jointype in (
+                    enums.JoinType.JOIN_RIGHT,
+                    enums.JoinType.JOIN_INNER,
+                ):
                     output.space(3)
-                    if node.jointype
-                    in (enums.JoinType.JOIN_RIGHT, enums.JoinType.JOIN_INNER)
-                    else output.space(2)
-                )
+                else:
+                    output.space(2)
                 output.swrite("ON")
                 output.space()
                 output.print_node(node.quals)
 
         if node.alias:
-            output.newline()
+            output.space()
             output.writes("AS")
             output.space()
             output.print_name(node.alias)

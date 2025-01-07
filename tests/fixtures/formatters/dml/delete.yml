@@ -12,8 +12,8 @@ delete:
      USING orders AS o
      WHERE u.id = o.user_id
        AND u.id IN (
-              SELECT id
-                FROM orders
+               SELECT id
+                 FROM orders
            )
     RETURNING u.id, o.user_id;
 
@@ -29,6 +29,6 @@ delete_with_cte:
     )
     DELETE FROM users AS u
      WHERE u.id IN (
-              SELECT id
-                FROM cte
+               SELECT id
+                 FROM cte
            );
