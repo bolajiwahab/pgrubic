@@ -45,7 +45,9 @@ class DisallowedSchema(linter.BaseChecker):
                 if node.schemaname == schema.name:
                     self.violations.add(
                         linter.Violation(
-                            rule=self.code,
+                            rule_code=self.code,
+                            rule_name=self.name,
+                            rule_category=self.category,
                             line_number=self.line_number,
                             column_offset=self.column_offset,
                             line=self.line,
@@ -53,7 +55,8 @@ class DisallowedSchema(linter.BaseChecker):
                             description=f"Schema '{node.schemaname}' is disallowed in"
                             f" config with reason: '{schema.reason}'"
                             f", use '{schema.use_instead}' instead",
-                            auto_fixable=self.is_auto_fixable,
+                            is_auto_fixable=self.is_auto_fixable,
+                            is_fix_enabled=self.is_fix_enabled,
                             help=self.help,
                         ),
                     )
@@ -82,7 +85,9 @@ class DisallowedSchema(linter.BaseChecker):
             if schema_name == schema.name:
                 self.violations.add(
                     linter.Violation(
-                        rule=self.code,
+                        rule_code=self.code,
+                        rule_name=self.name,
+                        rule_category=self.category,
                         line_number=self.line_number,
                         column_offset=self.column_offset,
                         line=self.line,
@@ -90,7 +95,8 @@ class DisallowedSchema(linter.BaseChecker):
                         description=f"Schema '{schema_name}' is disallowed in"
                         f" config with reason: '{schema.reason}'"
                         f", use '{schema.use_instead}' instead",
-                        auto_fixable=self.is_auto_fixable,
+                        is_auto_fixable=self.is_auto_fixable,
+                        is_fix_enabled=self.is_fix_enabled,
                         help=self.help,
                     ),
                 )
@@ -119,7 +125,9 @@ class DisallowedSchema(linter.BaseChecker):
             if schema_name == schema.name:
                 self.violations.add(
                     linter.Violation(
-                        rule=self.code,
+                        rule_code=self.code,
+                        rule_name=self.name,
+                        rule_category=self.category,
                         line_number=self.line_number,
                         column_offset=self.column_offset,
                         line=self.line,
@@ -127,7 +135,8 @@ class DisallowedSchema(linter.BaseChecker):
                         description=f"Schema '{schema_name}' is disallowed in"
                         f" config with reason: '{schema.reason}'"
                         f", use '{schema.use_instead}' instead",
-                        auto_fixable=self.is_auto_fixable,
+                        is_auto_fixable=self.is_auto_fixable,
+                        is_fix_enabled=self.is_fix_enabled,
                         help=self.help,
                     ),
                 )

@@ -34,16 +34,23 @@ class MissingReplaceInView(linter.BaseChecker):
         node: ast.ViewStmt,
     ) -> None:
         """Visit ViewStmt."""
-        if not node.replace:
+        create_or_replace_postgres_version = 14
+        if (
+            self.config.lint.postgres_target_version >= create_or_replace_postgres_version
+            and not node.replace
+        ):
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Prefer create or replace for view",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Use create or replace",
                 ),
             )

@@ -15,7 +15,7 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
     Explicitly specifying schema improves code readability and improves clarity.
 
     ## **When should you?**
-    If you really want to not specify schema.
+    If you really do not want to specify schema.
 
     ## **Use instead:**
     Specify schema.
@@ -31,14 +31,17 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         if len(node.typeName) < SCHEMA_QUALIFIED_LENGTH:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description=f"Database object `{node.typeName[0].sval}`"
                     " should be schema qualified",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help=self.help,
                 ),
             )
@@ -51,14 +54,17 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         if len(function_name) < SCHEMA_QUALIFIED_LENGTH:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description=f"Database object `{function_name[0].sval}`"
                     " should be schema qualified",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help=self.help,
                 ),
             )
@@ -86,14 +92,17 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         ):
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description=f"Database object `{node.relname}`"
                     " should be schema qualified",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help=self.help,
                 ),
             )
@@ -113,14 +122,17 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
             ):
                 self.violations.add(
                     linter.Violation(
-                        rule=self.code,
+                        rule_code=self.code,
+                        rule_name=self.name,
+                        rule_category=self.category,
                         line_number=self.line_number,
                         column_offset=self.column_offset,
                         line=self.line,
                         statement_location=self.statement_location,
                         description=f"Database object `{object_names[-1].sval}`"
                         " should be schema qualified",
-                        auto_fixable=self.is_auto_fixable,
+                        is_auto_fixable=self.is_auto_fixable,
+                        is_fix_enabled=self.is_fix_enabled,
                         help=self.help,
                     ),
                 )
@@ -166,14 +178,17 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         if len(node.objname) < SCHEMA_QUALIFIED_LENGTH:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description=f"Database object `{node.objname[0].sval}`"
                     " should be schema qualified",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help=self.help,
                 ),
             )

@@ -20,35 +20,27 @@ def update_stmt(node: ast.UpdateStmt, output: stream.RawStream) -> None:
         output.space(3)
         output.write("SET")
         output.space()
-        output.print_list(node.targetList)
+        output.print_list(node.targetList, standalone_items=False)
+
         if node.fromClause:
             output.newline()
             output.space(2)
             output.write("FROM")
             output.space()
             output.print_list(node.fromClause)
+
         if node.whereClause:
             output.newline()
             output.space()
             output.write("WHERE")
             output.space()
             output.print_node(node.whereClause)
-        if node.returningList:
-            output.newline()
-            output.write("RETURNING")
-            output.space()
-            first = True
-            for elem in node.returningList:
-                if first:
-                    first = False
-                else:
-                    output.write(",")
-                    output.space()
-                output.print_node(elem.val)
-                if elem.name:
-                    output.space()
-                    output.write("AS")
-                    output.space()
-                    output.print_name(elem.name)
+
+            if node.returningList:
+                output.newline()
+                output.write("RETURNING")
+                output.space()
+                output.print_list(node.returningList)
+
         if node.withClause:
             output.dedent()

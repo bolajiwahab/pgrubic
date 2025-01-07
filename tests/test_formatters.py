@@ -4,6 +4,7 @@ import typing
 import pathlib
 
 import pytest
+from pglast import parser
 
 from tests import TEST_FILE, conftest
 from pgrubic import core
@@ -39,6 +40,13 @@ def test_formatters(
     assert (
         actual_output == test_case["expected"]
     ), f"Test failed for formatter: `{test_formatter}` in `{test_id}`"
+
+    # Check that the formatted source code is valid
+    try:
+        parser.parse_sql(actual_output)
+    except parser.ParseError as error:
+        msg = f"Formatted code is not a valid syntax: {error!s}"
+        raise ValueError(msg) from error
 
 
 def test_format_parse_error(formatter: core.Formatter) -> None:

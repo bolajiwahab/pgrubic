@@ -23,10 +23,10 @@ class NotIn(linter.BaseChecker):
     any value of bar.x is null
     ```
 
-    This happens because col IN (1,null) returns TRUE if col=1, and NULL otherwise (i.e.
-    it can never return FALSE). Since NOT (TRUE) is FALSE, but NOT (NULL) is still NULL,
-    there is no way that NOT (col IN (1,null)) (which is the same thing as col NOT IN
-    (1,null)) can return TRUE under any circumstances.
+        This happens because col IN (1,null) returns TRUE if col=1, and NULL otherwise
+        (i.e. it can never return FALSE). Since NOT (TRUE) is FALSE, but NOT (NULL) is
+        still NULL, there is no way that NOT (col IN (1,null)) (which is the same thing
+        as col NOT IN (1,null)) can return TRUE under any circumstances.
 
     2. Because of point 1 above, NOT IN (SELECT ...) does not optimize very well.
     In particular, the planner can't transform it into an anti-join, and so it becomes
@@ -58,13 +58,16 @@ class NotIn(linter.BaseChecker):
         if node.kind == enums.A_Expr_Kind.AEXPR_IN and node.name[-1].sval == "<>":
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description="NOT IN detected",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Use NOT EXISTS instead",
                 ),
             )

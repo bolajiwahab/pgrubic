@@ -1,0 +1,92 @@
+---
+# yamllint disable rule:line-length
+formatter: CONSTRAINT
+
+create_table_with_constraints:
+  sql: |
+    CREATE TABLE orders (
+      id bigint,
+      CONSTRAINT pk_orders PRIMARY KEY(id),
+      name text UNIQUE NOT NULL DEFAULT 'a'
+    );
+  expected: |
+    CREATE TABLE orders (
+        id bigint
+      , name text UNIQUE DEFAULT 'a' NOT NULL
+      , CONSTRAINT pk_orders PRIMARY KEY (id)
+    );
+
+add_primary_key:
+  sql: |
+    ALTER TABLE orders
+    ADD CONSTRAINT pk_my_table PRIMARY KEY (id, name);
+  expected: |
+    ALTER TABLE orders
+        ADD CONSTRAINT pk_my_table PRIMARY KEY (id, name);
+
+add_primary_key_using_index:
+  sql: |
+    ALTER TABLE orders
+    ADD CONSTRAINT orders_pkey PRIMARY KEY USING INDEX idx;
+  expected: |
+    ALTER TABLE orders
+        ADD CONSTRAINT orders_pkey PRIMARY KEY USING INDEX idx;
+
+add_unique_constraint:
+  sql: |
+    ALTER TABLE orders
+        ADD CONSTRAINT uk_my_table UNIQUE (id, name) INCLUDE (order_date, total_amount) WITH (fillfactor = 70) USING INDEX TABLESPACE pg_default;
+  expected: |
+    ALTER TABLE orders
+        ADD CONSTRAINT uk_my_table UNIQUE (id, name) INCLUDE (order_date, total_amount) WITH (fillfactor = 70) USING INDEX TABLESPACE pg_default;
+
+add_unique_constraint_using_index:
+  sql: |
+    ALTER TABLE orders
+    ADD CONSTRAINT orders_pkey UNIQUE USING INDEX idx;
+  expected: |
+    ALTER TABLE orders
+        ADD CONSTRAINT orders_pkey UNIQUE USING INDEX idx;
+
+add_foreign_key:
+  sql: |
+    ALTER TABLE orders
+    ADD CONSTRAINT fk_orders_customers
+    FOREIGN KEY (customer_id) REFERENCES customers (id)
+    DEFERRABLE INITIALLY DEFERRED;
+  expected: |
+    ALTER TABLE orders
+        ADD CONSTRAINT fk_orders_customers FOREIGN KEY (customer_id) REFERENCES customers (id) DEFERRABLE INITIALLY DEFERRED;
+
+add_check_constraint:
+  sql: |
+    ALTER TABLE orders
+    ADD CONSTRAINT check_orders_total
+    CHECK (total > 0);
+  expected: |
+    ALTER TABLE orders
+        ADD CONSTRAINT check_orders_total CHECK (total > 0);
+
+add_not_null_constraint:
+  sql: |
+    ALTER TABLE orders
+    ALTER COLUMN total SET NOT NULL;
+  expected: |
+    ALTER TABLE orders
+        ALTER COLUMN total SET NOT NULL;
+
+drop_constraint:
+  sql: |
+    ALTER TABLE orders
+    DROP CONSTRAINT pk_my_table;
+  expected: |
+    ALTER TABLE orders
+        DROP CONSTRAINT pk_my_table;
+
+rename_constraint:
+  sql: |
+    ALTER TABLE orders
+    RENAME CONSTRAINT pk_my_table TO pk_new_table;
+  expected: |
+    ALTER TABLE orders
+        RENAME CONSTRAINT pk_my_table TO pk_new_table;

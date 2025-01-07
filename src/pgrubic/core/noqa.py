@@ -2,6 +2,7 @@
 
 import sys
 import typing
+import pathlib
 import dataclasses
 
 from pglast import parser
@@ -125,7 +126,7 @@ def _extract_statement_ignores(
 
             line_number = source_code[:statement_end_location].count("\n") + 1
 
-            # Here we extract last possible noqa because we can have a comment followed
+            # Here, we extract last comment because we can have a comment followed
             # by another comment e.g -- new table -- noqa: US005
             comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
 
@@ -150,10 +151,7 @@ def _extract_file_ignore(source_file: str, source_code: str) -> list[NoQaDirecti
     file_ignores: list[NoQaDirective] = []
 
     for token in parser.scan(source_code):
-        if token.name == "SQL_COMMENT":
-            if token.start != 0:
-                break
-
+        if token.start == 0 and token.name == "SQL_COMMENT":
             comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
 
             if comment.strip().startswith(f"{PACKAGE_NAME}: noqa"):
@@ -173,6 +171,8 @@ def _extract_file_ignore(source_file: str, source_code: str) -> list[NoQaDirecti
                     )
                     for rule in rules
                 )
+        else:
+            break
 
     return file_ignores
 
@@ -206,7 +206,10 @@ def extract_format_ignores(source_file: str, source_code: str) -> list[int]:
 
             comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
 
-            if comment.strip().startswith("fmt"):
+            if (
+                comment.strip().startswith("fmt")
+                and comment.removeprefix("fmt").removeprefix(":").strip() == "skip"
+            ):
                 inline_ignores.append(
                     statement_start_location,
                 )
@@ -272,3 +275,29 @@ def report_unused_ignores(
                 f" {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL}"
                 f" (unused: {Fore.RED}{Style.BRIGHT}{ignore.rule}{Style.RESET_ALL})\n",
             )
+
+
+def add_file_level_general_ignore(sources: set[pathlib.Path]) -> int:
+    """Add file-level general noqa directive to the begining of each source."""
+    sources_modified = 0
+
+    for source in sources:
+        skip = False
+        source_code = source.read_text()
+
+        for token in parser.scan(source_code):
+            if token.start == 0 and token.name == "SQL_COMMENT":
+                comment = (
+                    source_code[token.start : (token.end + 1)].split("--")[-1].strip()
+                )
+
+                if comment.strip() == f"{PACKAGE_NAME}: noqa":
+                    skip = True
+                    break
+
+        if not skip:
+            source.write_text(f"-- {PACKAGE_NAME}: noqa\n{source_code}")
+            sources_modified += 1
+            continue
+
+    return sources_modified

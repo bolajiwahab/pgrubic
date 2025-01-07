@@ -52,13 +52,16 @@ class KeywordIdentifier(CheckIdentifier):
         if identifier and identifier.strip().lower() in full_keywords:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=line_number,
                     column_offset=column_offset,
                     line=line,
                     statement_location=statement_location,
                     description=f"Keyword `{identifier}` used as an identifier",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Choose a name that is not a keyword",
                 ),
             )

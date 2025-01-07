@@ -19,8 +19,8 @@ class IndexElementsMoreThanThree(linter.BaseChecker):
     ## **When should you?**
     If you really need to.
 
-    See https://www.postgresql.org/docs/current/indexes-bitmap-scans.html for some
-    discussion of the merits of different index configurations.
+    See [indexes-bitmap-scans](https://www.postgresql.org/docs/current/indexes-bitmap-scans.html)
+    for some discussion of the merits of different index configurations.
 
     ## **Use instead:**
     Keep your index elements at most three.
@@ -37,13 +37,16 @@ class IndexElementsMoreThanThree(linter.BaseChecker):
         if len(node.indexParams) > max_index_elements:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description=f"Index elements more than {max_index_elements}",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Keep index elements at most three",
                 ),
             )

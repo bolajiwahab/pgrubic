@@ -1,5 +1,5 @@
 ---
-rule: TP018
+rule: US030
 
 test_fail_mismatch_column_in_data_type_change:
   sql_fail: |

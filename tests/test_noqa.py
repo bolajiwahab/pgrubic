@@ -1,6 +1,7 @@
 """Test noqa."""
 
 import typing
+import pathlib
 
 import pytest
 from colorama import Fore, Style
@@ -27,7 +28,6 @@ def test_extract_star_ignore_from_inline_comments() -> None:
 def test_extract_ignores() -> None:
     """Test extract ignores from inline comments."""
     source_code: str = """-- pgrubic: noqa: NM016, GN001
-    -- noqa: NM016, GN001
     CREATE TABLE tbl (activated date);
     """
 
@@ -129,3 +129,21 @@ def test_report_general_unused_ignores(
         out
         == f"{TEST_FILE}:3:45: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}{noqa.A_STAR}{Style.RESET_ALL})\n"  # noqa: E501
     )
+
+
+def test_add_file_level_general_ignore(tmp_path: pathlib.Path) -> None:
+    """Test add file level general ignore."""
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    source_file1 = directory / "source_file1.sql"
+    source_file1.write_text("SELECT * FROM tab")
+
+    source_file2 = directory / "source_file2.sql"
+    source_file2.write_text("-- pgrubic: noqa\n SELECT * FROM tab")
+
+    modified_sources = noqa.add_file_level_general_ignore(
+        sources={source_file1, source_file2},
+    )
+
+    assert modified_sources == 1

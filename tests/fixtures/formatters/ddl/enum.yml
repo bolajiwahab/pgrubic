@@ -1,0 +1,60 @@
+---
+formatter: ENUM
+
+create_enum:
+  sql: |
+    CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy');
+  expected: |
+    CREATE TYPE mood AS ENUM (
+        'sad'
+      , 'ok'
+      , 'happy'
+    );
+
+alter_enum_add_value_after:
+  sql: |
+    ALTER TYPE colors ADD VALUE 'orange' AFTER 'red';
+  expected: |
+    ALTER TYPE colors
+        ADD VALUE 'orange' AFTER 'red';
+
+alter_enum_add_value_after_if_not_exists:
+  sql: |
+    ALTER TYPE colors ADD VALUE IF NOT EXISTS 'orange' AFTER 'red';
+  expected: |
+    ALTER TYPE colors
+        ADD VALUE IF NOT EXISTS 'orange' AFTER 'red';
+
+alter_enum_add_value_before:
+  sql: |
+    ALTER TYPE colors ADD VALUE 'orange' BEFORE 'red';
+  expected: |
+    ALTER TYPE colors
+        ADD VALUE 'orange' BEFORE 'red';
+
+alter_enum_add_value_before_if_not_exists:
+  sql: |
+    ALTER TYPE colors ADD VALUE IF NOT EXISTS 'orange' BEFORE 'red';
+  expected: |
+    ALTER TYPE colors
+        ADD VALUE IF NOT EXISTS 'orange' BEFORE 'red';
+
+alter_enum_rename_value:
+  sql: |
+    ALTER TYPE colors RENAME VALUE 'purple' TO 'mauve';
+  expected: |
+    ALTER TYPE colors
+        RENAME VALUE 'purple' TO 'mauve';
+
+drop_enum:
+  sql: |
+    DROP TYPE colors;
+  expected: |
+    DROP TYPE colors;
+
+rename_enum:
+  sql: |
+    ALTER TYPE colors RENAME TO colors2;
+  expected: |
+    ALTER TYPE colors
+        RENAME TO colors2;

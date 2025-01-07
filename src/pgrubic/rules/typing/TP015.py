@@ -19,7 +19,7 @@ class WronglyTypedRequiredColumn(linter.BaseChecker):
     Never.
 
     ## **Use instead:**
-    Right data types for the required column.
+    Right data type for the required column.
 
     ## **Configuration**
     `required-columns`: List of required columns along with their data types.
@@ -47,7 +47,9 @@ class WronglyTypedRequiredColumn(linter.BaseChecker):
                 if column.data_type != prettified_type:
                     self.violations.add(
                         linter.Violation(
-                            rule=self.code,
+                            rule_code=self.code,
+                            rule_name=self.name,
+                            rule_category=self.category,
                             line_number=self.line_number,
                             column_offset=self.column_offset,
                             line=self.line,
@@ -55,7 +57,8 @@ class WronglyTypedRequiredColumn(linter.BaseChecker):
                             description=f"Column '{node.colname}' expected type is"
                             f" '{column.data_type}', found"
                             f" '{prettified_type}'",
-                            auto_fixable=self.is_auto_fixable,
+                            is_auto_fixable=self.is_auto_fixable,
+                            is_fix_enabled=self.is_fix_enabled,
                             help="Use the right data type for the required column",
                         ),
                     )

@@ -1,10 +1,26 @@
 ---
 formatter: SELECT
 
-skip_format:
+skip_format_right_marker:
   sql: |
     -- fmt: skip
     select 1;
   expected: |
     -- fmt: skip
     select 1;
+
+skip_format_not_working_due_to_wrong_marker:
+  sql: |
+    -- fmt:
+    select 1;
+  expected: |
+    -- fmt:
+    SELECT 1;
+
+skip_format_not_working_due_to_noisy_space_in_marker:
+  sql: |
+    -- fmt : skip
+    select 1;
+  expected: |
+    -- fmt : skip
+    SELECT 1;

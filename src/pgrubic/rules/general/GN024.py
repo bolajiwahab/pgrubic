@@ -14,7 +14,7 @@ class NullComparison(linter.BaseChecker):
     Comparing NULL to NULL with = returns NULL, not true.
     Comparing a value to NULL returns neither true nor false, but NULL.
 
-    Do not write expression = NULL because NULL is not “equal to” NULL.
+    Do not write expression = NULL because NULL is not equal to NULL.
     (The null value represents an unknown value, and it is not known whether two unknown
     values are equal.)
 
@@ -24,8 +24,8 @@ class NullComparison(linter.BaseChecker):
     ## **Use instead:**
     To check whether a value is or is not null, use the predicates:
 
-        expression IS NULL
-        expression IS NOT NULL
+    - expression IS NULL
+    - expression IS NOT NULL
     """
 
     is_auto_fixable: bool = True
@@ -46,13 +46,16 @@ class NullComparison(linter.BaseChecker):
         ):
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Comparison with NULL should be [IS | IS NOT] NULL",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Use [IS | IS NOT] NULL",
                 ),
             )

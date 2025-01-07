@@ -17,12 +17,13 @@ class NullConstraint(linter.BaseChecker):
     the default behavior that the column might be null. The NULL constraint is not present
     in the SQL standard and should not be used in portable applications.
     (It was only added to PostgreSQL to be compatible with some other database systems.)
+    Since it is the default for any column, its presence is simply noise.
 
     ## **When should you?**
     Almost Never.
 
     ## **Use instead:**
-    Leave out NULL constraints.
+    Leave out **NULL** constraints.
     """
 
     is_auto_fixable: bool = True
@@ -36,13 +37,16 @@ class NullConstraint(linter.BaseChecker):
         if node.contype == enums.ConstrType.CONSTR_NULL:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description="NULL constraints are redundant",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Remove the NULL constraint",
                 ),
             )

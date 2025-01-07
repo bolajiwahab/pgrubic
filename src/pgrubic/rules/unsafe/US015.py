@@ -1,13 +1,13 @@
-"""Unique constraint creating new index."""
+"""Primary key constraint creating index."""
 
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
 
 
-class PrimaryKeyConstraintCreatingNewIndex(linter.BaseChecker):
+class PrimaryKeyConstraintCreatingIndex(linter.BaseChecker):
     """## **What it does**
-    Checks primary key constraint creating new index.
+    Checks primary key constraint creating index.
 
     ## **Why not?**
     Primary key constraint is supported by a unique index and a **NOT NULL** constraint
@@ -47,13 +47,16 @@ class PrimaryKeyConstraintCreatingNewIndex(linter.BaseChecker):
         ):
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
-                    description="Primary key constraint creating new index",
-                    auto_fixable=self.is_auto_fixable,
+                    description="Primary key constraint creating index",
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Create a unique index in concurrent mode, have the primary key column(s) as NOT NULL, then add the primary key constraint using the index",  # noqa: E501
                 ),
             )

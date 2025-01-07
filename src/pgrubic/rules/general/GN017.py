@@ -11,8 +11,8 @@ class IdColumn(linter.BaseChecker):
 
     ## **Why not?**
     The name "id" does not provide much information about what the column represents in
-    the context of the table as it is so genric. Using a more descriptive name can improve
-    clarity, readability, and maintainability of the database schema.
+    the context of the table as it is so generic. Using a more descriptive name can
+    improve clarity, readability, and maintainability of the database schema.
 
     ## **When should you?**
     Almost never.
@@ -31,27 +31,25 @@ class IdColumn(linter.BaseChecker):
         """Visit ColumnDef."""
         if (
             (
-                isinstance(
-                    abs(ancestors).node,
-                    ast.AlterTableCmd,
-                )
-                and (abs(ancestors).node.subtype == enums.AlterTableType.AT_AddColumn)
+                ancestors.find_nearest(ast.AlterTableCmd)
+                and ancestors.find_nearest(ast.AlterTableCmd).node.subtype
+                == enums.AlterTableType.AT_AddColumn
             )
-            or isinstance(
-                abs(ancestors).node,
-                ast.CreateStmt,
-            )
+            or ancestors.find_nearest(ast.CreateStmt)
         ) and node.colname.lower() == "id":
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Use descriptive name for column instead of"
                     f" `{node.colname}`",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Use a more descriptive name",
                 ),
             )
@@ -60,13 +58,10 @@ class IdColumn(linter.BaseChecker):
 
     def _fix(self, ancestors: visitors.Ancestor, node: ast.ColumnDef) -> None:
         """Fix violation."""
-        if isinstance(
-            abs(ancestors).node,
-            ast.AlterTableCmd,
-        ):
+        if ancestors.find_nearest(ast.AlterTableCmd):
             table = ancestors.parent.parent.node.relation.relname
 
-        if isinstance(abs(ancestors).node, ast.CreateStmt):
+        if ancestors.find_nearest(ast.CreateStmt):
             table = ancestors.parent.node.relation.relname
 
         node.colname = table + "_" + node.colname

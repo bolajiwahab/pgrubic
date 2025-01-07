@@ -1,0 +1,87 @@
+---
+# yamllint disable rule:line-length
+formatter: COLUMN
+
+create_table_with_column:
+  sql: |
+    CREATE FOREIGN TABLE orders (
+      id text STORAGE EXTERNAL COMPRESSION LZ4 OPTIONS (column_name 'id') COLLATE "default",
+      CONSTRAINT pk_orders PRIMARY KEY(id),
+      name text UNIQUE NOT NULL DEFAULT 'a'
+    )
+    SERVER mood_server
+    OPTIONS (
+        schema_name 'some_schema'
+      , table_name 'some_table'
+    );
+  expected: |
+    CREATE FOREIGN TABLE orders (
+        id text STORAGE external COMPRESSION lz4 OPTIONS (column_name 'id') COLLATE "default"
+      , name text UNIQUE DEFAULT 'a' NOT NULL
+      , CONSTRAINT pk_orders PRIMARY KEY (id)
+    )
+    SERVER mood_server
+    OPTIONS (
+        schema_name 'some_schema'
+      , table_name 'some_table'
+    );
+
+create_table_of_type:
+  sql: |
+    CREATE TABLE employees OF employee_type (
+        PRIMARY KEY (name),
+        salary WITH OPTIONS DEFAULT 1000
+    );
+  expected: |
+    CREATE TABLE employees OF employee_type (
+        salary WITH OPTIONS DEFAULT 1000
+      , PRIMARY KEY (name)
+    );
+
+add_column:
+  sql: |
+    ALTER TABLE orders
+    ADD COLUMN test_column text;
+  expected: |
+    ALTER TABLE orders
+        ADD COLUMN test_column text;
+
+drop_column:
+  sql: |
+    ALTER TABLE orders
+    DROP COLUMN test_column;
+  expected: |
+    ALTER TABLE orders
+        DROP COLUMN test_column;
+
+rename_column:
+  sql: |
+    ALTER TABLE orders
+    RENAME COLUMN test_column TO new_test_column;
+  expected: |
+    ALTER TABLE orders
+        RENAME COLUMN test_column TO new_test_column;
+
+alter_column:
+  sql: |
+    ALTER TABLE orders
+    ALTER COLUMN test_column SET NOT NULL;
+  expected: |
+    ALTER TABLE orders
+        ALTER COLUMN test_column SET NOT NULL;
+
+alter_column_type:
+  sql: |
+    ALTER TABLE orders
+    ALTER COLUMN test_column TYPE text;
+  expected: |
+    ALTER TABLE orders
+        ALTER COLUMN test_column TYPE text;
+
+alter_column_default:
+  sql: |
+    ALTER TABLE orders
+    ALTER COLUMN test_column SET DEFAULT 'a';
+  expected: |
+    ALTER TABLE orders
+        ALTER COLUMN test_column SET DEFAULT 'a';

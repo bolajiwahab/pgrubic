@@ -2,6 +2,7 @@
 
 import sys
 import typing
+import fnmatch
 
 from pglast import ast, parser, stream, visitors
 from colorama import Fore, Style
@@ -14,13 +15,16 @@ from pgrubic.core import noqa, config, formatter
 class Violation(typing.NamedTuple):
     """Representation of rule violation."""
 
-    rule: str
+    rule_code: str
+    rule_name: str
+    rule_category: str
     line_number: int
     column_offset: int
     line: str
     statement_location: int
     description: str
-    auto_fixable: bool
+    is_auto_fixable: bool
+    is_fix_enabled: bool
     help: str | None = None
 
 
@@ -34,8 +38,9 @@ class LintResult(typing.NamedTuple):
 class ViolationStats(typing.NamedTuple):
     """Violation Stats."""
 
-    total: int = 0
-    fixable: int = 0
+    total: int
+    auto_fixable: int
+    fix_enabled: int
 
 
 class BaseChecker(visitors.Visitor):  # type: ignore[misc]
@@ -44,6 +49,8 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
     # Should not be set directly
     # as it is set in __init_subclass__
     code: str
+    name: str
+    category: str
 
     # Is this rule automatically fixable?
     is_auto_fixable: bool = False
@@ -66,22 +73,44 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
         self.violations: set[Violation] = set()
 
     def __init_subclass__(cls, **kwargs: typing.Any) -> None:
-        """Set code attribute for subclasses."""
+        """Set code, name and category attributes for subclasses."""
         cls.code = cls.__module__.split(".")[-1]
+        cls.name = kebabcase(cls.__name__)
+        cls.category = cls.__module__.split(".")[-2]
 
     def visit(self, node: ast.Node, ancestors: visitors.Ancestor) -> None:
         """Visit the node."""
 
     @property
-    def is_fix_applicable(self) -> bool:
-        """Check if fix can be applied."""
-        if not self.config.lint.fix:
-            return False
-
+    def is_fix_enabled(self) -> bool:
+        """Check if fix is enabled according to config."""
+        # if a rule is not auto fixable, there is no need to check
+        # if its fix is enabled, in which case, we return False
         if not self.is_auto_fixable:
             return False
 
-        # if the violation has been suppressed by noqa, there is no need to fix it
+        return not (
+            self.config.lint.fixable
+            and not any(
+                fnmatch.fnmatch(self.code, pattern + "*")
+                for pattern in self.config.lint.fixable
+            )
+            or any(
+                fnmatch.fnmatch(self.code, pattern + "*")
+                for pattern in self.config.lint.unfixable
+            )
+        )
+
+    @property
+    def is_fix_applicable(self) -> bool:
+        """Check if fix can be applied."""
+        if not self.is_auto_fixable:
+            return False
+
+        if not self.is_fix_enabled:
+            return False
+
+        # if the violation has been suppressed by noqa, there is no need to try to fix it
         for inline_ignore in self.inline_ignores:
             if (
                 (
@@ -150,48 +179,45 @@ class Linter:
         """Get violation stats."""
         return ViolationStats(
             total=len(violations),
-            fixable=sum(1 for violation in violations if violation.auto_fixable),
+            auto_fixable=sum(1 for violation in violations if violation.is_auto_fixable),
+            fix_enabled=sum(1 for violation in violations if violation.is_fix_enabled),
         )
 
     @staticmethod
     def print_violations(
         *,
-        checker: BaseChecker,
+        violations: set[Violation],
         source_file: str,
     ) -> None:
         """Print all violations collected by a checker."""
-        for violation in checker.violations:
-            if not checker.is_fix_applicable:
-                sys.stdout.write(
-                    f"{noqa.NEW_LINE}{source_file}:{violation.line_number}:{violation.column_offset}:"
-                    f" \033]8;;{DOCUMENTATION_URL}/rules/{checker.__module__.split(".")[-2]}/{kebabcase(checker.__class__.__name__)}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{checker.code}{Style.RESET_ALL}\033]8;;\033\\:"  # noqa: E501
-                    f" {violation.description}{noqa.NEW_LINE}",
-                )
+        for violation in violations:
+            # if not checker.is_fix_applicable:
+            sys.stdout.write(
+                f"{noqa.NEW_LINE}{source_file}:{violation.line_number}:{violation.column_offset}:"
+                f" \033]8;;{DOCUMENTATION_URL}/rules/{violation.rule_category}/{violation.rule_name}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{violation.rule_code}{Style.RESET_ALL}\033]8;;\033\\:"  # noqa: E501
+                f" {violation.description}{noqa.NEW_LINE}",
+            )
 
-                for idx, line in enumerate(
-                    violation.line.splitlines(keepends=False),
-                    start=violation.line_number - violation.line.count(noqa.NEW_LINE),
-                ):
+            for idx, line in enumerate(
+                violation.line.splitlines(keepends=False),
+                start=violation.line_number - violation.line.count(noqa.NEW_LINE),
+            ):
+                sys.stdout.write(
+                    f"{Fore.BLUE}{idx} | {Style.RESET_ALL}{Fore.RED}{Style.BRIGHT}{line}{Style.RESET_ALL}{noqa.NEW_LINE}",  # noqa: E501
+                )
+                # in order to have arrow pointing to the violation, we need to shift
+                # the screen by the length of the line_number as well as 2 spaces
+                # used above between the separator (|)
+                (
                     sys.stdout.write(
-                        f"{Fore.BLUE}{idx} | {Style.RESET_ALL}{Fore.RED}{Style.BRIGHT}{line}{Style.RESET_ALL}{noqa.NEW_LINE}",  # noqa: E501
+                        " "
+                        * (violation.column_offset + len(str(violation.line_number)) + 2)
+                        + "^"
+                        + noqa.NEW_LINE,
                     )
-                    # in order to have arrow pointing to the violation, we need to shift
-                    # the screen by the length of the line_number as well as 2 spaces
-                    # used above between the separator (|)
-                    (
-                        sys.stdout.write(
-                            " "
-                            * (
-                                violation.column_offset
-                                + len(str(violation.line_number))
-                                + 2
-                            )
-                            + "^"
-                            + noqa.NEW_LINE,
-                        )
-                        if idx == violation.line_number
-                        else None
-                    )
+                    if idx == violation.line_number
+                    else None
+                )
 
     def run(self, *, source_file: str, source_code: str) -> LintResult:
         """Run rules on a source code."""
@@ -239,11 +265,6 @@ class Linter:
                         inline_ignores=inline_ignores,
                     )
 
-                self.print_violations(
-                    checker=checker,
-                    source_file=source_file,
-                )
-
                 violations.update(checker.violations)
 
             if parser.parse_sql(statement.text) != tree:
@@ -276,8 +297,6 @@ class Linter:
 
         if parser.parse_sql(fixed_source_code) != parser.parse_sql(source_code):
             fix = fixed_source_code
-
-            sys.stdout.write(fix)
 
         noqa.report_unused_ignores(
             source_file=source_file,

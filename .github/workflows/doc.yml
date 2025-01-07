@@ -1,6 +1,6 @@
 ---
 # yamllint disable rule:line-length
-name: DOC
+name: docs
 
 on:  # yamllint disable-line rule:truthy
   push:

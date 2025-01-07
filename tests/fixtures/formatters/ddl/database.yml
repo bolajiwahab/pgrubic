@@ -1,0 +1,34 @@
+---
+formatter: DATABASE
+
+create_database:
+  sql: |
+    CREATE DATABASE music strategy wal_log ENCODING UTF8 LOCALE_PROVIDER libc
+    LOCALE C TEMPLATE template0 is_template true
+    allow_connections true connection limit 10;
+  expected: |
+    CREATE DATABASE music
+      WITH STRATEGY = 'WAL_LOG'
+           ENCODING = 'UTF8'
+           LOCALE_PROVIDER = 'libc'
+           LOCALE = 'C'
+           TEMPLATE = 'template0'
+           IS_TEMPLATE = true
+           ALLOW_CONNECTIONS = true
+           CONNECTION LIMIT = 10;
+
+drop_database:
+  sql: |
+    DROP DATABASE IF EXISTS music WITH (FORCE);
+  expected: |
+    DROP DATABASE IF EXISTS music
+    WITH (
+        FORCE
+    );
+
+rename_database:
+  sql: |
+    ALTER DATABASE music RENAME TO music2;
+  expected: |
+    ALTER DATABASE music
+        RENAME TO music2;

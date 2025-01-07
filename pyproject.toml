@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pgrubic"
 version = "0.1.0"
-description = "PostgreSQL linter for schema migrations and design best practices"
+description = "PostgreSQL linter and formatter for schema migrations and design best practices"
 readme = { file = "README.md", content-type = "text/markdown" }
 license = {file = "LICENSE"}
 requires-python = ">=3.12"
@@ -33,7 +33,7 @@ classifiers = [
 ]
 keywords = ["pgrubic", "sql", "postgres", "postgresql", "linter"]
 dependencies = [
-  "pglast==7.1",
+  "pglast==7.2",
   "case-converter==1.1.0",
   "colorama==0.4.6",
   "toml==0.10.2",
@@ -126,7 +126,7 @@ pythonpath = ["src"]
 relative_files = true
 source = ["src"]
 omit = [
-  "**/formatters/**", # excluded for now
+#   "**/formatters/**", # excluded for now
   "tests/*"
 ]
 
@@ -233,6 +233,7 @@ legacy_tox_ini = """
         # Hence it fails with import errors.
         pip install -e .
         python docs/rule_docs_generator.py
+        python docs/settings_doc_generator.py
 
     [testenv:ensure-docs-up-to-date]
     allowlist_externals = ./tools/ensure_up_to_date_docs.sh

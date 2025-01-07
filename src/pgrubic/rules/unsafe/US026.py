@@ -6,8 +6,6 @@ from pgrubic.core import linter
 
 
 class VacuumFull(linter.BaseChecker):
-    """Vacuum full."""
-
     """## **What it does**
     Checks vacuum full.
 
@@ -22,7 +20,7 @@ class VacuumFull(linter.BaseChecker):
     If the table is not empty but is not being concurrently accessed.
 
     ## **Use instead:**
-    Have a look at pg_repack as an alternative.
+    Have a look at **pg_repack** as an alternative.
     """
 
     def visit_VacuumStmt(
@@ -36,13 +34,16 @@ class VacuumFull(linter.BaseChecker):
         if "full" in options:
             self.violations.add(
                 linter.Violation(
-                    rule=self.code,
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
                     line_number=self.line_number,
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
                     description="Vacuum full found",
-                    auto_fixable=self.is_auto_fixable,
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
                     help="Have a look at pg_repack as an alternative",
                 ),
             )

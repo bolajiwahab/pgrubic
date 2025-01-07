@@ -1,0 +1,382 @@
+---
+formatter: SELECT
+
+simple_select:
+  sql: |
+    SELECT a, b, c FROM films WHERE date_prod >= '2002-01-01'
+      AND id = 1 AND genre = 'action' OR id = 2 AND NOT genre = 'comedy'
+      GROUP BY a, b, c
+      having count(*) > 1
+      ORDER BY date_prod DESC, id LIMIT 100
+      OFFSET 5 ROWS
+      FOR UPDATE SKIP LOCKED;
+  expected: |
+    SELECT a
+         , b
+         , c
+      FROM films
+     WHERE (date_prod >= '2002-01-01'
+       AND id = 1
+       AND genre = 'action')
+        OR (id = 2
+       AND NOT genre = 'comedy')
+     GROUP BY a
+            , b
+            , c
+    HAVING count(*) > 1
+     ORDER BY date_prod DESC
+            , id
+     LIMIT 100
+    OFFSET 5
+    FOR UPDATE SKIP LOCKED;
+
+select_limit_null:
+  sql: |
+    SELECT * FROM films LIMIT NULL;
+  expected: |
+    SELECT *
+      FROM films
+     LIMIT ALL;
+
+select_fetch_only:
+  sql: |
+    SELECT * FROM films FETCH FIRST 3 ROWS ONLY;
+  expected: |
+    SELECT *
+      FROM films
+     LIMIT 3;
+
+select_fetch_row_with_ties:
+  sql: |
+    SELECT *
+      FROM films
+      ORDER BY date_prod
+     FETCH FIRST 3 ROWS WITH TIES;
+  expected: |
+    SELECT *
+      FROM films
+     ORDER BY date_prod
+     FETCH FIRST 3 ROWS WITH TIES;
+
+select_into_unlogged:
+  sql: |
+    SELECT * INTO UNLOGGED public.films_recent FROM films WHERE date_prod >= '2002-01-01';
+  expected: |
+    SELECT *
+      INTO UNLOGGED public.films_recent
+      FROM films
+     WHERE date_prod >= '2002-01-01';
+
+select_into_temporary:
+  sql: |
+    SELECT * INTO TEMP public.films_recent FROM films WHERE date_prod >= '2002-01-01';
+  expected: |
+    SELECT *
+      INTO TEMPORARY public.films_recent
+      FROM films
+     WHERE date_prod >= '2002-01-01';
+
+select_from_values:
+  sql: |
+    SELECT * FROM (VALUES (1, 'one'), (2, 'two'), (3, 'three')) AS t (num,letter);
+  expected: |
+    SELECT *
+      FROM (
+               VALUES (1, 'one')
+                    , (2, 'two')
+                    , (3, 'three')
+           ) AS t (num, letter);
+
+select_union:
+  sql: |
+    SELECT * FROM users WHERE id=1
+    UNION
+    SELECT * FROM users WHERE id=2;
+  expected: |
+    SELECT *
+      FROM users
+     WHERE id = 1
+     UNION
+    SELECT *
+      FROM users
+     WHERE id = 2;
+
+select_union_all:
+  sql: |
+    SELECT * FROM users WHERE id=1
+    UNION ALL
+    SELECT * FROM users WHERE id=2;
+  expected: |
+    SELECT *
+      FROM users
+     WHERE id = 1
+     UNION ALL
+    SELECT *
+      FROM users
+     WHERE id = 2;
+
+select_intersect:
+  sql: |
+    SELECT * FROM users WHERE id=1
+    INTERSECT ALL
+    SELECT * FROM users WHERE id=2;
+  expected: |
+    SELECT *
+      FROM users
+     WHERE id = 1
+    INTERSECT ALL
+    SELECT *
+      FROM users
+     WHERE id = 2;
+
+select_except:
+  sql: |
+    SELECT * FROM users WHERE id=1
+    EXCEPT ALL
+    SELECT * FROM users WHERE id=2;
+  expected: |
+    SELECT *
+      FROM users
+     WHERE id = 1
+    EXCEPT ALL
+    SELECT *
+      FROM users
+     WHERE id = 2;
+
+select_set_operation_with_order_by_and_limit:
+  sql: |
+    (SELECT * FROM users WHERE id=1 LIMIT 1)
+    UNION
+    (SELECT * FROM users WHERE id=2 ORDER BY 1);
+  expected: |
+    (SELECT *
+       FROM users
+      WHERE id = 1
+      LIMIT 1)
+      UNION
+    (SELECT *
+       FROM users
+      WHERE id = 2
+      ORDER BY 1);
+
+select_distinct:
+  sql: |
+    SELECT DISTINCT a, b FROM users WHERE id=1 group by distinct(id);
+  expected: |
+    SELECT DISTINCT
+           a
+         , b
+      FROM users
+     WHERE id = 1
+     GROUP BY DISTINCT id;
+
+select_distinct_on:
+  sql: |
+    SELECT DISTINCT ON (a) a, b FROM users WHERE id=1;
+  expected: |
+    SELECT DISTINCT ON (a)
+           a
+         , b
+      FROM users
+     WHERE id = 1;
+
+select_exists_subquery:
+  sql: |
+    SELECT * FROM users u
+    WHERE EXISTS (SELECT 1 FROM orders o WHERE u.id = o.user_id);
+  expected: |
+    SELECT *
+      FROM users AS u
+     WHERE EXISTS (
+               SELECT 1
+                 FROM orders AS o
+                WHERE u.id = o.user_id
+           );
+
+select_with_cte:
+  sql: |
+    WITH cte AS (SELECT id FROM orders)
+    SELECT * FROM users u
+    WHERE u.id IN (SELECT id FROM cte);
+  expected: |
+    WITH cte AS (
+        SELECT id
+          FROM orders
+    )
+    SELECT *
+      FROM users AS u
+     WHERE u.id IN (
+               SELECT id
+                 FROM cte
+           );
+
+select_with_recursive_cte_with_search:
+  sql: |
+    WITH RECURSIVE search_tree(id, link, data) AS (
+        SELECT t.id, t.link, t.data
+        FROM tree t
+      UNION ALL
+        SELECT t.id, t.link, t.data
+        FROM tree t, search_tree st
+        WHERE t.id = st.link
+    ) SEARCH DEPTH FIRST BY id SET ordercol
+    SELECT * FROM search_tree ORDER BY ordercol;
+  expected: |
+    WITH RECURSIVE search_tree (id, link, data) AS (
+        SELECT t.id
+             , t.link
+             , t.data
+          FROM tree AS t
+         UNION ALL
+        SELECT t.id
+             , t.link
+             , t.data
+          FROM tree AS t
+             , search_tree AS st
+         WHERE t.id = st.link
+    ) SEARCH DEPTH FIRST BY id SET ordercol
+    SELECT *
+      FROM search_tree
+     ORDER BY ordercol;
+
+select_with_recursive_cte_with_cycle:
+  sql: |
+    WITH RECURSIVE search_graph(id, link, data, depth) AS (
+        SELECT g.id, g.link, g.data, 1
+        FROM graph g
+      UNION ALL
+        SELECT g.id, g.link, g.data, sg.depth + 1
+        FROM graph g, search_graph sg
+        WHERE g.id = sg.link
+    ) CYCLE id SET is_cycle USING path
+    SELECT * FROM search_graph;
+  expected: |
+    WITH RECURSIVE search_graph (id, link, data, depth) AS (
+        SELECT g.id
+             , g.link
+             , g.data
+             , 1
+          FROM graph AS g
+         UNION ALL
+        SELECT g.id
+             , g.link
+             , g.data
+             , sg.depth + 1
+          FROM graph AS g
+             , search_graph AS sg
+         WHERE g.id = sg.link
+    ) CYCLE id SET is_cycle TO TRUE DEFAULT FALSE USING path
+    SELECT *
+      FROM search_graph;
+
+select_all_subquery:
+  sql: |
+    SELECT * FROM employees WHERE
+    salary > ALL(
+      select
+        salary
+      from
+        managers
+    );
+  expected: |
+    SELECT *
+      FROM employees
+     WHERE salary > ALL (
+               SELECT salary
+                 FROM managers
+           );
+
+select_any_subquery:
+  sql: |
+    SELECT * FROM employees WHERE
+    salary > ANY(
+      select
+        salary
+      from
+        managers
+    );
+  expected: |
+    SELECT *
+      FROM employees
+     WHERE salary > ANY (
+               SELECT salary
+                 FROM managers
+           );
+
+select_array_subquery:
+  sql: |
+    SELECT
+    ARRAY(SELECT user_id FROM accounts WHERE status = 'active');
+  expected: |
+    SELECT ARRAY (
+               SELECT user_id
+                 FROM accounts
+                WHERE status = 'active'
+           );
+
+select_range_sub_select:
+  sql: |
+    SELECT * FROM foo, (SELECT * FROM bar WHERE bar.id = foo.bar_id) ss;
+  expected: |
+    SELECT *
+      FROM foo
+         , (
+               SELECT *
+                 FROM bar
+                WHERE bar.id = foo.bar_id
+           ) AS ss;
+
+select_range_sub_select_with_lateral:
+  sql: |
+    SELECT * FROM foo, lateral (SELECT * FROM bar WHERE bar.id = foo.bar_id) ss;
+  expected: |
+    SELECT *
+      FROM foo
+         , LATERAL (
+                       SELECT *
+                         FROM bar
+                        WHERE bar.id = foo.bar_id
+                   ) AS ss;
+
+select_multiple_tables:
+  sql: |
+    SELECT * FROM users, orders WHERE users.id = orders.user_id;
+  expected: |
+    SELECT *
+      FROM users
+         , orders
+     WHERE users.id = orders.user_id;
+
+select_expression_subquery:
+  sql: |
+    SELECT * FROM users WHERE id = (SELECT user_id FROM orders WHERE order_id = 1);
+  expected: |
+    SELECT *
+      FROM users
+     WHERE id = (
+               SELECT user_id
+                 FROM orders
+                WHERE order_id = 1
+           );
+
+select_with_window_keyword:
+  sql: |
+    SELECT sum(salary) OVER w, avg(salary) OVER w
+      FROM empsalary
+      WINDOW w AS (PARTITION BY depname);
+  expected: |
+    SELECT sum(salary) OVER w
+         , avg(salary) OVER w
+      FROM empsalary
+    WINDOW w AS (PARTITION BY depname);
+# select_with_window_function:
+#   sql: |
+#     SELECT id, name, salary,
+#       ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) AS row_num
+#     FROM employees;
+#   expected: |
+#     SELECT id
+#          , name
+#          , salary
+#          , row_number() OVER (PARTITION BY department ORDER BY salary DESC) AS row_num
+#       FROM employees;

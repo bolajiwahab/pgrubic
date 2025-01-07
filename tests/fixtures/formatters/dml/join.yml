@@ -1,0 +1,121 @@
+---
+formatter: JOIN
+
+left_join:
+  sql: |
+    SELECT * FROM users u LEFT join orders o ON u.id = o.user_id
+    WHERE u.id IN (SELECT id FROM orders LEFT JOIN orders o ON u.id = o.user_id);
+  expected: |
+    SELECT *
+      FROM users AS u
+      LEFT JOIN orders AS o
+        ON u.id = o.user_id
+     WHERE u.id IN (
+               SELECT id
+                 FROM orders
+                 LEFT JOIN orders AS o
+                   ON u.id = o.user_id
+           );
+
+inner_join:
+  sql: |
+    SELECT * FROM users u
+    JOIN orders o ON u.id = o.user_id;
+  expected: |
+    SELECT *
+      FROM users AS u
+     INNER JOIN orders AS o
+        ON u.id = o.user_id;
+
+join_using:
+  sql: |
+    SELECT * FROM users u
+    JOIN orders o USING (id) AS id;
+  expected: |
+    SELECT *
+      FROM users AS u
+     INNER JOIN orders AS o USING (id) AS id;
+
+full_join:
+  sql: |
+    SELECT * FROM users u
+    FULL JOIN orders o USING (id);
+  expected: |
+    SELECT *
+      FROM users AS u
+      FULL JOIN orders AS o USING (id);
+
+natural_join:
+  sql: |
+    SELECT *
+    FROM products
+    NATURAL JOIN categories;
+  expected: |
+    SELECT *
+      FROM products
+    NATURAL INNER JOIN categories;
+
+cross_join:
+  sql: |
+    SELECT * FROM users u CROSS JOIN orders o;
+  expected: |
+    SELECT *
+      FROM users AS u
+     CROSS JOIN orders AS o;
+
+right_join:
+  sql: |
+    SELECT * FROM users u RIGHT JOIN orders o ON u.id = o.user_id;
+  expected: |
+    SELECT *
+      FROM users AS u
+     RIGHT JOIN orders AS o
+        ON u.id = o.user_id;
+
+self_join:
+  sql: |
+    SELECT u1.id, u2.id, u1.name, u2.name
+    FROM users u1
+    JOIN users u2 ON u1.id = u2.id;
+  expected: |
+    SELECT u1.id
+         , u2.id
+         , u1.name
+         , u2.name
+      FROM users AS u1
+     INNER JOIN users AS u2
+        ON u1.id = u2.id;
+
+join_with_subquery:
+  sql: |
+    SELECT * FROM users u
+    JOIN (SELECT * FROM orders) o ON u.id = o.user_id;
+  expected: |
+    SELECT *
+      FROM users AS u
+     INNER JOIN (
+                    SELECT *
+                      FROM orders
+                ) AS o
+        ON u.id = o.user_id;
+
+join_expression_as_result:
+  sql: |
+    SELECT * FROM (my_table AS a CROSS JOIN my_table) AS b;
+  expected: |
+    SELECT *
+      FROM (my_table AS a
+     CROSS JOIN my_table) AS b;
+
+nested_join:
+  sql: |
+    select * from
+    int8_tbl x cross join (int4_tbl x cross join lateral (select x.f1) ss);
+  expected: |
+    SELECT *
+      FROM int8_tbl AS x
+     CROSS JOIN (int4_tbl AS x
+           CROSS JOIN LATERAL (
+                                  SELECT x.f1
+                              ) AS ss)
+    ;

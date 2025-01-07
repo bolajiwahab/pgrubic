@@ -1,0 +1,275 @@
+---
+formatter: TABLE
+
+create_table:
+  sql: |
+    CREATE TABLE IF NOT EXISTS mood (a text, b text) USING heap WITH (fillfactor = 10)
+    TABLESPACE pg_default;
+  expected: |
+    CREATE TABLE IF NOT EXISTS mood (
+        a text
+      , b text
+    )
+     USING heap
+      WITH (
+          fillfactor = 10
+      )
+    TABLESPACE pg_default;
+
+create_temporary_table:
+  sql: |
+    CREATE TEMPORARY TABLE mood ();
+  expected: |
+    CREATE TEMPORARY TABLE mood ();
+
+create_unlogged_table:
+  sql: |
+    CREATE UNLOGGED TABLE mood ();
+  expected: |
+    CREATE UNLOGGED TABLE mood ();
+
+create_temporary_table_on_commit_drop:
+  sql: |
+    CREATE TEMPORARY TABLE mood (name text) ON COMMIT DROP;
+  expected: |
+    CREATE TEMPORARY TABLE mood (
+        name text
+    )
+    ON COMMIT DROP;
+
+create_temporary_table_on_commit_preserve_rows:
+  sql: |
+    CREATE TEMPORARY TABLE mood (name text) ON COMMIT PRESERVE ROWS;
+  expected: |
+    CREATE TEMPORARY TABLE mood (
+        name text
+    )
+    ON COMMIT PRESERVE ROWS;
+
+create_temporary_table_on_commit_delete_rows:
+  sql: |
+    CREATE TEMPORARY TABLE mood (name text) ON COMMIT DELETE ROWS;
+  expected: |
+    CREATE TEMPORARY TABLE mood (
+        name text
+    )
+    ON COMMIT DELETE ROWS;
+
+create_temporary_table_ctas_on_commit_preserve_rows:
+  sql: |
+    CREATE TEMP TABLE my_temp(id) ON COMMIT PRESERVE ROWS AS VALUES
+    ('SOME_ID_1'),
+    ('SOME_ID_2'),
+    ('SOME_ID_3');
+  expected: |
+    CREATE TEMPORARY TABLE my_temp (id) ON COMMIT PRESERVE ROWS AS
+    VALUES ('SOME_ID_1')
+         , ('SOME_ID_2')
+         , ('SOME_ID_3');
+
+create_temporary_table_ctas_on_commit_delete_rows:
+  sql: |
+    CREATE TEMP TABLE my_temp(id) ON COMMIT DELETE ROWS AS VALUES
+    ('SOME_ID_1'),
+    ('SOME_ID_2'),
+    ('SOME_ID_3');
+  expected: |
+    CREATE TEMPORARY TABLE my_temp (id) ON COMMIT DELETE ROWS AS
+    VALUES ('SOME_ID_1')
+         , ('SOME_ID_2')
+         , ('SOME_ID_3');
+
+create_temporary_table_ctas_on_commit_drop:
+  sql: |
+    CREATE TEMP TABLE my_temp(id) ON COMMIT DROP AS VALUES
+    ('SOME_ID_1'),
+    ('SOME_ID_2'),
+    ('SOME_ID_3');
+  expected: |
+    CREATE TEMPORARY TABLE my_temp (id) ON COMMIT DROP AS
+    VALUES ('SOME_ID_1')
+         , ('SOME_ID_2')
+         , ('SOME_ID_3');
+
+create_table_of_type:
+  sql: |
+    CREATE TABLE example OF mytype;
+  expected: |
+    CREATE TABLE example OF mytype;
+
+create_foreign_table:
+  sql: |
+    CREATE FOREIGN TABLE mood (age bigint) SERVER mood_server
+    OPTIONS (schema_name 'some_schema', table_name 'some_table');
+  expected: |
+    CREATE FOREIGN TABLE mood (
+        age bigint
+    )
+    SERVER mood_server
+    OPTIONS (
+        schema_name 'some_schema'
+      , table_name 'some_table'
+    );
+
+create_foreign_table_partition:
+  sql: |
+    CREATE FOREIGN TABLE measurement_y2016m07
+    PARTITION OF measurement FOR VALUES FROM ('2016-07-01') TO ('2016-08-01')
+    SERVER myserver
+    OPTIONS (schema_name 'some_schema', table_name 'some_table');
+  expected: |
+    CREATE FOREIGN TABLE measurement_y2016m07
+        PARTITION OF measurement
+        FOR VALUES FROM ('2016-07-01') TO ('2016-08-01')
+        SERVER myserver
+        OPTIONS (
+            schema_name 'some_schema'
+          , table_name 'some_table'
+        );
+
+create_table_ctas:
+  sql: |
+    CREATE TABLE mood (a, b) USING heap WITH (fillfactor = 10)
+    TABLESPACE pg_default AS SELECT * FROM tbl;
+  expected: |
+    CREATE TABLE mood (a, b)
+     USING heap
+      WITH (
+          fillfactor = 10
+      )
+    TABLESPACE pg_default AS
+    SELECT *
+      FROM tbl;
+
+create_table_as_select_if_not_exists:
+  sql: |
+    CREATE TABLE IF NOT EXISTS mood AS SELECT * FROM tbl;
+  expected: |
+    CREATE TABLE IF NOT EXISTS mood AS
+    SELECT *
+      FROM tbl;
+
+create_temporary_table_as_select:
+  sql: |
+    CREATE TEMPORARY TABLE mood AS SELECT * FROM tbl;
+  expected: |
+    CREATE TEMPORARY TABLE mood AS
+    SELECT *
+      FROM tbl;
+
+create_unlogged_table_as_select:
+  sql: |
+    CREATE UNLOGGED TABLE mood AS SELECT * FROM tbl;
+  expected: |
+    CREATE UNLOGGED TABLE mood AS
+    SELECT *
+      FROM tbl;
+
+create_as_select_no_data:
+  sql: |
+    CREATE TABLE mood AS SELECT * FROM tbl WITH NO DATA;
+  expected: |
+    CREATE TABLE mood AS
+    SELECT *
+      FROM tbl
+      WITH NO DATA;
+
+create_as_table:
+  sql: |
+    CREATE TABLE films2 AS
+    TABLE films;
+  expected: |
+    CREATE TABLE films2 AS
+    SELECT *
+      FROM films;
+
+create_table_partition_by_range:
+  sql: |
+    CREATE TABLE mood (start_date date, end_date date)
+    PARTITION BY RANGE (start_date, end_date);
+  expected: |
+    CREATE TABLE mood (
+        start_date date
+      , end_date date
+    )
+    PARTITION BY RANGE (start_date, end_date);
+
+create_table_partition_by_list:
+  sql: |
+    CREATE TABLE mood (start_date date, end_date date)
+    PARTITION BY LIST (start_date, end_date);
+  expected: |
+    CREATE TABLE mood (
+        start_date date
+      , end_date date
+    )
+    PARTITION BY LIST (start_date, end_date);
+
+create_table_partition_by_hash:
+  sql: |
+    CREATE TABLE mood (start_date date, end_date date)
+    PARTITION BY HASH (start_date, end_date);
+  expected: |
+    CREATE TABLE mood (
+        start_date date
+      , end_date date
+    )
+    PARTITION BY HASH (start_date, end_date);
+
+create_table_partition:
+  sql: |
+    CREATE TABLE measurement_y2016m07
+    PARTITION OF measurement FOR VALUES FROM ('2016-07-01') TO ('2016-08-01');
+  expected: |
+    CREATE TABLE measurement_y2016m07
+        PARTITION OF measurement
+        FOR VALUES FROM ('2016-07-01') TO ('2016-08-01');
+
+create_table_inheritance:
+  sql: |
+    CREATE TABLE capitals (
+      state      char(2) UNIQUE NOT NULL
+    ) INHERITS (cities, states);
+  expected: |
+    CREATE TABLE capitals (
+        state char(2) UNIQUE NOT NULL
+    )
+    INHERITS (cities, states);
+
+alter_table:
+  sql: |
+    ALTER TABLE IF EXISTS mood ADD COLUMN col int, DROP COLUMN col2;
+  expected: |
+    ALTER TABLE IF EXISTS mood
+        ADD COLUMN col integer
+      , DROP COLUMN col2;
+
+drop_table:
+  sql: |
+    DROP TABLE IF EXISTS mood;
+  expected: |
+    DROP TABLE IF EXISTS mood;
+
+create_materialized_view:
+  sql: |
+    CREATE MATERIALIZED VIEW mv(a, b) USING heap
+    WITH (
+        fillfactor = 10
+    )
+    TABLESPACE pg_default AS SELECT * FROM tbl;
+  expected: |
+    CREATE MATERIALIZED VIEW mv (a, b)
+     USING heap
+      WITH (
+          fillfactor = 10
+      )
+    TABLESPACE pg_default AS
+    SELECT *
+      FROM tbl;
+
+rename_table:
+  sql: |
+    ALTER TABLE IF EXISTS mood RENAME TO mood2;
+  expected: |
+    ALTER TABLE IF EXISTS mood
+        RENAME TO mood2;
