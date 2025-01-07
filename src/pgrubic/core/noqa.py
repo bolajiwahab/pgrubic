@@ -126,7 +126,7 @@ def _extract_statement_ignores(
 
             line_number = source_code[:statement_end_location].count("\n") + 1
 
-            # Here we extract last possible noqa because we can have a comment followed
+            # Here, we extract last comment because we can have a comment followed
             # by another comment e.g -- new table -- noqa: US005
             comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
 
@@ -206,7 +206,10 @@ def extract_format_ignores(source_file: str, source_code: str) -> list[int]:
 
             comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
 
-            if comment.strip().startswith("fmt"):
+            if (
+                comment.strip().startswith("fmt")
+                and comment.removeprefix("fmt").removeprefix(":").strip() == "skip"
+            ):
                 inline_ignores.append(
                     statement_start_location,
                 )
