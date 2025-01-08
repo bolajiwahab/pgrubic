@@ -90,10 +90,12 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
             return False
 
         return not (
-            self.config.lint.fixable
-            and not any(
-                fnmatch.fnmatch(self.code, pattern + "*")
-                for pattern in self.config.lint.fixable
+            (
+                self.config.lint.fixable
+                and not any(
+                    fnmatch.fnmatch(self.code, pattern + "*")
+                    for pattern in self.config.lint.fixable
+                )
             )
             or any(
                 fnmatch.fnmatch(self.code, pattern + "*")
