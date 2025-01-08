@@ -1,4 +1,4 @@
-# Pgrubic
+# pgrubic
 
 [![pgrubic](https://img.shields.io/badge/pgrubic-purple.svg)](https://github.com/bolajiwahab/pgrubic/)
 [![PyPI - Version](https://img.shields.io/pypi/v/pgrubic)](https://pypi.org/project/pgrubic/)
@@ -11,6 +11,9 @@
 [![release](https://github.com/bolajiwahab/pgrubic/actions/workflows/release.yml/badge.svg)](https://github.com/bolajiwahab/pgrubic/actions/workflows/release.yml)
 [![PyPI Total Downloads](https://img.shields.io/pepy/dt/pgrubic)](https://pepy.tech/projects/pgrubic)
 [![CodeQL](https://github.com/bolajiwahab/pgrubic/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/bolajiwahab/pgrubic/actions/workflows/github-code-scanning/codeql)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v0.json)](https://github.com/charliermarsh/ruff)
+[![types - mypy](https://img.shields.io/badge/types-mypy-blue.svg)](https://github.com/python/mypy)
 
 Pgrubic is a PostgreSQL linter and formatter for schema migrations and design best practices.
 
@@ -18,8 +21,10 @@ Pgrubic is a PostgreSQL linter and formatter for schema migrations and design be
 
 - Over 100+ rules
 - Automatic violation correction (e.g., automatically add `concurrently` to index create statements)
-- River style code formatting
+- River style code formatting for DML statements
+- Almost identical stying with **pg_dump** for DDL statements
 - Python 3.12+ compatibility
+- Automatic caching to avoid reformatting unchanged files
 - Automatic caching to avoid reformatting unchanged files
 - Violations suppression, statement level, and file level
 
