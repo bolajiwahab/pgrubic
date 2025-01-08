@@ -11,9 +11,7 @@ repos:
         name: Lint commit messages
         entry: conventional-pre-commit
         language: python
-        always_run: true
         stages: [commit-msg]
-        args: []
       - id: trailing-whitespace
         stages: [pre-commit]
         name: Trim Trailing Whitespace
