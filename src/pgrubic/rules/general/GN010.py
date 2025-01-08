@@ -17,7 +17,7 @@ class TableColumnConflict(linter.BaseChecker):
     clarity in database design and manipulation.
 
     ## **When should you?**
-    Alsmost never.
+    Almost never.
 
     ## **Use instead:**
     Resolve the name conflict.

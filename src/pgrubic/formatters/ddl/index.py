@@ -16,17 +16,17 @@ def index_stmt(node: ast.IndexStmt, output: stream.RawStream) -> None:
         output.space()
 
     output.write("INDEX")
-    output.space()
 
     if node.concurrent:
-        output.write("CONCURRENTLY")
         output.space()
+        output.write("CONCURRENTLY")
 
     if node.if_not_exists:
-        output.write(IF_NOT_EXISTS)
         output.space()
+        output.write(IF_NOT_EXISTS)
 
     if node.idxname:
+        output.space()
         output.print_name(node.idxname)
 
     output.newline()

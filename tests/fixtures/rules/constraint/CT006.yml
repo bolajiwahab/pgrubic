@@ -1,0 +1,27 @@
+---
+rule: CT006
+
+test_fail_add_unique_key_constraint_duplicate_column:
+  sql_fail: |
+    alter table public.d add constraint unique_a unique(a, a);
+  sql_fix: |
+    ALTER TABLE public.d
+        ADD CONSTRAINT unique_a UNIQUE (a);
+
+test_pass_add_unique_key_constraint_no_duplicate_column:
+  sql_pass: |
+    alter table public.d add constraint unique_a unique(a, b);
+
+test_fail_duplicate_column_unique_key_constraint:
+  sql_fail: |
+    create table public.e (a bigint, b bigint, unique (a, a));
+  sql_fix: |
+    CREATE TABLE public.e (
+        a bigint
+      , b bigint
+      , UNIQUE (a)
+    );
+
+test_pass_duplicate_columns_unique_key_constraint:
+  sql_pass: |
+    create table public.e (a bigint, b bigint, unique (a, b));

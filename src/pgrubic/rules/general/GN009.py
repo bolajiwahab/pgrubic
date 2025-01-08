@@ -40,9 +40,9 @@ class DuplicateColumn(linter.BaseChecker):
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
-                    description=f"Column `{column}` specified more than once",
+                    description=f"Column `{column}` specified more than once in table {node.relation.relname}",  # noqa: E501
                     is_auto_fixable=self.is_auto_fixable,
                     is_fix_enabled=self.is_fix_enabled,
-                    help="Remove duplicate columns",
+                    help=f"Remove duplicate column from table {node.relation.relname}",
                 ),
             )
