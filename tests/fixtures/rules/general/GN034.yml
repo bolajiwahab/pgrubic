@@ -1,0 +1,10 @@
+---
+rule: GN034
+
+test_fail_typed_table:
+  sql_fail: |
+    CREATE TABLE example OF mytype (PRIMARY KEY (some_id));
+
+test_pass_like_table:
+  sql_pass: |
+    CREATE TABLE tbl1 (LIKE template);
