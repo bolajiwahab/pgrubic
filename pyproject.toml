@@ -156,11 +156,16 @@ legacy_tox_ini = """
         tests
         coverage
         docbuild
+        bump-version
 
     [testenv]
     skip_install = true
     deps =
     commands =
+
+    [testenv:bump-version]
+    deps = commitizen
+    commands = cz bump
 
     [testenv:tests]
     skip_install = false
