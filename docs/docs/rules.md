@@ -18,8 +18,8 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 | CT002 | [cascade-delete](rules/constraint/cascade-delete.md)                               | :white_check_mark: | :white_check_mark: |
 | CT003 | [identity-generated-by-default](rules/constraint/identity-generated-by-default.md) | :white_check_mark: | :white_check_mark: |
 | CT004 | [remove-constraint](rules/constraint/remove-constraint.md)                         | :white_check_mark: | :x:                |
-| CT005 | [duplicate-primary-key-column](rules/general/duplicate-primary-key-column.md)      | :white_check_mark: | :white_check_mark: |
-| CT006 | [duplicate-unique-key-column](rules/general/duplicate-unique-key-column.md)        | :white_check_mark: | :white_check_mark: |
+| CT005 | [duplicate-primary-key-column](rules/constraint/duplicate-primary-key-column.md)      | :white_check_mark: | :white_check_mark: |
+| CT006 | [duplicate-unique-key-column](rules/constraint/duplicate-unique-key-column.md)        | :white_check_mark: | :white_check_mark: |
 
 ## general (GN)
 

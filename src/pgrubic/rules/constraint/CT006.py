@@ -7,13 +7,13 @@ from pgrubic.core import linter
 
 class DuplicateUniqueKeyColumn(linter.BaseChecker):
     """## **What it does**
-    Checks for duplicate column in unique key.
+    Checks for duplicate column in unique key constraint.
 
     ## **Why not?**
     While PostgreSQL does not allow duplicate columns in a unique key constraint,
     such constructs are still parseable, but will error out at runtime.
 
-    Having a duplicate column in a unique key is an obvious error.
+    Having a duplicate column in a unique key constraint is an obvious error.
 
     ## **When should you?**
     Never.
