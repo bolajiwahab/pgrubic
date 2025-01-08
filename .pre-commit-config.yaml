@@ -2,36 +2,51 @@
 default_language_version:
   python: python3.12
 
+default_install_hook_types: [pre-commit, commit-msg]
+
 repos:
   - repo: local
     hooks:
+      - id: conventional-pre-commit
+        name: Lint commit messages
+        entry: conventional-pre-commit
+        language: python
+        always_run: true
+        stages: [commit-msg]
+        args: []
       - id: trailing-whitespace
+        stages: [pre-commit]
         name: Trim Trailing Whitespace
         entry: trailing-whitespace-fixer
         language: python
         types: [text]
       - id: end-of-file-fixer
+        stages: [pre-commit]
         name: Add a blank line at end of a file
         entry: end-of-file-fixer
         language: python
         types: [text]
       - id: mixed-line-ending
+        stages: [pre-commit]
         name: Ensure line feed character (LF)
         entry: mixed-line-ending
         language: python
         types: [text]
         args: [--fix=lf]
       - id: add-trailing-comma
+        stages: [pre-commit]
         name: Add trailing commas
         entry: add-trailing-comma
         language: python
         types: [python]
       - id: check-ast
+        stages: [pre-commit]
         name: Check that files parse as valid python
         entry: check-ast
         language: python
         types: [python]
       - id: check-yaml
+        stages: [pre-commit]
         name: Check yaml
         entry: check-yaml
         language: python
@@ -40,29 +55,34 @@ repos:
       # Formatters should be run late so that they can re-format
       # any prior changes
       - id: ruff
+        stages: [pre-commit]
         name: Formatting with ruff
         entry: ruff
         language: python
         args: [format]
         types: [python]
       - id: isort
+        stages: [pre-commit]
         name: Ensure imports are grouped and sorted
         entry: isort
         language: python
         types: [python]
         args: [--check, --diff, --profile=black]
       - id: yamllint
+        stages: [pre-commit]
         name: Lint yaml files
         entry: yamllint
         language: python
         types: [yaml]
       - id: ruff
+        stages: [pre-commit]
         name: Lint with ruff
         entry: ruff
         language: python
         args: [check, --fix]
         types: [python]
       - id: mypy
+        stages: [pre-commit]
         name: Type checking with mypy
         additional_dependencies: [types-PyYAML]
         entry: mypy

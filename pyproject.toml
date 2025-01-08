@@ -151,6 +151,7 @@ legacy_tox_ini = """
         isort
         linting
         yamllint
+        commitlint
         formatting
         typing
         tests
@@ -162,6 +163,10 @@ legacy_tox_ini = """
     skip_install = true
     deps =
     commands =
+
+    [testenv:commitlint]
+    deps = conventional-pre-commit
+    commands = conventional-pre-commit .git/COMMIT_EDITMSG
 
     [testenv:bump-version]
     deps = commitizen
