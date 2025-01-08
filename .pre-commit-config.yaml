@@ -77,7 +77,7 @@ repos:
         name: Lint with ruff
         entry: ruff
         language: python
-        args: [check, --fix]
+        args: [check, --fix, --config, ./pyproject.toml]
         types: [python]
       - id: mypy
         stages: [pre-commit]
