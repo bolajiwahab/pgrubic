@@ -57,6 +57,7 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 | GN030 | [missing-replace-in-trigger](rules/general/missing-replace-in-trigger.md)         | :white_check_mark: | :white_check_mark: |
 | GN031 | [stringified-null](rules/general/stringified-null.md)                             | :white_check_mark: | :white_check_mark: |
 | GN032 | [duplicate-index-column](rules/general/duplicate-index-column.md)                 | :white_check_mark: | :white_check_mark: |
+| GN033 | [insert-without-target-columns](rules/general/insert-without-target-columns.md)   | :white_check_mark: | :x:                |
 
 ## naming (NM)
 
