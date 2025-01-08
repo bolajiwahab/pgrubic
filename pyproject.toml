@@ -5,9 +5,16 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.package-data]
 "pgrubic" = ["pgrubic.toml"]
 
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "semver2"
+version_provider = "pep621"
+update_changelog_on_bump = true
 [project]
 name = "pgrubic"
-version = "0.1.0"
+version = "0.2.0"
 description = "PostgreSQL linter and formatter for schema migrations and design best practices"
 readme = { file = "README.md", content-type = "text/markdown" }
 license = {file = "LICENSE"}
@@ -149,11 +156,16 @@ legacy_tox_ini = """
         tests
         coverage
         docbuild
+        bump-version
 
     [testenv]
     skip_install = true
     deps =
     commands =
+
+    [testenv:bump-version]
+    deps = commitizen
+    commands = cz bump
 
     [testenv:tests]
     skip_install = false
