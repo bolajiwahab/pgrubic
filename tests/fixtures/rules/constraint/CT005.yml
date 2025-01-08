@@ -1,0 +1,27 @@
+---
+rule: CT005
+
+test_fail_add_primary_key_duplicate_column:
+  sql_fail: |
+    alter table public.d add primary key (a, a);
+  sql_fix: |
+    ALTER TABLE public.d
+        ADD PRIMARY KEY (a);
+
+test_pass_add_primary_key_no_duplicate_column:
+  sql_pass: |
+    alter table public.d add primary key (a, b);
+
+test_fail_duplicate_columns_primary_key:
+  sql_fail: |
+    create table public.e (a bigint, b bigint, primary key (a, a));
+  sql_fix: |
+    CREATE TABLE public.e (
+        a bigint
+      , b bigint
+      , PRIMARY KEY (a)
+    );
+
+test_pass_duplicate_columns_primary_key:
+  sql_pass: |
+    create table public.e (a bigint, b bigint, primary key (a, b));

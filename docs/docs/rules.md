@@ -18,10 +18,12 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 | CT002 | [cascade-delete](rules/constraint/cascade-delete.md)                               | :white_check_mark: | :white_check_mark: |
 | CT003 | [identity-generated-by-default](rules/constraint/identity-generated-by-default.md) | :white_check_mark: | :white_check_mark: |
 | CT004 | [remove-constraint](rules/constraint/remove-constraint.md)                         | :white_check_mark: | :x:                |
+| CT005 | [duplicate-primary-key-column](rules/general/duplicate-primary-key-column.md)      | :white_check_mark: | :white_check_mark: |
+| CT006 | [duplicate-unique-key-column](rules/general/duplicate-unique-key-column.md)        | :white_check_mark: | :white_check_mark: |
 
 ## general (GN)
 
-|   Code  |                      Name                                                       |      Stable        | Auto-fixable |
+|   Code  |                      Name                                                       |      Stable        | Auto-fixable       |
 | --------| --------------------------------------------------------------------------------|------------------- |--------------------|
 | GN001 | [table-inheritance](rules/general/table-inheritance.md)                           | :white_check_mark: | :x:                |
 | GN002 | [create-rule](rules/general/create-rule.md)                                       | :white_check_mark: | :x:                |
@@ -53,6 +55,8 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 | GN028 | [asterisk](rules/general/asterisk.md)                                             | :white_check_mark: | :x:                |
 | GN029 | [missing-replace-in-view](rules/general/missing-replace-in-view.md)               | :white_check_mark: | :white_check_mark: |
 | GN030 | [missing-replace-in-trigger](rules/general/missing-replace-in-trigger.md)         | :white_check_mark: | :white_check_mark: |
+| GN031 | [stringified-null](rules/general/stringified-null.md)                             | :white_check_mark: | :white_check_mark: |
+| GN032 | [duplicate-index-column](rules/general/duplicate-index-column.md)                 | :white_check_mark: | :white_check_mark: |
 
 ## naming (NM)
 

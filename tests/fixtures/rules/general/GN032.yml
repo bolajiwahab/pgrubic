@@ -1,0 +1,13 @@
+---
+rule: GN032
+
+test_fail_duplicate_index_column:
+  sql_fail: |
+    create index concurrently on public.d(a, a);
+  sql_fix: |
+    CREATE INDEX CONCURRENTLY
+        ON public.d (a);
+
+test_pass_no_duplicate_index_column:
+  sql_pass: |
+    create index concurrently on public.d(a, b);
