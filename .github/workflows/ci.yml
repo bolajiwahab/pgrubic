@@ -23,6 +23,7 @@ jobs:
           - typing
           - docbuild
           - ensure-docs-up-to-date
+          - pre-commit
     name: ${{ matrix.job }}
     steps:
       - uses: actions/checkout@v4
