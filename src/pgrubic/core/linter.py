@@ -1,8 +1,11 @@
 """Linter."""
 
+from __future__ import annotations
+
 import sys
 import typing
 import fnmatch
+import functools
 
 from pglast import ast, parser, stream, visitors
 from colorama import Fore, Style
@@ -10,6 +13,9 @@ from caseconverter import kebabcase
 
 from pgrubic import DOCUMENTATION_URL
 from pgrubic.core import noqa, config, formatter
+
+if typing.TYPE_CHECKING:
+    from collections import abc
 
 
 class Violation(typing.NamedTuple):
@@ -41,6 +47,50 @@ class ViolationStats(typing.NamedTuple):
     total: int
     auto_fixable: int
     fix_enabled: int
+
+
+def _set_locations(
+    func: abc.Callable[..., typing.Any],
+) -> abc.Callable[..., typing.Any]:
+    """Helper method to set locations for node."""
+
+    @functools.wraps(func)
+    def wrapper(
+        checker: BaseChecker,
+        ancestors: visitors.Ancestor,
+        node: ast.Node,
+    ) -> typing.Any:
+        # some nodes have location attribute which is different from node's location
+        # for example ast.CreateTablespaceStmt, while some nodes do not carry
+        # location at all
+        if hasattr(node, "location") and isinstance(node.location, int):
+            checker.node_location = checker.statement_location + node.location
+        else:
+            checker.node_location = checker.statement_location + len(checker.statement)
+
+        # get the position of the newline just before our node location,
+        line_start = (
+            checker.source_code.rfind(noqa.NEW_LINE, 0, checker.node_location) + 1
+        )
+        # get the position of the newline just after our node location
+        line_end = checker.source_code.find(noqa.NEW_LINE, checker.node_location)
+
+        # line number is number of newlines before our node location,
+        # increment by 1 to land on the actual node
+        checker.line_number = (
+            checker.source_code[: checker.node_location].count(noqa.NEW_LINE) + 1
+        )
+        checker.column_offset = checker.node_location - line_start + 1
+
+        # If a node has no location, we return the whole statement instead
+        if hasattr(node, "location") and isinstance(node.location, int):
+            checker.line = checker.source_code[line_start:line_end]
+        else:
+            checker.line = checker.statement.strip()
+
+        return func(checker, ancestors, node)
+
+    return wrapper
 
 
 class BaseChecker(visitors.Visitor):  # type: ignore[misc]
@@ -78,6 +128,7 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
         cls.name = kebabcase(cls.__name__)
         cls.category = cls.__module__.split(".")[-2]
 
+    @_set_locations
     def visit(self, node: ast.Node, ancestors: visitors.Ancestor) -> None:
         """Visit the node."""
 
@@ -90,10 +141,12 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
             return False
 
         return not (
-            self.config.lint.fixable
-            and not any(
-                fnmatch.fnmatch(self.code, pattern + "*")
-                for pattern in self.config.lint.fixable
+            (
+                self.config.lint.fixable
+                and not any(
+                    fnmatch.fnmatch(self.code, pattern + "*")
+                    for pattern in self.config.lint.fixable
+                )
             )
             or any(
                 fnmatch.fnmatch(self.code, pattern + "*")
