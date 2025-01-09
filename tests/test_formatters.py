@@ -8,6 +8,7 @@ from pglast import parser
 
 from tests import TEST_FILE, conftest
 from pgrubic import core
+from pgrubic.core import errors
 
 
 @pytest.mark.parametrize(
@@ -32,18 +33,18 @@ def test_formatters(
     # Apply overrides to global configuration
     conftest.update_config(formatter.config, config_overrides)
 
-    actual_output = formatter.format(
+    result = formatter.format(
         source_file=TEST_FILE,
         source_code=test_case["sql"],
     )
 
     assert (
-        actual_output == test_case["expected"]
+        result.formatted_source_code == test_case["expected"]
     ), f"Test failed for formatter: `{test_formatter}` in `{test_id}`"
 
     # Check that the formatted source code is valid
     try:
-        parser.parse_sql(actual_output)
+        parser.parse_sql(result.formatted_source_code)
     except parser.ParseError as error:
         msg = f"Formatted code is not a valid syntax: {error!s}"
         raise ValueError(msg) from error
@@ -52,10 +53,8 @@ def test_formatters(
 def test_format_parse_error(formatter: core.Formatter) -> None:
     """Test format."""
     source_code = "SELECT * FROM;"
-    with pytest.raises(SystemExit) as excinfo:
+    with pytest.raises(errors.ParseError):
         formatter.format(source_file=TEST_FILE, source_code=source_code)
-
-    assert excinfo.value.code == 1
 
 
 def test_new_line_before_semicolon(formatter: core.Formatter) -> None:
@@ -64,9 +63,10 @@ def test_new_line_before_semicolon(formatter: core.Formatter) -> None:
     expected_output: str = "SELECT 1\n;\n"
 
     formatter.config.format.new_line_before_semicolon = True
-    formatted_source_code = formatter.format(
+
+    result = formatter.format(
         source_file=TEST_FILE,
         source_code=source_code,
     )
 
-    assert formatted_source_code == expected_output
+    assert result.formatted_source_code == expected_output

@@ -3,6 +3,7 @@
 import pytest
 
 from pgrubic import core
+from pgrubic.core import errors
 
 SOURCE_FILE = "linter.sql"
 
@@ -86,13 +87,11 @@ def test_parse_error(linter: core.Linter) -> None:
     CREATE TABLE tbl (activated);
     """
 
-    with pytest.raises(SystemExit) as excinfo:
+    with pytest.raises(errors.ParseError):
         linter.run(
             source_file=SOURCE_FILE,
             source_code=source_code,
         )
-
-    assert excinfo.value.code == 1
 
 
 def test_new_line_before_semicolon(

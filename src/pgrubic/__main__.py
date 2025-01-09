@@ -138,7 +138,7 @@ def lint(  # noqa: C901, PLR0912
 
             lint_results = [result.get() for result in results]
 
-        except (errors.ParseError, errors.MissingStatementTerminatorError) as error:
+        except errors.ParseError as error:
             core.logger.error(error)
             sys.exit(2)
 

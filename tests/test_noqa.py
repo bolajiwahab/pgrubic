@@ -7,7 +7,7 @@ import pytest
 from colorama import Fore, Style
 
 from tests import TEST_FILE
-from pgrubic.core import noqa
+from pgrubic.core import noqa, errors
 
 
 def test_extract_star_ignore_from_inline_comments() -> None:
@@ -100,13 +100,11 @@ def test_missing_statement_terminator() -> None:
     """Test missing statement terminator."""
     source_code: str = "SELECT * FROM tab"
 
-    with pytest.raises(SystemExit) as excinfo:
+    with pytest.raises(errors.MissingStatementTerminatorError):
         noqa.extract_comments(
             source_file=TEST_FILE,
             source_code=source_code,
         )
-
-    assert excinfo.value.code == 1
 
 
 def test_report_general_unused_ignores(

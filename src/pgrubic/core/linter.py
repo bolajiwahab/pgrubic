@@ -15,7 +15,7 @@ from pgrubic import DOCUMENTATION_URL
 from pgrubic.core import noqa, config, errors, formatter
 
 if typing.TYPE_CHECKING:
-    from collections import abc
+    from collections import abc  # pragma: no cover
 
 
 class Violation(typing.NamedTuple):
