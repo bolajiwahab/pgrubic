@@ -11,15 +11,15 @@ on:  # yamllint disable-line rule:truthy
       - main
 
 jobs:
-  linting:
+  lint:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         job:
-          - linting
+          - lint
           - isort
-          - formatting
+          - format
           - typing
           - docbuild
           - ensure-docs-up-to-date
