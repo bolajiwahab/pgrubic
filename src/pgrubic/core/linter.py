@@ -12,7 +12,7 @@ from colorama import Fore, Style
 from caseconverter import kebabcase
 
 from pgrubic import DOCUMENTATION_URL
-from pgrubic.core import noqa, config, formatter
+from pgrubic.core import noqa, config, errors, formatter
 
 if typing.TYPE_CHECKING:
     from collections import abc
@@ -319,7 +319,7 @@ class Linter:
                     else None
                 )
 
-    def run(self, source_file: str, source_code: str) -> LintResult:
+    def run(self, *, source_file: str, source_code: str) -> LintResult:
         """Run rules on a source code."""
         fixed_statements: list[str] = []
 
@@ -347,9 +347,8 @@ class Linter:
                 )
 
             except parser.ParseError as error:
-                sys.stderr.write(f"{source_file}: {Fore.RED}{error!s}{Style.RESET_ALL}")
-
-                sys.exit(1)
+                msg = "Error parsing source code: "
+                raise errors.ParseError(f"{source_file}: " + msg + str(error)) from error
 
             BaseChecker.statement = statement.text
             BaseChecker.statement_location = statement.start_location

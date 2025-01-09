@@ -9,6 +9,7 @@ from pglast import parser
 from colorama import Fore, Style
 
 from pgrubic import PACKAGE_NAME
+from pgrubic.core import errors
 
 A_STAR: str = "*"
 ASCII_SEMI_COLON: str = "ASCII_59"
@@ -38,10 +39,9 @@ def extract_statement_locations(
 
     for idx, token in enumerate(tokens):
         if idx == len(tokens) - 1 and token.name != ASCII_SEMI_COLON:
-            sys.stderr.write(
-                f"{Fore.RED}Error:{source_file}:Missing statement terminator at location {token.end}{Style.RESET_ALL}\n",  # noqa: E501
-            )
-            sys.exit(1)
+            msg = f"Missing semicolon (;) at end of SQL statement at location {token.end}"
+
+            raise errors.MissingStatementTerminatorError(f"{source_file}: " + msg)
 
         if token.name == ASCII_SEMI_COLON:
             locations.append(

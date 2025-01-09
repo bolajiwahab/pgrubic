@@ -1,13 +1,18 @@
 """Formatter."""
 
-import sys
 import typing
-import pathlib
 
 from pglast import parser, stream
-from colorama import Fore, Style
 
-from pgrubic.core import noqa, config
+from pgrubic.core import noqa, config, errors
+
+
+class FormatResult(typing.NamedTuple):
+    """Format Result."""
+
+    source_file: str
+    original_source_code: str
+    formatted_source_code: str
 
 
 class Formatter:
@@ -30,9 +35,8 @@ class Formatter:
             parser.parse_sql(source_code)
 
         except parser.ParseError as error:
-            sys.stderr.write(f"{source_file}: {Fore.RED}{error!s}{Style.RESET_ALL}")
-
-            sys.exit(1)
+            msg = "Error parsing source code: "
+            raise errors.ParseError(f"{source_file}: " + msg + str(error)) from error
 
         formatted_statements: list[str] = []
 
@@ -75,10 +79,14 @@ class Formatter:
             formatted_statements,
         ) + noqa.NEW_LINE
 
-    def format(self, *, source_file: str, source_code: str) -> str:
+    def format(self, *, source_file: str, source_code: str) -> FormatResult:
         """Format source code."""
-        return self.run(
-            source_file=str(pathlib.Path(source_file).resolve()),
-            source_code=source_code,
-            config=self.config,
+        return FormatResult(
+            source_file=source_file,
+            original_source_code=source_code,
+            formatted_source_code=self.run(
+                source_file=source_file,
+                source_code=source_code,
+                config=self.config,
+            ),
         )

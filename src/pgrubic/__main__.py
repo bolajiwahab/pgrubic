@@ -14,7 +14,7 @@ from rich.syntax import Syntax
 from rich.console import Console
 
 from pgrubic import PACKAGE_NAME, core
-from pgrubic.core import noqa
+from pgrubic.core import noqa, errors
 
 T = typing.TypeVar("T")
 
@@ -53,7 +53,7 @@ def cli() -> None:
     """
 
 
-@cli.command()
+@cli.command(name="lint")
 @click.option(
     "--fix",
     is_flag=True,
@@ -74,7 +74,7 @@ def cli() -> None:
 )
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
-def lint(  # noqa: C901
+def lint(  # noqa: C901, PLR0912
     sources: tuple[pathlib.Path, ...],
     *,
     verbose: bool,
@@ -122,19 +122,27 @@ def lint(  # noqa: C901
     with multiprocessing.Pool(
         processes=min(multiprocessing.cpu_count(), MAX_WORKERS),
     ) as pool:
-        results = [
-            pool.apply_async(
-                linter.run,
-                args=(source.resolve(), source.read_text(encoding="utf-8")),
-            )
-            for source in included_sources
-        ]
-        pool.close()
-        pool.join()
+        try:
+            results = [
+                pool.apply_async(
+                    linter.run,
+                    kwds={
+                        "source_file": source.resolve(),
+                        "source_code": source.read_text(encoding="utf-8"),
+                    },
+                )
+                for source in included_sources
+            ]
+            pool.close()
+            pool.join()
 
-    list_results = [result.get() for result in results]
+            lint_results = [result.get() for result in results]
 
-    for lint_result in list_results:
+        except (errors.ParseError, errors.MissingStatementTerminatorError) as error:
+            core.logger.error(error)
+            sys.exit(2)
+
+    for lint_result in lint_results:
         violations = linter.get_violation_stats(
             lint_result.violations,
         )
@@ -248,32 +256,55 @@ def format_sql_file(  # noqa: C901
 
     changes_detected = False
 
-    for source in sources_to_reformat:
-        source_file = source.resolve()
-        source_code = source.read_text(encoding="utf-8")
+    # we set the number of processes to the least of available CPUs or the set MAX_WORKERS
+    with multiprocessing.Pool(
+        processes=min(multiprocessing.cpu_count(), MAX_WORKERS),
+    ) as pool:
+        try:
+            results = [
+                pool.apply_async(
+                    formatter.format,
+                    kwds={
+                        "source_file": source.resolve(),
+                        "source_code": source.read_text(encoding="utf-8"),
+                    },
+                )
+                for source in included_sources
+            ]
+            pool.close()
+            pool.join()
 
-        formatted_source_code = formatter.format(
-            source_file=str(source_file),
-            source_code=source_code,
-        )
+            formatting_results = [result.get() for result in results]
 
-        if formatted_source_code != source_code and not changes_detected:
+        except (errors.ParseError, errors.MissingStatementTerminatorError) as error:
+            core.logger.error(error)
+            sys.exit(2)
+
+    for formatting_result in formatting_results:
+        if (
+            formatting_result.formatted_source_code
+            != formatting_result.original_source_code
+            and not changes_detected
+        ):
             changes_detected = True
 
         if config.format.diff:
             diff_unified = difflib.unified_diff(
-                source_code.splitlines(keepends=True),
-                formatted_source_code.splitlines(keepends=True),
-                fromfile=str(source_file),
-                tofile=str(source_file),
+                formatting_result.original_source_code.splitlines(keepends=True),
+                formatting_result.formatted_source_code.splitlines(keepends=True),
+                fromfile=str(formatting_result.source_file),
+                tofile=str(formatting_result.source_file),
             )
 
             diff_output = "".join(diff_unified)
             console.print(Syntax(diff_output, "diff", theme="ansi_dark"))
 
         if not config.format.check and not config.format.diff:
-            with source_file.open("w", encoding="utf-8") as sf:
-                sf.write(formatted_source_code)
+            with pathlib.Path(formatting_result.source_file).open(
+                "w",
+                encoding="utf-8",
+            ) as sf:
+                sf.write(formatting_result.formatted_source_code)
 
     if not config.format.check and not config.format.diff:
         cache.write(sources=included_sources)
