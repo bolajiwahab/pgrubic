@@ -1,5 +1,6 @@
 """pgrubic."""
 
+import os
 import enum
 import typing
 import pathlib
@@ -9,6 +10,16 @@ import importlib.metadata
 from pglast import ast
 
 PACKAGE_NAME: typing.Final[str] = "pgrubic"
+
+MAX_WORKERS_ENVIRONMENT_VARIABLE: typing.Final[str] = (
+    f"{PACKAGE_NAME.upper()}_MAX_WORKERS"
+)
+
+DEFAULT_MAX_WORKERS: typing.Final[int] = 4
+
+MAX_WORKERS: typing.Final[int] = int(
+    os.getenv(MAX_WORKERS_ENVIRONMENT_VARIABLE, DEFAULT_MAX_WORKERS),
+)
 
 DOCUMENTATION_URL: typing.Final[str] = "https://bolajiwahab.github.io/pgrubic"
 

@@ -1,6 +1,5 @@
 """Entry point."""
 
-import os
 import sys
 import typing
 import difflib
@@ -13,20 +12,10 @@ import click
 from rich.syntax import Syntax
 from rich.console import Console
 
-from pgrubic import PACKAGE_NAME, core
+from pgrubic import MAX_WORKERS, PACKAGE_NAME, core
 from pgrubic.core import noqa, errors
 
 T = typing.TypeVar("T")
-
-MAX_WORKERS_ENVIRONMENT_VARIABLE: typing.Final[str] = (
-    f"{PACKAGE_NAME.upper()}_MAX_WORKERS"
-)
-
-DEFAULT_MAX_WORKERS: typing.Final[int] = 4
-
-MAX_WORKERS: typing.Final[int] = int(
-    os.getenv(MAX_WORKERS_ENVIRONMENT_VARIABLE, DEFAULT_MAX_WORKERS),
-)
 
 
 def common_options(func: abc.Callable[..., T]) -> abc.Callable[..., T]:
