@@ -115,11 +115,6 @@ def check_for_nullable_boolean_field(source_file: str, source_code: str) -> None
 
     linter: core.Linter = core.Linter(config=config, formatters=core.load_formatters)
 
-    core.BaseChecker.config = config
-
-    core.add_set_locations_to_rule(TP017.NullableBooleanField)
-    core.add_apply_fix_to_rule(TP017.NullableBooleanField)
-
     linter.checkers.add(TP017.NullableBooleanField())
 
     linting_result = linter.run(
