@@ -1,8 +1,11 @@
 """Linter."""
 
+from __future__ import annotations
+
 import sys
 import typing
 import fnmatch
+import functools
 
 from pglast import ast, parser, stream, visitors
 from colorama import Fore, Style
@@ -10,6 +13,9 @@ from caseconverter import kebabcase
 
 from pgrubic import DOCUMENTATION_URL
 from pgrubic.core import noqa, config, formatter
+
+if typing.TYPE_CHECKING:
+    from collections import abc
 
 
 class Violation(typing.NamedTuple):
@@ -31,6 +37,7 @@ class Violation(typing.NamedTuple):
 class LintResult(typing.NamedTuple):
     """Lint Result."""
 
+    source_file: str
     violations: set[Violation]
     fixed_sql: str | None = None
 
@@ -43,11 +50,102 @@ class ViolationStats(typing.NamedTuple):
     fix_enabled: int
 
 
-class BaseChecker(visitors.Visitor):  # type: ignore[misc]
+class CheckerMeta(type):
+    """Metaclass for Checker. This metaclass handles both runtime and subclass method
+    decorations. It is originally created for method decorations but could be extended in
+    the future.
+    """
+
+    def __new__(
+        cls: type[CheckerMeta],
+        name: str,
+        bases: tuple[typing.Any],
+        dct: dict[str, typing.Any],
+    ) -> typing.Any:
+        """Add method decorations."""
+        for attr_name, attr_value in dct.items():
+            if callable(attr_value) and attr_name.startswith("_fix"):
+                dct[attr_name] = cls._apply_fix(attr_value)
+
+            if callable(attr_value) and attr_name.startswith("visit_"):
+                dct[attr_name] = cls._set_locations(attr_value)
+
+        return super().__new__(cls, name, bases, dct)
+
+    @staticmethod
+    def _set_locations(
+        func: abc.Callable[..., typing.Any],
+    ) -> abc.Callable[..., typing.Any]:
+        """Helper method to set locations for node."""
+
+        @functools.wraps(func)
+        def wrapper(
+            checker: BaseChecker,
+            ancestors: visitors.Ancestor,
+            node: ast.Node,
+        ) -> typing.Any:
+            # some nodes have location attribute which is different from node location
+            # for example ast.CreateTablespaceStmt while some nodes do not carry
+            # location at all
+            if hasattr(node, "location") and isinstance(node.location, int):
+                checker.node_location = checker.statement_location + node.location
+            else:
+                checker.node_location = checker.statement_location + len(
+                    checker.statement,
+                )
+
+            # get the position of the newline just before our node location,
+            line_start = (
+                checker.source_code.rfind(noqa.NEW_LINE, 0, checker.node_location) + 1
+            )
+            # get the position of the newline just after our node location
+            line_end = checker.source_code.find(noqa.NEW_LINE, checker.node_location)
+
+            # line number is number of newlines before our node location,
+            # increment by 1 to land on the actual node
+            checker.line_number = (
+                checker.source_code[: checker.node_location].count(noqa.NEW_LINE) + 1
+            )
+            checker.column_offset = checker.node_location - line_start + 1
+
+            # If a node has no location, we return the whole statement instead
+            if hasattr(node, "location") and isinstance(node.location, int):
+                checker.line = checker.source_code[line_start:line_end]
+            else:
+                checker.line = checker.statement.strip()
+
+            return func(checker, ancestors, node)
+
+        return wrapper
+
+    @staticmethod
+    def _apply_fix(
+        func: abc.Callable[..., typing.Any],
+    ) -> abc.Callable[..., typing.Any]:
+        """Helper method to apply fix only if it is applicable."""
+
+        @functools.wraps(func)
+        def wrapper(
+            checker: BaseChecker,
+            *args: typing.Any,
+            **kwargs: typing.Any,
+        ) -> typing.Any:
+            if not checker.config.lint.fix:
+                return None
+
+            if not checker.is_fix_applicable:
+                return None
+
+            return func(checker, *args, **kwargs)
+
+        return wrapper
+
+
+class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):  # type: ignore[misc]
     """Define a lint rule, and store all the nodes that violate it."""
 
     # Should not be set directly
-    # as it is set in __init_subclass__
+    # as they are set in __init_subclass__
     code: str
     name: str
     category: str
@@ -221,7 +319,7 @@ class Linter:
                     else None
                 )
 
-    def run(self, *, source_file: str, source_code: str) -> LintResult:
+    def run(self, source_file: str, source_code: str) -> LintResult:
         """Run rules on a source code."""
         fixed_statements: list[str] = []
 
@@ -235,6 +333,7 @@ class Linter:
         BaseChecker.inline_ignores = inline_ignores
         BaseChecker.source_code = source_code
         BaseChecker.source_file = source_file
+        BaseChecker.config = self.config
 
         for statement in noqa.extract_statement_locations(
             source_file=source_file,
@@ -305,4 +404,4 @@ class Linter:
             inline_ignores=inline_ignores,
         )
 
-        return LintResult(violations=violations, fixed_sql=fix)
+        return LintResult(source_file=source_file, violations=violations, fixed_sql=fix)

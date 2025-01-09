@@ -1,10 +1,12 @@
 """Entry point."""
 
+import os
 import sys
 import typing
 import difflib
 import logging
 import pathlib
+import multiprocessing
 from collections import abc
 
 import click
@@ -15,6 +17,16 @@ from pgrubic import PACKAGE_NAME, core
 from pgrubic.core import noqa
 
 T = typing.TypeVar("T")
+
+MAX_WORKERS_ENVIRONMENT_VARIABLE: typing.Final[str] = (
+    f"{PACKAGE_NAME.upper()}_MAX_WORKERS"
+)
+
+DEFAULT_MAX_WORKERS: typing.Final[int] = 4
+
+MAX_WORKERS: typing.Final[int] = int(
+    os.getenv(MAX_WORKERS_ENVIRONMENT_VARIABLE, DEFAULT_MAX_WORKERS),
+)
 
 
 def common_options(func: abc.Callable[..., T]) -> abc.Callable[..., T]:
@@ -81,8 +93,6 @@ def lint(  # noqa: C901
 
     linter: core.Linter = core.Linter(config=config, formatters=core.load_formatters)
 
-    core.BaseChecker.config = config
-
     rules: set[core.BaseChecker] = core.load_rules(config=config)
 
     for rule in rules:
@@ -108,22 +118,30 @@ def lint(  # noqa: C901
             f"File-level general noqa directive added to {sources_modified} file(s)\n",
         )
 
-    for source in included_sources:
-        source_file = source.resolve()
-        source_code = source.read_text(encoding="utf-8")
+    # we set the number of processes to the least of available CPUs or the set MAX_WORKERS
+    with multiprocessing.Pool(
+        processes=min(multiprocessing.cpu_count(), MAX_WORKERS),
+    ) as pool:
+        results = [
+            pool.apply_async(
+                linter.run,
+                args=(source.resolve(), source.read_text(encoding="utf-8")),
+            )
+            for source in included_sources
+        ]
+        pool.close()
+        pool.join()
 
-        lint_result = linter.run(
-            source_file=str(source_file),
-            source_code=source_code,
-        )
+    list_results = [result.get() for result in results]
 
+    for lint_result in list_results:
         violations = linter.get_violation_stats(
             lint_result.violations,
         )
 
         linter.print_violations(
             violations=lint_result.violations,
-            source_file=str(source_file),
+            source_file=lint_result.source_file,
         )
 
         total_violations += violations.total
@@ -131,7 +149,10 @@ def lint(  # noqa: C901
         fix_enabled_violations += violations.fix_enabled
 
         if lint_result.fixed_sql:
-            with source_file.open("w", encoding="utf-8") as sf:
+            with pathlib.Path(lint_result.source_file).open(
+                "w",
+                encoding="utf-8",
+            ) as sf:
                 sf.write(lint_result.fixed_sql)
 
     if total_violations > 0:

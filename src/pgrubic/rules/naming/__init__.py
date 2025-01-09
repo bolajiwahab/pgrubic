@@ -7,7 +7,11 @@ from pglast import ast, visitors
 from pgrubic.core import linter
 
 
-class CheckIdentifier(abc.ABC, linter.BaseChecker):
+class ABCBaseCheckerMeta(abc.ABCMeta, linter.CheckerMeta):
+    """Combine ABCMeta and CheckerMeta."""
+
+
+class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta):
     """Check identifier."""
 
     @abc.abstractmethod
