@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+import copy
 import typing
 import fnmatch
 import functools
@@ -340,7 +341,9 @@ class Linter:
             source_code=source_code,
         ):
             try:
-                tree: ast.Node = parser.parse_sql(statement.text)
+                original_tree: ast.Node = parser.parse_sql(statement.text)
+                copied_tree: ast.Node = copy.deepcopy(original_tree)
+
                 comments = noqa.extract_comments(
                     source_file=source_file,
                     source_code=statement.text,
@@ -356,7 +359,7 @@ class Linter:
             for checker in self.checkers:
                 checker.violations = set()
 
-                checker(tree)
+                checker(copied_tree)
 
                 if not self.config.lint.ignore_noqa:
                     self._skip_suppressed_violations(
@@ -367,7 +370,7 @@ class Linter:
 
                 violations.update(checker.violations)
 
-            if parser.parse_sql(statement.text) != tree:
+            if original_tree != copied_tree:
                 fixed_statement = stream.IndentedStream(
                     comments=comments,
                     semicolon_after_last_statement=False,
@@ -375,7 +378,7 @@ class Linter:
                     separate_statements=self.config.format.lines_between_statements,
                     remove_pg_catalog_from_functions=self.config.format.remove_pg_catalog_from_functions,
                     comma_at_eoln=not (self.config.format.comma_at_beginning),
-                )(tree)
+                )(copied_tree)
 
                 if self.config.format.new_line_before_semicolon:
                     fixed_statement += noqa.NEW_LINE + noqa.SEMI_COLON
