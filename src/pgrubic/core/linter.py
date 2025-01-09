@@ -15,7 +15,7 @@ from pgrubic import DOCUMENTATION_URL
 from pgrubic.core import noqa, config, formatter
 
 if typing.TYPE_CHECKING:
-    from collections import abc
+    from collections import abc  # pragma: no cover
 
 
 class Violation(typing.NamedTuple):
@@ -49,7 +49,7 @@ class ViolationStats(typing.NamedTuple):
     fix_enabled: int
 
 
-def _set_locations(
+def _set_locations_for_node(
     func: abc.Callable[..., typing.Any],
 ) -> abc.Callable[..., typing.Any]:
     """Helper method to set locations for node."""
@@ -128,7 +128,7 @@ class BaseChecker(visitors.Visitor):  # type: ignore[misc]
         cls.name = kebabcase(cls.__name__)
         cls.category = cls.__module__.split(".")[-2]
 
-    @_set_locations
+    @_set_locations_for_node
     def visit(self, node: ast.Node, ancestors: visitors.Ancestor) -> None:
         """Visit the node."""
 
