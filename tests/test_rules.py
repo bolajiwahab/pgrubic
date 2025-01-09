@@ -4,6 +4,7 @@ import typing
 import pathlib
 
 import pytest
+from pglast import parser
 
 from tests import conftest
 from pgrubic import core
@@ -62,6 +63,13 @@ def test_rules(
 
         if parsed_test_case.sql_fix:
             assert linting_result.fixed_sql == parsed_test_case.sql_fix
+
+            # Check that the fixed sql is valid
+            try:
+                parser.parse_sql(linting_result.fixed_sql)
+            except parser.ParseError as error:
+                msg = f"Formatted code is not a valid syntax: {error!s}"
+                raise ValueError(msg) from error
 
     if parsed_test_case.sql_pass:
         linting_result = linter.run(
