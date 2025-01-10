@@ -50,6 +50,23 @@ A list of file patterns to exclude from the linting and formatting process.
 exclude = ["test*.sql"]
 ```
 </details>
+
+### **respect-gitignore**
+Whether to automatically exclude files that are ignored by `.ignore`, `.gitignore`,
+`.git/info/exclude`, and global gitignore files. Enabled by default.
+
+**Type**: `bool`
+
+**Default**: `True`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+respect_gitignore = false
+```
+</details>
 ## Lint
 
 ### **postgres-target-version**
