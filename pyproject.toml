@@ -245,6 +245,7 @@ legacy_tox_ini = """
         rich
         types-PyYAML
         msgpack-types
+        GitPython
     commands = mypy {posargs:src} {posargs:tests} {posargs:docs}
 
     [testenv:docbuild]
