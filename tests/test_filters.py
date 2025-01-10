@@ -225,8 +225,8 @@ def test_respect_gitignore_false_filter_sources(tmp_path: pathlib.Path) -> None:
         "*.sql",
     ]
     exclude = [
-        "{directory}/test_main.sql",
-        "{directory}/test.sql",
+        "{str(directory).replace(os.path.sep, '/')}/test_main.sql",
+        "{str(directory).replace(os.path.sep, '/')}/test.sql",
     ]
     """
 
