@@ -8,9 +8,9 @@
 | src/pgrubic/\_\_main\_\_.py                  |      121 |        0 |     100% |           |
 | src/pgrubic/core/\_\_init\_\_.py             |        9 |        0 |     100% |           |
 | src/pgrubic/core/cache.py                    |       64 |        0 |     100% |           |
-| src/pgrubic/core/config.py                   |      101 |        0 |     100% |           |
+| src/pgrubic/core/config.py                   |      102 |        0 |     100% |           |
 | src/pgrubic/core/errors.py                   |        4 |        0 |     100% |           |
-| src/pgrubic/core/filters.py                  |       16 |        0 |     100% |           |
+| src/pgrubic/core/filters.py                  |       26 |        0 |     100% |           |
 | src/pgrubic/core/formatter.py                |       33 |        0 |     100% |           |
 | src/pgrubic/core/linter.py                   |      162 |        0 |     100% |           |
 | src/pgrubic/core/loader.py                   |       23 |        0 |     100% |           |
@@ -149,7 +149,7 @@
 | src/pgrubic/rules/unsafe/US029.py            |        5 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US030.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-|                                    **TOTAL** | **2677** |    **0** | **100%** |           |
+|                                    **TOTAL** | **2688** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
