@@ -103,6 +103,7 @@ def lint(  # noqa: C901, PLR0912, PLR0913
         sources=sources,
         include=config.lint.include,
         exclude=config.lint.exclude,
+        respect_gitignore=config.respect_gitignore,
     )
 
     if add_file_level_general_noqa:
@@ -250,6 +251,7 @@ def format_sql_file(  # noqa: C901, PLR0913
         sources=sources,
         include=config.format.include,
         exclude=config.format.exclude,
+        respect_gitignore=config.respect_gitignore,
     )
 
     cache = core.Cache(config=config)

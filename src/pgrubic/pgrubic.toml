@@ -1,6 +1,7 @@
 cache-dir = ".pgrubic_cache"
 include = []
 exclude = []
+respect-gitignore = true
 [lint]
 target-postgres-version = 14
 select = []
