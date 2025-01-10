@@ -1,24 +1,28 @@
 """Entry point."""
 
+import os
 import sys
 import typing
 import difflib
 import logging
 import pathlib
+import multiprocessing
 from collections import abc
 
 import click
 from rich.syntax import Syntax
 from rich.console import Console
 
-from pgrubic import PACKAGE_NAME, core
-from pgrubic.core import noqa
+from pgrubic import PACKAGE_NAME, DEFAULT_WORKERS, WORKERS_ENVIRONMENT_VARIABLE, core
+from pgrubic.core import noqa, errors
 
 T = typing.TypeVar("T")
 
 
 def common_options(func: abc.Callable[..., T]) -> abc.Callable[..., T]:
     """Decorator to add common options to each subcommand."""
+    func = click.version_option()(func)
+    func = click.option("--workers", type=int, help="Number of workers to use.")(func)
     return click.option("--verbose", is_flag=True, help="Enable verbose logging.")(func)
 
 
@@ -41,7 +45,7 @@ def cli() -> None:
     """
 
 
-@cli.command()
+@cli.command(name="lint")
 @click.option(
     "--fix",
     is_flag=True,
@@ -62,13 +66,14 @@ def cli() -> None:
 )
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
-def lint(  # noqa: C901
+def lint(  # noqa: C901, PLR0912, PLR0913
     sources: tuple[pathlib.Path, ...],
     *,
-    verbose: bool,
     fix: bool,
     ignore_noqa: bool,
     add_file_level_general_noqa: bool,
+    workers: int,
+    verbose: bool,
 ) -> None:
     """Lint SQL files."""
     core.logger.setLevel(logging.INFO if verbose else logging.WARNING)
@@ -80,8 +85,6 @@ def lint(  # noqa: C901
             setattr(config.lint, key, value)
 
     linter: core.Linter = core.Linter(config=config, formatters=core.load_formatters)
-
-    core.BaseChecker.config = config
 
     rules: set[core.BaseChecker] = core.load_rules(config=config)
 
@@ -108,22 +111,51 @@ def lint(  # noqa: C901
             f"File-level general noqa directive added to {sources_modified} file(s)\n",
         )
 
-    for source in included_sources:
-        source_file = source.resolve()
-        source_code = source.read_text(encoding="utf-8")
+    # the `--workers` flag when provided, takes precedence over the environment variable
+    # the environment variable when provided, takes precedence over the default
+    workers = (
+        workers
+        if workers
+        else int(os.getenv(WORKERS_ENVIRONMENT_VARIABLE, DEFAULT_WORKERS))
+    )
 
-        lint_result = linter.run(
-            source_file=str(source_file),
-            source_code=source_code,
-        )
+    # we set the number of processes to the smallest of these values:
+    # 1. the number of CPUs
+    # 2. the number of workers
+    with multiprocessing.Pool(
+        processes=min(
+            multiprocessing.cpu_count(),
+            workers,
+        ),
+    ) as pool:
+        try:
+            results = [
+                pool.apply_async(
+                    linter.run,
+                    kwds={
+                        "source_file": source.resolve(),
+                        "source_code": source.read_text(encoding="utf-8"),
+                    },
+                )
+                for source in included_sources
+            ]
+            pool.close()
+            pool.join()
 
+            lint_results = [result.get() for result in results]
+
+        except errors.ParseError as error:
+            core.logger.error(error)
+            sys.exit(2)
+
+    for lint_result in lint_results:
         violations = linter.get_violation_stats(
             lint_result.violations,
         )
 
         linter.print_violations(
             violations=lint_result.violations,
-            source_file=str(source_file),
+            source_file=lint_result.source_file,
         )
 
         total_violations += violations.total
@@ -131,7 +163,10 @@ def lint(  # noqa: C901
         fix_enabled_violations += violations.fix_enabled
 
         if lint_result.fixed_sql:
-            with source_file.open("w", encoding="utf-8") as sf:
+            with pathlib.Path(lint_result.source_file).open(
+                "w",
+                encoding="utf-8",
+            ) as sf:
                 sf.write(lint_result.fixed_sql)
 
     if total_violations > 0:
@@ -182,12 +217,13 @@ def lint(  # noqa: C901
 )
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
-def format_sql_file(  # noqa: C901
+def format_sql_file(  # noqa: C901, PLR0913
     sources: tuple[pathlib.Path, ...],
     *,
     check: bool,
     diff: bool,
     no_cache: bool,
+    workers: int,
     verbose: bool,
 ) -> None:
     """Format SQL files."""
@@ -227,32 +263,68 @@ def format_sql_file(  # noqa: C901
 
     changes_detected = False
 
-    for source in sources_to_reformat:
-        source_file = source.resolve()
-        source_code = source.read_text(encoding="utf-8")
+    # the `--workers` flag when specified, takes precedence over the environment variable
+    # the environment variable when provided, takes precedence over the default
+    workers = (
+        workers
+        if workers
+        else int(os.getenv(WORKERS_ENVIRONMENT_VARIABLE, DEFAULT_WORKERS))
+    )
 
-        formatted_source_code = formatter.format(
-            source_file=str(source_file),
-            source_code=source_code,
-        )
+    # we set the number of processes to the smallest of these values:
+    # 1. the number of CPUs
+    # 2. the number of workers
+    with multiprocessing.Pool(
+        processes=min(
+            multiprocessing.cpu_count(),
+            workers,
+        ),
+    ) as pool:
+        try:
+            results = [
+                pool.apply_async(
+                    formatter.format,
+                    kwds={
+                        "source_file": source.resolve(),
+                        "source_code": source.read_text(encoding="utf-8"),
+                    },
+                )
+                for source in included_sources
+            ]
+            pool.close()
+            pool.join()
 
-        if formatted_source_code != source_code and not changes_detected:
+            formatting_results = [result.get() for result in results]
+
+        except (errors.ParseError, errors.MissingStatementTerminatorError) as error:
+            core.logger.error(error)
+            sys.exit(2)
+
+    for formatting_result in formatting_results:
+        if (
+            formatting_result.formatted_source_code
+            != formatting_result.original_source_code
+            and not changes_detected
+        ):
             changes_detected = True
 
         if config.format.diff:
             diff_unified = difflib.unified_diff(
-                source_code.splitlines(keepends=True),
-                formatted_source_code.splitlines(keepends=True),
-                fromfile=str(source_file),
-                tofile=str(source_file),
+                formatting_result.original_source_code.splitlines(keepends=True),
+                formatting_result.formatted_source_code.splitlines(keepends=True),
+                fromfile=str(formatting_result.source_file),
+                tofile=str(formatting_result.source_file),
             )
 
             diff_output = "".join(diff_unified)
             console.print(Syntax(diff_output, "diff", theme="ansi_dark"))
 
         if not config.format.check and not config.format.diff:
-            with source_file.open("w", encoding="utf-8") as sf:
-                sf.write(formatted_source_code)
+            with pathlib.Path(formatting_result.source_file).open(
+                "w",
+                encoding="utf-8",
+            ) as sf:
+                sf.write(formatting_result.formatted_source_code)
 
     if not config.format.check and not config.format.diff:
         cache.write(sources=included_sources)

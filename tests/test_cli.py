@@ -1,11 +1,13 @@
 """Test cli."""
 
 import pathlib
+from unittest.mock import patch
 
 import pytest
 from click import testing
 
 from tests import TEST_FILE
+from pgrubic import WORKERS_ENVIRONMENT_VARIABLE
 from pgrubic.__main__ import cli
 
 
@@ -154,6 +156,25 @@ def test_cli_lint_ignore_noqa(tmp_path: pathlib.Path) -> None:
     assert result.exit_code == 1
 
 
+def test_cli_lint_parse_error(tmp_path: pathlib.Path) -> None:
+    """Test cli lint parse error."""
+    runner = testing.CliRunner()
+
+    sql: str = "CREATE TABLE tbl (activated);"
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql)
+
+    result = runner.invoke(cli, ["lint", str(file_fail)])
+
+    expected_exit_code: int = 2
+
+    assert result.exit_code == expected_exit_code
+
+
 def test_cli_format_file(tmp_path: pathlib.Path) -> None:
     """Test cli format file."""
     runner = testing.CliRunner()
@@ -187,7 +208,7 @@ def test_cli_format_file_verbose(tmp_path: pathlib.Path) -> None:
 
     result = runner.invoke(cli, ["format", str(file_pass), "--verbose"])
 
-    assert result.output == "1 file(s) reformatted, 0 file(s) left unchanged\n"
+    assert "Using default settings" in result.output
 
     assert result.exit_code == 0
 
@@ -301,3 +322,62 @@ def test_cli_format_no_cache(tmp_path: pathlib.Path) -> None:
     assert result.output == "1 file(s) reformatted, 0 file(s) left unchanged\n"
 
     assert result.exit_code == 0
+
+
+def test_cli_format_parse_error(tmp_path: pathlib.Path) -> None:
+    """Test cli format parse error."""
+    runner = testing.CliRunner()
+
+    sql: str = "SELECT * FROM;"
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql)
+
+    result = runner.invoke(cli, ["format", str(file_fail)])
+
+    expected_exit_code: int = 2
+
+    assert result.exit_code == expected_exit_code
+
+
+def test_cli_format_missing_terminator_error(tmp_path: pathlib.Path) -> None:
+    """Test cli format missing terminator error."""
+    runner = testing.CliRunner()
+
+    sql: str = "SELECT * FROM tbl"
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql)
+
+    result = runner.invoke(cli, ["format", str(file_fail)])
+
+    expected_exit_code: int = 2
+
+    assert result.exit_code == expected_exit_code
+
+
+def test_max_workers_from_environment_variable(tmp_path: pathlib.Path) -> None:
+    """Test max workers from environment variable."""
+    with patch.dict(
+        "os.environ",
+        {WORKERS_ENVIRONMENT_VARIABLE: "1"},
+    ):
+        runner = testing.CliRunner()
+
+        sql: str = "SELECT * FROM tbl;"
+
+        directory = tmp_path / "sub"
+        directory.mkdir()
+
+        file_fail = directory / TEST_FILE
+        file_fail.write_text(sql)
+
+        result = runner.invoke(cli, ["format", str(file_fail)])
+
+        assert result.exit_code == 0

@@ -10,6 +10,10 @@ from pglast import ast
 
 PACKAGE_NAME: typing.Final[str] = "pgrubic"
 
+WORKERS_ENVIRONMENT_VARIABLE: typing.Final[str] = f"{PACKAGE_NAME.upper()}_WORKERS"
+
+DEFAULT_WORKERS: typing.Final[int] = 4
+
 DOCUMENTATION_URL: typing.Final[str] = "https://bolajiwahab.github.io/pgrubic"
 
 PACKAGE_DIRECTORY: typing.Final[pathlib.Path] = pathlib.Path(__file__).resolve().parent

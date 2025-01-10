@@ -246,7 +246,7 @@ Encountering issues? Take a look at the existing GitHub [issues](https://github.
 
 ## Acknowledgments
 
-Pgrubic is influenced by a number of similar tools such as [Strong Migrations](https://github.com/ankane/strong_migrations), [squabble](https://github.com/erik/squabble),
+Pgrubic is inspired by a number of similar tools such as [Strong Migrations](https://github.com/ankane/strong_migrations), [squabble](https://github.com/erik/squabble),
 [squawk](https://github.com/sbdchd/squawk), [pgextwlist](https://github.com/dimitri/pgextwlist), [Don't_Do_This](https://wiki.postgresql.org/wiki/Don't_Do_This)
 and [schemalint](https://github.com/kristiandupont/schemalint).
 

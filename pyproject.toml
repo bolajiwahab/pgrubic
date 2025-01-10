@@ -110,6 +110,9 @@ allow-star-arg-any = true
 length-sort = true
 known-first-party = ["pgrubic"]
 
+[tool.ruff.lint.flake8-builtins]
+builtins-allowed-modules = ["enum", "select"]
+
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
   "S101", # asserts allowed in tests...
@@ -149,10 +152,9 @@ legacy_tox_ini = """
     min_version = 4.0
     env_list =
         isort
-        linting
+        lint
         yamllint
-        commitlint
-        formatting
+        format
         typing
         tests
         coverage
@@ -224,11 +226,11 @@ legacy_tox_ini = """
     deps = isort
     commands = isort --check --diff --profile=black {posargs:src}
 
-    [testenv:linting]
+    [testenv:lint]
     deps = ruff
     commands = ruff check {posargs} --fix
 
-    [testenv:formatting]
+    [testenv:format]
     deps = ruff
     commands = ruff format {posargs}
 
