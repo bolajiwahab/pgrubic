@@ -107,13 +107,9 @@ nav:
   - Command line interface: cli.md
   - Rolling out: tutorial/#rolling-out
   - Pre commit: tutorial/#pre-commit
+  - Parallelism: tutorial/#parallelism
   - Contributing: contributing.md
   - License: license.md
-
-# not_in_nav: |
-  # ./settings/Config/.*
-#   ./rules/unsafe/.*
-#   ./rules/convention/.*
 
 extra:
   social:

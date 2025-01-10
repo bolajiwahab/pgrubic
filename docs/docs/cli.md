@@ -47,6 +47,10 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enable verbose logging.
 
+#### **--workers**
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Number of workers to use.
+
 ## **format**
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Format SQL files.
@@ -69,6 +73,10 @@ formatted file would look like.
 #### **--verbose**
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enable verbose logging.
+
+#### **--workers**
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Number of workers to use.
 
 ## Exit codes
 

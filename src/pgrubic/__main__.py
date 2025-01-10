@@ -1,5 +1,6 @@
 """Entry point."""
 
+import os
 import sys
 import typing
 import difflib
@@ -12,7 +13,7 @@ import click
 from rich.syntax import Syntax
 from rich.console import Console
 
-from pgrubic import MAX_WORKERS, PACKAGE_NAME, core
+from pgrubic import PACKAGE_NAME, DEFAULT_WORKERS, WORKERS_ENVIRONMENT_VARIABLE, core
 from pgrubic.core import noqa, errors
 
 T = typing.TypeVar("T")
@@ -20,6 +21,8 @@ T = typing.TypeVar("T")
 
 def common_options(func: abc.Callable[..., T]) -> abc.Callable[..., T]:
     """Decorator to add common options to each subcommand."""
+    func = click.version_option()(func)
+    func = click.option("--workers", type=int, help="Number of workers to use.")(func)
     return click.option("--verbose", is_flag=True, help="Enable verbose logging.")(func)
 
 
@@ -63,13 +66,14 @@ def cli() -> None:
 )
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
-def lint(  # noqa: C901, PLR0912
+def lint(  # noqa: C901, PLR0912, PLR0913
     sources: tuple[pathlib.Path, ...],
     *,
-    verbose: bool,
     fix: bool,
     ignore_noqa: bool,
     add_file_level_general_noqa: bool,
+    workers: int,
+    verbose: bool,
 ) -> None:
     """Lint SQL files."""
     core.logger.setLevel(logging.INFO if verbose else logging.WARNING)
@@ -107,9 +111,22 @@ def lint(  # noqa: C901, PLR0912
             f"File-level general noqa directive added to {sources_modified} file(s)\n",
         )
 
-    # we set the number of processes to the least of available CPUs or the set MAX_WORKERS
+    # the `--workers` flag when provided, takes precedence over the environment variable
+    # the environment variable when provided, takes precedence over the default
+    workers = (
+        workers
+        if workers
+        else int(os.getenv(WORKERS_ENVIRONMENT_VARIABLE, DEFAULT_WORKERS))
+    )
+
+    # we set the number of processes to the smallest of these values:
+    # 1. the number of CPUs
+    # 2. the number of workers
     with multiprocessing.Pool(
-        processes=min(multiprocessing.cpu_count(), MAX_WORKERS),
+        processes=min(
+            multiprocessing.cpu_count(),
+            workers,
+        ),
     ) as pool:
         try:
             results = [
@@ -200,12 +217,13 @@ def lint(  # noqa: C901, PLR0912
 )
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
-def format_sql_file(  # noqa: C901
+def format_sql_file(  # noqa: C901, PLR0913
     sources: tuple[pathlib.Path, ...],
     *,
     check: bool,
     diff: bool,
     no_cache: bool,
+    workers: int,
     verbose: bool,
 ) -> None:
     """Format SQL files."""
@@ -245,9 +263,22 @@ def format_sql_file(  # noqa: C901
 
     changes_detected = False
 
-    # we set the number of processes to the least of available CPUs or the set MAX_WORKERS
+    # the `--workers` flag when specified, takes precedence over the environment variable
+    # the environment variable when provided, takes precedence over the default
+    workers = (
+        workers
+        if workers
+        else int(os.getenv(WORKERS_ENVIRONMENT_VARIABLE, DEFAULT_WORKERS))
+    )
+
+    # we set the number of processes to the smallest of these values:
+    # 1. the number of CPUs
+    # 2. the number of workers
     with multiprocessing.Pool(
-        processes=min(multiprocessing.cpu_count(), MAX_WORKERS),
+        processes=min(
+            multiprocessing.cpu_count(),
+            workers,
+        ),
     ) as pool:
         try:
             results = [

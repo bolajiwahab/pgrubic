@@ -345,3 +345,17 @@ Create a file named `.pre-commit-config.yaml` at the root of your git project. T
 ```
 
 To know more about pre-commit hooks, see [pre-commit](https://pre-commit.com/).
+
+## Parallelism
+
+**pgrubic** supports parallelism via the command-line `--workers` flag and the `PGRUBIC_WORKERS` environment variable,
+with the flag when provided taking precedence over the environment variable while the environment variable takes precedence over the default number of workers (`4`).
+
+**pgrubic** runs with the smallest of these values: the number of CPUs or the number of workers.
+
+```bash
+pgrubic lint --workers 4
+pgrubic format --workers 4
+```
+
+With parallelism, **pgrubic** will run the linter and formatter concurrently on multiple processes. This can help speed up the process of linting and formatting.

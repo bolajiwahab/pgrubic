@@ -7,7 +7,7 @@ import pytest
 from click import testing
 
 from tests import TEST_FILE
-from pgrubic import MAX_WORKERS_ENVIRONMENT_VARIABLE
+from pgrubic import WORKERS_ENVIRONMENT_VARIABLE
 from pgrubic.__main__ import cli
 
 
@@ -366,7 +366,7 @@ def test_max_workers_from_environment_variable(tmp_path: pathlib.Path) -> None:
     """Test max workers from environment variable."""
     with patch.dict(
         "os.environ",
-        {MAX_WORKERS_ENVIRONMENT_VARIABLE: "1"},
+        {WORKERS_ENVIRONMENT_VARIABLE: "1"},
     ):
         runner = testing.CliRunner()
 
