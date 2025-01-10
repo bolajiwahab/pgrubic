@@ -782,12 +782,30 @@ A list of file patterns to exclude from the linting and formatting process.
 exclude = ["test*.sql"]
 ```
 </details>
+
+### **respect-gitignore**
+Whether to automatically exclude files that are ignored by `.ignore`, `.gitignore`,
+`.git/info/exclude`, and global gitignore files. Enabled by default.
+
+**Type**: `bool`
+
+**Default**: `True`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+respect_gitignore = false
+```
+</details>
     """  # noqa: D212, D207 # fmt: on
 
     cache_dir: pathlib.Path
 
     include: list[str]
     exclude: list[str]
+    respect_gitignore: bool
 
     lint: Lint
     format: Format
@@ -867,12 +885,13 @@ def parse_config() -> Config:
             cache_dir=pathlib.Path(merged_config["cache-dir"]),
             include=merged_config["include"],
             exclude=merged_config["exclude"],
+            respect_gitignore=merged_config["respect-gitignore"],
             lint=Lint(
                 postgres_target_version=config_lint["target-postgres-version"],
                 select=config_lint["select"],
                 ignore=config_lint["ignore"],
-                include=config_lint["include"] or merged_config["include"],
-                exclude=config_lint["exclude"] or merged_config["exclude"],
+                include=config_lint["include"] + merged_config["include"],
+                exclude=config_lint["exclude"] + merged_config["exclude"],
                 ignore_noqa=config_lint["ignore-noqa"],
                 allowed_extensions=config_lint["allowed-extensions"],
                 allowed_languages=config_lint["allowed-languages"],
@@ -914,8 +933,8 @@ def parse_config() -> Config:
                 ],
             ),
             format=Format(
-                include=config_format["include"] or merged_config["include"],
-                exclude=config_format["exclude"] or merged_config["exclude"],
+                include=config_format["include"] + merged_config["include"],
+                exclude=config_format["exclude"] + merged_config["exclude"],
                 comma_at_beginning=config_format["comma-at-beginning"],
                 new_line_before_semicolon=config_format["new-line-before-semicolon"],
                 lines_between_statements=config_format["lines-between-statements"],

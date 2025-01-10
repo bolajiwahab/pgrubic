@@ -3,15 +3,38 @@
 import fnmatch
 import pathlib
 
+import git
+import git.exc
+
 
 def filter_sources(
     *,
     sources: tuple[pathlib.Path, ...],
     include: list[str],
     exclude: list[str],
+    respect_gitignore: bool,
     extension: str = "sql",
 ) -> set[pathlib.Path]:
-    """Filter sources base on include and exclude."""
+    """Filter sources base on include and exclude and either respect gitignore.
+
+    Paramaters:
+    -----------
+    sources: tuple[pathlib.Path, ...]
+        List of sources to filter.
+    include: list[str]
+        List of file patterns to include.
+    exclude: list[str]
+        List of file patterns to exclude.
+    respect_gitignore: bool
+        Whether to respect gitignore.
+    extension: str
+        File extension to filter. Default is "sql".
+
+    Returns:
+    -------
+    set[pathlib.Path]
+        Set of filtered sources.
+    """
     flattened_sources: set[pathlib.Path] = set()
 
     for source in sources:
@@ -32,6 +55,9 @@ def filter_sources(
             )
             and source.stat().st_size > 0
         ):
+            if respect_gitignore and _is_git_ignored(str(source)):
+                continue
+
             included_sources.add(source)
 
     return included_sources
@@ -43,8 +69,43 @@ def _is_file_included(
     include: list[str],
     exclude: list[str],
 ) -> bool:
-    """Check if a source should be included or excluded based on global config."""
+    """Check if a source should be included or excluded based on global config.
+
+    Paramaters:
+    -----------
+    source: str
+        Path to the source file.
+    include: list[str]
+        List of file patterns to include.
+    exclude: list[str]
+        List of file patterns to exclude.
+
+    Returns:
+    -------
+    bool
+        True if the source should be included, False otherwise.
+    """
     return bool(
         (not include or any(fnmatch.fnmatch(source, pattern) for pattern in include))
         and not any(fnmatch.fnmatch(source, pattern) for pattern in exclude),
     )
+
+
+def _is_git_ignored(source: str) -> bool:
+    """Check if a source is git ignored.
+
+    Paramaters:
+    -----------
+    source: str
+        Path to the source file.
+
+    Returns:
+    -------
+    bool
+        True if the source is git ignored, False otherwise.
+    """
+    try:
+        repo = git.Repo(source, search_parent_directories=True)
+        return bool(repo.ignored(source))
+    except git.exc.InvalidGitRepositoryError:
+        return False
