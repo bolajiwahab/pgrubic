@@ -115,7 +115,7 @@ test_pass_referenced_cte_name_in_cte:
     SELECT * FROM public.card;
 
 test_fail_unqualified_object_in_outer_query:
-  sql_pass: |
+  sql_fail: |
     WITH cte AS (SELECT * FROM public.account),
     cte2 AS (SELECT * FROM cte)
     SELECT * FROM card;
