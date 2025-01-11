@@ -3,7 +3,8 @@
 ### Feat
 
 - enable SM001 for DMLs except subqueries (#41)
--  respect gitignore (#37)
+- add docker images (#39)
+- respect gitignore (#37)
 - Parallelism (#36)
 
 ### Fix
