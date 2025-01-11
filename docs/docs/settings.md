@@ -64,7 +64,7 @@ Whether to automatically exclude files that are ignored by `.ignore`, `.gitignor
 <summary><strong>pgrubic.toml</strong></summary>
 
 ```toml
-respect_gitignore = false
+respect-gitignore = false
 ```
 </details>
 ## Lint
