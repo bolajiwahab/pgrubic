@@ -86,7 +86,7 @@ jobs:
   #         python-version: "3.12"
 
   #     - name: Install dependencies
-  #       run: pip install tox
+  #       run: pip install --no-cache-dir --upgrade pip tox
 
   #     - name: Build source and wheel distribution
   #       run: |
