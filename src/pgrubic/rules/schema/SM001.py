@@ -1,6 +1,6 @@
 """Checker for objects that are schema-qualifiable but are not schema qualified."""
 
-from pglast import ast
+from pglast import ast, visitors
 
 from pgrubic.core import linter
 
@@ -10,6 +10,8 @@ SCHEMA_QUALIFIED_LENGTH = 2
 class SchemaUnqualifiedObject(linter.BaseChecker):
     """## **What it does**
     Checks for objects that are schema-qualifiable but are not schema qualified.
+
+    We currently do not check **subqueries**.
 
     ## **Why not?**
     Explicitly specifying schema improves code readability and improves clarity.
@@ -71,23 +73,52 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
 
     def visit_RangeVar(
         self,
-        ancestors: ast.Node,
+        ancestors: visitors.Ancestor,
         node: ast.RangeVar,
     ) -> None:
         """Visit RangeVar."""
-        # We exclude DML lines here due to the possibility of
-        # Common Table Expressions which are not schema qualified
+        # Since CTEs are not schema qualifiable, they need to be excluded
+        ctenames = []
+
+        # we exclude referenced CTE names in CTEs
+        if ancestors.find_nearest(ast.WithClause):
+            ctenames = [
+                cte.ctename for cte in ancestors.find_nearest(ast.WithClause).node.ctes
+            ]
+
+        # we exclude referenced CTE names in outer queries
         if (
-            not isinstance(
-                abs(ancestors).node,
+            ancestors.find_nearest(
                 ast.SelectStmt
                 | ast.UpdateStmt
-                | ast.InsertStmt
                 | ast.DeleteStmt
-                | ast.Query
-                | ast.WithClause
-                | ast.CommonTableExpr,
+                | ast.InsertStmt
+                | ast.MergeStmt,
             )
+            and ancestors.find_nearest(
+                ast.SelectStmt
+                | ast.UpdateStmt
+                | ast.DeleteStmt
+                | ast.InsertStmt
+                | ast.MergeStmt,
+            ).node.withClause
+        ):
+            ctenames = [
+                cte.ctename
+                for cte in ancestors.find_nearest(
+                    ast.SelectStmt
+                    | ast.UpdateStmt
+                    | ast.DeleteStmt
+                    | ast.InsertStmt
+                    | ast.MergeStmt,
+                ).node.withClause.ctes
+            ]
+
+        if (
+            # there is no simple way to figure out if a subquery is referencing a CTE name
+            # hence we are excluding all subqueries
+            not (ancestors.find_nearest(ast.RangeSubselect | ast.SubLink))
+            and node.relname not in ctenames
             and not node.schemaname
         ):
             self.violations.add(
