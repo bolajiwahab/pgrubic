@@ -12,6 +12,8 @@ on:  # yamllint disable-line rule:truthy
 
 jobs:
   lint:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -37,6 +39,8 @@ jobs:
         run: tox -e ${{ matrix.job }}
 
   tests-windows:
+    permissions:
+      contents: read
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -57,6 +61,8 @@ jobs:
         run: tox -e tests-windows
 
   tests-linux:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -77,6 +83,8 @@ jobs:
         run: tox -e tests-linux
 
   tests-macos:
+    permissions:
+      contents: read
     runs-on: macos-latest
     strategy:
       fail-fast: false

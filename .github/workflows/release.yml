@@ -19,6 +19,8 @@ env:
 
 jobs:
   details:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     outputs:
       new_version: ${{ steps.release.outputs.new_version }}
@@ -46,6 +48,8 @@ jobs:
           fi
 
   check_pypi:
+    permissions:
+      contents: read
     needs: details
     runs-on: ubuntu-latest
     steps:
@@ -72,6 +76,8 @@ jobs:
           fi
 
   setup_and_build:
+    permissions:
+      contents: write
     needs: [details, check_pypi]
     runs-on: ubuntu-latest
     steps:
