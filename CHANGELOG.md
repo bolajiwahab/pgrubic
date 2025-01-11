@@ -1,3 +1,15 @@
+## 0.3.0 (2025-01-11)
+
+### Feat
+
+- enable SM001 for DMLs except subqueries (#41)
+-  respect gitignore (#37)
+- Parallelism (#36)
+
+### Fix
+
+- printing of empty lines from format diff (#40)
+
 ## 0.2.0 (2025-01-08)
 
 ### Feat
