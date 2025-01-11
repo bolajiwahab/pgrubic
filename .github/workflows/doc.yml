@@ -32,7 +32,7 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - name: Install dependencies
-        run: pip install ".[doc]"
+        run: pip install --no-cache-dir --upgrade pip ".[doc]"
       - name: Deploy documentation
         working-directory: ./docs
         run: mkdocs gh-deploy --force

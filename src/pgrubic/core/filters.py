@@ -3,9 +3,6 @@
 import fnmatch
 import pathlib
 
-import git
-import git.exc
-
 
 def filter_sources(
     *,
@@ -105,7 +102,13 @@ def _is_git_ignored(source: str) -> bool:
         True if the source is git ignored, False otherwise.
     """
     try:
+        import git
+        import git.exc
+
         repo = git.Repo(source, search_parent_directories=True)
         return bool(repo.ignored(source))
-    except git.exc.InvalidGitRepositoryError:
+    except ImportError:  # pragma: no cover
+        # git is not installed
+        return False
+    except (git.exc.InvalidGitRepositoryError, git.exc.GitCommandError):
         return False
