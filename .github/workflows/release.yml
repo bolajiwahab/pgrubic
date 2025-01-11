@@ -3,12 +3,12 @@
 name: release
 
 on:  # yamllint disable-line rule:truthy
-  push:
-    tags:
-      - "[0-9]+.[0-9]+.[0-9]+"
-      - "[0-9]+.[0-9]+.[0-9]+a[0-9]+"
-      - "[0-9]+.[0-9]+.[0-9]+b[0-9]+"
-      - "[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
+  # push:
+  #   tags:
+  #     - "[0-9]+.[0-9]+.[0-9]+"
+  #     - "[0-9]+.[0-9]+.[0-9]+a[0-9]+"
+  #     - "[0-9]+.[0-9]+.[0-9]+b[0-9]+"
+  #     - "[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
   pull_request:
     branches:
       - main
@@ -18,85 +18,85 @@ env:
   OWNER: "bolajiwahab"
 
 jobs:
-  details:
-    # if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    outputs:
-      new_version: ${{ steps.release.outputs.new_version }}
-      suffix: ${{ steps.release.outputs.suffix }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
-    steps:
-      - uses: actions/checkout@v2
+  # details:
+  #   # if: github.ref == 'refs/heads/main'
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     new_version: ${{ steps.release.outputs.new_version }}
+  #     suffix: ${{ steps.release.outputs.suffix }}
+  #     tag_name: ${{ steps.release.outputs.tag_name }}
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Extract tag and Details
-        id: release
-        run: |
-          if [ "${{ github.ref_type }}" = "tag" ]; then
-            TAG_NAME=${GITHUB_REF#refs/tags/}
-            NEW_VERSION=$(echo $TAG_NAME | awk -F'-' '{print $1}')
-            SUFFIX=$(echo $TAG_NAME | grep -oP '[a-z]+[0-9]+' || echo "")
-            echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
-            echo "suffix=$SUFFIX" >> "$GITHUB_OUTPUT"
-            echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
-            echo "Version is $NEW_VERSION"
-            echo "Suffix is $SUFFIX"
-            echo "Tag name is $TAG_NAME"
-          else
-            echo "No tag found"
-            exit 1
-          fi
+  #     - name: Extract tag and Details
+  #       id: release
+  #       run: |
+  #         if [ "${{ github.ref_type }}" = "tag" ]; then
+  #           TAG_NAME=${GITHUB_REF#refs/tags/}
+  #           NEW_VERSION=$(echo $TAG_NAME | awk -F'-' '{print $1}')
+  #           SUFFIX=$(echo $TAG_NAME | grep -oP '[a-z]+[0-9]+' || echo "")
+  #           echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+  #           echo "suffix=$SUFFIX" >> "$GITHUB_OUTPUT"
+  #           echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
+  #           echo "Version is $NEW_VERSION"
+  #           echo "Suffix is $SUFFIX"
+  #           echo "Tag name is $TAG_NAME"
+  #         else
+  #           echo "No tag found"
+  #           exit 1
+  #         fi
 
-  check_pypi:
-    # if: github.ref == 'refs/heads/main'
-    needs: details
-    runs-on: ubuntu-latest
-    steps:
-      - name: Fetch information from PyPI
-        run: |
-          response=$(curl -s https://pypi.org/pypi/${{ env.PACKAGE_NAME }}/json || echo "{}")
-          latest_previous_version=$(echo $response | jq --raw-output "select(.releases != null) | .releases | keys_unsorted | last")
-          if [ -z "$latest_previous_version" ]; then
-            echo "Package not found on PyPI."
-            latest_previous_version="0.0.0"
-          fi
-          echo "Latest version on PyPI: $latest_previous_version"
-          echo "latest_previous_version=$latest_previous_version" >> $GITHUB_ENV
+  # check_pypi:
+  #   # if: github.ref == 'refs/heads/main'
+  #   needs: details
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Fetch information from PyPI
+  #       run: |
+  #         response=$(curl -s https://pypi.org/pypi/${{ env.PACKAGE_NAME }}/json || echo "{}")
+  #         latest_previous_version=$(echo $response | jq --raw-output "select(.releases != null) | .releases | keys_unsorted | last")
+  #         if [ -z "$latest_previous_version" ]; then
+  #           echo "Package not found on PyPI."
+  #           latest_previous_version="0.0.0"
+  #         fi
+  #         echo "Latest version on PyPI: $latest_previous_version"
+  #         echo "latest_previous_version=$latest_previous_version" >> $GITHUB_ENV
 
-      - name: Compare versions and exit if not newer
-        run: |
-          NEW_VERSION=${{ needs.details.outputs.new_version }}
-          LATEST_VERSION=$latest_previous_version
-          if [ "$(printf '%s\n' "$LATEST_VERSION" "$NEW_VERSION" | sort -rV | head -n 1)" != "$NEW_VERSION" ] || [ "$NEW_VERSION" == "$LATEST_VERSION" ]; then
-            echo "The new version $NEW_VERSION is not greater than the latest version $LATEST_VERSION on PyPI."
-            exit 1
-          else
-            echo "The new version $NEW_VERSION is greater than the latest version $LATEST_VERSION on PyPI."
-          fi
+  #     - name: Compare versions and exit if not newer
+  #       run: |
+  #         NEW_VERSION=${{ needs.details.outputs.new_version }}
+  #         LATEST_VERSION=$latest_previous_version
+  #         if [ "$(printf '%s\n' "$LATEST_VERSION" "$NEW_VERSION" | sort -rV | head -n 1)" != "$NEW_VERSION" ] || [ "$NEW_VERSION" == "$LATEST_VERSION" ]; then
+  #           echo "The new version $NEW_VERSION is not greater than the latest version $LATEST_VERSION on PyPI."
+  #           exit 1
+  #         else
+  #           echo "The new version $NEW_VERSION is greater than the latest version $LATEST_VERSION on PyPI."
+  #         fi
 
-  setup_and_build:
-    # if: github.ref == 'refs/heads/main'
-    needs: [details, check_pypi]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+  # setup_and_build:
+  #   # if: github.ref == 'refs/heads/main'
+  #   needs: [details, check_pypi]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.12"
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: "3.12"
 
-      - name: Install dependencies
-        run: pip install tox
+  #     - name: Install dependencies
+  #       run: pip install tox
 
-      - name: Build source and wheel distribution
-        run: |
-          tox -e build-dist
+  #     - name: Build source and wheel distribution
+  #       run: |
+  #         tox -e build-dist
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: dist
-          path: dist/
+  #     - name: Upload artifacts
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: dist
+  #         path: dist/
 
   # pypi_publish:
   #   # if: github.ref == 'refs/heads/main'
@@ -146,7 +146,7 @@ jobs:
   docker_image_release:
     # if: github.ref == 'refs/heads/main'
     name: Create docker image
-    needs: [setup_and_build, details]
+    # needs: [setup_and_build, details]
     runs-on: ubuntu-latest
     # permissions:
     #   contents: write
@@ -174,8 +174,8 @@ jobs:
         with:
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/${{ env.PACKAGE_NAME }}:$${{ needs.details.outputs.tag_name }}
+            # ghcr.io/${{ github.repository_owner }}/${{ env.PACKAGE_NAME }}:$${{ needs.details.outputs.tag_name }}
             ghcr.io/${{ github.repository_owner }}/${{ env.PACKAGE_NAME }}:latest
 
-      - name: Post Image URL
-        run: echo "Docker image published at ghcr.io/${{ github.repository_owner }}/${{ env.PACKAGE_NAME }}:${${{ needs.details.outputs.tag_name }}"
+      # - name: Post Image URL
+      #   run: echo "Docker image published at ghcr.io/${{ github.repository_owner }}/${{ env.PACKAGE_NAME }}:${${{ needs.details.outputs.tag_name }}"
