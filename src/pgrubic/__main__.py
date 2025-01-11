@@ -319,7 +319,9 @@ def format_sql_file(  # noqa: C901, PLR0913
             )
 
             diff_output = "".join(diff_unified)
-            console.print(Syntax(diff_output, "diff", theme="ansi_dark"))
+
+            if diff_output:
+                console.print(Syntax(diff_output, "diff", theme="ansi_dark"))
 
         if not config.format.check and not config.format.diff:
             with pathlib.Path(formatting_result.source_file).open(
