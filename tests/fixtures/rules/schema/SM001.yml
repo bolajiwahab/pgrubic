@@ -102,3 +102,32 @@ test_pass_schema_qualified_procedure:
     CREATE OR REPLACE PROCEDURE public.dup(bigint)
     LANGUAGE sql
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+
+test_fail_unqualified_object_in_cte:
+  sql_fail: |
+    WITH cte AS (SELECT * FROM account)
+    SELECT * FROM cte;
+
+test_pass_referenced_cte_name_in_cte:
+  sql_pass: |
+    WITH cte AS (SELECT * FROM public.account),
+    cte2 AS (SELECT * FROM cte)
+    SELECT * FROM public.card;
+
+test_fail_unqualified_object_in_outer_query:
+  sql_fail: |
+    WITH cte AS (SELECT * FROM public.account),
+    cte2 AS (SELECT * FROM cte)
+    SELECT * FROM card;
+
+test_pass_referenced_cte_name_in_outer_query:
+  sql_pass: |
+    WITH cte AS (SELECT * FROM public.account),
+    cte2 AS (SELECT * FROM cte)
+    SELECT * FROM cte2;
+
+test_pass_unqualified_object_in_sub_query:
+  sql_pass: |
+    WITH cte AS (SELECT * FROM public.account),
+    cte2 AS (SELECT * FROM cte)
+    SELECT * FROM cte2 WHERE id = (SELECT id FROM card);
