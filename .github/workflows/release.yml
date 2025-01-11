@@ -145,7 +145,7 @@ jobs:
 
   docker_image_release:
     # if: github.ref == 'refs/heads/main'
-    name: Create docker image
+    name: Create docker image for ${{ matrix.platform }}
     # needs: [setup_and_build, details]
     runs-on: ubuntu-latest
     # permissions:
@@ -153,6 +153,14 @@ jobs:
     permissions:
       contents: read
       packages: write
+    environment:
+      name: release
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
