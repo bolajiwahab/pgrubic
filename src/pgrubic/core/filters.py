@@ -107,7 +107,7 @@ def _is_git_ignored(source: str) -> bool:
 
         repo = git.Repo(source, search_parent_directories=True)
         return bool(repo.ignored(source))
-    except ImportError:
+    except ImportError:  # pragma: no cover
         # git is not installed
         return False
     except (git.exc.InvalidGitRepositoryError, git.exc.GitCommandError):
