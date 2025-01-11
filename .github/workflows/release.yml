@@ -174,7 +174,6 @@ jobs:
         with:
           push: true
           tags: |
-            # ghcr.io/${{ github.repository_owner }}/${{ env.PACKAGE_NAME }}:$${{ needs.details.outputs.tag_name }}
             ghcr.io/${{ github.repository_owner }}/${{ env.PACKAGE_NAME }}:latest
 
       # - name: Post Image URL
