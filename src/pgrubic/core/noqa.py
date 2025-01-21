@@ -30,7 +30,25 @@ def extract_statement_locations(
     source_file: str,
     source_code: str,
 ) -> list[Statement]:
-    """Build statements start and end locations."""
+    """Build statements start and end locations.
+
+    Parameters:
+    ----------
+    source_file: str
+        Path to the source file.
+    source_code: str
+        Source code to lint.
+
+    Returns:
+    -------
+    list[Statement]
+        List of statements.
+
+    Raises:
+    ------
+    MissingStatementTerminatorError
+        If semicolon is missing at the end of a statement.
+    """
     locations: list[Statement] = []
 
     statement_start_location = 0
@@ -61,7 +79,22 @@ def _get_rules_from_inline_comment(
     location: int,
     section: str = "noqa",
 ) -> list[str]:
-    """Get rules from inline comment."""
+    """Get rules from inline comment.
+
+    Parameters:
+    ----------
+    comment: str
+        Inline comment.
+    location: int
+        Location of inline comment.
+    section: str
+        Section of inline comment.
+
+    Returns:
+    -------
+    list[str]
+        List of rules.
+    """
     comment_remainder = comment.removeprefix(section)
 
     if not comment_remainder:
@@ -85,7 +118,20 @@ def _get_statement_locations(
     locations: list[Statement],
     stop: int,
 ) -> tuple[int, int]:
-    """Get statement start and end locations."""
+    """Get statement start and end locations.
+
+    Parameters:
+    ----------
+    locations: list[Statement]
+        List of statements.
+    stop: int
+        Stop location.
+
+    Returns:
+    -------
+    tuple[int, int]
+        Statement start and end locations.
+    """
     for statement_start_location, statement_end_location, _ in locations:
         if statement_start_location <= stop < statement_end_location:
             break
@@ -109,7 +155,20 @@ def _extract_statement_ignores(
     source_file: str,
     source_code: str,
 ) -> list[NoQaDirective]:
-    """Extract ignores from SQL statements."""
+    """Extract ignores from SQL statements.
+
+    Parameters:
+    ----------
+    source_file: str
+        Path to the source file.
+    source_code: str
+        Source code to lint.
+
+    Returns:
+    -------
+    list[NoQaDirective]
+        List of ignores.
+    """
     locations = extract_statement_locations(
         source_file=source_file,
         source_code=source_code,
@@ -147,7 +206,20 @@ def _extract_statement_ignores(
 
 
 def _extract_file_ignore(source_file: str, source_code: str) -> list[NoQaDirective]:
-    """Extract ignore from the start of a source file."""
+    """Extract ignore from the start of a source file.
+
+    Parameters:
+    ----------
+    source_file: str
+        Path to the source file.
+    source_code: str
+        Source code to lint.
+
+    Returns:
+    -------
+    list[NoQaDirective]
+        List of ignores.
+    """
     file_ignores: list[NoQaDirective] = []
 
     for token in parser.scan(source_code):
@@ -178,7 +250,20 @@ def _extract_file_ignore(source_file: str, source_code: str) -> list[NoQaDirecti
 
 
 def extract_ignores(*, source_file: str, source_code: str) -> list[NoQaDirective]:
-    """Extract ignores from source code."""
+    """Extract ignores from source code.
+
+    Parameters:
+    ----------
+    source_file: str
+        Path to the source file.
+    source_code: str
+        Source code to lint.
+
+    Returns:
+    -------
+    list[NoQaDirective]
+        List of ignores.
+    """
     return _extract_statement_ignores(
         source_file=source_file,
         source_code=source_code,
@@ -189,7 +274,20 @@ def extract_ignores(*, source_file: str, source_code: str) -> list[NoQaDirective
 
 
 def extract_format_ignores(source_file: str, source_code: str) -> list[int]:
-    """Extract format ignores from SQL statements."""
+    """Extract format ignores from SQL statements.
+
+    Parameters:
+    ----------
+    source_file: str
+        Path to the source file.
+    source_code: str
+        Source code to lint.
+
+    Returns:
+    -------
+    list[int]
+        List of ignores.
+    """
     locations = extract_statement_locations(
         source_file=source_file,
         source_code=source_code,
@@ -227,7 +325,20 @@ class Comment(typing.NamedTuple):
 
 
 def extract_comments(*, source_file: str, source_code: str) -> list[Comment]:
-    """Extract comments from SQL statements."""
+    """Extract comments from SQL statements.
+
+    Parameters:
+    ----------
+    source_file: str
+        Path to the source file.
+    source_code: str
+        Source code to lint.
+
+    Returns:
+    -------
+    list[Comment]
+        List of comments.
+    """
     locations = extract_statement_locations(
         source_file=source_file,
         source_code=source_code,
@@ -267,7 +378,19 @@ def report_unused_ignores(
     source_file: str,
     inline_ignores: list[NoQaDirective],
 ) -> None:
-    """Get unused ignores."""
+    """Get unused ignores.
+
+    Parameters:
+    ----------
+    source_file: str
+        Path to the source file.
+    inline_ignores: list[NoQaDirective]
+        Inline noqa directives.
+
+    Returns:
+    -------
+    None
+    """
     for ignore in inline_ignores:
         if not ignore.used:
             sys.stdout.write(
@@ -278,7 +401,18 @@ def report_unused_ignores(
 
 
 def add_file_level_general_ignore(sources: set[pathlib.Path]) -> int:
-    """Add file-level general noqa directive to the begining of each source."""
+    """Add file-level general noqa directive to the begining of each source.
+
+    Parameters:
+    ----------
+    sources: set[pathlib.Path]
+        Set of source files.
+
+    Returns:
+    -------
+    int
+        Number of sources modified.
+    """
     sources_modified = 0
 
     for source in sources:

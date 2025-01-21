@@ -39,8 +39,20 @@ RULES_BASE_MODULE: typing.Final[str] = f"{PACKAGE_NAME}/rules/"
 FORMATTERS_BASE_MODULE: typing.Final[str] = f"{PACKAGE_NAME}/formatters/"
 
 
-def get_fully_qualified_name(node: tuple[typing.Any]) -> str:
-    """Get fully qualified type name."""
+def get_fully_qualified_name(node: tuple[ast.Node]) -> str:
+    """Get fully qualified type name.
+
+    Parameters:
+    ----------
+    node: tuple[ast.Node]
+        Node to get fully qualified name for.
+
+    Returns:
+    -------
+    str
+        Fully qualified type name.
+
+    """
     if isinstance(node, ast.String):
         return str(node.sval)
 

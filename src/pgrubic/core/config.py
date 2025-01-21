@@ -812,12 +812,24 @@ respect-gitignore = false
 
 
 def _load_default_config() -> dict[str, typing.Any]:
-    """Load default config."""
+    """Load default config.
+
+    Returns:
+    -------
+    dict[str, typing.Any]
+        The default config.
+    """
     return dict(toml.load(DEFAULT_CONFIG))
 
 
 def _load_user_config() -> dict[str, typing.Any]:
-    """Load config from absolute path config file."""
+    """Load config from absolute path config file.
+
+    Returns:
+    -------
+    dict[str, typing.Any]
+        The config from the absolute path config file.
+    """
     config_file_absolute_path = _get_config_file_absolute_path()
 
     if config_file_absolute_path:
@@ -827,7 +839,13 @@ def _load_user_config() -> dict[str, typing.Any]:
 
 
 def _merge_config() -> dict[str, typing.Any]:
-    """Merge default and user config."""
+    """Merge default and user config.
+
+    Returns:
+    -------
+    dict[str, typing.Any]
+        The merged config.
+    """
     return dict(always_merger.merge(_load_default_config(), _load_user_config()))
 
 
@@ -838,6 +856,11 @@ def _get_config_file_absolute_path(
     If CONFIG_PATH_ENVIRONMENT_VARIABLE environment variable is set, we try to use that
     else, we use the first config file that we find upwards from the current working
     directory.
+
+    Returns:
+    -------
+    pathlib.Path | None
+        The absolute path of the config file if found, else None.
     """
     env_config_path = os.getenv(CONFIG_PATH_ENVIRONMENT_VARIABLE)
 
@@ -875,7 +898,18 @@ def _get_config_file_absolute_path(
 
 
 def parse_config() -> Config:
-    """Parse config."""
+    """Parse config.
+
+    Returns:
+    -------
+    Config
+        The parsed config.
+
+    Raises:
+    ------
+    MissingConfigError
+        Raised when a config is missing.
+    """
     merged_config = _merge_config()
     config_lint = merged_config["lint"]
     config_format = merged_config["format"]

@@ -252,7 +252,21 @@ class Linter:
         checker: BaseChecker,
         inline_ignores: list[noqa.NoQaDirective],
     ) -> None:
-        """Skip suppressed violations."""
+        """Skip suppressed violations.
+
+        Parameters:
+        ----------
+        source_file: str
+            Path to the source file.
+        checker: BaseChecker
+            Lint rule checker.
+        inline_ignores: list[NoQaDirective]
+            Inline noqa directives.
+
+        Returns:
+        -------
+        None
+        """
         for inline_ignore in inline_ignores:
             suppressed_violations: set[Violation] = {
                 violation
@@ -277,7 +291,18 @@ class Linter:
 
     @staticmethod
     def get_violation_stats(violations: set[Violation]) -> ViolationStats:
-        """Get violation stats."""
+        """Get violation stats.
+
+        Parameters:
+        ----------
+        violations: set[Violation]
+            Violations to get stats from.
+
+        Returns:
+        -------
+        ViolationStats
+            Violation stats.
+        """
         return ViolationStats(
             total=len(violations),
             auto_fixable=sum(1 for violation in violations if violation.is_auto_fixable),
@@ -290,7 +315,19 @@ class Linter:
         violations: set[Violation],
         source_file: str,
     ) -> None:
-        """Print all violations collected by a checker."""
+        """Print all violations collected by a checker.
+
+        Parameters:
+        ----------
+        violations: set[Violation]
+            Violations to print.
+        source_file: str
+            Path to the source file.
+
+        Returns:
+        -------
+        None
+        """
         for violation in violations:
             # if not checker.is_fix_applicable:
             sys.stdout.write(
@@ -321,7 +358,25 @@ class Linter:
                 )
 
     def run(self, *, source_file: str, source_code: str) -> LintResult:
-        """Run rules on a source code."""
+        """Run rules on a source code.
+
+        Parameters:
+        ----------
+        source_file: str
+            Path to the source file.
+        source_code: str
+            Source code to lint.
+
+        Returns:
+        -------
+        LintResult
+            Lint result.
+
+        Raises:
+        ------
+        ParseError
+            If there is an error parsing source code.
+        """
         fixed_statements: list[str] = []
 
         inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(

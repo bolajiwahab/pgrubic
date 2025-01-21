@@ -75,7 +75,28 @@ def lint(  # noqa: C901, PLR0912, PLR0913
     workers: int,
     verbose: bool,
 ) -> None:
-    """Lint SQL files."""
+    """Lint SQL files.
+
+    Parameters:
+    ----------
+    sources: tuple[pathlib.Path, ...]
+        List of sources to lint.
+    fix: bool
+        Fix lint violations automatically.
+    ignore_noqa: bool
+        Whether to ignore noqa directives.
+    add_file_level_general_noqa: bool
+        Whether to add file-level noqa directives.
+    workers: int
+        Number of workers to use.
+    verbose: bool
+        Enable verbose logging.
+
+    Returns:
+    -------
+    None
+
+    """
     core.logger.setLevel(logging.INFO if verbose else logging.WARNING)
 
     config: core.Config = core.parse_config()
@@ -218,7 +239,7 @@ def lint(  # noqa: C901, PLR0912, PLR0913
 )
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
-def format_sql_file(  # noqa: C901, PLR0913
+def format_sources(  # noqa: C901, PLR0913
     sources: tuple[pathlib.Path, ...],
     *,
     check: bool,
@@ -227,7 +248,29 @@ def format_sql_file(  # noqa: C901, PLR0913
     workers: int,
     verbose: bool,
 ) -> None:
-    """Format SQL files."""
+    """Format SQL files.
+
+    Parameters:
+    ----------
+    sources: tuple[pathlib.Path, ...]
+        List of sources to format.
+    check: bool
+        Check if any files would have been modified.
+    diff: bool
+        Report the difference between the current file and
+        how the formatted file would look like.
+    no_cache: bool
+        Whether to read the cache.
+    workers: int
+        Number of workers to use.
+    verbose: bool
+        Enable verbose logging.
+
+    Returns:
+    -------
+    None
+
+    """
     core.logger.setLevel(logging.INFO if verbose else logging.WARNING)
 
     console = Console()

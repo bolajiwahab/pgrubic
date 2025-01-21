@@ -64,14 +64,36 @@ class Cache:
             }
 
     def _hash_digest(self, source: pathlib.Path) -> str:
-        """Return hash digest of the content of source and config."""
+        """Return hash digest of the content of source and config.
+
+        Parameters:
+        ----------
+        source: pathlib.Path
+            Path to the source file.
+
+        Returns:
+        -------
+        str
+            Hash digest of the content of source and config.
+        """
         hasher = hashlib.sha256()
         hasher.update(source.read_bytes())
         hasher.update(msgpack.packb(self.config.format.__repr__()))
         return hasher.hexdigest()
 
     def _get_file_data(self, source: pathlib.Path) -> FileData:
-        """Return file data for source."""
+        """Return file data for source.
+
+        Parameters:
+        ----------
+        source: pathlib.Path
+            Path to the source file.
+
+        Returns:
+        -------
+        FileData
+            File data for source.
+        """
         file_stat = source.stat()
         hashed_content = self._hash_digest(source)
         return FileData(
@@ -81,7 +103,18 @@ class Cache:
         )
 
     def _need_to_be_formatted(self, source: pathlib.Path) -> bool:
-        """Check if source needs to be formatted."""
+        """Check if source needs to be formatted.
+
+        Parameters:
+        ----------
+        source: pathlib.Path
+            Path to the source file.
+
+        Returns:
+        -------
+        bool
+            True if source needs to be formatted, False otherwise.
+        """
         cache = self._read()
         resolved_source = source.resolve()
         cached_version = cache.get(str(resolved_source))
@@ -100,7 +133,18 @@ class Cache:
         return new_file_hash != cached_version.hashed_content
 
     def filter_sources(self, sources: set[pathlib.Path]) -> set[pathlib.Path]:
-        """Return sources that need to be formatted."""
+        """Return sources that need to be formatted.
+
+        Parameters:
+        ----------
+        sources: set[pathlib.Path]
+            Set of source files.
+
+        Returns:
+        -------
+        set[pathlib.Path]
+            Set of sources that need to be formatted.
+        """
         sources_to_be_formatted: set[pathlib.Path] = set()
         for source in sources:
             if self._need_to_be_formatted(source):
@@ -109,7 +153,17 @@ class Cache:
         return sources_to_be_formatted
 
     def write(self, sources: set[pathlib.Path]) -> None:
-        """Generate the cache data for sources and write a new cache file."""
+        """Generate the cache data for sources and write a new cache file.
+
+        Parameters:
+        ----------
+        sources: set[pathlib.Path]
+            Set of source files.
+
+        Returns:
+        -------
+        None
+        """
         file_data: dict[str, FileData] = {
             str(source.resolve()): self._get_file_data(source) for source in sources
         }

@@ -31,6 +31,7 @@ def filter_sources(
     -------
     set[pathlib.Path]
         Set of filtered sources.
+
     """
     flattened_sources: set[pathlib.Path] = set()
 
@@ -81,6 +82,7 @@ def _is_file_included(
     -------
     bool
         True if the source should be included, False otherwise.
+
     """
     return bool(
         (not include or any(fnmatch.fnmatch(source, pattern) for pattern in include))
@@ -100,6 +102,7 @@ def _is_git_ignored(source: str) -> bool:
     -------
     bool
         True if the source is git ignored, False otherwise.
+
     """
     try:
         import git
