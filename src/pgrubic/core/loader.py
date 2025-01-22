@@ -18,7 +18,18 @@ from pgrubic.core import config, linter
 
 
 def load_rules(config: config.Config) -> set[linter.BaseChecker]:
-    """Load rules."""
+    """Load rules.
+
+    Parameters:
+    ----------
+    config: config.Config
+        Config.
+
+    Returns:
+    -------
+    set[linter.BaseChecker]
+        Set of rules.
+    """
     rules: set[linter.BaseChecker] = set()
 
     for path in sorted(RULES_DIRECTORY.rglob("[!_]*.py"), key=lambda x: x.name):
@@ -55,7 +66,13 @@ def load_rules(config: config.Config) -> set[linter.BaseChecker]:
 
 
 def load_formatters() -> set[typing.Callable[[], None]]:
-    """Load formatters."""
+    """Load formatters.
+
+    Returns:
+    -------
+    set[typing.Callable[[], None]]
+        Set of formatters.
+    """
     formatters: set[typing.Callable[[], None]] = set()
 
     for path in sorted(FORMATTERS_DIRECTORY.rglob("[!_]*.py"), key=lambda x: x.name):

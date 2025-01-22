@@ -30,7 +30,25 @@ class Formatter:
 
     @staticmethod
     def run(*, source_file: str, source_code: str, config: config.Config) -> str:
-        """Format source code."""
+        """Format source code.
+
+        Parameters:
+        ----------
+        source_file: str
+            Path to the source file.
+        source_code: str
+            Source code to format.
+
+        Returns:
+        -------
+        str
+            Formatted source code.
+
+        Raises:
+        ------
+        ParseError
+            If there is an error parsing source code.
+        """
         try:
             parser.parse_sql(source_code)
 
@@ -80,7 +98,20 @@ class Formatter:
         ) + noqa.NEW_LINE
 
     def format(self, *, source_file: str, source_code: str) -> FormatResult:
-        """Format source code."""
+        """Format source code.
+
+        Parameters:
+        ----------
+        source_file: str
+            Path to the source file.
+        source_code: str
+            Source code to format.
+
+        Returns:
+        -------
+        FormatResult
+            Formatted source code.
+        """
         return FormatResult(
             source_file=source_file,
             original_source_code=source_code,
