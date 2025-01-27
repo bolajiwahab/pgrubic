@@ -8,6 +8,12 @@ test_fail_inline_sql_function_body_wrong_language:
     IMMUTABLE
     RETURNS NULL ON NULL INPUT
     RETURN 'select $1 + $2;';
+  sql_fix: |
+    CREATE OR REPLACE FUNCTION public.add1 (integer, integer) RETURNS integer
+    LANGUAGE sql
+    IMMUTABLE
+    RETURNS NULL ON NULL INPUT
+    RETURN 'select $1 + $2;';
 
 test_pass_inline_sql_function_body_language_sql:
   sql_pass: |
