@@ -1,0 +1,25 @@
+---
+rule: GN035
+
+test_fail_inline_sql_function_body_wrong_language:
+  sql_fail: |
+    CREATE OR REPLACE FUNCTION public.add1 (integer, integer) RETURNS integer
+    LANGUAGE plpgsql
+    IMMUTABLE
+    RETURNS NULL ON NULL INPUT
+    RETURN 'select $1 + $2;';
+
+test_pass_inline_sql_function_body_language_sql:
+  sql_pass: |
+    CREATE OR REPLACE FUNCTION public.add1 (integer, integer) RETURNS integer
+    LANGUAGE sql
+    IMMUTABLE
+    RETURNS NULL ON NULL INPUT
+    RETURN 'select $1 + $2;';
+
+test_pass_inline_sql_function_body_default_language_sql:
+  sql_pass: |
+    CREATE OR REPLACE FUNCTION public.add1 (integer, integer) RETURNS integer
+    IMMUTABLE
+    RETURNS NULL ON NULL INPUT
+    RETURN 'select $1 + $2;';
