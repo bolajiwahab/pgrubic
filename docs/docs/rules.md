@@ -12,58 +12,59 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 
 ## constraint (CT)
 
-|   Code  |                      Name                                                        |      Stable        | Auto-fixable |
-| --------| ---------------------------------------------------------------------------------|------------------- |--------------------|
+|  Code |                      Name                                                          |      Stable        | Auto-fixable       |
+| ------| -----------------------------------------------------------------------------------|------------------- |--------------------|
 | CT001 | [cascade-update](rules/constraint/cascade-update.md)                               | :white_check_mark: | :white_check_mark: |
 | CT002 | [cascade-delete](rules/constraint/cascade-delete.md)                               | :white_check_mark: | :white_check_mark: |
 | CT003 | [identity-generated-by-default](rules/constraint/identity-generated-by-default.md) | :white_check_mark: | :white_check_mark: |
 | CT004 | [remove-constraint](rules/constraint/remove-constraint.md)                         | :white_check_mark: | :x:                |
-| CT005 | [duplicate-primary-key-column](rules/constraint/duplicate-primary-key-column.md)      | :white_check_mark: | :white_check_mark: |
-| CT006 | [duplicate-unique-key-column](rules/constraint/duplicate-unique-key-column.md)        | :white_check_mark: | :white_check_mark: |
+| CT005 | [duplicate-primary-key-column](rules/constraint/duplicate-primary-key-column.md)   | :white_check_mark: | :white_check_mark: |
+| CT006 | [duplicate-unique-key-column](rules/constraint/duplicate-unique-key-column.md)     | :white_check_mark: | :white_check_mark: |
 
 ## general (GN)
 
-|   Code  |                      Name                                                       |      Stable        | Auto-fixable       |
-| --------| --------------------------------------------------------------------------------|------------------- |--------------------|
-| GN001 | [table-inheritance](rules/general/table-inheritance.md)                           | :white_check_mark: | :x:                |
-| GN002 | [create-rule](rules/general/create-rule.md)                                       | :white_check_mark: | :x:                |
-| GN003 | [sql-ascii-encoding](rules/general/sql-ascii-encoding.md)                         | :white_check_mark: | :white_check_mark: |
-| GN004 | [missing-primary-key](rules/general/missing-primary-key.md)                       | :white_check_mark: | :x:                |
-| GN005 | [index-elements-more-than-three](rules/general/index-elements-more-than-three.md) | :white_check_mark: | :x:                |
-| GN006 | [create-enum](rules/general/create-enum.md)                                       | :white_check_mark: | :x:                |
-| GN007 | [missing-replace-in-function](rules/general/missing-replace-in-function.md)       | :white_check_mark: | :white_check_mark: |
-| GN008 | [missing-replace-in-procedure](rules/general/missing-replace-in-procedure.md)     | :white_check_mark: | :white_check_mark: |
-| GN009 | [duplicate-column](rules/general/duplicate-column.md)                             | :white_check_mark: | :x:                |
-| GN010 | [table-column-conflict](rules/general/table-column-conflict.md)                   | :white_check_mark: | :x:                |
-| GN011 | [missing-required-column](rules/general/missing-required-column.md)               | :white_check_mark: | :white_check_mark: |
-| GN012 | [required-column-removal](rules/general/required-column-removal.md)               | :white_check_mark: | :x:                |
-| GN013 | [nullable-required-column](rules/general/nullable-required-column.md)             | :white_check_mark: | :white_check_mark: |
-| GN014 | [select-into](rules/general/select-into.md)                                       | :white_check_mark: | :white_check_mark: |
-| GN015 | [drop-cascade](rules/general/drop-cascade.md)                                     | :white_check_mark: | :white_check_mark: |
-| GN016 | [constant-generated-column](rules/general/constant-generated-column.md)           | :white_check_mark: | :x:                |
-| GN017 | [id-column](rules/general/id-column.md)                                           | :white_check_mark: | :white_check_mark: |
-| GN018 | [multi-column-partitioning](rules/general/multi-column-partitioning.md)           | :white_check_mark: | :x:                |
-| GN019 | [unlogged-table](rules/general/unlogged-table.md)                                 | :white_check_mark: | :white_check_mark: |
-| GN020 | [current-time](rules/general/current-time.md)                                     | :white_check_mark: | :white_check_mark: |
-| GN021 | [null-constraint](rules/general/null-constraint.md)                               | :white_check_mark: | :white_check_mark: |
-| GN022 | [update-without-where-clause](rules/general/update-without-where-clause.md)       | :white_check_mark: | :x:                |
-| GN023 | [delete-without-where-clause](rules/general/delete-without-where-clause.md)       | :white_check_mark: | :x:                |
-| GN024 | [null-comparison](rules/general/null-comparison.md)                               | :white_check_mark: | :white_check_mark: |
-| GN025 | [duplicate-index](rules/general/duplicate-index.md)                               | :white_check_mark: | :x:                |
-| GN026 | [not-in](rules/general/not-in.md)                                                 | :white_check_mark: | :x:                |
-| GN027 | [yoda-condition](rules/general/yoda-condition.md)                                 | :white_check_mark: | :white_check_mark: |
-| GN028 | [asterisk](rules/general/asterisk.md)                                             | :white_check_mark: | :x:                |
-| GN029 | [missing-replace-in-view](rules/general/missing-replace-in-view.md)               | :white_check_mark: | :white_check_mark: |
-| GN030 | [missing-replace-in-trigger](rules/general/missing-replace-in-trigger.md)         | :white_check_mark: | :white_check_mark: |
-| GN031 | [stringified-null](rules/general/stringified-null.md)                             | :white_check_mark: | :white_check_mark: |
-| GN032 | [duplicate-index-column](rules/general/duplicate-index-column.md)                 | :white_check_mark: | :white_check_mark: |
-| GN033 | [insert-without-target-columns](rules/general/insert-without-target-columns.md)   | :white_check_mark: | :x:                |
-| GN034 | [typed-table](rules/general/typed-table.md)                                       | :white_check_mark: | :x:                |
+|  Code |                      Name                                                                           |      Stable        | Auto-fixable       |
+|-------| ----------------------------------------------------------------------------------------------------|------------------- |--------------------|
+| GN001 | [table-inheritance](rules/general/table-inheritance.md)                                             | :white_check_mark: | :x:                |
+| GN002 | [create-rule](rules/general/create-rule.md)                                                         | :white_check_mark: | :x:                |
+| GN003 | [sql-ascii-encoding](rules/general/sql-ascii-encoding.md)                                           | :white_check_mark: | :white_check_mark: |
+| GN004 | [missing-primary-key](rules/general/missing-primary-key.md)                                         | :white_check_mark: | :x:                |
+| GN005 | [index-elements-more-than-three](rules/general/index-elements-more-than-three.md)                   | :white_check_mark: | :x:                |
+| GN006 | [create-enum](rules/general/create-enum.md)                                                         | :white_check_mark: | :x:                |
+| GN007 | [missing-replace-in-function](rules/general/missing-replace-in-function.md)                         | :white_check_mark: | :white_check_mark: |
+| GN008 | [missing-replace-in-procedure](rules/general/missing-replace-in-procedure.md)                       | :white_check_mark: | :white_check_mark: |
+| GN009 | [duplicate-column](rules/general/duplicate-column.md)                                               | :white_check_mark: | :x:                |
+| GN010 | [table-column-conflict](rules/general/table-column-conflict.md)                                     | :white_check_mark: | :x:                |
+| GN011 | [missing-required-column](rules/general/missing-required-column.md)                                 | :white_check_mark: | :white_check_mark: |
+| GN012 | [required-column-removal](rules/general/required-column-removal.md)                                 | :white_check_mark: | :x:                |
+| GN013 | [nullable-required-column](rules/general/nullable-required-column.md)                               | :white_check_mark: | :white_check_mark: |
+| GN014 | [select-into](rules/general/select-into.md)                                                         | :white_check_mark: | :white_check_mark: |
+| GN015 | [drop-cascade](rules/general/drop-cascade.md)                                                       | :white_check_mark: | :white_check_mark: |
+| GN016 | [constant-generated-column](rules/general/constant-generated-column.md)                             | :white_check_mark: | :x:                |
+| GN017 | [id-column](rules/general/id-column.md)                                                             | :white_check_mark: | :white_check_mark: |
+| GN018 | [multi-column-partitioning](rules/general/multi-column-partitioning.md)                             | :white_check_mark: | :x:                |
+| GN019 | [unlogged-table](rules/general/unlogged-table.md)                                                   | :white_check_mark: | :white_check_mark: |
+| GN020 | [current-time](rules/general/current-time.md)                                                       | :white_check_mark: | :white_check_mark: |
+| GN021 | [null-constraint](rules/general/null-constraint.md)                                                 | :white_check_mark: | :white_check_mark: |
+| GN022 | [update-without-where-clause](rules/general/update-without-where-clause.md)                         | :white_check_mark: | :x:                |
+| GN023 | [delete-without-where-clause](rules/general/delete-without-where-clause.md)                         | :white_check_mark: | :x:                |
+| GN024 | [null-comparison](rules/general/null-comparison.md)                                                 | :white_check_mark: | :white_check_mark: |
+| GN025 | [duplicate-index](rules/general/duplicate-index.md)                                                 | :white_check_mark: | :x:                |
+| GN026 | [not-in](rules/general/not-in.md)                                                                   | :white_check_mark: | :x:                |
+| GN027 | [yoda-condition](rules/general/yoda-condition.md)                                                   | :white_check_mark: | :white_check_mark: |
+| GN028 | [asterisk](rules/general/asterisk.md)                                                               | :white_check_mark: | :x:                |
+| GN029 | [missing-replace-in-view](rules/general/missing-replace-in-view.md)                                 | :white_check_mark: | :white_check_mark: |
+| GN030 | [missing-replace-in-trigger](rules/general/missing-replace-in-trigger.md)                           | :white_check_mark: | :white_check_mark: |
+| GN031 | [stringified-null](rules/general/stringified-null.md)                                               | :white_check_mark: | :white_check_mark: |
+| GN032 | [duplicate-index-column](rules/general/duplicate-index-column.md)                                   | :white_check_mark: | :white_check_mark: |
+| GN033 | [insert-without-target-columns](rules/general/insert-without-target-columns.md)                     | :white_check_mark: | :x:                |
+| GN034 | [typed-table](rules/general/typed-table.md)                                                         | :white_check_mark: | :x:                |
+| GN035 | [inline-sql-function-body-wrong-language](rules/general/inline-sql-function-body-wrong-language.md) | :white_check_mark: | :white_check_mark: |
 
 ## naming (NM)
 
-|   Code  |                      Name                                                            |      Stable        | Auto-fixable           |
-| --------| -------------------------------------------------------------------------------------|------------------- |--------------------|
+| Code  |                      Name                                                              |      Stable        | Auto-fixable       |
+| ------|----------------------------------------------------------------------------------------|------------------- |--------------------|
 | NM001 | [invalid-index-name](rules/naming/invalid-index-name.md)                               | :white_check_mark: | :x:                |
 | NM002 | [invalid-primary-key-name](rules/naming/invalid-primary-key-name.md)                   | :white_check_mark: | :x:                |
 | NM003 | [invalid-unique-key-name](rules/naming/invalid-unique-key-name.md)                     | :white_check_mark: | :x:                |
@@ -83,17 +84,17 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 
 ## schema (SM)
 
-|   Code  |                      Name                                            |      Stable        | Auto-fixable           |
-| --------| ---------------------------------------------------------------------|------------------- |--------------------|
+|  Code |                      Name                                              |      Stable        | Auto-fixable       |
+|-------| -----------------------------------------------------------------------|------------------- |--------------------|
 | SM001 | [schema-unqualified-object](rules/schema/schema-unqualified-object.md) | :white_check_mark: | :x:                |
 | SM002 | [disallowed-schema](rules/schema/disallowed-schema.md)                 | :white_check_mark: | :white_check_mark: |
 
 ## security (ST)
 
-|   Code  |                      Name                                                      |      Stable        | Auto-fixable |
-| --------| -------------------------------------------------------------------------------|------------------- |----------|
-| ST001 | [extension-whitelist](rules/security/extension-whitelist.md)                     | :white_check_mark: | :x:      |
-| ST002 | [procedural-language-whitelist](rules/security/procedural-language-whitelist.md) | :white_check_mark: | :x:      |
+|  Code |                      Name                                                        |      Stable        | Auto-fixable |
+| ------| ---------------------------------------------------------------------------------|------------------- |--------------|
+| ST001 | [extension-whitelist](rules/security/extension-whitelist.md)                     | :white_check_mark: | :x:          |
+| ST002 | [procedural-language-whitelist](rules/security/procedural-language-whitelist.md) | :white_check_mark: | :x:          |
 
 ## typing (TP)
 
