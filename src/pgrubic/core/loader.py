@@ -88,9 +88,7 @@ def load_formatters() -> set[typing.Callable[[], None]]:
 
         for _, formatter in inspect.getmembers(
             module,
-            lambda x: inspect.isfunction(x)
-            and x.__name__.endswith("_stmt")
-            and x.__module__ == module.__name__,  # noqa: B023
+            lambda x: inspect.isfunction(x) and x.__module__ == module.__name__,  # noqa: B023
         ):
             formatters.add(formatter)
 
