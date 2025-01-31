@@ -33,11 +33,13 @@ def load_rules(config: config.Config) -> set[linter.BaseChecker]:
     rules: set[linter.BaseChecker] = set()
 
     for path in sorted(RULES_DIRECTORY.rglob("[!_]*.py"), key=lambda x: x.name):
-        module = importlib.import_module(
+        module_path = (
             str(RULES_BASE_MODULE / path.relative_to(RULES_DIRECTORY))
             .replace(".py", "")
-            .replace(os.path.sep, "."),
+            .replace(os.path.sep, ".")
         )
+
+        module = importlib.import_module(module_path)
 
         for _, rule in inspect.getmembers(
             module,
@@ -76,17 +78,17 @@ def load_formatters() -> set[typing.Callable[[], None]]:
     formatters: set[typing.Callable[[], None]] = set()
 
     for path in sorted(FORMATTERS_DIRECTORY.rglob("[!_]*.py"), key=lambda x: x.name):
-        module = importlib.import_module(
+        module_path = (
             str(FORMATTERS_BASE_MODULE / path.relative_to(FORMATTERS_DIRECTORY))
             .replace(".py", "")
-            .replace(os.path.sep, "."),
+            .replace(os.path.sep, ".")
         )
+
+        module = importlib.import_module(module_path)
 
         for _, formatter in inspect.getmembers(
             module,
-            lambda x: inspect.isfunction(x)
-            and x.__name__.endswith("_stmt")
-            and x.__module__ == module.__name__,  # noqa: B023
+            lambda x: inspect.isfunction(x) and x.__module__ == module.__name__,  # noqa: B023
         ):
             formatters.add(formatter)
 

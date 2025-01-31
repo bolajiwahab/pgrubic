@@ -27,7 +27,7 @@ def linter() -> core.Linter:
     return linter
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def formatter() -> core.Formatter:
     """Setup formatters."""
     config: core.Config = core.parse_config()
