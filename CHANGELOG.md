@@ -1,3 +1,13 @@
+## 0.4.0 (2025-01-31)
+
+### Feat
+
+- add rule for checking inline sql function body with wrong language (GN035) (#51)
+
+### Fix
+
+- enable all custom formatters (#52)
+
 ## 0.3.1 (2025-01-11)
 
 ### Fix
