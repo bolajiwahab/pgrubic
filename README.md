@@ -15,13 +15,14 @@
 | src/pgrubic/core/linter.py                   |      162 |        0 |     100% |           |
 | src/pgrubic/core/loader.py                   |       25 |        0 |     100% |           |
 | src/pgrubic/core/logger.py                   |        5 |        0 |     100% |           |
-| src/pgrubic/core/noqa.py                     |      122 |        0 |     100% |           |
+| src/pgrubic/core/noqa.py                     |      130 |        0 |     100% |           |
 | src/pgrubic/formatters/\_\_init\_\_.py       |        0 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/\_\_init\_\_.py   |        2 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/column.py         |       31 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/constraint.py     |       48 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/database.py       |       39 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/enum.py           |       44 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/function.py       |      159 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/index.py          |       62 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/rename.py         |       34 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/table.py          |      181 |        0 |     100% |           |
@@ -150,7 +151,7 @@
 | src/pgrubic/rules/unsafe/US029.py            |        5 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US030.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-|                                    **TOTAL** | **2709** |    **0** | **100%** |           |
+|                                    **TOTAL** | **2876** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
