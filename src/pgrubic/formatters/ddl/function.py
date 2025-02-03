@@ -249,3 +249,21 @@ def create_function_option(  # noqa: PLR0911
     output.write(node.defname.upper())
     output.space()
     output.print_symbol(node.arg)
+
+
+@printers.node_printer(ast.AlterFunctionStmt, override=True)
+def alter_function_stmt(node: ast.AlterFunctionStmt, output: stream.RawStream) -> None:
+    """Printer for AlterFunctionStmt."""
+    output.write("ALTER")
+    output.space()
+    if node.objtype == enums.ObjectType.OBJECT_PROCEDURE:
+        output.write("PROCEDURE")
+        output.space()
+    else:
+        output.write("FUNCTION")
+        output.space()
+    output.print_node(node.func)
+    with output.push_indent(relative=False):
+        output.newline()
+        output.space(4)
+        output.print_list(node.actions, noqa.SPACE, standalone_items=True)

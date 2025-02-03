@@ -235,3 +235,21 @@ create_c_function:
     WINDOW
     STABLE
     AS 'MODULE_PATHNAME', 'pg_stat_statements_1_3';
+
+alter_function:
+  sql: |
+    ALTER FUNCTION check_password(text, text) SET search_path = admin, pg_temp reset all SET search_path = admin, pg_temp;
+  expected: |
+    ALTER FUNCTION check_password (text, text)
+        SET search_path TO 'admin', 'pg_temp'
+        RESET ALL
+        SET search_path TO 'admin', 'pg_temp';
+
+alter_procedure:
+  sql: |
+    ALTER PROCEDURE insert_data(a integer, b integer) SET search_path = admin, pg_temp reset all SET search_path = admin, pg_temp;
+  expected: |
+    ALTER PROCEDURE insert_data (a integer, b integer)
+        SET search_path TO 'admin', 'pg_temp'
+        RESET ALL
+        SET search_path TO 'admin', 'pg_temp';

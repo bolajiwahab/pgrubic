@@ -13,6 +13,8 @@ version_scheme = "semver2"
 version_provider = "pep621"
 update_changelog_on_bump = true
 bump_message = "chore(bump): version $current_version → $new_version"
+
+
 [project]
 name = "pgrubic"
 version = "0.4.0"
