@@ -10,6 +10,7 @@ create_sql_conforming_style_function:
     RETURNS NULL ON NULL INPUT
     VOLATILE PARALLEL SAFE NOT LEAKPROOF
     SECURITY DEFINER
+    COST 100
     SET search_path = 'admin', 'pg_temp'
     RETURN a + b;
   expected: |
@@ -25,6 +26,7 @@ create_sql_conforming_style_function:
     PARALLEL SAFE
     NOT LEAKPROOF
     SECURITY DEFINER
+    COST 100
     SET search_path TO 'admin', 'pg_temp'
     RETURN a + b;
 
@@ -193,6 +195,28 @@ create_sql_conforming_style_procedure:
         VALUES (b);
     END;
 
+create_sql_non_conforming_stype_procedure:
+  sql: |
+    CREATE PROCEDURE insert_data(a integer, b integer)
+    LANGUAGE SQL
+    AS $$
+    INSERT INTO tbl VALUES (a);
+    INSERT INTO tbl VALUES (b);
+    $$;
+  expected: |
+    CREATE PROCEDURE insert_data (
+        a integer
+      , b integer
+    )
+    LANGUAGE SQL
+    AS $BODY$
+        INSERT INTO tbl
+        VALUES (a);
+
+        INSERT INTO tbl
+        VALUES (b);
+    $BODY$;
+
 create_c_function:
   sql: |
     CREATE FUNCTION pg_stat_statements(IN showtext boolean,
@@ -200,7 +224,7 @@ create_c_function:
     )
     RETURNS SETOF record
     AS 'MODULE_PATHNAME', 'pg_stat_statements_1_3'
-    LANGUAGE C;
+    LANGUAGE C WINDOW STABLE;
   expected: |
     CREATE FUNCTION pg_stat_statements (
         IN showtext boolean
@@ -208,6 +232,8 @@ create_c_function:
     )
     RETURNS SETOF record
     LANGUAGE C
+    WINDOW
+    STABLE
     AS 'MODULE_PATHNAME', 'pg_stat_statements_1_3';
 
 # CREATE PROCEDURE add(a integer, b integer)

@@ -56,7 +56,7 @@ def extract_statement_locations(
 
     tokens = parser.scan(source_code)
 
-    inside_block = False  # Tracks if we are inside BEGIN ... END;
+    inside_block = False  # Tracks if we are inside BEGIN ... END block
 
     for idx, token in enumerate(tokens):
         if idx == len(tokens) - 1 and token.name != ASCII_SEMI_COLON:

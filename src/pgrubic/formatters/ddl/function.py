@@ -66,8 +66,8 @@ def create_function_stmt(
             # Do not treat them as arguments
             output.write("TABLE")
             output.space()
-            # to be replaced with push_indent
-            with output.expression(need_parens=False):
+
+            with output.push_indent(relative=False):
                 output.write("(")
                 output.newline()
                 output.space(4)
@@ -178,9 +178,10 @@ def create_function_option(  # noqa: PLR0911
                 config=_config,
             )
 
-            # indent the formatted function body by 4 spaces
+            # indent the non empty lines of the formatted function body by 4 spaces
             formatted_function_body = noqa.NEW_LINE.join(
-                noqa.SPACE * 4 + line for line in formatted_function_body.splitlines()
+                (noqa.SPACE * 4 + line if line.strip() else "")
+                for line in formatted_function_body.splitlines()
             )
             output.newline()
             output.write(formatted_function_body)
@@ -202,7 +203,11 @@ def create_function_option(  # noqa: PLR0911
 
     if option.upper() == "STRICT":
         output.swrite(
-            "RETURNS NULL ON NULL INPUT" if node.arg.boolval else "CALLED ON NULL INPUT",
+            (
+                "RETURNS NULL ON NULL INPUT"
+                if node.arg.boolval
+                else "CALLED ON NULL INPUT"
+            ),
         )
         return
 
@@ -243,4 +248,4 @@ def create_function_option(  # noqa: PLR0911
 
     output.write(node.defname.upper())
     output.space()
-    output.print_symbol(node.arg.sval)
+    output.print_symbol(node.arg)
