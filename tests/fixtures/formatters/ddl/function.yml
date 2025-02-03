@@ -1,0 +1,231 @@
+---
+# yamllint disable rule:line-length
+formatter: FUNCTION
+
+create_sql_conforming_style_function:
+  sql: |
+    CREATE FUNCTION add(a integer, b integer) RETURNS integer
+    LANGUAGE SQL
+    IMMUTABLE
+    RETURNS NULL ON NULL INPUT
+    VOLATILE PARALLEL SAFE NOT LEAKPROOF
+    SECURITY DEFINER
+    SET search_path = 'admin', 'pg_temp'
+    RETURN a + b;
+  expected: |
+    CREATE FUNCTION add (
+        a integer
+      , b integer
+    )
+    RETURNS integer
+    LANGUAGE SQL
+    IMMUTABLE
+    RETURNS NULL ON NULL INPUT
+    VOLATILE
+    PARALLEL SAFE
+    NOT LEAKPROOF
+    SECURITY DEFINER
+    SET search_path TO 'admin', 'pg_temp'
+    RETURN a + b;
+
+create_sql_function_with_as:
+  sql: |
+    CREATE FUNCTION add(integer, integer) RETURNS integer
+    AS 'select $1 + $2, $1 - $2, $1 * $2 from tbl'
+    LANGUAGE SQL
+    IMMUTABLE
+    SECURITY INVOKER
+    RETURNS NULL ON NULL INPUT;
+  expected: |
+    CREATE FUNCTION add (
+        integer
+      , integer
+    )
+    RETURNS integer
+    LANGUAGE SQL
+    IMMUTABLE
+    SECURITY INVOKER
+    RETURNS NULL ON NULL INPUT
+    AS $BODY$
+        SELECT $1 + $2
+             , $1 - $2
+             , $1 * $2
+          FROM tbl;
+    $BODY$;
+
+create_plpgsql_conforming_style_function:
+  sql: |
+    CREATE FUNCTION add(a integer, b integer) RETURNS integer
+    LANGUAGE plpgSQL
+    IMMUTABLE
+    STRICT
+    RETURN a + b;
+  expected: |
+    CREATE FUNCTION add (
+        a integer
+      , b integer
+    )
+    RETURNS integer
+    LANGUAGE plpgsql
+    IMMUTABLE
+    RETURNS NULL ON NULL INPUT
+    RETURN a + b;
+
+# we do not format non-sql function bodies
+create_plpgsql_function_with_as:
+  sql: |
+    CREATE OR REPLACE FUNCTION increment(i integer) RETURNS integer AS $$
+        BEGIN
+            RETURN i + 1;
+        END;
+    $$ LANGUAGE plpgsql;
+  expected: |
+    CREATE OR REPLACE FUNCTION increment (
+        i integer
+    )
+    RETURNS integer
+    LANGUAGE plpgsql
+    AS $BODY$
+        BEGIN
+            RETURN i + 1;
+        END;
+    $BODY$;
+
+# we do not format non-sql function bodies
+create_plpgsql_function_return_table:
+  sql: |
+    create or replace function get_demo_data(p_id varchar,p_start_date timestamp,p_end_date timestamp)
+    returns table(record_id bigint,record_date timestamp,amount numeric,code text)
+    as $_$
+    begin
+    return query select t.id,t.created_at,t.amount,t.code from test_table t where t.user_id=p_id
+    and t.created_at between p_start_date and p_end_date;
+    end;
+    $_$
+    language plpgsql;
+  expected: |
+    CREATE OR REPLACE FUNCTION get_demo_data (
+        p_id varchar
+      , p_start_date timestamp
+      , p_end_date timestamp
+    )
+    RETURNS TABLE (
+        record_id bigint
+      , record_date timestamp
+      , amount numeric
+      , code text
+    )
+    LANGUAGE plpgsql
+    AS $BODY$
+    begin
+    return query select t.id,t.created_at,t.amount,t.code from test_table t where t.user_id=p_id
+    and t.created_at between p_start_date and p_end_date;
+    end;
+    $BODY$;
+
+create_function_plpgsql_returns_set_of:
+  sql: |
+    create or replace function find_film_by_id(
+      p_id int
+    )
+    returns setof film
+    as
+    $$
+    begin
+      return query select * from film
+      where film_id = p_id;
+    end;
+    $$
+    language plpgsql;
+  expected: |
+    CREATE OR REPLACE FUNCTION find_film_by_id (
+        p_id integer
+    )
+    RETURNS SETOF film
+    LANGUAGE plpgsql
+    AS $BODY$
+    begin
+      return query select * from film
+      where film_id = p_id;
+    end;
+    $BODY$;
+
+create_function_no_parameters:
+  sql: |
+    create or replace function find_film_by_id()
+    returns setof film
+    as
+    $$
+    begin
+      return query select * from film;
+    end;
+    $$
+    language plpgsql;
+  expected: |
+    CREATE OR REPLACE FUNCTION find_film_by_id ()
+    RETURNS SETOF film
+    LANGUAGE plpgsql
+    AS $BODY$
+    begin
+      return query select * from film;
+    end;
+    $BODY$;
+
+create_sql_conforming_style_procedure:
+  sql: |
+    CREATE PROCEDURE insert_data(a integer, b integer)
+    LANGUAGE SQL
+    BEGIN ATOMIC
+      INSERT INTO tbl VALUES (a);
+      INSERT INTO tbl VALUES (b);
+    END;
+  expected: |
+    CREATE PROCEDURE insert_data (
+        a integer
+      , b integer
+    )
+    LANGUAGE SQL
+    BEGIN ATOMIC
+        INSERT INTO tbl
+        VALUES (a);
+
+        INSERT INTO tbl
+        VALUES (b);
+    END;
+
+create_c_function:
+  sql: |
+    CREATE FUNCTION pg_stat_statements(IN showtext boolean,
+        OUT userid oid
+    )
+    RETURNS SETOF record
+    AS 'MODULE_PATHNAME', 'pg_stat_statements_1_3'
+    LANGUAGE C;
+  expected: |
+    CREATE FUNCTION pg_stat_statements (
+        IN showtext boolean
+      , OUT userid oid
+    )
+    RETURNS SETOF record
+    LANGUAGE C
+    AS 'MODULE_PATHNAME', 'pg_stat_statements_1_3';
+
+# CREATE PROCEDURE add(a integer, b integer)
+# LANGUAGE SQL
+# IMMUTABLE
+# RETURNS NULL ON NULL INPUT
+# RETURN a + b;
+# create_procedure:
+#   sql: |
+#     CREATE OR REPLACE PROCEDURE public.dup(bigint)
+#     LANGUAGE sql
+#     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+#   expected: |
+#     CREATE OR REPLACE PROCEDURE public.dup (
+#         bigint
+#     )
+#     LANGUAGE sql
+#     AS $BODY$
+#         SELECT $1
+#              , CAST($1 AS text) || ' is text';
+#     $BODY$;

@@ -30,10 +30,18 @@ test_fail_disallowed_data_type_function_args:
     CREATE FUNCTION test.dup(point) RETURNS TABLE(f1 text, f2 text) LANGUAGE SQL
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
   sql_fix: |
-    CREATE OR REPLACE FUNCTION test.dup(text)
-    RETURNS TABLE (f1 text, f2 text)
-    LANGUAGE sql
-    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+    CREATE OR REPLACE FUNCTION test.dup (
+        text
+    )
+    RETURNS TABLE (
+        f1 text
+      , f2 text
+    )
+    LANGUAGE SQL
+    AS $BODY$
+        SELECT $1
+             , CAST($1 AS text) || ' is text';
+    $BODY$;
   config:
     lint:
       disallowed_data_types:
@@ -46,10 +54,18 @@ test_fail_disallowed_data_type_function_return:
     CREATE FUNCTION test.dup(bigint) RETURNS TABLE(f1 point, f2 text) LANGUAGE SQL
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
   sql_fix: |
-    CREATE OR REPLACE FUNCTION test.dup(bigint)
-    RETURNS TABLE (f1 text, f2 text)
-    LANGUAGE sql
-    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+    CREATE OR REPLACE FUNCTION test.dup (
+        bigint
+    )
+    RETURNS TABLE (
+        f1 text
+      , f2 text
+    )
+    LANGUAGE SQL
+    AS $BODY$
+        SELECT $1
+             , CAST($1 AS text) || ' is text';
+    $BODY$;
   config:
     lint:
       disallowed_data_types:
@@ -59,13 +75,18 @@ test_fail_disallowed_data_type_function_return:
 
 test_fail_disallowed_data_type_procedure:
   sql_fail: |
-    CREATE OR REPLACE PROCEDURE test.dup(point)
+    CREATE OR REPLACE PROCEDURE test.dup (point)
     LANGUAGE sql
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
   sql_fix: |
-    CREATE OR REPLACE PROCEDURE test.dup(text)
-    LANGUAGE sql
-    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+    CREATE OR REPLACE PROCEDURE test.dup (
+        text
+    )
+    LANGUAGE SQL
+    AS $BODY$
+        SELECT $1
+             , CAST($1 AS text) || ' is text';
+    $BODY$;
   config:
     lint:
       disallowed_data_types:

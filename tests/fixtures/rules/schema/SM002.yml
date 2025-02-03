@@ -61,10 +61,18 @@ test_fail_disallowed_schema_function:
     CREATE FUNCTION test.dup(bigint) RETURNS TABLE(f1 bigint, f2 text) LANGUAGE SQL
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
   sql_fix: |
-    CREATE OR REPLACE FUNCTION app.dup(bigint)
-    RETURNS TABLE (f1 bigint, f2 text)
-    LANGUAGE sql
-    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+    CREATE OR REPLACE FUNCTION app.dup (
+        bigint
+    )
+    RETURNS TABLE (
+        f1 bigint
+      , f2 text
+    )
+    LANGUAGE SQL
+    AS $BODY$
+        SELECT $1
+             , CAST($1 AS text) || ' is text';
+    $BODY$;
   config:
     lint:
       disallowed_schemas:
@@ -78,9 +86,14 @@ test_fail_disallowed_schema_procedure:
     LANGUAGE sql
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
   sql_fix: |
-    CREATE OR REPLACE PROCEDURE app.dup(bigint)
-    LANGUAGE sql
-    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+    CREATE OR REPLACE PROCEDURE app.dup (
+        bigint
+    )
+    LANGUAGE SQL
+    AS $BODY$
+        SELECT $1
+             , CAST($1 AS text) || ' is text';
+    $BODY$;
   config:
     lint:
       disallowed_schemas:

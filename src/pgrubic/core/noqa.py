@@ -11,10 +11,11 @@ from colorama import Fore, Style
 from pgrubic import PACKAGE_NAME
 from pgrubic.core import errors
 
-A_STAR: str = "*"
-ASCII_SEMI_COLON: str = "ASCII_59"
-SEMI_COLON: str = ";"
-NEW_LINE: str = "\n"
+A_STAR: typing.Final[str] = "*"
+ASCII_SEMI_COLON: typing.Final[str] = "ASCII_59"
+SEMI_COLON: typing.Final[str] = ";"
+NEW_LINE: typing.Final[str] = "\n"
+SPACE: typing.Final[str] = " "
 
 
 class Statement(typing.NamedTuple):
@@ -55,22 +56,35 @@ def extract_statement_locations(
 
     tokens = parser.scan(source_code)
 
+    inside_block = False  # Tracks if we are inside BEGIN ... END;
+
     for idx, token in enumerate(tokens):
         if idx == len(tokens) - 1 and token.name != ASCII_SEMI_COLON:
             msg = f"Missing semicolon (;) at end of SQL statement at location {token.end}"
 
             raise errors.MissingStatementTerminatorError(f"{source_file}: " + msg)
 
-        if token.name == ASCII_SEMI_COLON:
-            locations.append(
-                Statement(
-                    start_location=statement_start_location,
-                    end_location=token.end,
-                    text=source_code[statement_start_location : token.end] + SEMI_COLON,
-                ),
-            )
-            statement_start_location = token.end + 1
+        # Detect BEGIN
+        if token.name == "BEGIN_P":
+            inside_block = True
 
+        # Detect END
+        if inside_block and token.name == "END_P":
+            inside_block = False  # Function block ends
+
+        if token.name == ASCII_SEMI_COLON:
+            if not inside_block:
+                locations.append(
+                    Statement(
+                        start_location=statement_start_location,
+                        end_location=token.end,
+                        text=source_code[statement_start_location : token.end]
+                        + SEMI_COLON,
+                    ),
+                )
+                statement_start_location = token.end + 1
+            else:
+                continue
     return locations
 
 
