@@ -235,23 +235,3 @@ create_c_function:
     WINDOW
     STABLE
     AS 'MODULE_PATHNAME', 'pg_stat_statements_1_3';
-
-# CREATE PROCEDURE add(a integer, b integer)
-# LANGUAGE SQL
-# IMMUTABLE
-# RETURNS NULL ON NULL INPUT
-# RETURN a + b;
-# create_procedure:
-#   sql: |
-#     CREATE OR REPLACE PROCEDURE public.dup(bigint)
-#     LANGUAGE sql
-#     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
-#   expected: |
-#     CREATE OR REPLACE PROCEDURE public.dup (
-#         bigint
-#     )
-#     LANGUAGE sql
-#     AS $BODY$
-#         SELECT $1
-#              , CAST($1 AS text) || ' is text';
-#     $BODY$;
