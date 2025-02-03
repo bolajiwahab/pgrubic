@@ -6,10 +6,18 @@ test_fail_missing_replace_in_function:
     CREATE FUNCTION dup(bigint) RETURNS TABLE(f1 bigint, f2 text) LANGUAGE SQL
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
   sql_fix: |
-    CREATE OR REPLACE FUNCTION dup(bigint)
-    RETURNS TABLE (f1 bigint, f2 text)
-    LANGUAGE sql
-    AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+    CREATE OR REPLACE FUNCTION dup (
+        bigint
+    )
+    RETURNS TABLE (
+        f1 bigint
+      , f2 text
+    )
+    LANGUAGE SQL
+    AS $BODY$
+        SELECT $1
+             , CAST($1 AS text) || ' is text';
+    $BODY$;
 
 test_pass_create_or_replace_in_function:
   sql_pass: |
