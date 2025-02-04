@@ -1,0 +1,44 @@
+---
+formatter: OWNER
+
+owner_table:
+  sql: |
+    ALTER TABLE orders OWNER TO postgres;
+  expected: |
+    ALTER TABLE orders
+        OWNER TO postgres;
+
+owner_schema:
+  sql: |
+    ALTER SCHEMA orders OWNER TO postgres;
+  expected: |
+    ALTER SCHEMA orders
+        OWNER TO postgres;
+
+owner_database:
+  sql: |
+    ALTER DATABASE orders OWNER TO postgres;
+  expected: |
+    ALTER DATABASE orders
+        OWNER TO postgres;
+
+owner_function:
+  sql: |
+    ALTER FUNCTION add(a integer, b integer) OWNER TO postgres;
+  expected: |
+    ALTER FUNCTION add (a integer, b integer)
+        OWNER TO postgres;
+
+owner_operator_family:
+  sql: |
+    ALTER OPERATOR FAMILY alt_opf3 USING hash OWNER TO postgres;
+  expected: |
+    ALTER OPERATOR FAMILY alt_opf3 USING hash
+        OWNER TO postgres;
+
+owner_operator_class:
+  sql: |
+    ALTER OPERATOR CLASS alt_opc3 USING hash OWNER TO postgres;
+  expected: |
+    ALTER OPERATOR CLASS alt_opc3 USING hash
+        OWNER TO postgres;
