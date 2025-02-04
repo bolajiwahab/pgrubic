@@ -1,0 +1,57 @@
+---
+formatter: SCHEMA
+
+create_schema:
+  sql: |
+    CREATE SCHEMA IF NOT exists orders AUTHORIZATION postgres;
+  expected: |
+    CREATE SCHEMA IF NOT EXISTS orders
+        AUTHORIZATION postgres;
+
+create_schema_with_subcommands:
+  sql: |
+    CREATE SCHEMA hollywood authorization CURRENT_ROLE
+    CREATE TABLE films (title text, release date, awards text[])
+    CREATE VIEW winners AS
+        SELECT title, release FROM films WHERE awards IS NOT NULL;
+  expected: |
+    CREATE SCHEMA hollywood
+        AUTHORIZATION CURRENT_ROLE
+        CREATE TABLE films (
+            title text
+          , release date
+          , awards text[]
+        )
+        CREATE VIEW winners AS
+        SELECT title
+             , release
+          FROM films
+         WHERE awards IS NOT NULL;
+
+table_schema:
+  sql: |
+    ALTER TABLE IF EXISTS orders SET SCHEMA public;
+  expected: |
+    ALTER TABLE IF EXISTS orders
+        SET SCHEMA public;
+
+function_schema:
+  sql: |
+    ALTER FUNCTION add(a integer, b integer) SET SCHEMA public;
+  expected: |
+    ALTER FUNCTION add (a integer, b integer)
+        SET SCHEMA public;
+
+operator_family_schema:
+  sql: |
+    ALTER OPERATOR FAMILY alt_opf3 USING hash SET SCHEMA public;
+  expected: |
+    ALTER OPERATOR FAMILY alt_opf3 USING hash
+        SET SCHEMA public;
+
+operator_class_schema:
+  sql: |
+    ALTER OPERATOR CLASS alt_opc3 USING hash SET SCHEMA public;
+  expected: |
+    ALTER OPERATOR CLASS alt_opc3 USING hash
+        SET SCHEMA public;
