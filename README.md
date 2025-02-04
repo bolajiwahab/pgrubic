@@ -26,6 +26,7 @@
 | src/pgrubic/formatters/ddl/index.py          |       62 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/owner.py          |       16 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/rename.py         |       34 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/schema.py         |       38 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/table.py          |      181 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/view.py           |       30 |        0 |     100% |           |
 | src/pgrubic/formatters/dml/\_\_init\_\_.py   |        0 |        0 |     100% |           |
@@ -152,7 +153,7 @@
 | src/pgrubic/rules/unsafe/US029.py            |        5 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US030.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-|                                    **TOTAL** | **2892** |    **0** | **100%** |           |
+|                                    **TOTAL** | **2930** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
