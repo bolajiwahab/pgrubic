@@ -84,7 +84,7 @@ repos:
         entry: interrogate
         language: python
         types: [python]
-        args: [--quiet, --fail-under=100]
+        args: [--quiet, --fail-under=100, --config=./pyproject.toml]
       # Formatters should be run late so that they can re-format
       # any prior changes
       - id: ruff
