@@ -233,7 +233,7 @@ legacy_tox_ini = """
 
     [testenv:isort]
     deps = isort
-    commands = isort --check --diff --profile=black {posargs}
+    commands = isort --check --diff --profile=black {posargs:.}
 
     [testenv:lint]
     deps =
