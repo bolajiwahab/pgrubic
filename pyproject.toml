@@ -150,6 +150,11 @@ exclude_lines = [
   "if __name__ == .__main__.:",
 ]
 
+[tool.interrogate]
+fail-under = 100
+verbose = 1
+# omit-covered-files = true
+
 [tool.tox]
 legacy_tox_ini = """
     [tox]
@@ -157,7 +162,6 @@ legacy_tox_ini = """
     env_list =
         isort
         lint
-        yamllint
         format
         typing
         tests
@@ -188,7 +192,7 @@ legacy_tox_ini = """
         COVERAGE_FILE = .coverage
     commands =
         coverage erase
-        coverage run --source=src -m pytest -vv {posargs:tests}
+        coverage run -m pytest -vv {posargs:tests}
 
     [testenv:tests-linux]
     platform = linux
@@ -196,8 +200,7 @@ legacy_tox_ini = """
     deps = {[testenv:tests]deps}
     setenv =
         COVERAGE_FILE = .coverage
-    commands =
-        {[testenv:tests]commands}
+    commands = {[testenv:tests]commands}
 
     [testenv:tests-windows]
     platform = win32
@@ -205,8 +208,7 @@ legacy_tox_ini = """
     deps = {[testenv:tests]deps}
     setenv =
         COVERAGE_FILE = .coverage
-    commands =
-        {[testenv:tests]commands}
+    commands = {[testenv:tests]commands}
 
     [testenv:tests-macos]
     platform = darwin
@@ -214,8 +216,7 @@ legacy_tox_ini = """
     deps = {[testenv:tests]deps}
     setenv =
         COVERAGE_FILE = .coverage
-    commands =
-        {[testenv:tests]commands}
+    commands = {[testenv:tests]commands}
 
     [testenv:coverage]
     skip_install = false
@@ -226,13 +227,21 @@ legacy_tox_ini = """
         {[testenv:tests]commands}
         coverage report --fail-under=100 --show-missing {posargs}
 
+    [testenv:docstrings-coverage]
+    deps = interrogate
+    commands = interrogate {posargs}
+
     [testenv:isort]
     deps = isort
-    commands = isort --check --diff --profile=black {posargs:src}
+    commands = isort --check --diff --profile=black {posargs}
 
     [testenv:lint]
-    deps = ruff
-    commands = ruff check {posargs} --fix
+    deps =
+        ruff
+        yamllint
+    commands =
+        ruff check {posargs} --fix
+        yamllint --strict {posargs:.}
 
     [testenv:format]
     deps = ruff
@@ -249,7 +258,7 @@ legacy_tox_ini = """
         types-PyYAML
         msgpack-types
         GitPython
-    commands = mypy {posargs:src} {posargs:tests} {posargs:docs}
+    commands = mypy {posargs:.}
 
     [testenv:docbuild]
     commands =
@@ -265,17 +274,11 @@ legacy_tox_ini = """
         {[testenv:docbuild]commands}
         ./tools/ensure_up_to_date_docs.sh
 
-    [testenv:yamllint]
-    deps = yamllint
-    commands = yamllint .
-
     [testenv:pre-commit]
     deps = pre-commit
-    commands =
-        pre-commit {posargs:run --all-files}
+    commands = pre-commit {posargs:run --hook-stage pre-commit --all-files}
 
     [testenv:build-dist]
     deps = build
-    commands =
-        python -m build --sdist --wheel {posargs:{toxinidir}}
+    commands = python -m build --sdist --wheel {posargs:{toxinidir}}
 """
