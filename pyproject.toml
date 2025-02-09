@@ -140,7 +140,6 @@ pythonpath = ["src"]
 relative_files = true
 source = ["src"]
 omit = [
-#   "**/formatters/**", # excluded for now
   "tests/*"
 ]
 
@@ -153,7 +152,6 @@ exclude_lines = [
 [tool.interrogate]
 fail-under = 100
 verbose = 1
-# omit-covered-files = true
 
 [tool.tox]
 legacy_tox_ini = """
