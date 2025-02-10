@@ -15,6 +15,7 @@ on:  # yamllint disable-line rule:truthy
     types:
       - opened
       - edited
+      - reopened
 
 permissions:
   issues: write

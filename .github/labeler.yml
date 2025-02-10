@@ -1,4 +1,7 @@
 ---
+chore:
+  - "/(chore)/i"
+
 rule:
   - "/(rule)/i"
 
