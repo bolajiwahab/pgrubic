@@ -85,6 +85,7 @@ class CheckerMeta(type):
             ancestors: visitors.Ancestor,
             node: ast.Node,
         ) -> typing.Any:
+            """Set locations for node."""
             # some nodes have location attribute which is different from node location
             # for example ast.CreateTablespaceStmt while some nodes do not carry
             # location at all
@@ -131,6 +132,7 @@ class CheckerMeta(type):
             *args: typing.Any,
             **kwargs: typing.Any,
         ) -> typing.Any:
+            """Apply fix only if it is applicable."""
             if not checker.config.lint.fix:
                 return None
 

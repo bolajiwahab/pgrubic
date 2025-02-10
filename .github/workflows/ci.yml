@@ -20,6 +20,7 @@ jobs:
       matrix:
         job:
           - lint
+          - docstrings-coverage
           - isort
           - format
           - typing

@@ -50,15 +50,13 @@ repos:
         language: python
         types: [yaml]
         args: [--unsafe]
-      # Formatters should be run late so that they can re-format
-      # any prior changes
-      - id: ruff
+      - id: yamllint
         stages: [pre-commit]
-        name: Formatting with ruff
-        entry: ruff
+        name: Lint yaml files
+        entry: yamllint
         language: python
-        args: [format]
-        types: [python]
+        types: [yaml]
+        args: [--strict]
       - id: isort
         stages: [pre-commit]
         name: Ensure imports are grouped and sorted
@@ -66,12 +64,6 @@ repos:
         language: python
         types: [python]
         args: [--check, --diff, --profile=black]
-      - id: yamllint
-        stages: [pre-commit]
-        name: Lint yaml files
-        entry: yamllint
-        language: python
-        types: [yaml]
       - id: ruff
         stages: [pre-commit]
         name: Lint with ruff
@@ -87,3 +79,18 @@ repos:
         language: python
         types: [python]
         args: [--config-file=./pyproject.toml]
+      - id: interrogate
+        name: Docstrings coverage
+        entry: interrogate
+        language: python
+        types: [python]
+        args: [--quiet, --fail-under=100, --config=./pyproject.toml]
+      # Formatters should be run late so that they can re-format
+      # any prior changes
+      - id: ruff
+        stages: [pre-commit]
+        name: Formatting with ruff
+        entry: ruff
+        language: python
+        args: [format]
+        types: [python]
