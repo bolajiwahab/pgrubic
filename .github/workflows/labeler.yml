@@ -1,0 +1,31 @@
+---
+name: "PR and Issue Labeler"
+
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+
+  issues:
+    types:
+      - opened
+      - edited
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: github/issue-labeler@v3
+        with:
+          configuration-path: .github/labeler.yml
+          include-title: 1
+          include-body: 0
+          enable-versioned-regex: 0
+          repo-token: ${{ github.token }}

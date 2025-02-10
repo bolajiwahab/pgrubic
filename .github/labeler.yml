@@ -1,0 +1,30 @@
+---
+rule:
+  - "/(rule)/i"
+
+formatter:
+  - "/(formatter)/i"
+
+documentation:
+  - "/(documentation|doc)/i"
+
+bug:
+  - "/(bug|fix)/i"
+
+config:
+  - "/(config)/i"
+
+enhancement:
+  - "/(feature)/i"
+
+ci:
+  - "/(ci)/i"
+
+dependencies:
+  - "/(dependencies)/i"
+
+question:
+  - "/(question)/i"
+
+security:
+  - "/(security)/i"
