@@ -3,7 +3,7 @@ rule:
   - "/(rule)/i"
 
 formatter:
-  - "/(formatter:printer)/i"
+  - "/(formatter|printer)/i"
 
 documentation:
   - "/(documentation|doc)/i"
@@ -15,7 +15,7 @@ config:
   - "/(config)/i"
 
 enhancement:
-  - "/(feature)/i"
+  - "/(feat|feature)/i"
 
 ci:
   - "/(ci)/i"
