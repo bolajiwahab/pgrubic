@@ -3,7 +3,7 @@ rule:
   - "/(rule)/i"
 
 formatter:
-  - "/(formatter)/i"
+  - "/(formatter:printer)/i"
 
 documentation:
   - "/(documentation|doc)/i"
@@ -25,6 +25,9 @@ dependencies:
 
 question:
   - "/(question)/i"
+
+help-wanted:
+  - "/(help)/i"
 
 security:
   - "/(security)/i"
