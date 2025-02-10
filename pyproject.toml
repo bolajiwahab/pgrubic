@@ -43,7 +43,7 @@ classifiers = [
 ]
 keywords = ["pgrubic", "sql", "postgres", "postgresql", "linter"]
 dependencies = [
-  "pglast==7.2",
+  "pglast==7.3",
   "case-converter==1.1.0",
   "colorama==0.4.6",
   "toml==0.10.2",
@@ -56,21 +56,21 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "ruff==0.9.3",
-  "mypy==1.14.1",
-  "isort==5.13.2",
+  "ruff==0.9.5",
+  "mypy==1.15.0",
+  "isort==6.0.0",
   "add-trailing-comma==3.1.0",
   "pre-commit==4.1.0",
   "pytest==8.3.4",
-  "coverage==7.6.10",
+  "coverage==7.6.11",
   "tox==4.24.1",
 ]
 
 doc = [
   "mkdocs==1.6.1",
-  "mkdocs-material==9.5.50",
-  "mkdocstrings==0.27.0",
-  "mkdocstrings-python==1.13.0",
+  "mkdocs-material==9.6.3",
+  "mkdocstrings==0.28.0",
+  "mkdocstrings-python==1.14.6",
 ]
 
 [project.urls]
