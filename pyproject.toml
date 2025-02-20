@@ -118,7 +118,7 @@ length-sort = true
 known-first-party = ["pgrubic"]
 
 [tool.ruff.lint.flake8-builtins]
-builtins-allowed-modules = ["enum", "select"]
+builtins-allowed-modules = ["enum", "select", "typing"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
