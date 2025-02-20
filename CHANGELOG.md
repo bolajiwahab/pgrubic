@@ -1,3 +1,11 @@
+## 0.5.0 (2025-02-20)
+
+### Feat
+
+- formatter for schema (#58)
+- formatter for owner (#57)
+- add formatter for function/procedure (#54)
+
 ## 0.4.0 (2025-01-31)
 
 ### Feat
