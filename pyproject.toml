@@ -13,11 +13,14 @@ version_scheme = "semver2"
 version_provider = "pep621"
 update_changelog_on_bump = true
 bump_message = "chore(bump): version $current_version → $new_version"
-
+version_files = [
+    "README.md:rev",
+    "docs/docs/tutorial.md:rev",
+]
 
 [project]
 name = "pgrubic"
-version = "0.4.0"
+version = "0.5.0"
 description = "PostgreSQL linter and formatter for schema migrations and design best practices"
 readme = { file = "README.md", content-type = "text/markdown" }
 license = {file = "LICENSE"}
@@ -115,7 +118,7 @@ length-sort = true
 known-first-party = ["pgrubic"]
 
 [tool.ruff.lint.flake8-builtins]
-builtins-allowed-modules = ["enum", "select"]
+builtins-allowed-modules = ["enum", "select", "typing"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
