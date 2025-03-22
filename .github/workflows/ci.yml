@@ -105,6 +105,26 @@ jobs:
       - name: Run tests
         run: tox -e tests-macos
 
+  docker_image_release:
+    name: Build multi-platform docker image [arch=amd64,arm64]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up QEMU for ARM
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
   coverage:
     runs-on: ubuntu-latest
     permissions:
