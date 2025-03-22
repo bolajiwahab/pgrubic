@@ -143,7 +143,7 @@ jobs:
 
   docker_image_release:
     name: Publish multi-platform docker image [arch=amd64,arm64]
-    needs: [details]
+    needs: [setup_and_build, details]
     runs-on: ubuntu-latest
     permissions:
       contents: read
