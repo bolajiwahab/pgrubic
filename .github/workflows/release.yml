@@ -142,20 +142,14 @@ jobs:
           gh release create ${{ needs.details.outputs.tag_name }} dist/* --title ${{ needs.details.outputs.tag_name }} --generate-notes
 
   docker_image_release:
-    name: Create docker image for ${{ matrix.platform }}
-    needs: [setup_and_build, details]
+    name: Publish multi-platform docker image [arch=amd64,arm64]
+    needs: [details]
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     environment:
       name: release
-    strategy:
-      fail-fast: false
-      matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -169,13 +163,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set up QEMU for Arm
+        uses: docker/setup-qemu-action@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6
         with:
-          platforms: ${{ matrix.platform }}
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/${{ env.PACKAGE_NAME }}:${{ needs.details.outputs.tag_name }}
