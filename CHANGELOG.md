@@ -1,3 +1,9 @@
+## 0.5.1 (2025-03-22)
+
+### Fix
+
+- docker multi platform builds (#76)
+
 ## 0.5.0 (2025-02-20)
 
 ### Feat
