@@ -338,7 +338,7 @@ Create a file named `.pre-commit-config.yaml` at the root of your git project. T
 ```yaml
 - repo: https://github.com/bolajiwahab/pgrubic
   # The version of pgrubic to use.
-  rev: 0.5.2
+  rev: 0.5.3
   hooks:
     - id: pgrubic-lint
     - id: pgrubic-format
