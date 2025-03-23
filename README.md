@@ -251,7 +251,7 @@ and [schemalint](https://github.com/kristiandupont/schemalint).
 
 Pgrubic is built upon the shoulders of:
 
-- [pglast](https://github.com/pglast/pglast) - Python bindings to libpg_query
+- [pglast](https://github.com/lelit/pglast) - Python bindings to libpg_query
 - [libpg_query](https://github.com/pganalyze/libpg_query) - PostgreSQL parser outside of the server environment
 
 ## License
