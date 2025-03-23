@@ -20,7 +20,7 @@ version_files = [
 
 [project]
 name = "pgrubic"
-version = "0.5.2"
+version = "0.5.3"
 description = "PostgreSQL linter and formatter for schema migrations and design best practices"
 readme = { file = "README.md", content-type = "text/markdown" }
 license = {file = "LICENSE"}
