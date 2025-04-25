@@ -113,7 +113,7 @@ ignore_missing_imports = true
 
 [tool.ruff]
 lint.select = ["ALL"]
-lint.ignore = ["N802", "ARG002", "ANN401", "D205", "N999", "ISC001", "COM812"]
+lint.ignore = ["N802", "ARG002", "ANN401", "D205", "N999", "ISC001", "COM812", "TC006"]
 line-length = 90
 
 [tool.ruff.lint.pydocstyle]

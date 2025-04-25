@@ -26,7 +26,7 @@ def test_formatters(
 ) -> None:
     """Test formatters."""
     config_overrides: dict[str, typing.Any] = typing.cast(
-        "dict[str, typing.Any]",
+        dict[str, typing.Any],
         test_case.get("config", {}),
     )
 
