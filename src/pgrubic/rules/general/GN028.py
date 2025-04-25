@@ -14,9 +14,11 @@ class Asterisk(linter.BaseChecker):
     This approach helps developers quickly grasp the purpose of the query and fosters
     better collaboration.
 
-    Also, using (SELECT *) complicates code maintenance. When the table structure
-    changes, such as adding, renaming, or removing columns, queries with SELECT * can
-    fail unexpectedly or silently return incorrect results.
+    Also, using asterisk (*) in column references complicates code maintenance.
+    When the table structure changes, such as adding, renaming, or removing columns,
+    queries with asterisk (*) can fail unexpectedly or silently return incorrect results.
+    Examples are (SELECT * or RETURNING *).
+
     By explicitly listing the necessary columns, you ensure the code is more resilient to
     changes in the database schema.
 
@@ -33,19 +35,18 @@ class Asterisk(linter.BaseChecker):
         node: ast.A_Star,
     ) -> None:
         """Visit A_Star."""
-        if ancestors.find_nearest(ast.SelectStmt):
-            self.violations.add(
-                linter.Violation(
-                    rule_code=self.code,
-                    rule_name=self.name,
-                    rule_category=self.category,
-                    line_number=self.line_number,
-                    column_offset=self.column_offset,
-                    line=self.line,
-                    statement_location=self.statement_location,
-                    description="Asterisk in column reference is discouraged",
-                    is_auto_fixable=self.is_auto_fixable,
-                    is_fix_enabled=self.is_fix_enabled,
-                    help="Name columns explicitly",
-                ),
-            )
+        self.violations.add(
+            linter.Violation(
+                rule_code=self.code,
+                rule_name=self.name,
+                rule_category=self.category,
+                line_number=self.line_number,
+                column_offset=self.column_offset,
+                line=self.line,
+                statement_location=self.statement_location,
+                description="Asterisk in column reference is discouraged",
+                is_auto_fixable=self.is_auto_fixable,
+                is_fix_enabled=self.is_fix_enabled,
+                help="Name columns explicitly",
+            ),
+        )
