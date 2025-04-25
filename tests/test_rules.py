@@ -79,4 +79,6 @@ def test_rules(
 
         assert not any(
             violation.rule_code == rule for violation in linting_result.violations
-        ), f"""Test failed: Violations found for rule: `{rule}` in `{test_id}` which should pass"""  # noqa: E501
+        ), (
+            f"""Test failed: Violations found for rule: `{rule}` in `{test_id}` which should pass"""  # noqa: E501
+        )

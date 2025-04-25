@@ -5,6 +5,10 @@ test_fail_a_star:
   sql_fail: |
     SELECT * FROM measurement WHERE 10 = city_id;
 
+test_fail_returning_star:
+  sql_fail: |
+    INSERT INTO users (firstname, lastname) VALUES ('Joe', 'Cool') RETURNING *;
+
 test_pass_explicit_columns:
   sql_pass: |
     SELECT a, b, c FROM measurement;
@@ -12,3 +16,7 @@ test_pass_explicit_columns:
 test_pass_count_star:
   sql_pass: |
     SELECT count(*) FROM measurement;
+
+test_pass_returning_star:
+  sql_pass: |
+    INSERT INTO users (firstname, lastname) VALUES ('Joe', 'Cool') RETURNING id;

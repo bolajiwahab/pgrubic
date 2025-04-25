@@ -38,9 +38,9 @@ def test_formatters(
         source_code=test_case["sql"],
     )
 
-    assert (
-        result.formatted_source_code == test_case["expected"]
-    ), f"Test failed for formatter: `{test_formatter}` in `{test_id}`"
+    assert result.formatted_source_code == test_case["expected"], (
+        f"Test failed for formatter: `{test_formatter}` in `{test_id}`"
+    )
 
     # Check that the formatted source code is valid
     try:

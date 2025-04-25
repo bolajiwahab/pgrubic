@@ -37,7 +37,7 @@ def test_filter_linting_sources(tmp_path: pathlib.Path) -> None:
         "*.py",
     ]
     exclude = [
-        "{str(directory).replace(os.path.sep, '/')}/test_main.sql",
+        "{str(directory).replace(os.path.sep, "/")}/test_main.sql",
     ]
     [lint]
     include = [
@@ -45,7 +45,7 @@ def test_filter_linting_sources(tmp_path: pathlib.Path) -> None:
         "*.txt",
     ]
     exclude = [
-        "{str(directory).replace(os.path.sep, '/')}/test.sql",
+        "{str(directory).replace(os.path.sep, "/")}/test.sql",
     ]
     """
 
@@ -95,7 +95,7 @@ def test_filter_formatting_sources(tmp_path: pathlib.Path) -> None:
         "*.py",
     ]
     exclude = [
-        "{str(directory).replace(os.path.sep, '/')}/test_main.sql",
+        "{str(directory).replace(os.path.sep, "/")}/test_main.sql",
     ]
     [format]
     include = [
@@ -103,7 +103,7 @@ def test_filter_formatting_sources(tmp_path: pathlib.Path) -> None:
         "*.txt",
     ]
     exclude = [
-        "{str(directory).replace(os.path.sep, '/')}/test.sql",
+        "{str(directory).replace(os.path.sep, "/")}/test.sql",
     ]
     """
 
@@ -163,8 +163,8 @@ def test_respect_gitignore_filter_sources(tmp_path: pathlib.Path) -> None:
         "*.sql",
     ]
     exclude = [
-        "{str(directory).replace(os.path.sep, '/')}/test_main.sql",
-        "{str(directory).replace(os.path.sep, '/')}/test.sql",
+        "{str(directory).replace(os.path.sep, "/")}/test_main.sql",
+        "{str(directory).replace(os.path.sep, "/")}/test.sql",
     ]
     """
 
@@ -225,8 +225,8 @@ def test_respect_gitignore_false_filter_sources(tmp_path: pathlib.Path) -> None:
         "*.sql",
     ]
     exclude = [
-        "{str(directory).replace(os.path.sep, '/')}/test_main.sql",
-        "{str(directory).replace(os.path.sep, '/')}/test.sql",
+        "{str(directory).replace(os.path.sep, "/")}/test_main.sql",
+        "{str(directory).replace(os.path.sep, "/")}/test.sql",
     ]
     """
 
