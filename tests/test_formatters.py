@@ -26,7 +26,7 @@ def test_formatters(
 ) -> None:
     """Test formatters."""
     config_overrides: dict[str, typing.Any] = typing.cast(
-        dict[str, typing.Any],
+        "dict[str, typing.Any]",
         test_case.get("config", {}),
     )
 
@@ -38,9 +38,9 @@ def test_formatters(
         source_code=test_case["sql"],
     )
 
-    assert (
-        result.formatted_source_code == test_case["expected"]
-    ), f"Test failed for formatter: `{test_formatter}` in `{test_id}`"
+    assert result.formatted_source_code == test_case["expected"], (
+        f"Test failed for formatter: `{test_formatter}` in `{test_id}`"
+    )
 
     # Check that the formatted source code is valid
     try:

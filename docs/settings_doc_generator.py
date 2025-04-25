@@ -22,4 +22,4 @@ for category, value in categories.items():
         "a",
     ) as file:
         file.write(f"## {category}\n\n")
-        file.write(typing.cast(str, value.__doc__).strip() + "\n")
+        file.write(typing.cast("str", value.__doc__).strip() + "\n")
