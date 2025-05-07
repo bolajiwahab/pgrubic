@@ -193,11 +193,9 @@ legacy_tox_ini = """
 
     [testenv:prepare-release]
     extras = release
-    allowlist_externals = cz
     commands = cz bump
 
     [testenv:tests]
-    allowlist_externals = coverage
     extras = dev
     setenv = {[testenv:coverage]setenv}
     commands =
@@ -206,27 +204,23 @@ legacy_tox_ini = """
 
     [testenv:tests-linux]
     platform = linux
-    allowlist_externals = {[testenv:tests]allowlist_externals}
     extras = {[testenv:tests]extras}
     setenv = {[testenv:tests]setenv}
     commands = {[testenv:tests]commands}
 
     [testenv:tests-windows]
     platform = win32
-    allowlist_externals = {[testenv:tests]allowlist_externals}
     extras = {[testenv:tests]extras}
     setenv = {[testenv:tests]setenv}
     commands = {[testenv:tests]commands}
 
     [testenv:tests-macos]
     platform = darwin
-    allowlist_externals = {[testenv:tests]allowlist_externals}
     extras = {[testenv:tests]extras}
     setenv = {[testenv:tests]setenv}
     commands = {[testenv:tests]commands}
 
     [testenv:coverage]
-    allowlist_externals = coverage
     extras = dev
     setenv =
         COVERAGE_FILE = .coverage
@@ -239,24 +233,20 @@ legacy_tox_ini = """
     commands = interrogate {posargs}
 
     [testenv:isort]
-    allowlist_externals = isort
     extras = dev
     commands = isort --check --diff --profile=black {posargs:.}
 
     [testenv:lint]
     extras = dev
-    allowlist_externals = ruff, yamllint
     commands =
         ruff check {posargs} --fix
         yamllint --strict {posargs:.}
 
     [testenv:format]
     extras = dev
-    allowlist_externals = ruff
     commands = ruff format {posargs}
 
     [testenv:typing]
-    allowlist_externals = mypy
     extras = dev
     commands = mypy {posargs:.}
 
@@ -275,7 +265,6 @@ legacy_tox_ini = """
         ./tools/ensure_up_to_date_docs.sh
 
     [testenv:pre-commit]
-    allowlist_externals = pre-commit
     extras = dev
     commands = pre-commit {posargs:run --hook-stage pre-commit --all-files}
 
