@@ -250,6 +250,7 @@ legacy_tox_ini = """
     commands = bandit --severity-level all -r src
 
     [testenv:docbuild]
+    skip_install = true
     commands =
         # We need to build the project in order to generate the docs.
         # Hence it fails with import errors.
