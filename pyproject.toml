@@ -85,6 +85,10 @@ doc = [
   "mkdocstrings-python==1.16.10",
 ]
 
+release = [
+  "commitizen==4.6.3",
+]
+
 [project.urls]
 Homepage = "https://github.com/bolajiwahab/pgrubic"
 Documentation = "https://github.com/bolajiwahab/pgrubic/blob/main/README.md"
@@ -185,52 +189,50 @@ legacy_tox_ini = """
     commands =
 
     [testenv:commitlint]
-    deps = conventional-pre-commit
+    extras = dev
     commands = conventional-pre-commit .git/COMMIT_EDITMSG
 
     [testenv:prepare-release]
-    deps = commitizen
+    extras = release
+    allowlist_externals = cz
     commands = cz bump
 
     [testenv:tests]
     skip_install = false
-    deps =
-        pytest
-        coverage
-        pyyaml
-    setenv =
-        COVERAGE_FILE = .coverage
+    allowlist_externals = coverage
+    extras = dev
+    setenv = {[testenv:coverage]setenv}
     commands =
         coverage erase
         coverage run -m pytest -vv {posargs:tests}
 
     [testenv:tests-linux]
     platform = linux
-    skip_install = false
-    deps = {[testenv:tests]deps}
-    setenv =
-        COVERAGE_FILE = .coverage
+    skip_install = {[testenv:tests]skip_install}
+    allowlist_externals = {[testenv:tests]allowlist_externals}
+    extras = {[testenv:tests]extras}
+    setenv = {[testenv:tests]setenv}
     commands = {[testenv:tests]commands}
 
     [testenv:tests-windows]
     platform = win32
-    skip_install = false
-    deps = {[testenv:tests]deps}
-    setenv =
-        COVERAGE_FILE = .coverage
+    skip_install = {[testenv:tests]skip_install}
+    allowlist_externals = {[testenv:tests]allowlist_externals}
+    setenv = {[testenv:tests]setenv}
     commands = {[testenv:tests]commands}
 
     [testenv:tests-macos]
     platform = darwin
-    skip_install = false
-    deps = {[testenv:tests]deps}
-    setenv =
-        COVERAGE_FILE = .coverage
+    skip_install = {[testenv:tests]skip_install}
+    allowlist_externals = {[testenv:tests]allowlist_externals}
+    extras = {[testenv:tests]extras}
+    setenv = {[testenv:tests]setenv}
     commands = {[testenv:tests]commands}
 
     [testenv:coverage]
     skip_install = false
-    deps = {[testenv:tests]deps}
+    allowlist_externals = coverage
+    extras = dev
     setenv =
         COVERAGE_FILE = .coverage
     commands =
@@ -238,36 +240,29 @@ legacy_tox_ini = """
         coverage report --fail-under=100 --show-missing {posargs}
 
     [testenv:docstrings-coverage]
-    deps = interrogate
+    extras = dev
     commands = interrogate {posargs}
 
     [testenv:isort]
-    deps = isort
+    allowlist_externals = isort
+    extras = dev
     commands = isort --check --diff --profile=black {posargs:.}
 
     [testenv:lint]
-    deps =
-        ruff
-        yamllint
+    extras = dev
+    allowlist_externals = ruff, yamllint
     commands =
         ruff check {posargs} --fix
         yamllint --strict {posargs:.}
 
     [testenv:format]
-    deps = ruff
+    extras = dev
+    allowlist_externals = ruff
     commands = ruff format {posargs}
 
     [testenv:typing]
-    deps =
-        mypy
-        pytest
-        types-toml
-        types-colorama
-        types-click
-        rich
-        types-PyYAML
-        msgpack-types
-        GitPython
+    allowlist_externals = mypy
+    extras = dev
     commands = mypy {posargs:.}
 
     [testenv:docbuild]
@@ -285,7 +280,8 @@ legacy_tox_ini = """
         ./tools/ensure_up_to_date_docs.sh
 
     [testenv:pre-commit]
-    deps = pre-commit
+    allowlist_externals = pre-commit
+    extras = dev
     commands = pre-commit {posargs:run --hook-stage pre-commit --all-files}
 
     [testenv:build-dist]
