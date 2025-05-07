@@ -14,8 +14,10 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v0.json)](https://github.com/charliermarsh/ruff)
 [![types - mypy](https://img.shields.io/badge/types-mypy-blue.svg)](https://github.com/python/mypy)
+[![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
+[![Socket Badge](https://socket.dev/api/badge/pypi/package/pgrubic?artifact_id=tar-gz)](https://socket.dev/pypi/package/pgrubic/overview/)
 
-Pgrubic is a PostgreSQL linter and formatter for schema migrations and design best practices.
+pgrubic is a PostgreSQL linter and formatter for schema migrations and design best practices.
 
 ## Features
 
@@ -37,7 +39,7 @@ For more, see the [documentation](https://bolajiwahab.github.io/pgrubic/).
 pip install pgrubic
 ```
 
-**<span style="color:red">Pgrubic is only supported on Python 3.12 or higher</span>**.
+**<span style="color:red">pgrubic is only supported on Python 3.12 or higher</span>**.
 
 ## Usage
 
@@ -85,7 +87,7 @@ pgrubic format directory/*.sql --check # Check if SQL files would have been modi
 pgrubic format file.sql --diff         # Report if `file.sql` would have been modified, returning a non-zero exit code as well the difference between `file.sql` and how the formatted file would look like
 ```
 
-Pgrubic can also be used as a pre-commit hook:
+pgrubic can also be used as a pre-commit hook:
 
 ```
 - repo: https://github.com/bolajiwahab/pgrubic
@@ -97,7 +99,7 @@ Pgrubic can also be used as a pre-commit hook:
 
 ## Configuration
 
-Pgrubic can be configured via the [`pgrubic.toml`] file in either the current directory, up to the root directory or the path set by the `PGRUBIC_CONFIG_PATH` environment variable.
+pgrubic can be configured via the [`pgrubic.toml`] file in either the current directory, up to the root directory or the path set by the `PGRUBIC_CONFIG_PATH` environment variable.
 
 The following configuration options are available in the [`pgrubic.toml`] with the following defaults:
 
@@ -233,11 +235,11 @@ There are 100+ rules. All rules are enabled by default. For a complete list, see
 
 ## Formatting style
 
-Pgrubic uses **River** style code formatting.
+pgrubic uses **River** style code formatting.
 
 ## Contributing
 
-We welcome and greatly appreciate contributions. If you would like to contribute, please see the [contributing guidelines](https://github.com/bolajiwahab/pgrubic/blob/main/CONTRIBUTING.md).
+We welcome and greatly appreciate contributions. If you would like to contribute, please see the [contributing guidelines](https://github.com/bolajiwahab/pgrubic/blob/main/docs/docs/contributing.md).
 
 ## Support
 
@@ -245,15 +247,15 @@ Encountering issues? Take a look at the existing GitHub [issues](https://github.
 
 ## Acknowledgments
 
-Pgrubic is inspired by a number of similar tools such as [Strong Migrations](https://github.com/ankane/strong_migrations), [squabble](https://github.com/erik/squabble),
+pgrubic is inspired by a number of similar tools such as [Strong Migrations](https://github.com/ankane/strong_migrations), [squabble](https://github.com/erik/squabble),
 [squawk](https://github.com/sbdchd/squawk), [pgextwlist](https://github.com/dimitri/pgextwlist), [Don't_Do_This](https://wiki.postgresql.org/wiki/Don't_Do_This)
 and [schemalint](https://github.com/kristiandupont/schemalint).
 
-Pgrubic is built upon the shoulders of:
+pgrubic is built upon the shoulders of:
 
 - [pglast](https://github.com/lelit/pglast) - Python bindings to libpg_query
 - [libpg_query](https://github.com/pganalyze/libpg_query) - PostgreSQL parser outside of the server environment
 
 ## License
 
-Pgrubic is released under GPL-3.0 license.
+pgrubic is released under GPL-3.0 license.

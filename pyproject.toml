@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=77.0.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.package-data]
@@ -23,7 +23,8 @@ name = "pgrubic"
 version = "0.5.3"
 description = "PostgreSQL linter and formatter for schema migrations and design best practices"
 readme = { file = "README.md", content-type = "text/markdown" }
-license = {file = "LICENSE"}
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
 requires-python = ">=3.12"
 authors = [{ name = "Bolaji Wahab", email = "bolajiwahab23@gmail.com" }]
 maintainers = [{ name = "Bolaji Wahab", email = "bolajiwahab23@gmail.com" }]
@@ -31,7 +32,6 @@ classifiers = [
   "Development Status :: 4 - Beta",
   "Environment :: Console",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
   "Operating System :: MacOS :: MacOS X",
   "Operating System :: POSIX :: Linux",
   "Operating System :: Microsoft :: Windows",
@@ -62,6 +62,7 @@ dev = [
   "ruff==0.11.7",
   "mypy==1.15.0",
   "isort==6.0.1",
+  "bandit==1.8.3",
   "add-trailing-comma==3.1.0",
   "interrogate==1.7.0",
   "pre-commit==4.2.0",
@@ -85,6 +86,10 @@ doc = [
   "mkdocstrings-python==1.16.10",
 ]
 
+release = [
+  "commitizen==4.6.3",
+]
+
 [project.urls]
 Homepage = "https://github.com/bolajiwahab/pgrubic"
 Documentation = "https://github.com/bolajiwahab/pgrubic/blob/main/README.md"
@@ -94,6 +99,11 @@ Changelog = "https://github.com/bolajiwahab/pgrubic/blob/main/CHANGELOG.md"
 
 [project.scripts]
 pgrubic = "pgrubic.__main__:cli"
+
+[tool.bandit]
+exclude_dirs = [
+  "tests"
+]
 
 [tool.mypy]
 python_version = "3.12"
@@ -180,57 +190,42 @@ legacy_tox_ini = """
         prepare-release
 
     [testenv]
-    skip_install = true
+    extras = dev
     deps =
     commands =
 
+    [testenv:dev]
+    extras = dev
+
     [testenv:commitlint]
-    deps = conventional-pre-commit
     commands = conventional-pre-commit .git/COMMIT_EDITMSG
 
     [testenv:prepare-release]
-    deps = commitizen
+    extras = release
     commands = cz bump
 
     [testenv:tests]
-    skip_install = false
-    deps =
-        pytest
-        coverage
-        pyyaml
-    setenv =
-        COVERAGE_FILE = .coverage
+    setenv = {[testenv:coverage]setenv}
     commands =
         coverage erase
         coverage run -m pytest -vv {posargs:tests}
 
     [testenv:tests-linux]
     platform = linux
-    skip_install = false
-    deps = {[testenv:tests]deps}
-    setenv =
-        COVERAGE_FILE = .coverage
+    setenv = {[testenv:tests]setenv}
     commands = {[testenv:tests]commands}
 
     [testenv:tests-windows]
     platform = win32
-    skip_install = false
-    deps = {[testenv:tests]deps}
-    setenv =
-        COVERAGE_FILE = .coverage
+    setenv = {[testenv:tests]setenv}
     commands = {[testenv:tests]commands}
 
     [testenv:tests-macos]
     platform = darwin
-    skip_install = false
-    deps = {[testenv:tests]deps}
-    setenv =
-        COVERAGE_FILE = .coverage
+    setenv = {[testenv:tests]setenv}
     commands = {[testenv:tests]commands}
 
     [testenv:coverage]
-    skip_install = false
-    deps = {[testenv:tests]deps}
     setenv =
         COVERAGE_FILE = .coverage
     commands =
@@ -238,43 +233,31 @@ legacy_tox_ini = """
         coverage report --fail-under=100 --show-missing {posargs}
 
     [testenv:docstrings-coverage]
-    deps = interrogate
     commands = interrogate {posargs}
 
     [testenv:isort]
-    deps = isort
     commands = isort --check --diff --profile=black {posargs:.}
 
     [testenv:lint]
-    deps =
-        ruff
-        yamllint
     commands =
         ruff check {posargs} --fix
         yamllint --strict {posargs:.}
 
     [testenv:format]
-    deps = ruff
     commands = ruff format {posargs}
 
     [testenv:typing]
-    deps =
-        mypy
-        pytest
-        types-toml
-        types-colorama
-        types-click
-        rich
-        types-PyYAML
-        msgpack-types
-        GitPython
     commands = mypy {posargs:.}
 
+    [testenv:security]
+    commands = bandit --severity-level all -r src
+
     [testenv:docbuild]
+    skip_install = true
     commands =
         # We need to build the project in order to generate the docs.
         # Hence it fails with import errors.
-        pip install -e .
+        pip install .
         python docs/rule_docs_generator.py
         python docs/settings_doc_generator.py
 
@@ -285,7 +268,6 @@ legacy_tox_ini = """
         ./tools/ensure_up_to_date_docs.sh
 
     [testenv:pre-commit]
-    deps = pre-commit
     commands = pre-commit {posargs:run --hook-stage pre-commit --all-files}
 
     [testenv:build-dist]

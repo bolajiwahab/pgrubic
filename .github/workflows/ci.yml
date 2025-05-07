@@ -24,6 +24,7 @@ jobs:
           - isort
           - format
           - typing
+          - security
           - docbuild
           - ensure-docs-up-to-date
           - build-dist
