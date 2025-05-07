@@ -239,7 +239,7 @@ pgrubic uses **River** style code formatting.
 
 ## Contributing
 
-We welcome and greatly appreciate contributions. If you would like to contribute, please see the [contributing guidelines](https://github.com/bolajiwahab/pgrubic/blob/main/CONTRIBUTING.md).
+We welcome and greatly appreciate contributions. If you would like to contribute, please see the [contributing guidelines](https://github.com/bolajiwahab/pgrubic/blob/main/docs/docs/contributing.md).
 
 ## Support
 
