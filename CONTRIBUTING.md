@@ -1,16 +1,32 @@
 # Contributing
 
-Thank you for your interest in contributing to Pgrubic!.
+Thank you for your interest in contributing to pgrubic!.
 Contributions are welcome, whether they are bug reports, feature requests, code improvements, documentation updates, or new features. Contributions are welcome in form of Pull Requests. This guide will help you get started with the contributing process.
 
 For significant changes, such as new rules, please consider creating an [issue](https://github.com/bolajiwahab/pgrubic/issues) to outline your proposed feature for discussion.
 
-## Getting Started
+## Development
 
-To contribute, you will need:
+To set up a development environment, you will need **tox** and **python 3.12 or higher**.
 
-- Python 3.12 or higher
-- tox for running tests and other environments
+1. Install **tox**:
+
+```console
+python3.12 -m pip install --upgrade tox
+```
+
+2. Create and activate a virtual environment:
+
+```console
+tox -e dev --devenv .venv
+source .venv/bin/activate
+```
+
+3. Set up the git hook scripts
+
+```console
+pre-commit install
+```
 
 ## Project Structure
 
@@ -50,7 +66,7 @@ To contribute, you will need:
 
 ## Architecture
 
-Pgrubic has two components:
+pgrubic has two components:
 
 1. **The Linter:** The linter loads the rules and check SQL files against the rules.
 2. **The Formatter:** The formatter formats SQL files.

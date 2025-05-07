@@ -194,6 +194,9 @@ legacy_tox_ini = """
     deps =
     commands =
 
+    [testenv:dev]
+    extras = dev
+
     [testenv:commitlint]
     commands = conventional-pre-commit .git/COMMIT_EDITMSG
 
