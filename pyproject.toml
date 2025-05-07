@@ -184,7 +184,6 @@ legacy_tox_ini = """
         prepare-release
 
     [testenv]
-    skip_install = true
     deps =
     commands =
 
@@ -198,7 +197,6 @@ legacy_tox_ini = """
     commands = cz bump
 
     [testenv:tests]
-    skip_install = false
     allowlist_externals = coverage
     extras = dev
     setenv = {[testenv:coverage]setenv}
@@ -208,7 +206,6 @@ legacy_tox_ini = """
 
     [testenv:tests-linux]
     platform = linux
-    skip_install = {[testenv:tests]skip_install}
     allowlist_externals = {[testenv:tests]allowlist_externals}
     extras = {[testenv:tests]extras}
     setenv = {[testenv:tests]setenv}
@@ -216,21 +213,19 @@ legacy_tox_ini = """
 
     [testenv:tests-windows]
     platform = win32
-    skip_install = {[testenv:tests]skip_install}
     allowlist_externals = {[testenv:tests]allowlist_externals}
+    extras = {[testenv:tests]extras}
     setenv = {[testenv:tests]setenv}
     commands = {[testenv:tests]commands}
 
     [testenv:tests-macos]
     platform = darwin
-    skip_install = {[testenv:tests]skip_install}
     allowlist_externals = {[testenv:tests]allowlist_externals}
     extras = {[testenv:tests]extras}
     setenv = {[testenv:tests]setenv}
     commands = {[testenv:tests]commands}
 
     [testenv:coverage]
-    skip_install = false
     allowlist_externals = coverage
     extras = dev
     setenv =
