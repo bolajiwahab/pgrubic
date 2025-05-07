@@ -190,11 +190,11 @@ legacy_tox_ini = """
         prepare-release
 
     [testenv]
+    extras = dev
     deps =
     commands =
 
     [testenv:commitlint]
-    extras = dev
     commands = conventional-pre-commit .git/COMMIT_EDITMSG
 
     [testenv:prepare-release]
@@ -202,7 +202,6 @@ legacy_tox_ini = """
     commands = cz bump
 
     [testenv:tests]
-    extras = dev
     setenv = {[testenv:coverage]setenv}
     commands =
         coverage erase
@@ -210,24 +209,20 @@ legacy_tox_ini = """
 
     [testenv:tests-linux]
     platform = linux
-    extras = {[testenv:tests]extras}
     setenv = {[testenv:tests]setenv}
     commands = {[testenv:tests]commands}
 
     [testenv:tests-windows]
     platform = win32
-    extras = {[testenv:tests]extras}
     setenv = {[testenv:tests]setenv}
     commands = {[testenv:tests]commands}
 
     [testenv:tests-macos]
     platform = darwin
-    extras = {[testenv:tests]extras}
     setenv = {[testenv:tests]setenv}
     commands = {[testenv:tests]commands}
 
     [testenv:coverage]
-    extras = dev
     setenv =
         COVERAGE_FILE = .coverage
     commands =
@@ -235,29 +230,23 @@ legacy_tox_ini = """
         coverage report --fail-under=100 --show-missing {posargs}
 
     [testenv:docstrings-coverage]
-    extras = dev
     commands = interrogate {posargs}
 
     [testenv:isort]
-    extras = dev
     commands = isort --check --diff --profile=black {posargs:.}
 
     [testenv:lint]
-    extras = dev
     commands =
         ruff check {posargs} --fix
         yamllint --strict {posargs:.}
 
     [testenv:format]
-    extras = dev
     commands = ruff format {posargs}
 
     [testenv:typing]
-    extras = dev
     commands = mypy {posargs:.}
 
     [testenv:security]
-    extras = dev
     commands = bandit --severity-level all -r src
 
     [testenv:docbuild]
@@ -275,7 +264,6 @@ legacy_tox_ini = """
         ./tools/ensure_up_to_date_docs.sh
 
     [testenv:pre-commit]
-    extras = dev
     commands = pre-commit {posargs:run --hook-stage pre-commit --all-files}
 
     [testenv:build-dist]
