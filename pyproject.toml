@@ -59,7 +59,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "ruff==0.11.7",
+  "ruff==0.11.8",
   "mypy==1.15.0",
   "isort==6.0.1",
   "bandit==1.8.3",
@@ -67,8 +67,8 @@ dev = [
   "interrogate==1.7.0",
   "pre-commit==4.2.0",
   "pre-commit-hooks==5.0.0",
-  "yamllint==1.37.0",
-  "conventional-pre-commit==4.0.0",
+  "yamllint==1.37.1",
+  "conventional-pre-commit==4.2.0",
   "pytest==8.3.5",
   "coverage==7.8.0",
   "tox==4.25.0",
