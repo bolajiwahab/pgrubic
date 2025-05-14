@@ -87,7 +87,7 @@ Rules use visitor pattern. This allows for traversing an Abstract Syntax Tree (A
 
 - The rule should inherit from the base checker
 - Documentation is provided through the docstring of the rule
-- The rule should implement a set of particular named method(s), specifically `visit_XYZ` where XYZ is the name of the AST node it is visiting
+- The rule should implement a set of particular named method(s), specifically `visit_XYZ` where XYZ is the name of the AST node it is visiting. List of nodes can be found [here](https://pglast.readthedocs.io/en/latest/ast.html).
 - The rule should add necessary violation to the violations list
 - Fixes must not have side effects, in the sense that such fixes should not trigger violation of another rule
 
