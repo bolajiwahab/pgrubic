@@ -58,6 +58,8 @@ def extract_statement_locations(
 
     inside_block = False  # Tracks if we are inside BEGIN ... END block
 
+    inside_parenthesis = False  # Tracks if we are inside parentheses (...)
+
     for idx, token in enumerate(tokens):
         if idx == len(tokens) - 1 and token.name != ASCII_SEMI_COLON:
             msg = f"Missing semicolon (;) at end of SQL statement at location {token.end}"
@@ -72,8 +74,16 @@ def extract_statement_locations(
         if inside_block and token.name == "END_P":
             inside_block = False  # Function block ends
 
+        # Detect open parenthesis
+        if token.name == "ASCII_40":
+            inside_parenthesis = True
+
+        # Detect close parenthesis
+        if token.name == "ASCII_41":
+            inside_parenthesis = False  # Parenthesis ends
+
         if token.name == ASCII_SEMI_COLON:
-            if not inside_block:
+            if not (inside_block or inside_parenthesis):
                 locations.append(
                     Statement(
                         start_location=statement_start_location,
@@ -372,7 +382,6 @@ def extract_comments(*, source_file: str, source_code: str) -> list[Comment]:
             at_start_of_line = not source_code[
                 : token.start - statement_start_location
             ].strip()
-            comment = source_code[token.start : token.end + 1]
             comments.append(
                 Comment(
                     statement_start_location,
