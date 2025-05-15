@@ -3,6 +3,7 @@
 import sys
 import typing
 import pathlib
+import dataclasses
 
 from pglast import parser
 from colorama import Fore, Style
@@ -162,14 +163,15 @@ def _get_statement_locations(
     return statement_start_location, statement_end_location
 
 
-class NoQaDirective(typing.NamedTuple):
+@dataclasses.dataclass(kw_only=True)
+class NoQaDirective:
     """Representation of a noqa directive."""
 
+    source_file: str | None = None
     location: int
     line_number: int
     column_offset: int
     rule: str
-    source_file: str | None = None
     used: bool = False
 
 
