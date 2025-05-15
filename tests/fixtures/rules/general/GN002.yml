@@ -7,6 +7,10 @@ test_fail_create_rule:
         ON UPDATE TO tbl
         DO ALSO NOTIFY tbl;
 
+test_fail_create_rule_multiple_statements:
+  sql_fail: |
+    CREATE RULE x AS ON SELECT TO tbl DO (SELECT 1; SELECT 2; SELECT 3;);
+
 test_pass_create_trigger:
   sql_pass: |
     CREATE OR REPLACE TRIGGER check_update
