@@ -50,7 +50,7 @@ dependencies = [
   "case-converter==1.1.0",
   "colorama==0.4.6",
   "toml==0.10.2",
-  "click==8.1.8",
+  "click==8.2.0",
   "rich==14.0.0",
   "deepmerge==2.0",
   "msgpack==1.1.0",
@@ -59,7 +59,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "ruff==0.11.8",
+  "ruff==0.11.10",
   "mypy==1.15.0",
   "isort==6.0.1",
   "bandit==1.8.3",
@@ -71,8 +71,8 @@ dev = [
   "conventional-pre-commit==4.2.0",
   "pytest==8.3.5",
   "coverage==7.8.0",
-  "tox==4.25.0",
-  "types-PyYAML==6.0.12.20250402",
+  "tox==4.26.0",
+  "types-PyYAML==6.0.12.20250516",
   "types-toml==0.10.8.20240310",
   "types-colorama==0.4.15.20240311",
   "types-click==7.1.8",
@@ -81,13 +81,13 @@ dev = [
 
 doc = [
   "mkdocs==1.6.1",
-  "mkdocs-material==9.6.12",
+  "mkdocs-material==9.6.14",
   "mkdocstrings==0.29.1",
   "mkdocstrings-python==1.16.10",
 ]
 
 release = [
-  "commitizen==4.6.3",
+  "commitizen==4.7.2",
 ]
 
 [project.urls]
