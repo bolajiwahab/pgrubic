@@ -53,6 +53,8 @@ def extract_statement_locations(
 
     inside_block = False  # Tracks if we are inside BEGIN ... END block
 
+    inside_parenthesis = False  # Tracks if we are inside parentheses (...)
+
     for _, token in enumerate(tokens):
         # Detect BEGIN
         if token.name == "BEGIN_P":
