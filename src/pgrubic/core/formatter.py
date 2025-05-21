@@ -56,12 +56,10 @@ class Formatter:
         formatted_statements: list[str] = []
 
         format_ignores = noqa.extract_format_ignores(
-            source_file=source_file,
             source_code=source_code,
         )
 
         for statement in noqa.extract_statement_locations(
-            source_file=source_file,
             source_code=source_code,
         ):
             if statement.start_location in format_ignores:
@@ -69,7 +67,6 @@ class Formatter:
                 continue
 
             comments = noqa.extract_comments(
-                source_file=source_file,
                 source_code=statement.text,
             )
 

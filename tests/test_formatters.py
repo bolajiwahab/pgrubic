@@ -8,7 +8,7 @@ from pglast import parser
 
 from tests import TEST_FILE, conftest
 from pgrubic import core
-from pgrubic.core import errors
+from pgrubic.core import noqa
 
 
 @pytest.mark.parametrize(
@@ -51,16 +51,16 @@ def test_formatters(
 
 
 def test_format_parse_error(formatter: core.Formatter) -> None:
-    """Test format."""
+    """Test parse error."""
     source_code = "SELECT * FROM;"
-    with pytest.raises(errors.ParseError):
-        formatter.format(source_file=TEST_FILE, source_code=source_code)
+    formatting_result = formatter.format(source_file=TEST_FILE, source_code=source_code)
+    assert len(formatting_result.errors) == 1
 
 
 def test_new_line_before_semicolon(formatter: core.Formatter) -> None:
     """Test new line before semicolon."""
     source_code = "select 1;"
-    expected_output: str = "SELECT 1\n;\n"
+    expected_output: str = f"SELECT 1{noqa.NEW_LINE};{noqa.NEW_LINE}"
 
     formatter.config.format.new_line_before_semicolon = True
 

@@ -3,11 +3,10 @@
 import typing
 import pathlib
 
-import pytest
 from colorama import Fore, Style
 
 from tests import TEST_FILE
-from pgrubic.core import noqa, errors
+from pgrubic.core import noqa
 
 
 def test_extract_star_ignore_from_inline_comments() -> None:
@@ -70,7 +69,7 @@ def test_wrongly_formed_inline_ignores_from_inline_comments(capfd: typing.Any) -
 
     assert (
         err
-        == f"{Fore.YELLOW}Warning: Malformed `noqa` directive at location 5. Expected `noqa: <rules>`{Style.RESET_ALL}\n"  # noqa: E501
+        == f"{Fore.YELLOW}Warning: Malformed `noqa` directive at location 5. Expected `noqa: <rules>`{Style.RESET_ALL}{noqa.NEW_LINE}"  # noqa: E501
     )
 
 
@@ -92,19 +91,8 @@ def test_report_specific_unused_ignores(
     out, _ = capfd.readouterr()
     assert (
         out
-        == f"{TEST_FILE}:3:52: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}NM016{Style.RESET_ALL})\n"  # noqa: E501
+        == f"{TEST_FILE}:3:52: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}NM016{Style.RESET_ALL}){noqa.NEW_LINE}"  # noqa: E501
     )
-
-
-def test_missing_statement_terminator() -> None:
-    """Test missing statement terminator."""
-    source_code: str = "SELECT * FROM tab"
-
-    with pytest.raises(errors.MissingStatementTerminatorError):
-        noqa.extract_comments(
-            source_file=TEST_FILE,
-            source_code=source_code,
-        )
 
 
 def test_report_general_unused_ignores(
@@ -125,7 +113,7 @@ def test_report_general_unused_ignores(
     out, _ = capfd.readouterr()
     assert (
         out
-        == f"{TEST_FILE}:3:45: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}{noqa.A_STAR}{Style.RESET_ALL})\n"  # noqa: E501
+        == f"{TEST_FILE}:3:45: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}{noqa.A_STAR}{Style.RESET_ALL}){noqa.NEW_LINE}"  # noqa: E501
     )
 
 
@@ -138,7 +126,7 @@ def test_add_file_level_general_ignore(tmp_path: pathlib.Path) -> None:
     source_file1.write_text("SELECT * FROM tab")
 
     source_file2 = directory / "source_file2.sql"
-    source_file2.write_text("-- pgrubic: noqa\n SELECT * FROM tab")
+    source_file2.write_text(f"-- pgrubic: noqa{noqa.NEW_LINE} SELECT * FROM tab")  # noqa: S608
 
     modified_sources = noqa.add_file_level_general_ignore(
         sources={source_file1, source_file2},

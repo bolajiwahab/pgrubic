@@ -8,6 +8,7 @@ from click import testing
 
 from tests import TEST_FILE
 from pgrubic import WORKERS_ENVIRONMENT_VARIABLE
+from pgrubic.core import noqa
 from pgrubic.__main__ import cli
 
 
@@ -97,7 +98,29 @@ def test_cli_lint_with_add_file_level_general_noqa(tmp_path: pathlib.Path) -> No
 
     result = runner.invoke(cli, ["lint", str(file_fail), "--add-file-level-general-noqa"])
 
-    assert result.output == "File-level general noqa directive added to 1 file(s)\n"
+    assert (
+        result.output
+        == f"File-level general noqa directive added to 1 file(s){noqa.NEW_LINE}"
+    )
+
+    assert result.exit_code == 0
+
+
+def test_cli_lint_no_violations(tmp_path: pathlib.Path) -> None:
+    """Test cli lint with add_file_level_general_noqa."""
+    runner = testing.CliRunner()
+
+    sql_fail: str = "SELECT a;"
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql_fail)
+
+    result = runner.invoke(cli, ["lint", str(file_fail)])
+
+    assert result.output == f"All checks passed!{noqa.NEW_LINE}"
 
     assert result.exit_code == 0
 
@@ -170,16 +193,14 @@ def test_cli_lint_parse_error(tmp_path: pathlib.Path) -> None:
 
     result = runner.invoke(cli, ["lint", str(file_fail)])
 
-    expected_exit_code: int = 1
-
-    assert result.exit_code == expected_exit_code
+    assert result.exit_code == 1
 
 
 def test_cli_format_file(tmp_path: pathlib.Path) -> None:
     """Test cli format file."""
     runner = testing.CliRunner()
 
-    sql_pass: str = "SELECT a = NULL;\n"
+    sql_pass: str = f"SELECT a = NULL;{noqa.NEW_LINE}"
 
     directory = tmp_path / "sub"
     directory.mkdir()
@@ -189,7 +210,10 @@ def test_cli_format_file(tmp_path: pathlib.Path) -> None:
 
     result = runner.invoke(cli, ["format", str(file_pass)])
 
-    assert result.output == "\n1 file(s) reformatted, 0 file(s) left unchanged\n"
+    assert (
+        result.output
+        == f"{noqa.NEW_LINE}1 file(s) reformatted, 0 file(s) left unchanged{noqa.NEW_LINE}"  # noqa: E501
+    )
 
     assert result.exit_code == 0
 
@@ -198,7 +222,7 @@ def test_cli_format_file_verbose(tmp_path: pathlib.Path) -> None:
     """Test cli format file."""
     runner = testing.CliRunner()
 
-    sql_pass: str = "SELECT a = NULL;\n"
+    sql_pass: str = f"SELECT a = NULL;{noqa.NEW_LINE}"
 
     directory = tmp_path / "sub"
     directory.mkdir()
@@ -217,7 +241,7 @@ def test_cli_format_directory(tmp_path: pathlib.Path) -> None:
     """Test cli format directory."""
     runner = testing.CliRunner()
 
-    sql_pass: str = "SELECT a = NULL;\n"
+    sql_pass: str = f"SELECT a = NULL;{noqa.NEW_LINE}"
 
     directory = tmp_path / "sub"
     directory.mkdir()
@@ -227,7 +251,10 @@ def test_cli_format_directory(tmp_path: pathlib.Path) -> None:
 
     result = runner.invoke(cli, ["format", str(directory)])
 
-    assert result.output == "\n1 file(s) reformatted, 0 file(s) left unchanged\n"
+    assert (
+        result.output
+        == f"{noqa.NEW_LINE}1 file(s) reformatted, 0 file(s) left unchanged{noqa.NEW_LINE}"  # noqa: E501
+    )
 
     assert result.exit_code == 0
 
@@ -250,7 +277,10 @@ def test_cli_format_current_directory(
 
     result = runner.invoke(cli, ["format"])
 
-    assert result.output == "1 file(s) reformatted, 0 file(s) left unchanged\n"
+    assert (
+        result.output
+        == f"{noqa.NEW_LINE}1 file(s) reformatted, 0 file(s) left unchanged{noqa.NEW_LINE}"  # noqa: E501
+    )
 
     assert result.exit_code == 0
 
@@ -270,6 +300,25 @@ def test_cli_format_check(tmp_path: pathlib.Path) -> None:
     result = runner.invoke(cli, ["format", str(file_fail), "--check"])
 
     assert result.output == ""
+
+    assert result.exit_code == 1
+
+
+def test_cli_format_check_parse_error(tmp_path: pathlib.Path) -> None:
+    """Test cli format check parse error."""
+    runner = testing.CliRunner()
+
+    sql_fail: str = "SELECT a ="
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql_fail)
+
+    result = runner.invoke(cli, ["format", str(file_fail), "--check"])
+
+    assert f"1 error(s) found{noqa.NEW_LINE}" in result.output
 
     assert result.exit_code == 1
 
@@ -305,21 +354,30 @@ def test_cli_format_no_cache(tmp_path: pathlib.Path) -> None:
 
     result = runner.invoke(cli, ["format", str(file_fail)])
 
-    assert result.output == "1 file(s) reformatted, 0 file(s) left unchanged\n"
+    assert (
+        result.output
+        == f"{noqa.NEW_LINE}1 file(s) reformatted, 0 file(s) left unchanged{noqa.NEW_LINE}"  # noqa: E501
+    )
 
     assert result.exit_code == 0
 
     # with cache read
     result = runner.invoke(cli, ["format", str(file_fail)])
 
-    assert result.output == "0 file(s) reformatted, 1 file(s) left unchanged\n"
+    assert (
+        result.output
+        == f"{noqa.NEW_LINE}0 file(s) reformatted, 1 file(s) left unchanged{noqa.NEW_LINE}"  # noqa: E501
+    )
 
     assert result.exit_code == 0
 
     # without cache
     result = runner.invoke(cli, ["format", str(file_fail), "--no-cache"])
 
-    assert result.output == "1 file(s) reformatted, 0 file(s) left unchanged\n"
+    assert (
+        result.output
+        == f"{noqa.NEW_LINE}1 file(s) reformatted, 0 file(s) left unchanged{noqa.NEW_LINE}"  # noqa: E501
+    )
 
     assert result.exit_code == 0
 
@@ -338,28 +396,7 @@ def test_cli_format_parse_error(tmp_path: pathlib.Path) -> None:
 
     result = runner.invoke(cli, ["format", str(file_fail)])
 
-    expected_exit_code: int = 2
-
-    assert result.exit_code == expected_exit_code
-
-
-def test_cli_format_missing_terminator_error(tmp_path: pathlib.Path) -> None:
-    """Test cli format missing terminator error."""
-    runner = testing.CliRunner()
-
-    sql: str = "SELECT * FROM tbl"
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql)
-
-    result = runner.invoke(cli, ["format", str(file_fail)])
-
-    expected_exit_code: int = 2
-
-    assert result.exit_code == expected_exit_code
+    assert result.exit_code == 1
 
 
 def test_max_workers_from_environment_variable(tmp_path: pathlib.Path) -> None:

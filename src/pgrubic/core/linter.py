@@ -334,8 +334,8 @@ class Linter:
         for violation in violations:
             sys.stdout.write(
                 f"{noqa.NEW_LINE}{source_file}:{violation.line_number}:{violation.column_offset}:"
-                f" \033]8;;{DOCUMENTATION_URL}/rules/{violation.rule_category}/{violation.rule_name}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{violation.rule_code}{Style.RESET_ALL}\033]8;;\033\\:"  # noqa: E501
-                f" {violation.description}{noqa.NEW_LINE}",
+                f"{noqa.SPACE}\033]8;;{DOCUMENTATION_URL}/rules/{violation.rule_category}/{violation.rule_name}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{violation.rule_code}{Style.RESET_ALL}\033]8;;\033\\:"
+                f"{noqa.SPACE}{violation.description}{noqa.NEW_LINE}",
             )
 
             for idx, line in enumerate(
@@ -350,7 +350,7 @@ class Linter:
                 # used above between the separator (|)
                 (
                     sys.stdout.write(
-                        " "
+                        noqa.SPACE
                         * (violation.column_offset + len(str(violation.line_number)) + 2)
                         + "^"
                         + noqa.NEW_LINE,
@@ -390,14 +390,12 @@ class Linter:
         BaseChecker.config = self.config
 
         for statement in noqa.extract_statement_locations(
-            source_file=source_file,
             source_code=source_code,
         ):
             try:
                 parse_tree: ast.Node = parser.parse_sql(statement.text)
 
                 comments = noqa.extract_comments(
-                    source_file=source_file,
                     source_code=statement.text,
                 )
 

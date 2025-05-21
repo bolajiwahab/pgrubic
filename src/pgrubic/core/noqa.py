@@ -9,7 +9,6 @@ from pglast import parser
 from colorama import Fore, Style
 
 from pgrubic import PACKAGE_NAME
-from pgrubic.core import errors
 
 A_STAR: typing.Final[str] = "*"
 ASCII_SEMI_COLON: typing.Final[str] = "ASCII_59"
@@ -28,17 +27,14 @@ class Statement(typing.NamedTuple):
 
 def extract_statement_locations(
     *,
-    source_file: str,
     source_code: str,
 ) -> list[Statement]:
     """Build statements start and end locations.
 
     Parameters:
     ----------
-    source_file: str
-        Path to the source file.
     source_code: str
-        Source code to lint.
+        Source code to extract statements from.
 
     Returns:
     -------
@@ -54,18 +50,15 @@ def extract_statement_locations(
 
     statement_start_location = 0
 
+    # Add semi-colon at the end if missing
+    if not source_code.rstrip(NEW_LINE).rstrip(SPACE).endswith(SEMI_COLON):
+        source_code += SEMI_COLON
+
     tokens = parser.scan(source_code)
 
     inside_block = False  # Tracks if we are inside BEGIN ... END block
 
-    inside_parenthesis = False  # Tracks if we are inside parentheses (...)
-
-    for idx, token in enumerate(tokens):
-        if idx == len(tokens) - 1 and token.name != ASCII_SEMI_COLON:
-            msg = f"Missing semicolon (;) at end of SQL statement at location {token.end}"
-
-            raise errors.MissingStatementTerminatorError(f"{source_file}: " + msg)
-
+    for _, token in enumerate(tokens):
         # Detect BEGIN
         if token.name == "BEGIN_P":
             inside_block = True
@@ -177,17 +170,14 @@ class NoQaDirective:
 
 
 def _extract_statement_ignores(
-    source_file: str,
     source_code: str,
 ) -> list[NoQaDirective]:
     """Extract ignores from SQL statements.
 
     Parameters:
     ----------
-    source_file: str
-        Path to the source file.
     source_code: str
-        Source code to lint.
+        Source code to extract ignores from.
 
     Returns:
     -------
@@ -195,7 +185,6 @@ def _extract_statement_ignores(
         List of ignores.
     """
     locations = extract_statement_locations(
-        source_file=source_file,
         source_code=source_code,
     )
 
@@ -230,7 +219,7 @@ def _extract_statement_ignores(
     return inline_ignores
 
 
-def _extract_file_ignore(source_file: str, source_code: str) -> list[NoQaDirective]:
+def _extract_file_ignore(*, source_file: str, source_code: str) -> list[NoQaDirective]:
     """Extract ignore from the start of a source file.
 
     Parameters:
@@ -238,7 +227,7 @@ def _extract_file_ignore(source_file: str, source_code: str) -> list[NoQaDirecti
     source_file: str
         Path to the source file.
     source_code: str
-        Source code to lint.
+        Source code to extract ignores from.
 
     Returns:
     -------
@@ -282,7 +271,7 @@ def extract_ignores(*, source_file: str, source_code: str) -> list[NoQaDirective
     source_file: str
         Path to the source file.
     source_code: str
-        Source code to lint.
+        Source code to extract ignores from.
 
     Returns:
     -------
@@ -290,7 +279,6 @@ def extract_ignores(*, source_file: str, source_code: str) -> list[NoQaDirective
         List of ignores.
     """
     return _extract_statement_ignores(
-        source_file=source_file,
         source_code=source_code,
     ) + _extract_file_ignore(
         source_file=source_file,
@@ -298,15 +286,13 @@ def extract_ignores(*, source_file: str, source_code: str) -> list[NoQaDirective
     )
 
 
-def extract_format_ignores(source_file: str, source_code: str) -> list[int]:
+def extract_format_ignores(source_code: str) -> list[int]:
     """Extract format ignores from SQL statements.
 
     Parameters:
     ----------
-    source_file: str
-        Path to the source file.
     source_code: str
-        Source code to lint.
+        Source code to extract ignores from.
 
     Returns:
     -------
@@ -314,7 +300,6 @@ def extract_format_ignores(source_file: str, source_code: str) -> list[int]:
         List of ignores.
     """
     locations = extract_statement_locations(
-        source_file=source_file,
         source_code=source_code,
     )
 
@@ -349,15 +334,13 @@ class Comment(typing.NamedTuple):
     continue_previous: bool
 
 
-def extract_comments(*, source_file: str, source_code: str) -> list[Comment]:
+def extract_comments(*, source_code: str) -> list[Comment]:
     """Extract comments from SQL statements.
 
     Parameters:
     ----------
-    source_file: str
-        Path to the source file.
     source_code: str
-        Source code to lint.
+        Source code to extract comments from.
 
     Returns:
     -------
@@ -365,7 +348,6 @@ def extract_comments(*, source_file: str, source_code: str) -> list[Comment]:
         List of comments.
     """
     locations = extract_statement_locations(
-        source_file=source_file,
         source_code=source_code,
     )
 

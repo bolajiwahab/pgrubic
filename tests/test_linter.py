@@ -1,6 +1,7 @@
 """Test linter."""
 
 from pgrubic import core
+from pgrubic.core import noqa
 
 SOURCE_FILE = "linter.sql"
 
@@ -59,7 +60,7 @@ def test_linter_violations_fixed_source_code(
         source_code="SELECT a = NULL;",
     )
 
-    assert linting_result.fixed_source_code == "SELECT a IS NULL;\n"
+    assert linting_result.fixed_source_code == f"SELECT a IS NULL;{noqa.NEW_LINE}"
 
 
 def test_linter_suppressed_violations_fixed_source_code(
@@ -77,6 +78,20 @@ SELECT a = NULL;
     assert not linting_result.fixed_source_code
 
 
+def test_lint_parse_error(linter: core.Linter) -> None:
+    """Test parse error."""
+    source_code: str = """
+    CREATE TABLE tbl (activated);
+    """
+
+    linting_result = linter.run(
+        source_file=SOURCE_FILE,
+        source_code=source_code,
+    )
+
+    assert len(linting_result.errors) == 1
+
+
 def test_new_line_before_semicolon(
     linter: core.Linter,
 ) -> None:
@@ -88,7 +103,12 @@ def test_new_line_before_semicolon(
         source_code="SELECT a = NULL;",
     )
 
-    assert linting_result.fixed_source_code == "SELECT a IS NULL\n;\n"
+    linter.config.format.new_line_before_semicolon = False
+
+    assert (
+        linting_result.fixed_source_code
+        == f"SELECT a IS NULL{noqa.NEW_LINE};{noqa.NEW_LINE}"
+    )
 
 
 def test_fix_enabledment(
@@ -102,4 +122,4 @@ def test_fix_enabledment(
         source_code="SELECT a = NULL;",
     )
 
-    assert linting_result.fixed_source_code == "SELECT a IS NULL\n;\n"
+    assert linting_result.fixed_source_code == f"SELECT a IS NULL;{noqa.NEW_LINE}"
