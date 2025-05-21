@@ -4,6 +4,7 @@ import typing
 
 from pglast import parser, stream
 
+from pgrubic import ISSUES_URL
 from pgrubic.core import noqa, config, errors
 
 
@@ -13,6 +14,7 @@ class FormatResult(typing.NamedTuple):
     source_file: str
     original_source_code: str
     formatted_source_code: str
+    errors: set[errors.Error]
 
 
 class Formatter:
@@ -29,7 +31,12 @@ class Formatter:
         self.config = config
 
     @staticmethod
-    def run(*, source_file: str, source_code: str, config: config.Config) -> str:
+    def run(
+        *,
+        source_file: str,
+        source_code: str,
+        config: config.Config,
+    ) -> tuple[str, set[errors.Error]]:
         """Format source code.
 
         Parameters:
@@ -43,18 +50,8 @@ class Formatter:
         -------
         str
             Formatted source code.
-
-        Raises:
-        ------
-        ParseError
-            If there is an error parsing source code.
         """
-        try:
-            parser.parse_sql(source_code)
-
-        except parser.ParseError as error:
-            msg = "Error parsing source code: "
-            raise errors.ParseError(f"{source_file}: " + msg + str(error)) from error
+        _errors: set[errors.Error] = set()
 
         formatted_statements: list[str] = []
 
@@ -76,26 +73,43 @@ class Formatter:
                 source_code=statement.text,
             )
 
-            formatted_statement = stream.IndentedStream(
-                comments=comments,
-                semicolon_after_last_statement=False,
-                remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
-                comma_at_eoln=not (config.format.comma_at_beginning),
-                special_functions=True,
-            )(statement.text)
+            try:
+                parser.parse_sql(statement.text)
 
-            if config.format.new_line_before_semicolon:
-                formatted_statement += noqa.NEW_LINE + noqa.SEMI_COLON
-            else:
-                formatted_statement += noqa.SEMI_COLON
+                formatted_statement = stream.IndentedStream(
+                    comments=comments,
+                    semicolon_after_last_statement=False,
+                    remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
+                    comma_at_eoln=not (config.format.comma_at_beginning),
+                    special_functions=True,
+                )(statement.text)
 
-            formatted_statements.append(formatted_statement)
+                if config.format.new_line_before_semicolon:
+                    formatted_statement += noqa.NEW_LINE + noqa.SEMI_COLON
+                else:
+                    formatted_statement += noqa.SEMI_COLON
+
+                formatted_statements.append(formatted_statement)
+            except parser.ParseError as error:
+                _errors.add(
+                    errors.Error(
+                        source_file=str(source_file),
+                        source_code=statement.text,
+                        statement_start_location=statement.start_location + 1,
+                        statement_end_location=statement.end_location,
+                        statement=statement.text,
+                        message=str(error),
+                        hint=f"""Make sure the statement is valid PostgreSQL statement. If it is, please report this issue at {ISSUES_URL}\n""",  # noqa: E501
+                    ),
+                )
+                formatted_statements.append(statement.text)
+                continue
 
         return (
             noqa.NEW_LINE + (noqa.NEW_LINE * config.format.lines_between_statements)
         ).join(
             formatted_statements,
-        ) + noqa.NEW_LINE
+        ) + noqa.NEW_LINE, _errors
 
     def format(self, *, source_file: str, source_code: str) -> FormatResult:
         """Format source code.
@@ -112,12 +126,14 @@ class Formatter:
         FormatResult
             Formatted source code.
         """
+        formatted_source_code, errors = self.run(
+            source_file=source_file,
+            source_code=source_code,
+            config=self.config,
+        )
         return FormatResult(
             source_file=source_file,
             original_source_code=source_code,
-            formatted_source_code=self.run(
-                source_file=source_file,
-                source_code=source_code,
-                config=self.config,
-            ),
+            formatted_source_code=formatted_source_code,
+            errors=errors,
         )

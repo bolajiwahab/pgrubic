@@ -14,6 +14,10 @@ WORKERS_ENVIRONMENT_VARIABLE: typing.Final[str] = f"{PACKAGE_NAME.upper()}_WORKE
 
 DEFAULT_WORKERS: typing.Final[int] = 4
 
+REPOSITORY_URL: typing.Final[str] = "https://github.com/bolajiwahab/pgrubic"
+
+ISSUES_URL: typing.Final[str] = f"{REPOSITORY_URL}/issues"
+
 DOCUMENTATION_URL: typing.Final[str] = "https://bolajiwahab.github.io/pgrubic"
 
 PACKAGE_DIRECTORY: typing.Final[pathlib.Path] = pathlib.Path(__file__).resolve().parent

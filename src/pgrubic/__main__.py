@@ -66,7 +66,7 @@ def cli() -> None:
 )
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
-def lint(  # noqa: C901, PLR0912, PLR0913
+def lint(  # noqa: C901, PLR0913
     sources: tuple[pathlib.Path, ...],
     *,
     fix: bool,
@@ -112,10 +112,6 @@ def lint(  # noqa: C901, PLR0912, PLR0913
     for rule in rules:
         linter.checkers.add(rule())
 
-    total_violations = 0
-    auto_fixable_violations = 0
-    fix_enabled_violations = 0
-
     # Use the current working directory if no sources are specified
     if not sources:
         sources = (pathlib.Path.cwd(),)
@@ -150,25 +146,25 @@ def lint(  # noqa: C901, PLR0912, PLR0913
             workers,
         ),
     ) as pool:
-        try:
-            results = [
-                pool.apply_async(
-                    linter.run,
-                    kwds={
-                        "source_file": source.resolve(),
-                        "source_code": source.read_text(encoding="utf-8"),
-                    },
-                )
-                for source in included_sources
-            ]
-            pool.close()
-            pool.join()
+        results = [
+            pool.apply_async(
+                linter.run,
+                kwds={
+                    "source_file": source.resolve(),
+                    "source_code": source.read_text(encoding="utf-8"),
+                },
+            )
+            for source in included_sources
+        ]
+        pool.close()
+        pool.join()
 
-            lint_results = [result.get() for result in results]
+        lint_results = [result.get() for result in results]
 
-        except errors.ParseError as error:
-            core.logger.error(error)
-            sys.exit(2)
+    total_violations = 0
+    auto_fixable_violations = 0
+    fix_enabled_violations = 0
+    total_errors = 0
 
     for lint_result in lint_results:
         violations = linter.get_violation_stats(
@@ -180,32 +176,40 @@ def lint(  # noqa: C901, PLR0912, PLR0913
             source_file=lint_result.source_file,
         )
 
+        errors.print_errors(
+            errors=lint_result.errors,
+            source_file=lint_result.source_file,
+        )
+
         total_violations += violations.total
         auto_fixable_violations += violations.auto_fixable
         fix_enabled_violations += violations.fix_enabled
+        total_errors += len(lint_result.errors)
 
-        if lint_result.fixed_sql:
+        if lint_result.fixed_source_code:
             with pathlib.Path(lint_result.source_file).open(
                 "w",
                 encoding="utf-8",
             ) as sf:
-                sf.write(lint_result.fixed_sql)
+                sf.write(lint_result.fixed_source_code)
 
-    if total_violations > 0:
+    if total_violations > 0 or total_errors > 0:
         if config.lint.fix:
             sys.stdout.write(
-                f"Found {total_violations} violation(s)"
+                f"\nFound {total_violations} violation(s)"
                 f" ({fix_enabled_violations} fixed,"
-                f" {total_violations - fix_enabled_violations} remaining)\n",
+                f" {total_violations - fix_enabled_violations} remaining)\n"
+                f"{total_errors} error(s) found\n",
             )
 
-            if (total_violations - fix_enabled_violations) > 0:
+            if (total_violations - fix_enabled_violations) > 0 or total_errors > 0:
                 sys.exit(1)
 
         else:
             sys.stdout.write(
-                f"Found {total_violations} violation(s)\n"
-                f"{auto_fixable_violations} fix(es) available, {fix_enabled_violations} fix(es) enabled\n",  # noqa: E501
+                f"\nFound {total_violations} violation(s)\n"
+                f"{auto_fixable_violations} fix(es) available, {fix_enabled_violations} fix(es) enabled\n"  # noqa: E501
+                f"{total_errors} error(s) found\n",
             )
 
             if auto_fixable_violations > 0:
@@ -239,7 +243,7 @@ def lint(  # noqa: C901, PLR0912, PLR0913
 )
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
-def format_sources(  # noqa: C901, PLR0913
+def format_sources(  # noqa: C901, PLR0913, PLR0912
     sources: tuple[pathlib.Path, ...],
     *,
     check: bool,
@@ -325,26 +329,22 @@ def format_sources(  # noqa: C901, PLR0913
             workers,
         ),
     ) as pool:
-        try:
-            results = [
-                pool.apply_async(
-                    formatter.format,
-                    kwds={
-                        "source_file": source.resolve(),
-                        "source_code": source.read_text(encoding="utf-8"),
-                    },
-                )
-                for source in included_sources
-            ]
-            pool.close()
-            pool.join()
+        results = [
+            pool.apply_async(
+                formatter.format,
+                kwds={
+                    "source_file": source.resolve(),
+                    "source_code": source.read_text(encoding="utf-8"),
+                },
+            )
+            for source in included_sources
+        ]
+        pool.close()
+        pool.join()
 
-            formatting_results = [result.get() for result in results]
+        formatting_results = [result.get() for result in results]
 
-        except (errors.ParseError, errors.MissingStatementTerminatorError) as error:
-            core.logger.error(error)
-            sys.exit(2)
-
+    total_errors = 0
     for formatting_result in formatting_results:
         if (
             formatting_result.formatted_source_code
@@ -373,14 +373,28 @@ def format_sources(  # noqa: C901, PLR0913
             ) as sf:
                 sf.write(formatting_result.formatted_source_code)
 
+        errors.print_errors(
+            errors=formatting_result.errors,
+            source_file=formatting_result.source_file,
+        )
+
+        total_errors += len(formatting_result.errors)
+
     if not config.format.check and not config.format.diff:
         cache.write(sources=included_sources)
         sys.stdout.write(
-            f"{len(sources_to_reformat)} file(s) reformatted, "
+            f"\n{len(sources_to_reformat)} file(s) reformatted, "
             f"{len(included_sources) - len(sources_to_reformat)} file(s) left unchanged\n",  # noqa: E501
         )
+        if total_errors > 0:
+            sys.stdout.write(f"{total_errors} error(s) found\n")
+            sys.exit(1)
 
-    if changes_detected and (config.format.check or config.format.diff):
+    if (
+        changes_detected and (config.format.check or config.format.diff)
+    ) or total_errors > 0:
+        if total_errors > 0:
+            sys.stdout.write(f"\n{total_errors} error(s) found\n")
         sys.exit(1)
 
 

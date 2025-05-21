@@ -16,8 +16,6 @@ __all__ = [
     "Formatter",
     "Linter",
     "ViolationStats",
-    "add_apply_fix_to_rule",
-    "add_set_locations_to_rule",
     "cache",
     "config",
     "filter_sources",

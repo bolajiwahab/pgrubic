@@ -62,11 +62,11 @@ def test_rules(
         ), f"Test failed: No violations found for rule: `{rule}` in `{test_id}`"
 
         if parsed_test_case.sql_fix:
-            assert linting_result.fixed_sql == parsed_test_case.sql_fix
+            assert linting_result.fixed_source_code == parsed_test_case.sql_fix
 
-            # Check that the fixed sql is valid
+            # Check that the fixed source_code is valid
             try:
-                parser.parse_sql(linting_result.fixed_sql)
+                parser.parse_sql(linting_result.fixed_source_code)
             except parser.ParseError as error:
                 msg = f"Formatted code is not a valid syntax: {error!s}"
                 raise ValueError(msg) from error

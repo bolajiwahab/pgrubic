@@ -88,8 +88,9 @@ def extract_statement_locations(
                     Statement(
                         start_location=statement_start_location,
                         end_location=token.end,
-                        text=source_code[statement_start_location : token.end]
-                        + SEMI_COLON,
+                        text=(
+                            source_code[statement_start_location : token.end] + SEMI_COLON
+                        ).strip(),
                     ),
                 )
                 statement_start_location = token.end + 1

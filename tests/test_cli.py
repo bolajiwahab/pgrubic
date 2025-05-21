@@ -170,7 +170,7 @@ def test_cli_lint_parse_error(tmp_path: pathlib.Path) -> None:
 
     result = runner.invoke(cli, ["lint", str(file_fail)])
 
-    expected_exit_code: int = 2
+    expected_exit_code: int = 1
 
     assert result.exit_code == expected_exit_code
 
@@ -189,7 +189,7 @@ def test_cli_format_file(tmp_path: pathlib.Path) -> None:
 
     result = runner.invoke(cli, ["format", str(file_pass)])
 
-    assert result.output == "1 file(s) reformatted, 0 file(s) left unchanged\n"
+    assert result.output == "\n1 file(s) reformatted, 0 file(s) left unchanged\n"
 
     assert result.exit_code == 0
 
@@ -227,7 +227,7 @@ def test_cli_format_directory(tmp_path: pathlib.Path) -> None:
 
     result = runner.invoke(cli, ["format", str(directory)])
 
-    assert result.output == "1 file(s) reformatted, 0 file(s) left unchanged\n"
+    assert result.output == "\n1 file(s) reformatted, 0 file(s) left unchanged\n"
 
     assert result.exit_code == 0
 
