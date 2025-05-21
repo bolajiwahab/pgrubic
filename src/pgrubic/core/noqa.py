@@ -40,11 +40,6 @@ def extract_statement_locations(
     -------
     list[Statement]
         List of statements.
-
-    Raises:
-    ------
-    MissingStatementTerminatorError
-        If semicolon is missing at the end of a statement.
     """
     locations: list[Statement] = []
 
