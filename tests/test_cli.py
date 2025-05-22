@@ -308,7 +308,7 @@ def test_cli_format_check_parse_error(tmp_path: pathlib.Path) -> None:
     """Test cli format check parse error."""
     runner = testing.CliRunner()
 
-    sql_fail: str = "SELECT a ="
+    sql_fail: str = "SELECT a =;"
 
     directory = tmp_path / "sub"
     directory.mkdir()

@@ -133,3 +133,32 @@ def test_add_file_level_general_ignore(tmp_path: pathlib.Path) -> None:
     )
 
     assert modified_sources == 1
+
+
+def test_statement_without_semi_colon() -> None:
+    """Test statements without semicolon."""
+    source_code: str = """
+    CREATE TABLE tbl (activated date)
+
+    """
+
+    extracted_statements = noqa.extract_statement_locations(source_code=source_code)
+
+    assert extracted_statements[0].text == "CREATE TABLE tbl (activated date);"
+
+
+def test_indented_statement_without_semi_colon() -> None:
+    """Test statements without semicolon."""
+    source_code: str = """
+CREATE TABLE tbl (
+    activated date
+)
+
+    """
+    expected_statement = """CREATE TABLE tbl (
+    activated date
+);"""
+
+    extracted_statements = noqa.extract_statement_locations(source_code=source_code)
+
+    assert extracted_statements[0].text == expected_statement

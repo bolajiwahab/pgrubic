@@ -80,9 +80,7 @@ SELECT a = NULL;
 
 def test_lint_parse_error(linter: core.Linter) -> None:
     """Test parse error."""
-    source_code: str = """
-    CREATE TABLE tbl (activated);
-    """
+    source_code: str = "CREATE TABLE tbl (activated);"
 
     linting_result = linter.run(
         source_file=SOURCE_FILE,

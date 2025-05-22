@@ -140,7 +140,11 @@ class CheckerMeta(type):
             if not checker.is_fix_applicable:
                 return None
 
-            return func(checker, *args, **kwargs)
+            result = func(checker, *args, **kwargs)
+
+            checker.applied_fixes.append(result is not None)
+
+            return result
 
         return wrapper
 
@@ -169,6 +173,9 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):  # type: ignore[misc
     column_offset: int
     statement: str
     line: str
+
+    # Track applied fixes
+    applied_fixes: typing.ClassVar[list[bool]] = []
 
     def __init__(self) -> None:
         """Initialize variables."""
@@ -431,25 +438,37 @@ class Linter:
 
                 violations.update(checker.violations)
 
-            # We can run into RecursionError if we have too many nested queries
-            # We should look for a better way to check if ast has been modified
-            if parse_tree != parser.parse_sql(statement.text):
-                fixed_statement = stream.IndentedStream(
-                    comments=comments,
-                    semicolon_after_last_statement=False,
-                    special_functions=True,
-                    separate_statements=self.config.format.lines_between_statements,
-                    remove_pg_catalog_from_functions=self.config.format.remove_pg_catalog_from_functions,
-                    comma_at_eoln=not (self.config.format.comma_at_beginning),
-                )(parse_tree)
+            # If the tree has been modified due to fixes, we convert it to string
+            if any(BaseChecker.applied_fixes):
+                try:
+                    fixed_statement = stream.IndentedStream(
+                        comments=comments,
+                        semicolon_after_last_statement=False,
+                        special_functions=True,
+                        separate_statements=self.config.format.lines_between_statements,
+                        remove_pg_catalog_from_functions=self.config.format.remove_pg_catalog_from_functions,
+                        comma_at_eoln=not (self.config.format.comma_at_beginning),
+                    )(parse_tree)
 
-                if self.config.format.new_line_before_semicolon:
-                    fixed_statement += noqa.NEW_LINE + noqa.SEMI_COLON
-                else:
-                    fixed_statement += noqa.SEMI_COLON
+                    if self.config.format.new_line_before_semicolon:
+                        fixed_statement += noqa.NEW_LINE + noqa.SEMI_COLON
+                    else:
+                        fixed_statement += noqa.SEMI_COLON
 
-                fixed_statements.append(fixed_statement)
-
+                    fixed_statements.append(fixed_statement)
+                except RecursionError as error:  # pragma: no cover
+                    _errors.add(
+                        errors.Error(
+                            source_file=str(source_file),
+                            source_code=source_code,
+                            statement_start_location=statement.start_location + 1,
+                            statement_end_location=statement.end_location,
+                            statement=statement.text,
+                            message=str(error),
+                            hint="Maximum format depth exceeded, reduce deeply nested queries",  # noqa: E501
+                        ),
+                    )
+                    fixed_statements.append(statement.text)
             else:
                 fixed_statements.append(statement.text)
 

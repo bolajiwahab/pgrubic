@@ -87,6 +87,7 @@ class Formatter:
                     formatted_statement += noqa.SEMI_COLON
 
                 formatted_statements.append(formatted_statement)
+
             except parser.ParseError as error:
                 _errors.add(
                     errors.Error(
@@ -100,7 +101,20 @@ class Formatter:
                     ),
                 )
                 formatted_statements.append(statement.text)
-                continue
+
+            except RecursionError as error:  # pragma: no cover
+                _errors.add(
+                    errors.Error(
+                        source_file=str(source_file),
+                        source_code=statement.text,
+                        statement_start_location=statement.start_location + 1,
+                        statement_end_location=statement.end_location,
+                        statement=statement.text,
+                        message=str(error),
+                        hint="Maximum format depth exceeded, reduce deeply nested queries",  # noqa: E501
+                    ),
+                )
+                formatted_statements.append(statement.text)
 
         return (
             noqa.NEW_LINE + (noqa.NEW_LINE * config.format.lines_between_statements)

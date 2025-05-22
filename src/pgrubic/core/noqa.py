@@ -46,8 +46,8 @@ def extract_statement_locations(
     statement_start_location = 0
 
     # Add semi-colon at the end if missing
-    if not source_code.rstrip(NEW_LINE).rstrip(SPACE).endswith(SEMI_COLON):
-        source_code += SEMI_COLON
+    if not source_code.strip().endswith(SEMI_COLON):
+        source_code = source_code.strip() + SEMI_COLON
 
     tokens = parser.scan(source_code)
 
