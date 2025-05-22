@@ -196,7 +196,7 @@ def test_respect_gitignore_false_filter_sources(tmp_path: pathlib.Path) -> None:
 
     # Create a .gitignore file in the repository
     gitignore_file = tmp_path / ".gitignore"
-    gitignore_file.write_text("ignored_file.sql{noqa.NEW_LINE}")
+    gitignore_file.write_text(f"ignored_file.sql{noqa.NEW_LINE}")
 
     directory = tmp_path / "sub"
     directory.mkdir()
