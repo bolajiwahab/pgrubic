@@ -142,7 +142,7 @@ class CheckerMeta(type):
 
             result = func(checker, *args, **kwargs)
 
-            checker.applied_fixes.append(result is not None)
+            checker.applied_fixes.append(True)
 
             return result
 
@@ -175,7 +175,7 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):  # type: ignore[misc
     line: str
 
     # Track applied fixes
-    applied_fixes: typing.ClassVar[list[bool]] = []
+    applied_fixes: list[bool]
 
     def __init__(self) -> None:
         """Initialize variables."""
@@ -423,6 +423,8 @@ class Linter:
 
             BaseChecker.statement = statement.text
             BaseChecker.statement_location = statement.start_location
+            # Reset the applied fixes for each statement
+            BaseChecker.applied_fixes = []
 
             for checker in self.checkers:
                 checker.violations = set()
