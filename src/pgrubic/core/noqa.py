@@ -55,7 +55,7 @@ def extract_statements(
 
     inside_parenthesis = False  # Tracks if we are inside parentheses (...)
 
-    for _, token in enumerate(tokens):
+    for token in tokens:
         # Detect BEGIN
         if token.name == "BEGIN_P":
             inside_block = True
