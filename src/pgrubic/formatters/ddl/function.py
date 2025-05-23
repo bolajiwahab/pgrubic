@@ -172,8 +172,8 @@ def create_function_option(  # noqa: PLR0911
         output.write("$BODY$")
 
         if is_sql_function:
-            # We do not need to track errors here as the whole SQL function is already
-            # parsed by the parser
+            # No error tracking is needed here because the SQL function body has already
+            # been parsed successfully by the parser.
             formatted_function_body, _ = Formatter.run(
                 source_code=function_body,
                 source_file="function_body",

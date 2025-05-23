@@ -142,7 +142,7 @@ def test_statement_without_semi_colon() -> None:
 
     """
 
-    extracted_statements = noqa.extract_statement_locations(source_code=source_code)
+    extracted_statements = noqa.extract_statements(source_code=source_code)
 
     assert extracted_statements[0].text == "CREATE TABLE tbl (activated date);"
 
@@ -159,6 +159,6 @@ CREATE TABLE tbl (
     activated date
 );"""
 
-    extracted_statements = noqa.extract_statement_locations(source_code=source_code)
+    extracted_statements = noqa.extract_statements(source_code=source_code)
 
     assert extracted_statements[0].text == expected_statement

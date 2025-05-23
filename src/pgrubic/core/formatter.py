@@ -59,7 +59,7 @@ class Formatter:
             source_code=source_code,
         )
 
-        for statement in noqa.extract_statement_locations(
+        for statement in noqa.extract_statements(
             source_code=source_code,
         ):
             if statement.start_location in format_ignores:

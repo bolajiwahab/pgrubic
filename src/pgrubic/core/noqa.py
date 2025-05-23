@@ -25,7 +25,7 @@ class Statement(typing.NamedTuple):
     text: str
 
 
-def extract_statement_locations(
+def extract_statements(
     *,
     source_code: str,
 ) -> list[Statement]:
@@ -181,7 +181,7 @@ def _extract_statement_ignores(
     list[NoQaDirective]
         List of ignores.
     """
-    locations = extract_statement_locations(
+    locations = extract_statements(
         source_code=source_code,
     )
 
@@ -296,7 +296,7 @@ def extract_format_ignores(source_code: str) -> list[int]:
     list[int]
         List of ignores.
     """
-    locations = extract_statement_locations(
+    locations = extract_statements(
         source_code=source_code,
     )
 
@@ -344,7 +344,7 @@ def extract_comments(*, source_code: str) -> list[Comment]:
     list[Comment]
         List of comments.
     """
-    locations = extract_statement_locations(
+    locations = extract_statements(
         source_code=source_code,
     )
 

@@ -396,7 +396,7 @@ class Linter:
         BaseChecker.source_file = source_file
         BaseChecker.config = self.config
 
-        for statement in noqa.extract_statement_locations(
+        for statement in noqa.extract_statements(
             source_code=source_code,
         ):
             try:
