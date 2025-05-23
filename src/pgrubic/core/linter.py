@@ -415,7 +415,7 @@ class Linter:
                         statement_end_location=statement.end_location,
                         statement=statement.text,
                         message=str(error),
-                        hint=f"""Make sure the statement is valid PostgreSQL statement. If it is, please report this issue at {ISSUES_URL}\n""",  # noqa: E501
+                        hint=f"""Make sure the statement is valid PostgreSQL statement. If it is, please report this issue at {ISSUES_URL}{noqa.NEW_LINE}""",  # noqa: E501
                     ),
                 )
                 fixed_statements.append(statement.text)

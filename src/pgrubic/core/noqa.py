@@ -123,7 +123,7 @@ def _get_rules_from_inline_comment(
 
     if not rules:
         sys.stderr.write(
-            f"{Fore.YELLOW}Warning: Malformed `noqa` directive at location {location}. Expected `noqa: <rules>`{Style.RESET_ALL}\n",  # noqa: E501
+            f"{Fore.YELLOW}Warning: Malformed `noqa` directive at location {location}. Expected `noqa: <rules>`{Style.RESET_ALL}{NEW_LINE}",  # noqa: E501
         )
 
     return rules
@@ -194,7 +194,7 @@ def _extract_statement_ignores(
                 token.start,
             )
 
-            line_number = source_code[:statement_end_location].count("\n") + 1
+            line_number = source_code[:statement_end_location].count(NEW_LINE) + 1
 
             # Here, we extract last comment because we can have a comment followed
             # by another comment e.g -- new table -- noqa: US005
@@ -399,7 +399,7 @@ def report_unused_ignores(
             sys.stdout.write(
                 f"{source_file}:{ignore.line_number}:{ignore.column_offset}:"
                 f" {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL}"
-                f" (unused: {Fore.RED}{Style.BRIGHT}{ignore.rule}{Style.RESET_ALL})\n",
+                f" (unused: {Fore.RED}{Style.BRIGHT}{ignore.rule}{Style.RESET_ALL}){NEW_LINE}",  # noqa: E501
             )
 
 
