@@ -16,6 +16,7 @@
 [![types - mypy](https://img.shields.io/badge/types-mypy-blue.svg)](https://github.com/python/mypy)
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 [![Socket Badge](https://socket.dev/api/badge/pypi/package/pgrubic?artifact_id=tar-gz)](https://socket.dev/pypi/package/pgrubic/overview/)
+![Dependency Review](https://img.shields.io/badge/Dependency%20Review-enabled-deepgreen)
 
 pgrubic is a PostgreSQL linter and formatter for schema migrations and design best practices.
 
