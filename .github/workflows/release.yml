@@ -103,7 +103,7 @@ jobs:
     needs: [setup_and_build, details]
     runs-on: ubuntu-latest
     environment:
-      name: release
+      name: pypi
     permissions:
       id-token: write
     steps:
@@ -120,6 +120,8 @@ jobs:
     name: Create GitHub Release
     needs: [setup_and_build, details]
     runs-on: ubuntu-latest
+    environment:
+      name: release
     permissions:
       contents: write
     steps:
@@ -149,7 +151,7 @@ jobs:
       contents: read
       packages: write
     environment:
-      name: release
+      name: ghcr
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
