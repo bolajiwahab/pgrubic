@@ -4,18 +4,18 @@
 
 | Name                                         |    Stmts |     Miss |    Cover |   Missing |
 |--------------------------------------------- | -------: | -------: | -------: | --------: |
-| src/pgrubic/\_\_init\_\_.py                  |       30 |        0 |     100% |           |
-| src/pgrubic/\_\_main\_\_.py                  |      122 |        0 |     100% |           |
+| src/pgrubic/\_\_init\_\_.py                  |       32 |        0 |     100% |           |
+| src/pgrubic/\_\_main\_\_.py                  |      128 |        0 |     100% |           |
 | src/pgrubic/core/\_\_init\_\_.py             |        9 |        0 |     100% |           |
 | src/pgrubic/core/cache.py                    |       64 |        0 |     100% |           |
 | src/pgrubic/core/config.py                   |      102 |        0 |     100% |           |
-| src/pgrubic/core/errors.py                   |        4 |        0 |     100% |           |
+| src/pgrubic/core/errors.py                   |       20 |        0 |     100% |           |
 | src/pgrubic/core/filters.py                  |       26 |        0 |     100% |           |
-| src/pgrubic/core/formatter.py                |       33 |        0 |     100% |           |
-| src/pgrubic/core/linter.py                   |      162 |        0 |     100% |           |
+| src/pgrubic/core/formatter.py                |       37 |        0 |     100% |           |
+| src/pgrubic/core/linter.py                   |      168 |        0 |     100% |           |
 | src/pgrubic/core/loader.py                   |       25 |        0 |     100% |           |
 | src/pgrubic/core/logger.py                   |        5 |        0 |     100% |           |
-| src/pgrubic/core/noqa.py                     |      134 |        0 |     100% |           |
+| src/pgrubic/core/noqa.py                     |      132 |        0 |     100% |           |
 | src/pgrubic/formatters/\_\_init\_\_.py       |        0 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/\_\_init\_\_.py   |        2 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/column.py         |       31 |        0 |     100% |           |
@@ -153,7 +153,7 @@
 | src/pgrubic/rules/unsafe/US029.py            |        5 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US030.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-|                                    **TOTAL** | **2933** |    **0** | **100%** |           |
+|                                    **TOTAL** | **2965** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
