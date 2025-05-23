@@ -1,3 +1,14 @@
+## 0.6.0 (2025-05-23)
+
+### Feat
+
+- implement graceful exit (#93)
+- flag returning * (#86)
+
+### Fix
+
+- ignore semicolon in parentheses when building statement locations (#91)
+
 ## 0.5.3 (2025-03-23)
 
 ## 0.5.2 (2025-03-22)
