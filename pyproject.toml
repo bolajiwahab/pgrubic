@@ -208,7 +208,7 @@ legacy_tox_ini = """
     setenv = {[testenv:coverage]setenv}
     commands =
         coverage erase
-        coverage run -m pytest -vv {posargs:tests}
+        coverage run -m pytest -vv --color=yes {posargs:tests}
 
     [testenv:tests-linux]
     platform = linux

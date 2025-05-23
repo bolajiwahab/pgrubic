@@ -6,6 +6,7 @@ import pathlib
 from unittest.mock import patch
 
 from pgrubic import core
+from pgrubic.core import noqa
 
 SOURCE_FILE: typing.Final[str] = "cache.sql"
 
@@ -122,7 +123,7 @@ def test_source_invalidated_in_cache_by_size(
     assert len(sources_to_be_formatted) == 0
 
     # Add a new line to source
-    source.write_text(source_code + "\n")
+    source.write_text(source_code + noqa.NEW_LINE)
 
     sources_to_be_formatted = cache.filter_sources(
         sources={source},

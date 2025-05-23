@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import sys
-import copy
 import typing
 import fnmatch
 import functools
@@ -12,7 +11,7 @@ from pglast import ast, parser, stream, visitors
 from colorama import Fore, Style
 from caseconverter import kebabcase
 
-from pgrubic import DOCUMENTATION_URL
+from pgrubic import ISSUES_URL, DOCUMENTATION_URL
 from pgrubic.core import noqa, config, errors, formatter
 
 if typing.TYPE_CHECKING:
@@ -40,7 +39,8 @@ class LintResult(typing.NamedTuple):
 
     source_file: str
     violations: set[Violation]
-    fixed_sql: str | None = None
+    errors: set[errors.Error]
+    fixed_source_code: str | None = None
 
 
 class ViolationStats(typing.NamedTuple):
@@ -53,7 +53,8 @@ class ViolationStats(typing.NamedTuple):
 
 class CheckerMeta(type):
     """Metaclass for Checker. This metaclass handles both runtime and subclass method
-    decorations. It is originally created for method decorations but could be extended in
+    decorations ensuring decorated methods retain their decoration even in child
+    processes. It is originally created for method decorations but could be extended in
     the future.
     """
 
@@ -114,7 +115,7 @@ class CheckerMeta(type):
             if hasattr(node, "location") and isinstance(node.location, int):
                 checker.line = checker.source_code[line_start:line_end]
             else:
-                checker.line = checker.statement.strip()
+                checker.line = checker.statement
 
             return func(checker, ancestors, node)
 
@@ -139,7 +140,11 @@ class CheckerMeta(type):
             if not checker.is_fix_applicable:
                 return None
 
-            return func(checker, *args, **kwargs)
+            result = func(checker, *args, **kwargs)
+
+            checker.applied_fixes.append(True)
+
+            return result
 
         return wrapper
 
@@ -169,6 +174,9 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):  # type: ignore[misc
     statement: str
     line: str
 
+    # Track applied fixes
+    applied_fixes: list[bool]
+
     def __init__(self) -> None:
         """Initialize variables."""
         self.violations: set[Violation] = set()
@@ -179,7 +187,7 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):  # type: ignore[misc
         cls.name = kebabcase(cls.__name__)
         cls.category = cls.__module__.split(".")[-2]
 
-    def visit(self, node: ast.Node, ancestors: visitors.Ancestor) -> None:
+    def visit(self, ancestors: visitors.Ancestor, node: ast.Node) -> None:
         """Visit the node."""
 
     @property
@@ -331,11 +339,10 @@ class Linter:
         None
         """
         for violation in violations:
-            # if not checker.is_fix_applicable:
             sys.stdout.write(
                 f"{noqa.NEW_LINE}{source_file}:{violation.line_number}:{violation.column_offset}:"
-                f" \033]8;;{DOCUMENTATION_URL}/rules/{violation.rule_category}/{violation.rule_name}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{violation.rule_code}{Style.RESET_ALL}\033]8;;\033\\:"  # noqa: E501
-                f" {violation.description}{noqa.NEW_LINE}",
+                f"{noqa.SPACE}\033]8;;{DOCUMENTATION_URL}/rules/{violation.rule_category}/{violation.rule_name}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{violation.rule_code}{Style.RESET_ALL}\033]8;;\033\\:"
+                f"{noqa.SPACE}{violation.description}{noqa.NEW_LINE}",
             )
 
             for idx, line in enumerate(
@@ -350,7 +357,7 @@ class Linter:
                 # used above between the separator (|)
                 (
                     sys.stdout.write(
-                        " "
+                        noqa.SPACE
                         * (violation.column_offset + len(str(violation.line_number)) + 2)
                         + "^"
                         + noqa.NEW_LINE,
@@ -373,11 +380,6 @@ class Linter:
         -------
         LintResult
             Lint result.
-
-        Raises:
-        ------
-        ParseError
-            If there is an error parsing source code.
         """
         fixed_statements: list[str] = []
 
@@ -387,36 +389,47 @@ class Linter:
         )
 
         violations: set[Violation] = set()
+        _errors: set[errors.Error] = set()
 
         BaseChecker.inline_ignores = inline_ignores
         BaseChecker.source_code = source_code
         BaseChecker.source_file = source_file
         BaseChecker.config = self.config
 
-        for statement in noqa.extract_statement_locations(
-            source_file=source_file,
+        for statement in noqa.extract_statements(
             source_code=source_code,
         ):
             try:
-                original_tree: ast.Node = parser.parse_sql(statement.text)
-                copied_tree: ast.Node = copy.deepcopy(original_tree)
+                parse_tree: ast.Node = parser.parse_sql(statement.text)
 
                 comments = noqa.extract_comments(
-                    source_file=source_file,
                     source_code=statement.text,
                 )
 
             except parser.ParseError as error:
-                msg = "Error parsing source code: "
-                raise errors.ParseError(f"{source_file}: " + msg + str(error)) from error
+                _errors.add(
+                    errors.Error(
+                        source_file=str(source_file),
+                        source_code=source_code,
+                        statement_start_location=statement.start_location + 1,
+                        statement_end_location=statement.end_location,
+                        statement=statement.text,
+                        message=str(error),
+                        hint=f"""Make sure the statement is valid PostgreSQL statement. If it is, please report this issue at {ISSUES_URL}{noqa.NEW_LINE}""",  # noqa: E501
+                    ),
+                )
+                fixed_statements.append(statement.text)
+                continue
 
             BaseChecker.statement = statement.text
             BaseChecker.statement_location = statement.start_location
+            # Reset the applied fixes for each statement
+            BaseChecker.applied_fixes = []
 
             for checker in self.checkers:
                 checker.violations = set()
 
-                checker(copied_tree)
+                checker(parse_tree)
 
                 if not self.config.lint.ignore_noqa:
                     self._skip_suppressed_violations(
@@ -427,40 +440,59 @@ class Linter:
 
                 violations.update(checker.violations)
 
-            if original_tree != copied_tree:
-                fixed_statement = stream.IndentedStream(
-                    comments=comments,
-                    semicolon_after_last_statement=False,
-                    special_functions=True,
-                    separate_statements=self.config.format.lines_between_statements,
-                    remove_pg_catalog_from_functions=self.config.format.remove_pg_catalog_from_functions,
-                    comma_at_eoln=not (self.config.format.comma_at_beginning),
-                )(copied_tree)
+            # If the tree has been modified due to fixes, we convert it to string
+            if any(BaseChecker.applied_fixes):
+                try:
+                    fixed_statement = stream.IndentedStream(
+                        comments=comments,
+                        semicolon_after_last_statement=False,
+                        special_functions=True,
+                        separate_statements=self.config.format.lines_between_statements,
+                        remove_pg_catalog_from_functions=self.config.format.remove_pg_catalog_from_functions,
+                        comma_at_eoln=not (self.config.format.comma_at_beginning),
+                    )(parse_tree)
 
-                if self.config.format.new_line_before_semicolon:
-                    fixed_statement += noqa.NEW_LINE + noqa.SEMI_COLON
-                else:
-                    fixed_statement += noqa.SEMI_COLON
+                    if self.config.format.new_line_before_semicolon:
+                        fixed_statement += noqa.NEW_LINE + noqa.SEMI_COLON
+                    else:
+                        fixed_statement += noqa.SEMI_COLON
 
-                fixed_statements.append(fixed_statement)
-
+                    fixed_statements.append(fixed_statement)
+                except RecursionError as error:  # pragma: no cover
+                    _errors.add(
+                        errors.Error(
+                            source_file=str(source_file),
+                            source_code=source_code,
+                            statement_start_location=statement.start_location + 1,
+                            statement_end_location=statement.end_location,
+                            statement=statement.text,
+                            message=str(error),
+                            hint="Maximum format depth exceeded, reduce deeply nested queries",  # noqa: E501
+                        ),
+                    )
+                    fixed_statements.append(statement.text)
             else:
-                fixed_statements.append(statement.text.strip())
+                fixed_statements.append(statement.text)
 
-        fixed_source_code = (
+        _fixed_source_code = (
             noqa.NEW_LINE + (noqa.NEW_LINE * self.config.format.lines_between_statements)
         ).join(
             fixed_statements,
         ) + noqa.NEW_LINE
 
-        fix = None
+        fixed_source_code = None
 
-        if parser.parse_sql(fixed_source_code) != parser.parse_sql(source_code):
-            fix = fixed_source_code
+        if _fixed_source_code.encode("utf-8") != source_code.encode("utf-8"):
+            fixed_source_code = _fixed_source_code
 
         noqa.report_unused_ignores(
             source_file=source_file,
             inline_ignores=inline_ignores,
         )
 
-        return LintResult(source_file=source_file, violations=violations, fixed_sql=fix)
+        return LintResult(
+            source_file=source_file,
+            violations=violations,
+            errors=_errors,
+            fixed_source_code=fixed_source_code,
+        )

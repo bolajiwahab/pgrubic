@@ -7,7 +7,7 @@ from unittest.mock import patch
 import git
 
 from pgrubic import core
-from pgrubic.core import config
+from pgrubic.core import noqa, config
 
 
 def test_filter_linting_sources(tmp_path: pathlib.Path) -> None:
@@ -135,7 +135,7 @@ def test_respect_gitignore_filter_sources(tmp_path: pathlib.Path) -> None:
 
     # Create a .gitignore file in the repository
     gitignore_file = tmp_path / ".gitignore"
-    gitignore_file.write_text("ignored_file.sql\n")
+    gitignore_file.write_text(f"ignored_file.sql{noqa.NEW_LINE}")
 
     directory = tmp_path / "sub"
     directory.mkdir()
@@ -196,7 +196,7 @@ def test_respect_gitignore_false_filter_sources(tmp_path: pathlib.Path) -> None:
 
     # Create a .gitignore file in the repository
     gitignore_file = tmp_path / ".gitignore"
-    gitignore_file.write_text("ignored_file.sql\n")
+    gitignore_file.write_text(f"ignored_file.sql{noqa.NEW_LINE}")
 
     directory = tmp_path / "sub"
     directory.mkdir()

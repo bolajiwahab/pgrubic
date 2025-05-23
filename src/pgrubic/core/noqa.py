@@ -9,7 +9,6 @@ from pglast import parser
 from colorama import Fore, Style
 
 from pgrubic import PACKAGE_NAME
-from pgrubic.core import errors
 
 A_STAR: typing.Final[str] = "*"
 ASCII_SEMI_COLON: typing.Final[str] = "ASCII_59"
@@ -26,33 +25,29 @@ class Statement(typing.NamedTuple):
     text: str
 
 
-def extract_statement_locations(
+def extract_statements(
     *,
-    source_file: str,
     source_code: str,
 ) -> list[Statement]:
     """Build statements start and end locations.
 
     Parameters:
     ----------
-    source_file: str
-        Path to the source file.
     source_code: str
-        Source code to lint.
+        Source code to extract statements from.
 
     Returns:
     -------
     list[Statement]
         List of statements.
-
-    Raises:
-    ------
-    MissingStatementTerminatorError
-        If semicolon is missing at the end of a statement.
     """
     locations: list[Statement] = []
 
     statement_start_location = 0
+
+    # Add semi-colon at the end if missing
+    if not source_code.strip().endswith(SEMI_COLON):
+        source_code = source_code.strip() + SEMI_COLON
 
     tokens = parser.scan(source_code)
 
@@ -60,12 +55,7 @@ def extract_statement_locations(
 
     inside_parenthesis = False  # Tracks if we are inside parentheses (...)
 
-    for idx, token in enumerate(tokens):
-        if idx == len(tokens) - 1 and token.name != ASCII_SEMI_COLON:
-            msg = f"Missing semicolon (;) at end of SQL statement at location {token.end}"
-
-            raise errors.MissingStatementTerminatorError(f"{source_file}: " + msg)
-
+    for token in tokens:
         # Detect BEGIN
         if token.name == "BEGIN_P":
             inside_block = True
@@ -88,8 +78,9 @@ def extract_statement_locations(
                     Statement(
                         start_location=statement_start_location,
                         end_location=token.end,
-                        text=source_code[statement_start_location : token.end]
-                        + SEMI_COLON,
+                        text=(
+                            source_code[statement_start_location : token.end] + SEMI_COLON
+                        ).strip(),
                     ),
                 )
                 statement_start_location = token.end + 1
@@ -132,7 +123,7 @@ def _get_rules_from_inline_comment(
 
     if not rules:
         sys.stderr.write(
-            f"{Fore.YELLOW}Warning: Malformed `noqa` directive at location {location}. Expected `noqa: <rules>`{Style.RESET_ALL}\n",  # noqa: E501
+            f"{Fore.YELLOW}Warning: Malformed `noqa` directive at location {location}. Expected `noqa: <rules>`{Style.RESET_ALL}{NEW_LINE}",  # noqa: E501
         )
 
     return rules
@@ -176,25 +167,21 @@ class NoQaDirective:
 
 
 def _extract_statement_ignores(
-    source_file: str,
     source_code: str,
 ) -> list[NoQaDirective]:
     """Extract ignores from SQL statements.
 
     Parameters:
     ----------
-    source_file: str
-        Path to the source file.
     source_code: str
-        Source code to lint.
+        Source code to extract ignores from.
 
     Returns:
     -------
     list[NoQaDirective]
         List of ignores.
     """
-    locations = extract_statement_locations(
-        source_file=source_file,
+    locations = extract_statements(
         source_code=source_code,
     )
 
@@ -207,7 +194,7 @@ def _extract_statement_ignores(
                 token.start,
             )
 
-            line_number = source_code[:statement_end_location].count("\n") + 1
+            line_number = source_code[:statement_end_location].count(NEW_LINE) + 1
 
             # Here, we extract last comment because we can have a comment followed
             # by another comment e.g -- new table -- noqa: US005
@@ -229,7 +216,7 @@ def _extract_statement_ignores(
     return inline_ignores
 
 
-def _extract_file_ignore(source_file: str, source_code: str) -> list[NoQaDirective]:
+def _extract_file_ignore(*, source_file: str, source_code: str) -> list[NoQaDirective]:
     """Extract ignore from the start of a source file.
 
     Parameters:
@@ -237,7 +224,7 @@ def _extract_file_ignore(source_file: str, source_code: str) -> list[NoQaDirecti
     source_file: str
         Path to the source file.
     source_code: str
-        Source code to lint.
+        Source code to extract ignores from.
 
     Returns:
     -------
@@ -281,7 +268,7 @@ def extract_ignores(*, source_file: str, source_code: str) -> list[NoQaDirective
     source_file: str
         Path to the source file.
     source_code: str
-        Source code to lint.
+        Source code to extract ignores from.
 
     Returns:
     -------
@@ -289,7 +276,6 @@ def extract_ignores(*, source_file: str, source_code: str) -> list[NoQaDirective
         List of ignores.
     """
     return _extract_statement_ignores(
-        source_file=source_file,
         source_code=source_code,
     ) + _extract_file_ignore(
         source_file=source_file,
@@ -297,23 +283,20 @@ def extract_ignores(*, source_file: str, source_code: str) -> list[NoQaDirective
     )
 
 
-def extract_format_ignores(source_file: str, source_code: str) -> list[int]:
+def extract_format_ignores(source_code: str) -> list[int]:
     """Extract format ignores from SQL statements.
 
     Parameters:
     ----------
-    source_file: str
-        Path to the source file.
     source_code: str
-        Source code to lint.
+        Source code to extract ignores from.
 
     Returns:
     -------
     list[int]
         List of ignores.
     """
-    locations = extract_statement_locations(
-        source_file=source_file,
+    locations = extract_statements(
         source_code=source_code,
     )
 
@@ -348,23 +331,20 @@ class Comment(typing.NamedTuple):
     continue_previous: bool
 
 
-def extract_comments(*, source_file: str, source_code: str) -> list[Comment]:
+def extract_comments(*, source_code: str) -> list[Comment]:
     """Extract comments from SQL statements.
 
     Parameters:
     ----------
-    source_file: str
-        Path to the source file.
     source_code: str
-        Source code to lint.
+        Source code to extract comments from.
 
     Returns:
     -------
     list[Comment]
         List of comments.
     """
-    locations = extract_statement_locations(
-        source_file=source_file,
+    locations = extract_statements(
         source_code=source_code,
     )
 
@@ -419,7 +399,7 @@ def report_unused_ignores(
             sys.stdout.write(
                 f"{source_file}:{ignore.line_number}:{ignore.column_offset}:"
                 f" {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL}"
-                f" (unused: {Fore.RED}{Style.BRIGHT}{ignore.rule}{Style.RESET_ALL})\n",
+                f" (unused: {Fore.RED}{Style.BRIGHT}{ignore.rule}{Style.RESET_ALL}){NEW_LINE}",  # noqa: E501
             )
 
 
