@@ -100,3 +100,13 @@ repos:
         language: python
         args: [format]
         types: [python]
+
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.11.0-1
+    hooks:
+      - id: shfmt
+        name: Format shell scripts
+        entry: shfmt
+        args: [--indent=4]
+        stages: [pre-commit]
+        types: [shell]
