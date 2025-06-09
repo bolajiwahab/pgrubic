@@ -7,26 +7,26 @@ For significant changes, such as new rules, please consider creating an [issue](
 
 ## Development
 
-To set up a development environment, you will need **tox** and **python 3.12 or higher**.
+To set up a development environment, you will need **tox**, **pre-commit**, and **python 3.12 or higher**.
 
-1. Install **tox**:
+1. Install **tox** and **pre-commit**:
 
-```console
-python3.12 -m pip install --upgrade tox
-```
+    ```console
+    python3.12 -m pip install --upgrade tox pre-commit
+    ```
 
 2. Create and activate a virtual environment:
 
-```console
-tox -e dev --devenv .venv
-source .venv/bin/activate
-```
+    ```console
+    tox -e dev --devenv .venv
+    source .venv/bin/activate
+    ```
 
 3. Set up the git hook scripts
 
-```console
-pre-commit install
-```
+    ```console
+    pre-commit install
+    ```
 
 ## Project Structure
 

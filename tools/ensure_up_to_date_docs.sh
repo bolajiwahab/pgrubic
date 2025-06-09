@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # tools/ensure_up_to_date_docs.sh
 
 if git diff --quiet -- docs/ && [ -z "$(git ls-files --others --exclude-standard docs/)" ]; then
