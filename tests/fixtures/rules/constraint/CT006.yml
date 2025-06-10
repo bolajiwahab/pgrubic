@@ -12,6 +12,10 @@ test_pass_add_unique_key_constraint_no_duplicate_column:
   sql_pass: |
     alter table public.d add constraint unique_a unique(a, b);
 
+test_pass_column_constraint:
+  sql_pass: |
+    alter table public.d add column a bigint unique;
+
 test_fail_duplicate_column_unique_key_constraint:
   sql_fail: |
     create table public.e (a bigint, b bigint, unique (a, a));
