@@ -53,7 +53,8 @@ class DuplicatePrimaryKeyColumn(linter.BaseChecker):
                     ),
                 )
 
-            self._fix(node)
+            if duplicate_columns:
+                self._fix(node)
 
     def _fix(self, node: ast.Constraint) -> None:
         """Fix violation."""

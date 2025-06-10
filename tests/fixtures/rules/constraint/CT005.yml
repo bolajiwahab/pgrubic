@@ -12,6 +12,10 @@ test_pass_add_primary_key_no_duplicate_column:
   sql_pass: |
     alter table public.d add primary key (a, b);
 
+test_pass_column_constraint:
+  sql_pass: |
+    alter table public.d add column a bigint primary key;
+
 test_fail_duplicate_columns_primary_key:
   sql_fail: |
     create table public.e (a bigint, b bigint, primary key (a, a));
