@@ -306,10 +306,10 @@ def format_sources(  # noqa: C901, PLR0912, PLR0913
 
     cache = core.Cache(config=config)
 
-    sources_to_reformat = included_sources
+    sources_to_format = included_sources
 
     if not config.format.no_cache:
-        sources_to_reformat = cache.filter_sources(
+        sources_to_format = cache.filter_sources(
             sources=included_sources,
         )
 
@@ -338,7 +338,7 @@ def format_sources(  # noqa: C901, PLR0912, PLR0913
                     "source_code": source.read_text(encoding="utf-8"),
                 },
             )
-            for source in included_sources
+            for source in sources_to_format
         ]
         pool.close()
         pool.join()
@@ -384,10 +384,10 @@ def format_sources(  # noqa: C901, PLR0912, PLR0913
         total_errors += len(formatting_result.errors)
 
     if not config.format.check and not config.format.diff:
-        cache.write(sources=included_sources)
+        cache.write(sources=sources_to_format)
         sys.stdout.write(
-            f"{noqa.NEW_LINE}{len(sources_to_reformat)} file(s) reformatted, "
-            f"{len(included_sources) - len(sources_to_reformat)} file(s) left unchanged{noqa.NEW_LINE}",  # noqa: E501
+            f"{noqa.NEW_LINE}{len(sources_to_format)} file(s) reformatted, "
+            f"{len(included_sources) - len(sources_to_format)} file(s) left unchanged{noqa.NEW_LINE}",  # noqa: E501
         )
         if total_errors > 0:
             sys.stdout.write(f"{total_errors} error(s) found{noqa.NEW_LINE}")
