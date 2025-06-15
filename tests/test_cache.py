@@ -35,14 +35,52 @@ def test_source_not_in_cache(tmp_path: pathlib.Path, cache: core.Cache) -> None:
     directory = tmp_path / "sub"
     directory.mkdir()
 
-    source = directory / SOURCE_FILE
-    source.write_text(source_code)
+    source_1 = directory / "source_1.sql"
+    source_1.write_text(source_code)
+
+    source_2 = directory / "source_2.sql"
+    source_2.write_text(source_code)
+
+    source_3 = directory / "source_3.sql"
+    source_3.write_text(source_code)
 
     sources_to_be_formatted = cache.filter_sources(
-        sources={source},
+        sources={source_1, source_2},
+    )
+
+    assert len(sources_to_be_formatted) == 2  # noqa: PLR2004
+
+    cache.write(sources={source_1, source_2})
+
+    sources_to_be_formatted = cache.filter_sources(
+        sources={source_1, source_2},
+    )
+
+    assert len(sources_to_be_formatted) == 0
+
+    # Force recaching source_1, source_2 should still be in the cache
+    cache.write(sources={source_1})
+
+    sources_to_be_formatted = cache.filter_sources(
+        sources={source_1, source_2},
+    )
+
+    assert len(sources_to_be_formatted) == 0
+
+    # Add a new source
+    sources_to_be_formatted = cache.filter_sources(
+        sources={source_1, source_2, source_3},
     )
 
     assert len(sources_to_be_formatted) == 1
+
+    cache.write(sources={source_3})
+
+    sources_to_be_formatted = cache.filter_sources(
+        sources={source_1, source_2, source_3},
+    )
+
+    assert len(sources_to_be_formatted) == 0
 
 
 def test_source_in_cache(tmp_path: pathlib.Path, cache: core.Cache) -> None:

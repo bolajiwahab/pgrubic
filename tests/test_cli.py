@@ -196,23 +196,47 @@ def test_cli_lint_parse_error(tmp_path: pathlib.Path) -> None:
     assert result.exit_code == 1
 
 
-def test_cli_format_file(tmp_path: pathlib.Path) -> None:
-    """Test cli format file."""
+def test_cli_format_files(tmp_path: pathlib.Path) -> None:
+    """Test cli format source files."""
     runner = testing.CliRunner()
 
-    sql_pass: str = f"SELECT a = NULL;{noqa.NEW_LINE}"
+    source_code: str = f"SELECT a = NULL;{noqa.NEW_LINE}"
 
     directory = tmp_path / "sub"
     directory.mkdir()
 
-    file_pass = directory / TEST_FILE
-    file_pass.write_text(sql_pass)
+    source_1 = directory / "source_1.sql"
+    source_1.write_text(source_code)
 
-    result = runner.invoke(cli, ["format", str(file_pass)])
+    source_2 = directory / "source_2.sql"
+    source_2.write_text(source_code)
+
+    source_3 = directory / "source_3.sql"
+    source_3.write_text(source_code)
+
+    result = runner.invoke(cli, ["format", str(source_1), str(source_2)])
 
     assert (
         result.output
-        == f"{noqa.NEW_LINE}1 file(s) reformatted, 0 file(s) left unchanged{noqa.NEW_LINE}"  # noqa: E501
+        == f"{noqa.NEW_LINE}2 file(s) reformatted, 0 file(s) left unchanged{noqa.NEW_LINE}"  # noqa: E501
+    )
+
+    assert result.exit_code == 0
+
+    # source_1 and source_2 are cached
+    result = runner.invoke(cli, ["format", str(source_1), str(source_2)])
+    assert (
+        result.output
+        == f"{noqa.NEW_LINE}0 file(s) reformatted, 2 file(s) left unchanged{noqa.NEW_LINE}"  # noqa: E501
+    )
+
+    assert result.exit_code == 0
+
+    # Add a new source
+    result = runner.invoke(cli, ["format", str(source_1), str(source_2), str(source_3)])
+    assert (
+        result.output
+        == f"{noqa.NEW_LINE}1 file(s) reformatted, 2 file(s) left unchanged{noqa.NEW_LINE}"  # noqa: E501
     )
 
     assert result.exit_code == 0

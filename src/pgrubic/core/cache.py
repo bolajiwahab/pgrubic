@@ -164,9 +164,13 @@ class Cache:
         -------
         None
         """
+        cache = self._read()
         file_data: dict[str, FileData] = {
             str(source.resolve()): self._get_file_data(source) for source in sources
         }
+
+        # Maintain cache for previous sources that are not in the new sources
+        file_data.update({k: v for k, v in cache.items() if k not in file_data})
 
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
