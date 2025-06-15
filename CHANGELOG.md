@@ -1,3 +1,10 @@
+## 0.6.1 (2025-06-15)
+
+### Fix
+
+- recaching of a source should not invalidate other sources already in the cache (#104)
+- only apply fixes if there are duplicated columns in primary/unique keys (#101)
+
 ## 0.6.0 (2025-05-23)
 
 ### Feat
