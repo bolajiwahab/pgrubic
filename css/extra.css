@@ -1,0 +1,4 @@
+table th, table td {
+    background: rgba(131, 122, 122, 0.051);
+    min-width: 180px;
+}
