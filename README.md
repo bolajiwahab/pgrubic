@@ -92,7 +92,7 @@ pgrubic can also be used as a pre-commit hook:
 
 ```
 - repo: https://github.com/bolajiwahab/pgrubic
-  rev: 0.6.0
+  rev: 0.6.1
   hooks:
     - id: pgrubic-lint
     - id: pgrubic-format

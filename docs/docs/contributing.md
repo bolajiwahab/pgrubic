@@ -178,3 +178,30 @@ To preview changes to the documentation, from the parent directory, use:
 ```bash
 mkdocs serve --config-file docs/mkdocs.yml
 ```
+
+## Release
+
+The project uses [commitizen](https://commitizen-tools.github.io/commitizen/) to manage releases. To create a new release, follow the steps below:
+
+1. Prepare a new release by running
+
+    ```bash
+    tools/prepare_release.sh
+    ```
+
+    The above script automatically creates a branch named `Release`, runs `tox -e prepare-release` (which wraps around `cz bump`), and pushes the changes to the remote repository.
+
+2. Create a pull request and get the changes merged
+
+3. After the changes are merged, checkout to the main branch locally and rebase it with the remote main branch
+
+    ```bash
+    git checkout main
+    git pull --rebase origin main
+    ```
+
+4. Push the tags, along with the latest tag
+
+    ```bash
+    git push origin --tags
+    ```
