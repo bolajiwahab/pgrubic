@@ -12,9 +12,22 @@ from pgrubic import PACKAGE_NAME
 
 A_STAR: typing.Final[str] = "*"
 ASCII_SEMI_COLON: typing.Final[str] = "ASCII_59"
+ASCII_OPEN_PARENTHESIS: typing.Final[str] = "ASCII_40"
+ASCII_CLOSE_PARENTHESIS: typing.Final[str] = "ASCII_41"
+BEGIN_BLOCK: typing.Final[str] = "BEGIN_P"
+END_BLOCK: typing.Final[str] = "END_P"
 SEMI_COLON: typing.Final[str] = ";"
 NEW_LINE: typing.Final[str] = "\n"
 SPACE: typing.Final[str] = " "
+
+
+class Token(typing.NamedTuple):
+    """Representation of a token."""
+
+    start: int
+    end: int
+    name: str
+    kind: str
 
 
 class Statement(typing.NamedTuple):
@@ -29,7 +42,7 @@ def extract_statements(
     *,
     source_code: str,
 ) -> list[Statement]:
-    """Build statements start and end locations.
+    """Extract statements from source code.
 
     Parameters:
     ----------
@@ -45,70 +58,67 @@ def extract_statements(
 
     statement_start_location = 0
 
-    # Add semi-colon at the end if missing
-    if not source_code.strip().endswith(SEMI_COLON):
-        source_code = source_code.strip() + SEMI_COLON
-
-    tokens = parser.scan(source_code)
+    tokens: list[Token] = parser.scan(source_code)
 
     inside_block = False  # Tracks if we are inside BEGIN ... END block
 
     inside_parenthesis = False  # Tracks if we are inside parentheses (...)
 
     for token in tokens:
-        # Detect BEGIN
-        if token.name == "BEGIN_P":
+        if token.name == BEGIN_BLOCK:
             inside_block = True
 
-        # Detect END
-        if inside_block and token.name == "END_P":
+        if inside_block and token.name == END_BLOCK:
             inside_block = False  # Function block ends
 
-        # Detect open parenthesis
-        if token.name == "ASCII_40":
+        if token.name == ASCII_OPEN_PARENTHESIS:
             inside_parenthesis = True
 
-        # Detect close parenthesis
-        if token.name == "ASCII_41":
+        if token.name == ASCII_CLOSE_PARENTHESIS:
             inside_parenthesis = False  # Parenthesis ends
 
-        if token.name == ASCII_SEMI_COLON:
+        if token.name == ASCII_SEMI_COLON or token is tokens[-1]:
             if not (inside_block or inside_parenthesis):
+                # For ASCII_SEMI_COLON, both start and end locations are the same and
+                # in order to still have it in the statement, we need to increase the end
+                # location by one
+                actual_end_location = token.end + 1
                 locations.append(
                     Statement(
                         start_location=statement_start_location,
-                        end_location=token.end,
-                        text=(
-                            source_code[statement_start_location : token.end] + SEMI_COLON
-                        ).strip(),
+                        end_location=actual_end_location,
+                        text=(source_code[statement_start_location:actual_end_location]),
                     ),
                 )
-                statement_start_location = token.end + 1
+                # Move to the next statement
+                statement_start_location = actual_end_location + 1
             else:
                 continue
     return locations
 
 
-def _get_rules_from_inline_comment(
+def _get_lint_rules_from_comment(
     comment: str,
     location: int,
-    section: str = "noqa",
+    section: str,
 ) -> list[str]:
-    """Get rules from inline comment.
+    """Get lint rules from comment.
 
     Parameters:
     ----------
     comment: str
-        Inline comment.
+        The comment.
+
     location: int
-        Location of inline comment.
+        Location of comment.
+
     section: str
-        Section of inline comment.
+        Section of comment.
 
     Returns:
     -------
     list[str]
-        List of rules.
+        List of lint rules.
     """
     comment_remainder = comment.removeprefix(section)
 
@@ -123,7 +133,7 @@ def _get_rules_from_inline_comment(
 
     if not rules:
         sys.stderr.write(
-            f"{Fore.YELLOW}Warning: Malformed `noqa` directive at location {location}. Expected `noqa: <rules>`{Style.RESET_ALL}{NEW_LINE}",  # noqa: E501
+            f"{Fore.YELLOW}Warning: Malformed `{LINT_IGNORE_DIRECTIVE}` directive at location {location}. Expected `{LINT_IGNORE_DIRECTIVE}: <rules>`{Style.RESET_ALL}{NEW_LINE}",  # noqa: E501
         )
 
     return rules
@@ -139,6 +149,7 @@ def _get_statement_locations(
     ----------
     locations: list[Statement]
         List of statements.
+
     stop: int
         Stop location.
 
@@ -166,31 +177,34 @@ class NoQaDirective:
     used: bool = False
 
 
-def _extract_statement_ignores(
+LINT_IGNORE_DIRECTIVE: typing.Final[str] = "noqa"
+
+
+def _extract_statement_lint_ignores(
     source_code: str,
+    statements: list[Statement],
 ) -> list[NoQaDirective]:
-    """Extract ignores from SQL statements.
+    """Extract lint ignores from SQL statements.
 
     Parameters:
     ----------
     source_code: str
-        Source code to extract ignores from.
+        Source code to extract lint ignores from.
+
+    statements: list[Statement]
+        List of statements.
 
     Returns:
     -------
     list[NoQaDirective]
-        List of ignores.
+        List of lint ignores.
     """
-    locations = extract_statements(
-        source_code=source_code,
-    )
+    statement_lint_ignores: list[NoQaDirective] = []
 
-    inline_ignores: list[NoQaDirective] = []
-
-    for token in parser.scan(source_code):
+    for token in typing.cast(list[Token], parser.scan(source_code)):
         if token.name == "SQL_COMMENT":
             statement_start_location, statement_end_location = _get_statement_locations(
-                locations,
+                statements,
                 token.start,
             )
 
@@ -200,10 +214,14 @@ def _extract_statement_ignores(
             # by another comment e.g -- new table -- noqa: US005
             comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
 
-            if comment.startswith("noqa"):
-                rules = _get_rules_from_inline_comment(comment, token.start)
+            if comment.startswith(LINT_IGNORE_DIRECTIVE):
+                rules = _get_lint_rules_from_comment(
+                    comment,
+                    token.start,
+                    LINT_IGNORE_DIRECTIVE,
+                )
 
-                inline_ignores.extend(
+                statement_lint_ignores.extend(
                     NoQaDirective(
                         location=statement_start_location,
                         line_number=line_number,
@@ -213,23 +231,27 @@ def _extract_statement_ignores(
                     for rule in rules
                 )
 
-    return inline_ignores
+    return statement_lint_ignores
 
 
-def _extract_file_ignore(*, source_file: str, source_code: str) -> list[NoQaDirective]:
-    """Extract ignore from the start of a source file.
+def _extract_file_lint_ignores(
+    *,
+    source_file: str,
+    source_code: str,
+) -> list[NoQaDirective]:
+    """Extract lint ignores from the start of a source file.
 
     Parameters:
     ----------
     source_file: str
-        Path to the source file.
+        The source file.
     source_code: str
-        Source code to extract ignores from.
+        Source code to extract lint ignores from.
 
     Returns:
     -------
     list[NoQaDirective]
-        List of ignores.
+        List of lint ignores.
     """
     file_ignores: list[NoQaDirective] = []
 
@@ -237,11 +259,11 @@ def _extract_file_ignore(*, source_file: str, source_code: str) -> list[NoQaDire
         if token.start == 0 and token.name == "SQL_COMMENT":
             comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
 
-            if comment.strip().startswith(f"{PACKAGE_NAME}: noqa"):
-                rules = _get_rules_from_inline_comment(
+            if comment.strip().startswith(f"{PACKAGE_NAME}: {LINT_IGNORE_DIRECTIVE}"):
+                rules = _get_lint_rules_from_comment(
                     comment,
                     token.start,
-                    section=f"{PACKAGE_NAME}: noqa",
+                    section=f"{PACKAGE_NAME}: {LINT_IGNORE_DIRECTIVE}",
                 )
 
                 file_ignores.extend(
@@ -260,30 +282,43 @@ def _extract_file_ignore(*, source_file: str, source_code: str) -> list[NoQaDire
     return file_ignores
 
 
-def extract_ignores(*, source_file: str, source_code: str) -> list[NoQaDirective]:
-    """Extract ignores from source code.
+def extract_lint_ignores(
+    *,
+    source_file: str,
+    source_code: str,
+    statements: list[Statement],
+) -> list[NoQaDirective]:
+    """Extract lint ignores from source code.
 
     Parameters:
     ----------
     source_file: str
-        Path to the source file.
+        The source file.
+
     source_code: str
-        Source code to extract ignores from.
+        Source code to extract lint ignores from.
+
+    statements: list[Statement]
+        List of statements.
 
     Returns:
     -------
     list[NoQaDirective]
         List of ignores.
     """
-    return _extract_statement_ignores(
+    return _extract_statement_lint_ignores(
         source_code=source_code,
-    ) + _extract_file_ignore(
+        statements=statements,
+    ) + _extract_file_lint_ignores(
         source_file=source_file,
         source_code=source_code,
     )
 
 
-def extract_format_ignores(source_code: str) -> list[int]:
+def extract_statement_format_ignores(
+    source_code: str,
+    statements: list[Statement],
+) -> list[int]:
     """Extract format ignores from SQL statements.
 
     Parameters:
@@ -291,21 +326,20 @@ def extract_format_ignores(source_code: str) -> list[int]:
     source_code: str
         Source code to extract ignores from.
 
+    statements: list[Statement]
+        List of statements.
+
     Returns:
     -------
     list[int]
         List of ignores.
     """
-    locations = extract_statements(
-        source_code=source_code,
-    )
-
-    inline_ignores: list[int] = []
+    statement_format_ignores: list[int] = []
 
     for token in parser.scan(source_code):
         if token.name == "SQL_COMMENT":
             statement_start_location, _ = _get_statement_locations(
-                locations,
+                statements,
                 token.start,
             )
 
@@ -315,11 +349,11 @@ def extract_format_ignores(source_code: str) -> list[int]:
                 comment.strip().startswith("fmt")
                 and comment.removeprefix("fmt").removeprefix(":").strip() == "skip"
             ):
-                inline_ignores.append(
+                statement_format_ignores.append(
                     statement_start_location,
                 )
 
-    return inline_ignores
+    return statement_format_ignores
 
 
 class Comment(typing.NamedTuple):
@@ -331,55 +365,45 @@ class Comment(typing.NamedTuple):
     continue_previous: bool
 
 
-def extract_comments(*, source_code: str) -> list[Comment]:
-    """Extract comments from SQL statements.
+def extract_comments(*, statement: Statement) -> list[Comment]:
+    """Extract comments from SQL statement.
 
     Parameters:
     ----------
-    source_code: str
-        Source code to extract comments from.
+    statement: str
+        Statement to extract comments from.
 
     Returns:
     -------
     list[Comment]
         List of comments.
     """
-    locations = extract_statements(
-        source_code=source_code,
-    )
-
     comments: list[Comment] = []
-    continue_previous = False
+    # We have consciously decided to always have comments at the top of the
+    # respective statement
+    continue_previous = True
 
-    for token in parser.scan(source_code):
+    for token in parser.scan(statement.text):
         if token.name in ("C_COMMENT", "SQL_COMMENT"):
-            statement_start_location, _ = _get_statement_locations(
-                locations,
-                token.start,
-            )
-
-            comment = source_code[token.start : (token.end + 1)]
-            at_start_of_line = not source_code[
-                : token.start - statement_start_location
-            ].strip()
+            comment = statement.text[token.start : (token.end + 1)]
+            at_start_of_line = not statement.text[
+                : token.start - statement.start_location
+            ]
             comments.append(
                 Comment(
-                    statement_start_location,
+                    0,
                     comment,
                     at_start_of_line,
                     continue_previous,
                 ),
             )
-            continue_previous = True
-        else:
-            continue_previous = False
     return comments
 
 
-def report_unused_ignores(
+def report_unused_lint_ignores(
     *,
     source_file: str,
-    inline_ignores: list[NoQaDirective],
+    lint_ignores: list[NoQaDirective],
 ) -> None:
     """Get unused ignores.
 
@@ -387,24 +411,25 @@ def report_unused_ignores(
     ----------
     source_file: str
         Path to the source file.
-    inline_ignores: list[NoQaDirective]
-        Inline noqa directives.
+
+    lint_ignores: list[NoQaDirective]
+        List of noqa directives.
 
     Returns:
     -------
     None
     """
-    for ignore in inline_ignores:
+    for ignore in lint_ignores:
         if not ignore.used:
             sys.stdout.write(
                 f"{source_file}:{ignore.line_number}:{ignore.column_offset}:"
-                f" {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL}"
+                f" {Fore.YELLOW}Unused {LINT_IGNORE_DIRECTIVE} directive{Style.RESET_ALL}"
                 f" (unused: {Fore.RED}{Style.BRIGHT}{ignore.rule}{Style.RESET_ALL}){NEW_LINE}",  # noqa: E501
             )
 
 
 def add_file_level_general_ignore(sources: set[pathlib.Path]) -> int:
-    """Add file-level general noqa directive to the begining of each source.
+    """Add file-level general lint ignore to the beginning of each source.
 
     Parameters:
     ----------
@@ -422,18 +447,20 @@ def add_file_level_general_ignore(sources: set[pathlib.Path]) -> int:
         skip = False
         source_code = source.read_text()
 
-        for token in parser.scan(source_code):
+        for token in typing.cast(list[Token], parser.scan(source_code)):
             if token.start == 0 and token.name == "SQL_COMMENT":
                 comment = (
                     source_code[token.start : (token.end + 1)].split("--")[-1].strip()
                 )
 
-                if comment.strip() == f"{PACKAGE_NAME}: noqa":
+                if comment.strip() == f"{PACKAGE_NAME}: {LINT_IGNORE_DIRECTIVE}":
                     skip = True
                     break
 
         if not skip:
-            source.write_text(f"-- {PACKAGE_NAME}: noqa\n{source_code}")
+            source.write_text(
+                f"-- {PACKAGE_NAME}: {LINT_IGNORE_DIRECTIVE}\n{source_code}",
+            )
             sources_modified += 1
             continue
 
