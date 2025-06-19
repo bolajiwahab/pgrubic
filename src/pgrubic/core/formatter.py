@@ -55,19 +55,22 @@ class Formatter:
 
         formatted_statements: list[str] = []
 
-        format_ignores = noqa.extract_format_ignores(
+        statements = noqa.extract_statements(
             source_code=source_code,
         )
 
-        for statement in noqa.extract_statements(
+        format_ignores = noqa.extract_statement_format_ignores(
             source_code=source_code,
-        ):
+            statements=statements,
+        )
+
+        for statement in statements:
             if statement.start_location in format_ignores:
                 formatted_statements.append(statement.text)
                 continue
 
             comments = noqa.extract_comments(
-                source_code=statement.text,
+                statement=statement,
             )
 
             try:
