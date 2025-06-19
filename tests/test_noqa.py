@@ -16,12 +16,13 @@ def test_extract_star_ignore_from_inline_comments() -> None:
     CREATE TABLE tbl (activated date);
     """
 
-    inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(
+    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
         source_file=TEST_FILE,
         source_code=source_code,
+        statements=noqa.extract_statements(source_code=source_code),
     )
 
-    assert inline_ignores[0].rule == noqa.A_STAR
+    assert lint_ignores[0].rule == noqa.A_STAR
 
 
 def test_extract_ignores() -> None:
@@ -30,13 +31,14 @@ def test_extract_ignores() -> None:
     CREATE TABLE tbl (activated date);
     """
 
-    inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(
+    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
         source_file=str(TEST_FILE),
         source_code=source_code,
+        statements=noqa.extract_statements(source_code=source_code),
     )
 
-    assert inline_ignores[0].rule == "NM016"
-    assert inline_ignores[1].rule == "GN001"
+    assert lint_ignores[0].rule == "NM016"
+    assert lint_ignores[1].rule == "GN001"
 
 
 def test_extract_ignores_length() -> None:
@@ -46,14 +48,15 @@ def test_extract_ignores_length() -> None:
     CREATE TABLE tbl (activated date);
     """
 
-    inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(
+    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
         source_file=TEST_FILE,
         source_code=source_code,
+        statements=noqa.extract_statements(source_code=source_code),
     )
 
     expected_ignores_length: int = 2
 
-    assert len(inline_ignores) == expected_ignores_length
+    assert len(lint_ignores) == expected_ignores_length
 
 
 def test_wrongly_formed_inline_ignores_from_inline_comments(capfd: typing.Any) -> None:
@@ -63,7 +66,11 @@ def test_wrongly_formed_inline_ignores_from_inline_comments(capfd: typing.Any) -
     CREATE TABLE tbl (activated date);
     """
 
-    noqa.extract_ignores(source_file=TEST_FILE, source_code=source_code)
+    noqa.extract_lint_ignores(
+        source_file=TEST_FILE,
+        source_code=source_code,
+        statements=noqa.extract_statements(source_code=source_code),
+    )
 
     _, err = capfd.readouterr()
 
@@ -82,16 +89,17 @@ def test_report_specific_unused_ignores(
     CREATE TABLE tbl (activated date);
     """
 
-    inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(
+    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
         source_file=TEST_FILE,
         source_code=source_code,
+        statements=noqa.extract_statements(source_code=source_code),
     )
 
-    noqa.report_unused_ignores(source_file=TEST_FILE, inline_ignores=inline_ignores)
+    noqa.report_unused_lint_ignores(source_file=TEST_FILE, lint_ignores=lint_ignores)
     out, _ = capfd.readouterr()
     assert (
         out
-        == f"{TEST_FILE}:3:52: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}NM016{Style.RESET_ALL}){noqa.NEW_LINE}"  # noqa: E501
+        == f"{TEST_FILE}:3:53: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}NM016{Style.RESET_ALL}){noqa.NEW_LINE}"  # noqa: E501
     )
 
 
@@ -104,16 +112,17 @@ def test_report_general_unused_ignores(
     CREATE TABLE tbl (activated date);
     """
 
-    inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(
+    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
         source_file=TEST_FILE,
         source_code=source_code,
+        statements=noqa.extract_statements(source_code=source_code),
     )
 
-    noqa.report_unused_ignores(source_file=TEST_FILE, inline_ignores=inline_ignores)
+    noqa.report_unused_lint_ignores(source_file=TEST_FILE, lint_ignores=lint_ignores)
     out, _ = capfd.readouterr()
     assert (
         out
-        == f"{TEST_FILE}:3:45: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}{noqa.A_STAR}{Style.RESET_ALL}){noqa.NEW_LINE}"  # noqa: E501
+        == f"{TEST_FILE}:3:46: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}{noqa.A_STAR}{Style.RESET_ALL}){noqa.NEW_LINE}"  # noqa: E501
     )
 
 
@@ -137,14 +146,11 @@ def test_add_file_level_general_ignore(tmp_path: pathlib.Path) -> None:
 
 def test_statement_without_semi_colon() -> None:
     """Test statements without semicolon."""
-    source_code: str = """
-    CREATE TABLE tbl (activated date)
-
-    """
+    source_code: str = """CREATE TABLE tbl (activated date)"""
 
     extracted_statements = noqa.extract_statements(source_code=source_code)
 
-    assert extracted_statements[0].text == "CREATE TABLE tbl (activated date);"
+    assert extracted_statements[0].text == "CREATE TABLE tbl (activated date)"
 
 
 def test_indented_statement_without_semi_colon() -> None:
@@ -155,9 +161,10 @@ CREATE TABLE tbl (
 )
 
     """
-    expected_statement = """CREATE TABLE tbl (
+    expected_statement = """
+CREATE TABLE tbl (
     activated date
-);"""
+)"""
 
     extracted_statements = noqa.extract_statements(source_code=source_code)
 
