@@ -59,13 +59,8 @@ class Formatter:
             source_code=source_code,
         )
 
-        format_ignores = noqa.extract_statement_format_ignores(
-            source_code=source_code,
-            statements=statements,
-        )
-
         for statement in statements:
-            if statement.start_location in format_ignores:
+            if noqa.check_statement_format_skip(statement=statement):
                 formatted_statements.append(statement.text)
                 continue
 

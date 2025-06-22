@@ -396,15 +396,15 @@ class Linter:
             source_code=source_code,
         )
 
-        lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
-            source_file=source_file,
-            source_code=source_code,
-            statements=statements,
-        )
-
-        BaseChecker.lint_ignores = lint_ignores
-
         for statement in statements:
+            lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
+                source_file=source_file,
+                source_code=source_code,
+                statement=statement,
+            )
+
+            BaseChecker.lint_ignores = lint_ignores
+
             try:
                 parse_tree: ast.Node = parser.parse_sql(statement.text)
 

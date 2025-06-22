@@ -6,6 +6,7 @@ import pathlib
 from colorama import Fore, Style
 
 from tests import TEST_FILE
+from pgrubic import PACKAGE_NAME
 from pgrubic.core import noqa
 
 
@@ -19,7 +20,7 @@ def test_extract_star_ignore_from_inline_comments() -> None:
     lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
         source_file=TEST_FILE,
         source_code=source_code,
-        statements=noqa.extract_statements(source_code=source_code),
+        statement=noqa.extract_statements(source_code=source_code)[0],
     )
 
     assert lint_ignores[0].rule == noqa.A_STAR
@@ -27,14 +28,14 @@ def test_extract_star_ignore_from_inline_comments() -> None:
 
 def test_extract_ignores() -> None:
     """Test extract ignores from inline comments."""
-    source_code: str = """-- pgrubic: noqa: NM016, GN001
+    source_code: str = f"""-- {PACKAGE_NAME}: noqa: NM016, GN001
     CREATE TABLE tbl (activated date);
     """
 
     lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
         source_file=str(TEST_FILE),
         source_code=source_code,
-        statements=noqa.extract_statements(source_code=source_code),
+        statement=noqa.extract_statements(source_code=source_code)[0],
     )
 
     assert lint_ignores[0].rule == "NM016"
@@ -51,7 +52,7 @@ def test_extract_ignores_length() -> None:
     lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
         source_file=TEST_FILE,
         source_code=source_code,
-        statements=noqa.extract_statements(source_code=source_code),
+        statement=noqa.extract_statements(source_code=source_code)[0],
     )
 
     expected_ignores_length: int = 2
@@ -69,7 +70,7 @@ def test_wrongly_formed_inline_ignores_from_inline_comments(capfd: typing.Any) -
     noqa.extract_lint_ignores(
         source_file=TEST_FILE,
         source_code=source_code,
-        statements=noqa.extract_statements(source_code=source_code),
+        statement=noqa.extract_statements(source_code=source_code)[0],
     )
 
     _, err = capfd.readouterr()
@@ -84,22 +85,21 @@ def test_report_specific_unused_ignores(
     capfd: typing.Any,
 ) -> None:
     """Test report specific unused ignores."""
-    source_code: str = """
-    -- noqa: NM016
+    source_code: str = """-- noqa: NM016
     CREATE TABLE tbl (activated date);
     """
 
     lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
         source_file=TEST_FILE,
         source_code=source_code,
-        statements=noqa.extract_statements(source_code=source_code),
+        statement=noqa.extract_statements(source_code=source_code)[0],
     )
 
     noqa.report_unused_lint_ignores(source_file=TEST_FILE, lint_ignores=lint_ignores)
     out, _ = capfd.readouterr()
     assert (
         out
-        == f"{TEST_FILE}:3:53: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}NM016{Style.RESET_ALL}){noqa.NEW_LINE}"  # noqa: E501
+        == f"{TEST_FILE}:1:53: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}NM016{Style.RESET_ALL}){noqa.NEW_LINE}"  # noqa: E501
     )
 
 
@@ -115,14 +115,14 @@ def test_report_general_unused_ignores(
     lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
         source_file=TEST_FILE,
         source_code=source_code,
-        statements=noqa.extract_statements(source_code=source_code),
+        statement=noqa.extract_statements(source_code=source_code)[0],
     )
 
     noqa.report_unused_lint_ignores(source_file=TEST_FILE, lint_ignores=lint_ignores)
     out, _ = capfd.readouterr()
     assert (
         out
-        == f"{TEST_FILE}:3:46: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}{noqa.A_STAR}{Style.RESET_ALL}){noqa.NEW_LINE}"  # noqa: E501
+        == f"{TEST_FILE}:2:46: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}{noqa.A_STAR}{Style.RESET_ALL}){noqa.NEW_LINE}"  # noqa: E501
     )
 
 
@@ -135,9 +135,9 @@ def test_add_file_level_general_ignore(tmp_path: pathlib.Path) -> None:
     source_file1.write_text("SELECT * FROM tab")
 
     source_file2 = directory / "source_file2.sql"
-    source_file2.write_text(f"-- pgrubic: noqa{noqa.NEW_LINE} SELECT * FROM tab")  # noqa: S608
+    source_file2.write_text(f"-- {PACKAGE_NAME}: noqa{noqa.NEW_LINE} SELECT * FROM tab")  # noqa: S608
 
-    modified_sources = noqa.add_file_level_general_ignore(
+    modified_sources = noqa.add_file_level_general_lint_ignore(
         sources={source_file1, source_file2},
     )
 

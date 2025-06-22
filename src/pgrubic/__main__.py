@@ -124,7 +124,7 @@ def lint(  # noqa: C901, PLR0912, PLR0913
     )
 
     if add_file_level_general_noqa:
-        sources_modified = noqa.add_file_level_general_ignore(included_sources)
+        sources_modified = noqa.add_file_level_general_lint_ignore(included_sources)
         sys.stdout.write(
             f"File-level general noqa directive added to {sources_modified} file(s){noqa.NEW_LINE}",  # noqa: E501
         )
