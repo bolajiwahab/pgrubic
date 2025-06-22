@@ -14,8 +14,13 @@ A_STAR: typing.Final[str] = "*"
 ASCII_SEMI_COLON: typing.Final[str] = "ASCII_59"
 ASCII_OPEN_PARENTHESIS: typing.Final[str] = "ASCII_40"
 ASCII_CLOSE_PARENTHESIS: typing.Final[str] = "ASCII_41"
+SQL_COMMENT: typing.Final[str] = "SQL_COMMENT"
+C_COMMENT: typing.Final[str] = "C_COMMENT"
 BEGIN_BLOCK: typing.Final[str] = "BEGIN_P"
 END_BLOCK: typing.Final[str] = "END_P"
+
+LINT_IGNORE_DIRECTIVE: typing.Final[str] = "noqa"
+FORMAT_IGNORE_DIRECTIVE: typing.Final[str] = "fmt"
 SEMI_COLON: typing.Final[str] = ";"
 NEW_LINE: typing.Final[str] = "\n"
 SPACE: typing.Final[str] = " "
@@ -139,32 +144,6 @@ def _get_lint_rules_from_comment(
     return rules
 
 
-def _get_statement_locations(
-    locations: list[Statement],
-    stop: int,
-) -> tuple[int, int]:
-    """Get statement start and end locations.
-
-    Parameters:
-    ----------
-    locations: list[Statement]
-        List of statements.
-
-    stop: int
-        Stop location.
-
-    Returns:
-    -------
-    tuple[int, int]
-        Statement start and end locations.
-    """
-    for statement_start_location, statement_end_location, _ in locations:
-        if statement_start_location <= stop < statement_end_location:
-            break
-
-    return statement_start_location, statement_end_location
-
-
 @dataclasses.dataclass(kw_only=True)
 class NoQaDirective:
     """Representation of a noqa directive."""
@@ -177,22 +156,20 @@ class NoQaDirective:
     used: bool = False
 
 
-LINT_IGNORE_DIRECTIVE: typing.Final[str] = "noqa"
-
-
 def _extract_statement_lint_ignores(
+    *,
+    statement: Statement,
     source_code: str,
-    statements: list[Statement],
 ) -> list[NoQaDirective]:
-    """Extract lint ignores from SQL statements.
+    """Extract lint ignores from SQL statement.
 
     Parameters:
     ----------
-    source_code: str
-        Source code to extract lint ignores from.
+    statement: Statement
+        Statement to extract lint ignores from.
 
-    statements: list[Statement]
-        List of statements.
+    source_code: str
+        Source code to construct the line number and column offset of lint ignores from.
 
     Returns:
     -------
@@ -201,18 +178,21 @@ def _extract_statement_lint_ignores(
     """
     statement_lint_ignores: list[NoQaDirective] = []
 
-    for token in typing.cast(list[Token], parser.scan(source_code)):
-        if token.name == "SQL_COMMENT":
-            statement_start_location, statement_end_location = _get_statement_locations(
-                statements,
-                token.start,
-            )
+    for token in typing.cast(list[Token], parser.scan(statement.text)):
+        if token.name == SQL_COMMENT:
+            # In order to include the last character, we need to increase the end
+            # location by one
+            actual_end_location = token.end + 1
 
-            line_number = source_code[:statement_end_location].count(NEW_LINE) + 1
+            line_number = source_code[:actual_end_location].count(NEW_LINE) + 1
 
             # Here, we extract last comment because we can have a comment followed
             # by another comment e.g -- new table -- noqa: US005
-            comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
+            comment = (
+                statement.text[token.start : (actual_end_location)]
+                .split("--")[-1]
+                .strip()
+            )
 
             if comment.startswith(LINT_IGNORE_DIRECTIVE):
                 rules = _get_lint_rules_from_comment(
@@ -223,9 +203,9 @@ def _extract_statement_lint_ignores(
 
                 statement_lint_ignores.extend(
                     NoQaDirective(
-                        location=statement_start_location,
+                        location=statement.start_location,
                         line_number=line_number,
-                        column_offset=(statement_end_location - token.start),
+                        column_offset=(statement.end_location - token.start),
                         rule=rule,
                     )
                     for rule in rules
@@ -245,6 +225,7 @@ def _extract_file_lint_ignores(
     ----------
     source_file: str
         The source file.
+
     source_code: str
         Source code to extract lint ignores from.
 
@@ -255,11 +236,17 @@ def _extract_file_lint_ignores(
     """
     file_ignores: list[NoQaDirective] = []
 
-    for token in parser.scan(source_code):
-        if token.start == 0 and token.name == "SQL_COMMENT":
-            comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
+    for token in typing.cast(list[Token], parser.scan(source_code)):
+        if token.start == 0 and token.name == SQL_COMMENT:
+            # In order to include the last character, we need to increase the end
+            # location by one
+            actual_end_location = token.end + 1
 
-            if comment.strip().startswith(f"{PACKAGE_NAME}: {LINT_IGNORE_DIRECTIVE}"):
+            comment = (
+                source_code[token.start : actual_end_location].split("--")[-1].strip()
+            )
+
+            if comment.startswith(f"{PACKAGE_NAME}: {LINT_IGNORE_DIRECTIVE}"):
                 rules = _get_lint_rules_from_comment(
                     comment,
                     token.start,
@@ -286,7 +273,7 @@ def extract_lint_ignores(
     *,
     source_file: str,
     source_code: str,
-    statements: list[Statement],
+    statement: Statement,
 ) -> list[NoQaDirective]:
     """Extract lint ignores from source code.
 
@@ -296,10 +283,10 @@ def extract_lint_ignores(
         The source file.
 
     source_code: str
-        Source code to extract lint ignores from.
+        Source code to extract file lint ignores from.
 
-    statements: list[Statement]
-        List of statements.
+    statement: Statement
+        Statement to extract lint ignores from.
 
     Returns:
     -------
@@ -307,53 +294,49 @@ def extract_lint_ignores(
         List of ignores.
     """
     return _extract_statement_lint_ignores(
+        statement=statement,
         source_code=source_code,
-        statements=statements,
     ) + _extract_file_lint_ignores(
         source_file=source_file,
         source_code=source_code,
     )
 
 
-def extract_statement_format_ignores(
-    source_code: str,
-    statements: list[Statement],
-) -> list[int]:
-    """Extract format ignores from SQL statements.
+def check_statement_format_skip(
+    statement: Statement,
+) -> bool:
+    """Check if formatting should be skipped for SQL statement.
 
     Parameters:
     ----------
-    source_code: str
-        Source code to extract ignores from.
-
-    statements: list[Statement]
-        List of statements.
+    statement: Statement
+        Statement to check if formatting should be skipped.
 
     Returns:
     -------
-    list[int]
-        List of ignores.
+    bool
+        True if format skip is found, False otherwise.
     """
-    statement_format_ignores: list[int] = []
+    for token in typing.cast(list[Token], parser.scan(statement.text)):
+        if token.name == SQL_COMMENT:
+            # In order to include the last character, we need to increase the end
+            # location by one
+            actual_end_location = token.end + 1
 
-    for token in parser.scan(source_code):
-        if token.name == "SQL_COMMENT":
-            statement_start_location, _ = _get_statement_locations(
-                statements,
-                token.start,
+            comment = (
+                statement.text[token.start : actual_end_location].split("--")[-1].strip()
             )
 
-            comment = source_code[token.start : (token.end + 1)].split("--")[-1].strip()
-
             if (
-                comment.strip().startswith("fmt")
-                and comment.removeprefix("fmt").removeprefix(":").strip() == "skip"
+                comment.startswith(FORMAT_IGNORE_DIRECTIVE)
+                and comment.removeprefix(FORMAT_IGNORE_DIRECTIVE)
+                .removeprefix(":")
+                .strip()
+                == "skip"
             ):
-                statement_format_ignores.append(
-                    statement_start_location,
-                )
+                return True
 
-    return statement_format_ignores
+    return False
 
 
 class Comment(typing.NamedTuple):
@@ -370,7 +353,7 @@ def extract_comments(*, statement: Statement) -> list[Comment]:
 
     Parameters:
     ----------
-    statement: str
+    statement: Statement
         Statement to extract comments from.
 
     Returns:
@@ -384,17 +367,14 @@ def extract_comments(*, statement: Statement) -> list[Comment]:
     continue_previous = True
 
     for token in parser.scan(statement.text):
-        if token.name in ("C_COMMENT", "SQL_COMMENT"):
+        if token.name in (C_COMMENT, SQL_COMMENT):
             comment = statement.text[token.start : (token.end + 1)]
-            at_start_of_line = not statement.text[
-                : token.start - statement.start_location
-            ]
             comments.append(
                 Comment(
-                    0,
-                    comment,
-                    at_start_of_line,
-                    continue_previous,
+                    location=0,
+                    text=comment,
+                    at_start_of_line=True,
+                    continue_previous=continue_previous,
                 ),
             )
     return comments
@@ -428,7 +408,7 @@ def report_unused_lint_ignores(
             )
 
 
-def add_file_level_general_ignore(sources: set[pathlib.Path]) -> int:
+def add_file_level_general_lint_ignore(sources: set[pathlib.Path]) -> int:
     """Add file-level general lint ignore to the beginning of each source.
 
     Parameters:
@@ -448,12 +428,12 @@ def add_file_level_general_ignore(sources: set[pathlib.Path]) -> int:
         source_code = source.read_text()
 
         for token in typing.cast(list[Token], parser.scan(source_code)):
-            if token.start == 0 and token.name == "SQL_COMMENT":
+            if token.start == 0 and token.name == SQL_COMMENT:
                 comment = (
                     source_code[token.start : (token.end + 1)].split("--")[-1].strip()
                 )
 
-                if comment.strip() == f"{PACKAGE_NAME}: {LINT_IGNORE_DIRECTIVE}":
+                if comment == f"{PACKAGE_NAME}: {LINT_IGNORE_DIRECTIVE}":
                     skip = True
                     break
 
