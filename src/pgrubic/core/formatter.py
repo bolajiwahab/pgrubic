@@ -59,66 +59,76 @@ class Formatter:
             source_code=source_code,
         )
 
-        for statement in statements:
-            if noqa.check_statement_format_skip(statement=statement):
-                formatted_statements.append(statement.text)
-                continue
+        is_file_format_skip = noqa.check_file_format_skip(
+            source_code=source_code,
+        )
 
-            comments = noqa.extract_comments(
-                statement=statement,
-            )
+        if not is_file_format_skip:
+            for statement in statements:
+                if noqa.check_statement_format_skip(
+                    source_code=source_code,
+                    statement=statement,
+                ):
+                    formatted_statements.append(statement.text)
+                    continue
 
-            try:
-                parser.parse_sql(statement.text)
-
-                formatted_statement = stream.IndentedStream(
-                    comments=comments,
-                    semicolon_after_last_statement=False,
-                    remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
-                    comma_at_eoln=not (config.format.comma_at_beginning),
-                    special_functions=True,
-                )(statement.text)
-
-                if config.format.new_line_before_semicolon:
-                    formatted_statement += noqa.NEW_LINE + noqa.SEMI_COLON
-                else:
-                    formatted_statement += noqa.SEMI_COLON
-
-                formatted_statements.append(formatted_statement)
-
-            except parser.ParseError as error:
-                _errors.add(
-                    errors.Error(
-                        source_file=str(source_file),
-                        source_code=statement.text,
-                        statement_start_location=statement.start_location + 1,
-                        statement_end_location=statement.end_location,
-                        statement=statement.text,
-                        message=str(error),
-                        hint=f"""Make sure the statement is valid PostgreSQL statement. If it is, please report this issue at {ISSUES_URL}{noqa.NEW_LINE}""",  # noqa: E501
-                    ),
+                comments = noqa.extract_comments(
+                    statement=statement,
                 )
-                formatted_statements.append(statement.text)
 
-            except RecursionError as error:  # pragma: no cover
-                _errors.add(
-                    errors.Error(
-                        source_file=str(source_file),
-                        source_code=statement.text,
-                        statement_start_location=statement.start_location + 1,
-                        statement_end_location=statement.end_location,
-                        statement=statement.text,
-                        message=str(error),
-                        hint="Maximum format depth exceeded, reduce deeply nested queries",  # noqa: E501
-                    ),
-                )
-                formatted_statements.append(statement.text)
+                try:
+                    parser.parse_sql(statement.text)
 
-        return (
-            noqa.NEW_LINE + (noqa.NEW_LINE * config.format.lines_between_statements)
-        ).join(
-            formatted_statements,
-        ) + noqa.NEW_LINE, _errors
+                    formatted_statement = stream.IndentedStream(
+                        comments=comments,
+                        semicolon_after_last_statement=False,
+                        remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
+                        comma_at_eoln=not (config.format.comma_at_beginning),
+                        special_functions=True,
+                    )(statement.text)
+
+                    if config.format.new_line_before_semicolon:
+                        formatted_statement += noqa.NEW_LINE + noqa.SEMI_COLON
+                    else:
+                        formatted_statement += noqa.SEMI_COLON
+
+                    formatted_statements.append(formatted_statement)
+
+                except parser.ParseError as error:
+                    _errors.add(
+                        errors.Error(
+                            source_file=str(source_file),
+                            source_code=statement.text,
+                            statement_start_location=statement.start_location + 1,
+                            statement_end_location=statement.end_location,
+                            statement=statement.text,
+                            message=str(error),
+                            hint=f"""Make sure the statement is valid PostgreSQL statement. If it is, please report this issue at {ISSUES_URL}{noqa.NEW_LINE}""",  # noqa: E501
+                        ),
+                    )
+                    formatted_statements.append(statement.text)
+
+                except RecursionError as error:  # pragma: no cover
+                    _errors.add(
+                        errors.Error(
+                            source_file=str(source_file),
+                            source_code=statement.text,
+                            statement_start_location=statement.start_location + 1,
+                            statement_end_location=statement.end_location,
+                            statement=statement.text,
+                            message=str(error),
+                            hint="Maximum format depth exceeded, reduce deeply nested queries",  # noqa: E501
+                        ),
+                    )
+                    formatted_statements.append(statement.text)
+
+            return (
+                noqa.NEW_LINE + (noqa.NEW_LINE * config.format.lines_between_statements)
+            ).join(
+                formatted_statements,
+            ) + noqa.NEW_LINE, _errors
+
+        return source_code, _errors
 
     def format(self, *, source_file: str, source_code: str) -> FormatResult:
         """Format source code.

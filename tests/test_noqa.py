@@ -10,15 +10,14 @@ from pgrubic import PACKAGE_NAME
 from pgrubic.core import noqa
 
 
-def test_extract_star_ignore_from_inline_comments() -> None:
-    """Test extract star ignore from inline comments."""
+def test_extract_star_statement_lint_ignore() -> None:
+    """Test extract star statement lint ignore."""
     source_code: str = """
     -- noqa
     CREATE TABLE tbl (activated date);
     """
 
-    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
-        source_file=TEST_FILE,
+    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_statement_lint_ignores(
         source_code=source_code,
         statement=noqa.extract_statements(source_code=source_code)[0],
     )
@@ -26,49 +25,62 @@ def test_extract_star_ignore_from_inline_comments() -> None:
     assert lint_ignores[0].rule == noqa.A_STAR
 
 
-def test_extract_ignores() -> None:
-    """Test extract ignores from inline comments."""
+def test_extract_file_lint_ignores() -> None:
+    """Test extract file lint ignores."""
     source_code: str = f"""-- {PACKAGE_NAME}: noqa: NM016, GN001
     CREATE TABLE tbl (activated date);
     """
 
-    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
-        source_file=str(TEST_FILE),
+    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_file_lint_ignores(
+        source_file=TEST_FILE,
         source_code=source_code,
-        statement=noqa.extract_statements(source_code=source_code)[0],
     )
 
     assert lint_ignores[0].rule == "NM016"
     assert lint_ignores[1].rule == "GN001"
 
 
-def test_extract_ignores_length() -> None:
-    """Test extract ignore from inline comments length."""
+def test_extract_file_lint_ignores_length() -> None:
+    """Test extract file lint ignores length."""
+    source_code: str = f"""-- {PACKAGE_NAME}: noqa: NM016, GN001
+    CREATE TABLE tbl (activated date);
+    """
+
+    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_file_lint_ignores(
+        source_file=TEST_FILE,
+        source_code=source_code,
+    )
+
+    expected_lint_ignores_length: int = 2
+
+    assert len(lint_ignores) == expected_lint_ignores_length
+
+
+def test_extract_statement_lint_ignores_length() -> None:
+    """Test extract statement lint ignores length."""
     source_code: str = """
     -- noqa: NM016, GN001
     CREATE TABLE tbl (activated date);
     """
 
-    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
-        source_file=TEST_FILE,
+    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_statement_lint_ignores(
         source_code=source_code,
         statement=noqa.extract_statements(source_code=source_code)[0],
     )
 
-    expected_ignores_length: int = 2
+    expected_lint_ignores_length: int = 2
 
-    assert len(lint_ignores) == expected_ignores_length
+    assert len(lint_ignores) == expected_lint_ignores_length
 
 
-def test_wrongly_formed_inline_ignores_from_inline_comments(capfd: typing.Any) -> None:
-    """Test extract ignore from inline comments."""
+def test_wrongly_formed_lint_ignores(capfd: typing.Any) -> None:
+    """Test wrongly formed lint ignores."""
     source_code: str = """
     -- noqa NM016, GN001
     CREATE TABLE tbl (activated date);
     """
 
-    noqa.extract_lint_ignores(
-        source_file=TEST_FILE,
+    noqa.extract_statement_lint_ignores(
         source_code=source_code,
         statement=noqa.extract_statements(source_code=source_code)[0],
     )
@@ -89,8 +101,7 @@ def test_report_specific_unused_ignores(
     CREATE TABLE tbl (activated date);
     """
 
-    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
-        source_file=TEST_FILE,
+    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_statement_lint_ignores(
         source_code=source_code,
         statement=noqa.extract_statements(source_code=source_code)[0],
     )
@@ -103,17 +114,16 @@ def test_report_specific_unused_ignores(
     )
 
 
-def test_report_general_unused_ignores(
+def test_report_star_unused_ignores(
     capfd: typing.Any,
 ) -> None:
-    """Test report general unused ignores."""
+    """Test report star unused ignores."""
     source_code: str = """
     -- noqa
     CREATE TABLE tbl (activated date);
     """
 
-    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_lint_ignores(
-        source_file=TEST_FILE,
+    lint_ignores: list[noqa.NoQaDirective] = noqa.extract_statement_lint_ignores(
         source_code=source_code,
         statement=noqa.extract_statements(source_code=source_code)[0],
     )
