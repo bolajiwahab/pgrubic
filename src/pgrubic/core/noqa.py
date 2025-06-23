@@ -156,7 +156,7 @@ class NoQaDirective:
     used: bool = False
 
 
-def _extract_statement_lint_ignores(
+def extract_statement_lint_ignores(
     *,
     statement: Statement,
     source_code: str,
@@ -214,7 +214,7 @@ def _extract_statement_lint_ignores(
     return statement_lint_ignores
 
 
-def _extract_file_lint_ignores(
+def extract_file_lint_ignores(
     *,
     source_file: str,
     source_code: str,
@@ -269,40 +269,49 @@ def _extract_file_lint_ignores(
     return file_ignores
 
 
-def extract_lint_ignores(
+def check_file_format_skip(
     *,
-    source_file: str,
+    # source_file: str,
     source_code: str,
-    statement: Statement,
-) -> list[NoQaDirective]:
-    """Extract lint ignores from source code.
+) -> bool:
+    """Check if formatting should be skipped for source code.
 
     Parameters:
     ----------
-    source_file: str
-        The source file.
+    # source_file: str
+    #     The source file.
 
     source_code: str
-        Source code to extract file lint ignores from.
-
-    statement: Statement
-        Statement to extract lint ignores from.
+        Source code to check file format skip for.
 
     Returns:
     -------
-    list[NoQaDirective]
-        List of ignores.
+    bool
+        True if format skip is found, False otherwise.
     """
-    return _extract_statement_lint_ignores(
-        statement=statement,
-        source_code=source_code,
-    ) + _extract_file_lint_ignores(
-        source_file=source_file,
-        source_code=source_code,
-    )
+    for token in typing.cast(list[Token], parser.scan(source_code)):
+        if token.start == 0 and token.name == SQL_COMMENT:
+            # In order to include the last character, we need to increase the end
+            # location by one
+            actual_end_location = token.end + 1
+
+            comment = (
+                source_code[token.start : actual_end_location].split("--")[-1].strip()
+            )
+
+            return bool(
+                comment.startswith(FORMAT_IGNORE_DIRECTIVE)
+                and comment.removeprefix(FORMAT_IGNORE_DIRECTIVE)
+                .removeprefix(":")
+                .strip()
+                == "skip",
+            )
+
+    return False
 
 
-def check_statement_format_skip(
+def _check_statement_format_skip(
+    *,
     statement: Statement,
 ) -> bool:
     """Check if formatting should be skipped for SQL statement.
@@ -337,6 +346,29 @@ def check_statement_format_skip(
                 return True
 
     return False
+
+
+def check_statement_format_skip(
+    *,
+    source_code: str,
+    statement: Statement,
+) -> bool:
+    """Check if formatting should be skipped for SQL statement base on source code or the
+    statement.
+
+    Parameters:
+    ----------
+    statement: Statement
+        Statement to check if formatting should be skipped.
+
+    Returns:
+    -------
+    bool
+        True if format skip is found, False otherwise.
+    """
+    return check_file_format_skip(
+        source_code=source_code,
+    ) or _check_statement_format_skip(statement=statement)
 
 
 class Comment(typing.NamedTuple):
@@ -429,8 +461,12 @@ def add_file_level_general_lint_ignore(sources: set[pathlib.Path]) -> int:
 
         for token in typing.cast(list[Token], parser.scan(source_code)):
             if token.start == 0 and token.name == SQL_COMMENT:
+                # In order to include the last character, we need to increase the end
+                # location by one
+                actual_end_location = token.end + 1
+
                 comment = (
-                    source_code[token.start : (token.end + 1)].split("--")[-1].strip()
+                    source_code[token.start : actual_end_location].split("--")[-1].strip()
                 )
 
                 if comment == f"{PACKAGE_NAME}: {LINT_IGNORE_DIRECTIVE}":
