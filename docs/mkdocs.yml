@@ -1,6 +1,7 @@
 ---
 site_name: pgrubic
 site_url: https://docs.azellar.com/pgrubic
+use_directory_urls: false
 site_description:
   PostgreSQL linter for schema migrations and design best practices
 
