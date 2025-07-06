@@ -1,3 +1,9 @@
+## 0.6.2 (2025-07-06)
+
+### Fix
+
+- **linter**: reset ansi escape character sequence (#114)
+
 ## 0.6.1 (2025-06-15)
 
 ### Fix
