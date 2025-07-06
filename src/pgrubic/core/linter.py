@@ -341,7 +341,7 @@ class Linter:
         for violation in violations:
             sys.stdout.write(
                 f"{noqa.NEW_LINE}{source_file}:{violation.line_number}:{violation.column_offset}:"
-                f"{noqa.SPACE}\033]8;;{DOCUMENTATION_URL}/rules/{violation.rule_category}/{violation.rule_name}{Style.RESET_ALL}\033\\{Fore.RED}{Style.BRIGHT}{violation.rule_code}{Style.RESET_ALL}\033]8;;\033\\:"
+                f"{noqa.SPACE}\033]8;;{DOCUMENTATION_URL}/rules/{violation.rule_category}/{violation.rule_name}{Style.RESET_ALL}{Fore.RED}{Style.BRIGHT}{violation.rule_code}\033]8;;{Style.RESET_ALL}:"
                 f"{noqa.SPACE}{violation.description}{noqa.NEW_LINE}",
             )
 
