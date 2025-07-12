@@ -1,3 +1,9 @@
+## 0.6.3 (2025-07-13)
+
+### Fix
+
+- **linter**: false-positive fixes caused by mismatched trailing newlines (#118)
+
 ## 0.6.2 (2025-07-06)
 
 ### Fix
