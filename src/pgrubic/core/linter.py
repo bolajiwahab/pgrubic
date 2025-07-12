@@ -482,7 +482,7 @@ class Linter:
 
         fixed_source_code = None
 
-        if _fixed_source_code.strip(noqa.NEW_LINE).encode("utf-8") != source_code.strip(
+        if _fixed_source_code.rstrip(noqa.NEW_LINE).encode("utf-8") != source_code.rstrip(
             noqa.NEW_LINE,
         ).encode("utf-8"):
             fixed_source_code = _fixed_source_code
