@@ -13,6 +13,7 @@ from caseconverter import kebabcase
 
 from pgrubic import ISSUES_URL, DOCUMENTATION_URL
 from pgrubic.core import noqa, config, errors, formatter
+from pgrubic.core.do_block import extract_do_block_body, extract_sql_statements_from_plpgsql
 
 if typing.TYPE_CHECKING:
     from collections import abc  # pragma: no cover
@@ -366,6 +367,109 @@ class Linter:
                     else None
                 )
 
+    def _lint_do_block(
+        self,
+        *,
+        parse_tree: ast.Node,
+        statement: noqa.Statement,
+        source_file: str,
+        source_code: str,
+        inline_ignores: list[noqa.NoQaDirective],
+        _processing_do_block: bool = False,
+    ) -> tuple[set[Violation], set[errors.Error]]:
+        """Lint SQL statements within DO blocks.
+        
+        Parameters:
+        ----------
+        parse_tree: ast.Node
+            The parsed DO statement
+        statement: noqa.Statement
+            The original statement
+        source_file: str
+            Path to the source file
+        source_code: str
+            Full source code
+        inline_ignores: list[noqa.NoQaDirective]
+            Inline noqa directives
+            
+        Returns:
+        -------
+        tuple[set[Violation], set[errors.Error]]
+            Violations and errors found within the DO block
+        """
+        violations: set[Violation] = set()
+        _errors: set[errors.Error] = set()
+        
+        # Prevent infinite recursion when processing DO blocks
+        if _processing_do_block:
+            return violations, _errors
+        
+        # Check if this is a DO statement
+        if not isinstance(parse_tree, (list, tuple)):
+            return violations, _errors
+            
+        for raw_stmt in parse_tree:
+            if hasattr(raw_stmt, 'stmt') and isinstance(raw_stmt.stmt, ast.DoStmt):
+                do_stmt = raw_stmt.stmt
+                
+                # Extract the body code
+                body = extract_do_block_body(do_stmt)
+                if not body:
+                    continue
+                
+                # Calculate the base line number for the DO block
+                base_line = source_code[:statement.start_location].count(noqa.NEW_LINE) + 1
+                
+                # Extract SQL statements from the body
+                statements = extract_sql_statements_from_plpgsql(body)
+                
+                # Lint each extracted statement
+                for sql, line_offset in statements:
+                    try:
+                        # Create a new linter instance to prevent infinite recursion
+                        # We'll use a simple approach and just run the checkers directly
+                        temp_violations: set[Violation] = set()
+                        
+                        try:
+                            temp_parse_tree: ast.Node = parser.parse_sql(sql)
+                            
+                            # Set up temporary checker state
+                            BaseChecker.statement = sql
+                            BaseChecker.statement_location = 0
+                            BaseChecker.applied_fixes = []
+                            
+                            for checker in self.checkers:
+                                checker.violations = set()
+                                checker(temp_parse_tree)
+                                temp_violations.update(checker.violations)
+                                
+                        except parser.ParseError:
+                            # Skip statements that can't be parsed
+                            continue
+                        
+                        # Adjust line numbers for all violations
+                        for violation in temp_violations:
+                            adjusted_violation = Violation(
+                                rule_code=violation.rule_code,
+                                rule_name=violation.rule_name,
+                                rule_category=violation.rule_category,
+                                line_number=base_line + line_offset + violation.line_number - 1,
+                                column_offset=violation.column_offset,
+                                line=violation.line,
+                                statement_location=statement.start_location,
+                                description=violation.description,
+                                is_auto_fixable=violation.is_auto_fixable,
+                                is_fix_enabled=violation.is_fix_enabled,
+                                help=violation.help,
+                            )
+                            violations.add(adjusted_violation)
+                        
+                    except Exception as e:
+                        # Log but continue with other statements
+                        pass
+                        
+        return violations, _errors
+
     def run(self, *, source_file: str, source_code: str) -> LintResult:
         """Run rules on a source code.
 
@@ -425,6 +529,18 @@ class Linter:
             BaseChecker.statement_location = statement.start_location
             # Reset the applied fixes for each statement
             BaseChecker.applied_fixes = []
+
+            # Check if this is a DO block and handle it specially
+            do_violations, do_errors = self._lint_do_block(
+                parse_tree=parse_tree,
+                statement=statement,
+                source_file=source_file,
+                source_code=source_code,
+                inline_ignores=inline_ignores,
+                _processing_do_block=False,
+            )
+            violations.update(do_violations)
+            _errors.update(do_errors)
 
             for checker in self.checkers:
                 checker.violations = set()
