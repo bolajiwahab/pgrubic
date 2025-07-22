@@ -7,6 +7,9 @@ from typing import Iterator, List, Optional, Tuple
 import pglast
 from pglast import ast
 
+from .string_parser import StringSQLParser, StringSQLContent
+from .function_handlers import function_handler_registry
+
 # Import at runtime to avoid circular imports
 
 logger = logging.getLogger(__name__)
@@ -203,3 +206,114 @@ def lint_do_block(linter: 'Linter', do_stmt: ast.DoStmt, source: str, filename: 
             logger.debug(f"Failed to parse SQL statement in DO block: {e}")
             # Continue with other statements
             continue
+
+
+def lint_string_based_do_blocks(linter: 'Linter', string_content: str, source: str, filename: str, base_line: int = 1) -> Iterator['Violation']:
+    """Lint DO blocks found within string literals.
+    
+    Args:
+        linter: The linter instance to use
+        string_content: The string content to search for DO blocks
+        source: The original source code
+        filename: The filename being linted
+        base_line: The line number where the string starts
+        
+    Yields:
+        Violations found within string-embedded DO blocks
+    """
+    parser = StringSQLParser()
+    sql_contents = parser.parse_string_content(string_content)
+    
+    logger.debug(f"Found {len(sql_contents)} SQL content(s) in string")
+    
+    # Process each DO block found in the string
+    for sql_content in sql_contents:
+        if sql_content.content_type == 'do_block':
+            try:
+                # Parse the DO block SQL to get the AST
+                from pglast import parser
+                parsed = parser.parse_sql(sql_content.sql_content)
+                
+                # Look for DO statements in the parsed content
+                for stmt in parsed:
+                    if isinstance(stmt.stmt, ast.DoStmt):
+                        # Use the existing lint_do_block function but adjust line numbers
+                        adjusted_base_line = base_line + sql_content.start_line_offset - 1
+                        yield from lint_do_block(linter, stmt.stmt, source, filename, adjusted_base_line)
+                        
+            except Exception as e:
+                logger.debug(f"Failed to parse string-based DO block: {e}")
+                continue
+
+
+def lint_function_call_sql_parameters(linter: 'Linter', func_call: ast.FuncCall, source: str, filename: str, base_line: int = 1) -> Iterator['Violation']:
+    """Lint SQL content within function call parameters.
+    
+    Args:
+        linter: The linter instance to use
+        func_call: The function call AST node
+        source: The original source code
+        filename: The filename being linted
+        base_line: The line number where the function call starts
+        
+    Yields:
+        Violations found within function parameters
+    """
+    # Use the function handler registry to extract SQL from parameters
+    sql_parameters = function_handler_registry.extract_sql_from_function_call(func_call)
+    
+    logger.debug(f"Found {len(sql_parameters)} SQL parameter(s) in function call")
+    
+    # Process each parameter with SQL content
+    for param in sql_parameters:
+        for sql_content in param.sql_contents:
+            if sql_content.content_type == 'do_block':
+                try:
+                    # Parse the DO block SQL to get the AST
+                    from pglast import parser
+                    parsed = parser.parse_sql(sql_content.sql_content)
+                    
+                    # Look for DO statements in the parsed content
+                    for stmt in parsed:
+                        if isinstance(stmt.stmt, ast.DoStmt):
+                            # Adjust line numbers for the function parameter position
+                            adjusted_base_line = base_line + sql_content.start_line_offset - 1
+                            yield from lint_do_block(linter, stmt.stmt, source, filename, adjusted_base_line)
+                            
+                except Exception as e:
+                    logger.debug(f"Failed to parse function parameter DO block: {e}")
+                    continue
+
+
+def extract_all_do_blocks(source: str) -> Iterator[Tuple[str, int, str]]:
+    """Extract all DO blocks from source code, including string-embedded ones.
+    
+    Args:
+        source: The PostgreSQL source code to analyze
+        
+    Yields:
+        Tuples of (do_block_sql, line_number, context_type)
+        where context_type is 'direct' or 'string_embedded'
+    """
+    try:
+        # Parse the source to find direct DO blocks
+        from pglast import parser
+        parsed = parser.parse_sql(source)
+        
+        for stmt in parsed:
+            if isinstance(stmt.stmt, ast.DoStmt):
+                body = extract_do_block_body(stmt.stmt)
+                if body:
+                    # TODO: Calculate actual line number from AST position
+                    yield (body, 1, 'direct')
+    
+    except Exception as e:
+        logger.debug(f"Failed to parse source for direct DO blocks: {e}")
+    
+    # Also look for string-embedded DO blocks
+    parser = StringSQLParser()
+    sql_contents = parser.parse_string_content(source)
+    
+    for sql_content in sql_contents:
+        if sql_content.content_type == 'do_block':
+            yield (sql_content.sql_content, sql_content.start_line_offset, 'string_embedded')

@@ -13,7 +13,12 @@ from caseconverter import kebabcase
 
 from pgrubic import ISSUES_URL, DOCUMENTATION_URL
 from pgrubic.core import noqa, config, errors, formatter
-from pgrubic.core.do_block import extract_do_block_body, extract_sql_statements_from_plpgsql
+from pgrubic.core.do_block import (
+    extract_do_block_body, 
+    extract_sql_statements_from_plpgsql,
+    lint_function_call_sql_parameters,
+    lint_string_based_do_blocks
+)
 
 if typing.TYPE_CHECKING:
     from collections import abc  # pragma: no cover
@@ -255,6 +260,17 @@ class Linter:
             config=config,
             formatters=formatters,
         )
+        
+        # Register custom functions for enhanced string parsing
+        self._setup_enhanced_string_parsing()
+
+    def _setup_enhanced_string_parsing(self) -> None:
+        """Setup enhanced string parsing with custom functions from config."""
+        from .function_handlers import function_handler_registry
+        
+        custom_functions = getattr(self.config.lint, 'enhanced_string_parsing_functions', [])
+        if custom_functions:
+            function_handler_registry.register_custom_functions(custom_functions)
 
     @staticmethod
     def _skip_suppressed_violations(
@@ -470,6 +486,105 @@ class Linter:
                         
         return violations, _errors
 
+    def _lint_enhanced_string_parsing(
+        self,
+        *,
+        parse_tree: ast.Node,
+        statement: noqa.Statement,
+        source_file: str,
+        source_code: str,
+        inline_ignores: list[noqa.NoQaDirective],
+    ) -> tuple[set[Violation], set[errors.Error]]:
+        """Lint using enhanced string parsing for function calls and string literals.
+        
+        This method looks for SQL content within:
+        1. Function call parameters (e.g., pglogical.replicate_ddl_command)
+        2. String literals containing DO blocks
+        
+        Parameters:
+        ----------
+        parse_tree: ast.Node
+            The parsed statement
+        statement: noqa.Statement
+            The original statement
+        source_file: str
+            Path to the source file
+        source_code: str
+            Full source code
+        inline_ignores: list[noqa.NoQaDirective]
+            Inline noqa directives
+            
+        Returns:
+        -------
+        tuple[set[Violation], set[errors.Error]]
+            Violations and errors found within string content
+        """
+        violations: set[Violation] = set()
+        _errors: set[errors.Error] = set()
+        
+        # Calculate the base line number for this statement
+        base_line = source_code[:statement.start_location].count(noqa.NEW_LINE) + 1
+        
+        # Check if enhanced string parsing is enabled
+        enhanced_parsing_enabled = getattr(self.config.lint, 'enhanced_string_parsing', True)
+        if not enhanced_parsing_enabled:
+            return violations, _errors
+        
+        try:
+            # Use a visitor to find function calls and string literals
+            class EnhancedParsingVisitor(visitors.Visitor):
+                def __init__(self, linter_instance, violations_set, errors_set):
+                    self.linter = linter_instance
+                    self.violations = violations_set
+                    self.errors = errors_set
+                    self.base_line = base_line
+                    
+                def visit_FuncCall(self, ancestors, node):
+                    """Visit function calls to check for SQL in parameters."""
+                    try:
+                        func_violations = lint_function_call_sql_parameters(
+                            linter=self.linter,
+                            func_call=node,
+                            source=source_code,
+                            filename=source_file,
+                            base_line=self.base_line
+                        )
+                        self.violations.update(func_violations)
+                    except Exception as e:
+                        # Log but continue
+                        pass
+                        
+                def visit_A_Const(self, ancestors, node):
+                    """Visit string constants to check for embedded SQL."""
+                    if hasattr(node.val, 'sval') and node.val.sval:
+                        try:
+                            string_violations = lint_string_based_do_blocks(
+                                linter=self.linter,
+                                string_content=node.val.sval,
+                                source=source_code,
+                                filename=source_file,
+                                base_line=self.base_line
+                            )
+                            self.violations.update(string_violations)
+                        except Exception as e:
+                            # Log but continue
+                            pass
+            
+            # Create visitor and traverse the parse tree
+            visitor = EnhancedParsingVisitor(self, violations, _errors)
+            
+            if isinstance(parse_tree, (list, tuple)):
+                for stmt in parse_tree:
+                    visitor(stmt)
+            else:
+                visitor(parse_tree)
+                
+        except Exception as e:
+            # Log but continue - don't let enhanced parsing break regular linting
+            pass
+        
+        return violations, _errors
+
     def run(self, *, source_file: str, source_code: str) -> LintResult:
         """Run rules on a source code.
 
@@ -541,6 +656,17 @@ class Linter:
             )
             violations.update(do_violations)
             _errors.update(do_errors)
+
+            # Enhanced string parsing for function calls and string literals
+            enhanced_violations, enhanced_errors = self._lint_enhanced_string_parsing(
+                parse_tree=parse_tree,
+                statement=statement,
+                source_file=source_file,
+                source_code=source_code,
+                inline_ignores=inline_ignores,
+            )
+            violations.update(enhanced_violations)
+            _errors.update(enhanced_errors)
 
             for checker in self.checkers:
                 checker.violations = set()

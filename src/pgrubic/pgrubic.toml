@@ -27,6 +27,8 @@ regex-constraint-foreign-key = "^.+$"
 regex-constraint-check = "^.+$"
 regex-constraint-exclusion = "^.+$"
 regex-sequence = "^.+$"
+enhanced-string-parsing = true
+enhanced-string-parsing-functions = ["pglogical.replicate_ddl_command", "pglogical.replicate_ddl"]
 
 [format]
 include = []
