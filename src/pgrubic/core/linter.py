@@ -6,13 +6,14 @@ import sys
 import typing
 import fnmatch
 import functools
+from contextlib import contextmanager
 
 from pglast import ast, parser, stream, visitors
 from colorama import Fore, Style
 from caseconverter import kebabcase
 
 from pgrubic import ISSUES_URL, DOCUMENTATION_URL
-from pgrubic.core import noqa, config, errors, formatter
+from pgrubic.core import noqa, config, errors, visitors as pgrubic_visitors, formatter
 
 if typing.TYPE_CHECKING:
     from collections import abc  # pragma: no cover
@@ -254,6 +255,23 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):  # type: ignore[misc
 
         return True
 
+    @classmethod
+    @contextmanager
+    def disable_auto_fix(
+        cls,
+        checkers: set[BaseChecker],
+    ) -> typing.Generator[None, None, None]:
+        """Disable auto fix for the given checkers."""
+        original_states = [checker.is_auto_fixable for checker in checkers]
+
+        try:
+            for checker in checkers:
+                checker.is_auto_fixable = False
+            yield
+        finally:
+            for checker, original_state in zip(checkers, original_states, strict=False):
+                checker.is_auto_fixable = original_state
+
 
 class Linter:
     """Holds all lint rules, and runs them against a source code."""
@@ -387,7 +405,7 @@ class Linter:
                     else None
                 )
 
-    def run(self, *, source_file: str, source_code: str) -> LintResult:
+    def run(self, *, source_file: str, source_code: str) -> LintResult:  # noqa: C901
         """Run rules on a source code.
 
         Parameters:
@@ -444,6 +462,14 @@ class Linter:
                     statement=statement,
                 )
 
+                plpgsql_visitor = pgrubic_visitors.PLPGSQLVisitor()
+                plpgsql_visitor(parse_tree)
+                children_sql_statements = plpgsql_visitor.get_sql_statements()
+
+                children_parse_trees = [
+                    parser.parse_sql(sql) for sql in children_sql_statements
+                ]
+
             except parser.ParseError as error:
                 _errors.add(
                     errors.Error(
@@ -463,6 +489,16 @@ class Linter:
             BaseChecker.statement_location = statement.start_location
             # Reset the statement fixes counter per statement
             BaseChecker.statement_fixes.reset()
+
+            # Temporarily disable auto fixes, we do not try to fix children statements
+            # inside plpgsql
+            with BaseChecker.disable_auto_fix(self.checkers):
+                for child_parse_tree in children_parse_trees:
+                    for child_checker in self.checkers:
+                        child_checker.violations = set()
+                        child_checker(child_parse_tree)
+
+                        violations.update(child_checker.violations)
 
             for checker in self.checkers:
                 checker.violations = set()
