@@ -59,7 +59,7 @@ def extract_statements(
     list[Statement]
         List of statements.
     """
-    locations: list[Statement] = []
+    statements: list[Statement] = []
 
     statement_start_location = 0
 
@@ -99,7 +99,7 @@ def extract_statements(
                 statement_start_location = actual_end_location + 1
             else:
                 continue
-    return locations
+    return statements
 
 
 def _get_lint_rules_from_comment(
