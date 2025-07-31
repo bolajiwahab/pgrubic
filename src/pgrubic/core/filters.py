@@ -93,7 +93,7 @@ def _is_file_included(
 def _is_git_ignored(source: str) -> bool:
     """Check if a source is git ignored.
 
-    Paramaters:
+    Parameters:
     -----------
     source: str
         Path to the source file.
@@ -105,8 +105,9 @@ def _is_git_ignored(source: str) -> bool:
 
     """
     try:
-        import git
-        import git.exc
+        # git needs to be installed for us to be able to check if a file is git ignored
+        import git  # noqa: PLC0415
+        import git.exc  # noqa: PLC0415
 
         repo = git.Repo(source, search_parent_directories=True)
         return bool(repo.ignored(source))
