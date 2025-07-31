@@ -109,7 +109,8 @@ class CheckerMeta(type):
             checker.line_number = (
                 checker.source_code[: checker.node_location].count(noqa.NEW_LINE) + 1
             )
-            checker.column_offset = checker.node_location - line_start + 1
+            # We account for a single space thus +1
+            checker.column_offset = (checker.node_location - line_start) + 1
 
             # If a node has no location, we return the whole statement instead
             if hasattr(node, "location") and isinstance(node.location, int):

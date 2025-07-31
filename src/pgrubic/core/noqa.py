@@ -180,18 +180,16 @@ def extract_statement_lint_ignores(
 
     for token in typing.cast(list[Token], parser.scan(statement.text)):
         if token.name == SQL_COMMENT:
-            # In order to include the last character, we need to increase the end
-            # location by 1
-            actual_end_location = token.end + 1
+            actual_start_location = statement.start_location + token.start
 
-            line_number = source_code[:actual_end_location].count(NEW_LINE) + 1
+            line_number = source_code[:actual_start_location].count(NEW_LINE) + 1
 
             # Here, we extract last comment because we can have a comment followed
             # by another comment e.g -- new table -- noqa: US005
             comment = (
-                statement.text[token.start : (actual_end_location)]
-                .split("--")[-1]
-                .strip()
+                # In order to include the last character, we need to increase the end
+                # location by 1
+                statement.text[token.start : (token.end + 1)].split("--")[-1].strip()
             )
 
             if comment.startswith(LINT_IGNORE_DIRECTIVE):
@@ -205,7 +203,12 @@ def extract_statement_lint_ignores(
                     NoQaDirective(
                         location=statement.start_location,
                         line_number=line_number,
-                        column_offset=(statement.end_location - token.start),
+                        # Calculate column offset as the position within the line where
+                        # our directive starts
+                        column_offset=(
+                            actual_start_location
+                            - source_code.rfind(NEW_LINE, 0, actual_start_location)
+                        ),
                         rule=rule,
                     )
                     for rule in rules
@@ -258,7 +261,7 @@ def extract_file_lint_ignores(
                         source_file=source_file,
                         location=token.start,
                         line_number=1,
-                        column_offset=0,
+                        column_offset=1,
                         rule=rule,
                     )
                     for rule in rules

@@ -110,7 +110,7 @@ def test_report_specific_unused_ignores(
     out, _ = capfd.readouterr()
     assert (
         out
-        == f"{TEST_FILE}:1:53: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}NM016{Style.RESET_ALL}){noqa.NEW_LINE}"  # noqa: E501
+        == f"{TEST_FILE}:1:1: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}NM016{Style.RESET_ALL}){noqa.NEW_LINE}"  # noqa: E501
     )
 
 
@@ -132,7 +132,7 @@ def test_report_star_unused_ignores(
     out, _ = capfd.readouterr()
     assert (
         out
-        == f"{TEST_FILE}:2:46: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}{noqa.A_STAR}{Style.RESET_ALL}){noqa.NEW_LINE}"  # noqa: E501
+        == f"{TEST_FILE}:2:5: {Fore.YELLOW}Unused noqa directive{Style.RESET_ALL} (unused: {Fore.RED}{Style.BRIGHT}{noqa.A_STAR}{Style.RESET_ALL}){noqa.NEW_LINE}"  # noqa: E501
     )
 
 
