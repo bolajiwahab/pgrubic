@@ -2,7 +2,6 @@
 
 import os
 import sys
-import typing
 import difflib
 import logging
 import pathlib
@@ -16,10 +15,8 @@ from rich.console import Console
 from pgrubic import PACKAGE_NAME, DEFAULT_WORKERS, WORKERS_ENVIRONMENT_VARIABLE, core
 from pgrubic.core import noqa, errors
 
-T = typing.TypeVar("T")
 
-
-def common_options(func: abc.Callable[..., T]) -> abc.Callable[..., T]:
+def common_options[T](func: abc.Callable[..., T]) -> abc.Callable[..., T]:
     """Decorator to add common options to each subcommand."""
     func = click.version_option()(func)
     func = click.option("--workers", type=int, help="Number of workers to use.")(func)
