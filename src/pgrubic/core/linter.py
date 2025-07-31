@@ -401,6 +401,8 @@ class Linter:
             source_code=source_code,
         )
 
+        lint_ignores = file_lint_ignores
+
         for statement in statements:
             statement_lint_ignores: list[noqa.NoQaDirective] = (
                 noqa.extract_statement_lint_ignores(
@@ -409,7 +411,7 @@ class Linter:
                 )
             )
 
-            lint_ignores = file_lint_ignores + statement_lint_ignores
+            lint_ignores.extend(statement_lint_ignores)
 
             BaseChecker.lint_ignores = lint_ignores
 

@@ -85,6 +85,8 @@ def extract_statements(
         # Check if we have reached a semi-colon or the end of the source code
         if token.name == ASCII_SEMI_COLON or token is tokens[-1]:
             if not (inside_block or inside_parenthesis):
+                # In order to include the last character, we need to increase the end
+                # location by 1
                 actual_end_location = token.end + 1
                 locations.append(
                     Statement(
@@ -179,7 +181,7 @@ def extract_statement_lint_ignores(
     for token in typing.cast(list[Token], parser.scan(statement.text)):
         if token.name == SQL_COMMENT:
             # In order to include the last character, we need to increase the end
-            # location by one
+            # location by 1
             actual_end_location = token.end + 1
 
             line_number = source_code[:actual_end_location].count(NEW_LINE) + 1
