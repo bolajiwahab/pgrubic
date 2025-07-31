@@ -62,4 +62,4 @@ For the full list of all supported settings, see [**settings**](settings.md#form
 Similar to several other formatters, the pgrubic formatter provides various ways to skip formatting a statement/file.
 
 - To skip formatting a statement, add `-- fmt: skip` directive to the top of the statement
-- To skip formatting a file completely, add the file name to the [**format.exclude**](settings.md/#exclude_2) setting
+- To skip formatting a file, you can use either use `-- pgrubic: fmt: skip` directive at the top of the file or add the file name to the [**format.exclude**](settings.md/#exclude_2) setting

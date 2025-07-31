@@ -109,7 +109,8 @@ class CheckerMeta(type):
             checker.line_number = (
                 checker.source_code[: checker.node_location].count(noqa.NEW_LINE) + 1
             )
-            checker.column_offset = checker.node_location - line_start + 1
+            # We account for a single space thus +1
+            checker.column_offset = (checker.node_location - line_start) + 1
 
             # If a node has no location, we return the whole statement instead
             if hasattr(node, "location") and isinstance(node.location, int):
@@ -163,7 +164,7 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):  # type: ignore[misc
 
     # Attributes shared among all subclasses
     config: config.Config
-    inline_ignores: list[noqa.NoQaDirective]
+    lint_ignores: list[noqa.NoQaDirective]
     source_file: str
     source_code: str
 
@@ -222,7 +223,7 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):  # type: ignore[misc
             return False
 
         # if the violation has been suppressed by noqa, there is no need to try to fix it
-        for inline_ignore in self.inline_ignores:
+        for inline_ignore in self.lint_ignores:
             if (
                 (
                     self.statement_location == inline_ignore.location
@@ -260,7 +261,7 @@ class Linter:
         *,
         source_file: str,
         checker: BaseChecker,
-        inline_ignores: list[noqa.NoQaDirective],
+        lint_ignores: list[noqa.NoQaDirective],
     ) -> None:
         """Skip suppressed violations.
 
@@ -268,16 +269,18 @@ class Linter:
         ----------
         source_file: str
             Path to the source file.
+
         checker: BaseChecker
             Lint rule checker.
-        inline_ignores: list[NoQaDirective]
-            Inline noqa directives.
+
+        lint_ignores: list[NoQaDirective]
+            List of noqa directives.
 
         Returns:
         -------
         None
         """
-        for inline_ignore in inline_ignores:
+        for inline_ignore in lint_ignores:
             suppressed_violations: set[Violation] = {
                 violation
                 for violation in checker.violations
@@ -383,27 +386,41 @@ class Linter:
         """
         fixed_statements: list[str] = []
 
-        inline_ignores: list[noqa.NoQaDirective] = noqa.extract_ignores(
-            source_file=source_file,
-            source_code=source_code,
-        )
-
         violations: set[Violation] = set()
         _errors: set[errors.Error] = set()
 
-        BaseChecker.inline_ignores = inline_ignores
         BaseChecker.source_code = source_code
         BaseChecker.source_file = source_file
         BaseChecker.config = self.config
 
-        for statement in noqa.extract_statements(
+        statements = noqa.extract_statements(
             source_code=source_code,
-        ):
+        )
+
+        file_lint_ignores = noqa.extract_file_lint_ignores(
+            source_file=source_file,
+            source_code=source_code,
+        )
+
+        lint_ignores = file_lint_ignores
+
+        for statement in statements:
+            statement_lint_ignores: list[noqa.NoQaDirective] = (
+                noqa.extract_statement_lint_ignores(
+                    statement=statement,
+                    source_code=source_code,
+                )
+            )
+
+            lint_ignores.extend(statement_lint_ignores)
+
+            BaseChecker.lint_ignores = lint_ignores
+
             try:
                 parse_tree: ast.Node = parser.parse_sql(statement.text)
 
                 comments = noqa.extract_comments(
-                    source_code=statement.text,
+                    statement=statement,
                 )
 
             except parser.ParseError as error:
@@ -435,7 +452,7 @@ class Linter:
                     self._skip_suppressed_violations(
                         source_file=source_file,
                         checker=checker,
-                        inline_ignores=inline_ignores,
+                        lint_ignores=lint_ignores,
                     )
 
                 violations.update(checker.violations)
@@ -487,9 +504,9 @@ class Linter:
         ):
             fixed_source_code = _fixed_source_code
 
-        noqa.report_unused_ignores(
+        noqa.report_unused_lint_ignores(
             source_file=source_file,
-            inline_ignores=inline_ignores,
+            lint_ignores=lint_ignores,
         )
 
         return LintResult(
