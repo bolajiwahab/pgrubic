@@ -82,11 +82,9 @@ def extract_statements(
         if token.name == ASCII_CLOSE_PARENTHESIS:
             inside_parenthesis = False  # Parenthesis ends
 
+        # Check if we have reached a semi-colon or the end of the source code
         if token.name == ASCII_SEMI_COLON or token is tokens[-1]:
             if not (inside_block or inside_parenthesis):
-                # For ASCII_SEMI_COLON, both start and end locations are the same and
-                # in order to still have it in the statement, we need to increase the end
-                # location by one
                 actual_end_location = token.end + 1
                 locations.append(
                     Statement(
