@@ -88,7 +88,8 @@ def extract_statements(
                 # In order to include the last character, we need to increase the end
                 # location by 1
                 actual_end_location = token.end + 1
-                locations.append(
+
+                statements.append(
                     Statement(
                         start_location=statement_start_location,
                         end_location=actual_end_location,
