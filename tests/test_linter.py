@@ -109,10 +109,10 @@ def test_new_line_before_semicolon(
     )
 
 
-def test_fix_enabledment(
+def test_fix_enablement(
     linter: core.Linter,
 ) -> None:
-    """Test fix enabledment."""
+    """Test fix enablement."""
     linter.config.lint.fix = True
     linter.config.lint.fixable = ["GN024"]
     linting_result = linter.run(

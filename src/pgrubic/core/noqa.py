@@ -271,16 +271,12 @@ def extract_file_lint_ignores(
 
 def check_file_format_skip(
     *,
-    # source_file: str,
     source_code: str,
 ) -> bool:
     """Check if formatting should be skipped for source code.
 
     Parameters:
     ----------
-    # source_file: str
-    #     The source file.
-
     source_code: str
         Source code to check file format skip for.
 
@@ -300,8 +296,8 @@ def check_file_format_skip(
             )
 
             return bool(
-                comment.startswith(FORMAT_IGNORE_DIRECTIVE)
-                and comment.removeprefix(FORMAT_IGNORE_DIRECTIVE)
+                comment.startswith(f"{PACKAGE_NAME}: {FORMAT_IGNORE_DIRECTIVE}")
+                and comment.removeprefix(f"{PACKAGE_NAME}: {FORMAT_IGNORE_DIRECTIVE}")
                 .removeprefix(":")
                 .strip()
                 == "skip",
