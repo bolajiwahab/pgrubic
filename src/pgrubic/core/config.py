@@ -509,6 +509,10 @@ regex-sequence = r"^[a-z0-9_]+$"
     regex_constraint_check: str
     regex_constraint_exclusion: str
     regex_sequence: str
+    
+    # Enhanced string parsing options
+    enhanced_string_parsing: bool
+    enhanced_string_parsing_functions: list[str]
 
 
 @dataclasses.dataclass(kw_only=True)
@@ -965,6 +969,8 @@ def parse_config() -> Config:
                     )
                     for schema in config_lint["disallowed-schemas"]
                 ],
+                enhanced_string_parsing=config_lint.get("enhanced-string-parsing", True),
+                enhanced_string_parsing_functions=config_lint.get("enhanced-string-parsing-functions", []),
             ),
             format=Format(
                 include=config_format["include"] + merged_config["include"],
