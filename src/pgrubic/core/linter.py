@@ -435,7 +435,7 @@ class Linter:
                         hint=f"""Make sure the statement is valid PostgreSQL statement. If it is, please report this issue at {ISSUES_URL}{noqa.NEW_LINE}""",  # noqa: E501
                     ),
                 )
-                fixed_statements.append(statement.text)
+                fixed_statements.append(statement.text.strip(noqa.NEW_LINE))
                 continue
 
             BaseChecker.statement = statement.text
@@ -487,7 +487,7 @@ class Linter:
                             hint="Maximum format depth exceeded, reduce deeply nested queries",  # noqa: E501
                         ),
                     )
-                    fixed_statements.append(statement.text)
+                    fixed_statements.append(statement.text.strip(noqa.NEW_LINE))
 
         fixed_source_code = None
 
