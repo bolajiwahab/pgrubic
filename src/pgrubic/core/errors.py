@@ -16,6 +16,14 @@ class MissingConfigError(BaseError):
     """Raised when a config is missing."""
 
 
+class ConfigFileNotFoundError(BaseError):
+    """Raised when a config file is not found."""
+
+
+class ConfigParseError(BaseError):
+    """Raised when a config file cannot be parsed."""
+
+
 class Error(typing.NamedTuple):
     """Representation of an error."""
 

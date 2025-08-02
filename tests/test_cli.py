@@ -8,7 +8,7 @@ from click import testing
 
 from tests import TEST_FILE
 from pgrubic import WORKERS_ENVIRONMENT_VARIABLE
-from pgrubic.core import noqa
+from pgrubic.core import noqa, config
 from pgrubic.__main__ import cli
 
 
@@ -194,6 +194,94 @@ def test_cli_lint_parse_error(tmp_path: pathlib.Path) -> None:
     result = runner.invoke(cli, ["lint", str(file_fail)])
 
     assert result.exit_code == 1
+
+
+def test_cli_lint_missing_config_error(tmp_path: pathlib.Path) -> None:
+    """Test cli lint missing config error."""
+    config_content = """
+    [lint]
+    required-columns = [
+        { name = "foo", type = "text" }
+    ]
+    """
+    runner = testing.CliRunner()
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    config_file = directory / config.CONFIG_FILE
+    config_file.write_text(config_content)
+
+    sql: str = "CREATE TABLE tbl (activated);"
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql)
+
+    with patch("os.getcwd", return_value=str(directory)):
+        result = runner.invoke(cli, ["lint", str(file_fail)])
+
+        assert result.output == f"""Missing config key: data-type{noqa.NEW_LINE}"""
+        assert result.exit_code == 1
+
+
+def test_cli_lint_config_file_from_environment_variable_not_found_error(
+    tmp_path: pathlib.Path,
+) -> None:
+    """Test cli lint config file from environment variable not found error."""
+    runner = testing.CliRunner()
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    sql: str = "CREATE TABLE tbl (activated);"
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql)
+
+    with patch.dict(
+        "os.environ",
+        {config.CONFIG_PATH_ENVIRONMENT_VARIABLE: "directory"},
+    ):
+        result = runner.invoke(cli, ["lint", str(file_fail)])
+
+        assert (
+            result.output
+            == f"""Config file "pgrubic.toml" not found in the path set in the environment variable PGRUBIC_CONFIG_PATH{noqa.NEW_LINE}"""  # noqa: E501
+        )
+
+        assert result.exit_code == 1
+
+
+def test_cli_lint_config_parse_error(
+    tmp_path: pathlib.Path,
+) -> None:
+    """Test cli lint config parse error."""
+    config_content = """
+    [lint]
+    fix =
+    """
+    runner = testing.CliRunner()
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    config_file = directory / config.CONFIG_FILE
+    config_file.write_text(config_content)
+
+    sql: str = "CREATE TABLE tbl (activated);"
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql)
+
+    with patch("os.getcwd", return_value=str(directory)):
+        result = runner.invoke(cli, ["lint", str(file_fail)])
+
+        assert (
+            result.output
+            == f"""Error parsing configuration file "{config_file}"{noqa.NEW_LINE}"""
+        )
+
+        assert result.exit_code == 1
 
 
 def test_cli_format_files(tmp_path: pathlib.Path) -> None:
@@ -442,3 +530,92 @@ def test_max_workers_from_environment_variable(tmp_path: pathlib.Path) -> None:
         result = runner.invoke(cli, ["format", str(file_fail)])
 
         assert result.exit_code == 0
+
+
+def test_cli_format_missing_config_error(tmp_path: pathlib.Path) -> None:
+    """Test cli format missing config error."""
+    config_content = """
+    [lint]
+    required-columns = [
+        { name = "foo", type = "text" }
+    ]
+    """
+    runner = testing.CliRunner()
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    config_file = directory / config.CONFIG_FILE
+    config_file.write_text(config_content)
+
+    sql: str = "CREATE TABLE tbl (activated);"
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql)
+
+    with patch("os.getcwd", return_value=str(directory)):
+        result = runner.invoke(cli, ["format", str(file_fail)])
+
+        assert result.output == f"Missing config key: data-type{noqa.NEW_LINE}"
+
+        assert result.exit_code == 1
+
+
+def test_cli_format_config_file_from_environment_variable_not_found_error(
+    tmp_path: pathlib.Path,
+) -> None:
+    """Test cli format config file from environment variable not found error."""
+    runner = testing.CliRunner()
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    sql: str = "CREATE TABLE tbl (activated);"
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql)
+
+    with patch.dict(
+        "os.environ",
+        {config.CONFIG_PATH_ENVIRONMENT_VARIABLE: "directory"},
+    ):
+        result = runner.invoke(cli, ["format", str(file_fail)])
+
+        assert (
+            result.output
+            == f"""Config file "pgrubic.toml" not found in the path set in the environment variable PGRUBIC_CONFIG_PATH{noqa.NEW_LINE}"""  # noqa: E501
+        )
+
+        assert result.exit_code == 1
+
+
+def test_cli_format_config_parse_error(
+    tmp_path: pathlib.Path,
+) -> None:
+    """Test cli format config parse error."""
+    config_content = """
+    [format]
+    lines-between-statements =
+    """
+    runner = testing.CliRunner()
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    config_file = directory / config.CONFIG_FILE
+    config_file.write_text(config_content)
+
+    sql: str = "CREATE TABLE tbl (activated);"
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql)
+
+    with patch("os.getcwd", return_value=str(directory)):
+        result = runner.invoke(cli, ["format", str(file_fail)])
+
+        assert (
+            result.output
+            == f"""Error parsing configuration file "{config_file}"{noqa.NEW_LINE}"""
+        )
+
+        assert result.exit_code == 1

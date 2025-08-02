@@ -833,7 +833,13 @@ def _load_user_config() -> dict[str, typing.Any]:
     config_file_absolute_path = _get_config_file_absolute_path()
 
     if config_file_absolute_path:
-        return dict(toml.load(config_file_absolute_path))
+        try:
+            return dict(toml.load(config_file_absolute_path))
+        except toml.decoder.TomlDecodeError as error:
+            msg = f"""Error parsing configuration file "{config_file_absolute_path}\""""
+            raise errors.ConfigParseError(
+                msg,
+            ) from error
 
     return {}  # pragma: no cover
 
@@ -872,6 +878,9 @@ def _get_config_file_absolute_path(
                 config_file_absolute_path,
             )
             return config_file_absolute_path
+
+        msg = f"""Config file "{config_file}" not found in the path set in the environment variable {CONFIG_PATH_ENVIRONMENT_VARIABLE}"""  # noqa: E501
+        raise errors.ConfigFileNotFoundError(msg)
 
     current_directory = pathlib.Path.cwd()
 
