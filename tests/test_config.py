@@ -106,5 +106,5 @@ def test_config_parse_error(tmp_path: pathlib.Path) -> None:
 
         assert (
             excinfo.value.args[0]
-            == f"""Error parsing configuration file "{directory}/pgrubic.toml\""""
+            == f"""Error parsing configuration file "{config_file}\""""
         )

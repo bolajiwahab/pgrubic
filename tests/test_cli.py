@@ -278,7 +278,7 @@ def test_cli_lint_config_parse_error(
 
         assert (
             result.output
-            == f"""Error parsing configuration file "{directory}/pgrubic.toml\"{noqa.NEW_LINE}"""  # noqa: E501
+            == f"""Error parsing configuration file "{config_file}\"{noqa.NEW_LINE}"""
         )
 
         assert result.exit_code == 1
@@ -615,7 +615,7 @@ def test_cli_format_config_parse_error(
 
         assert (
             result.output
-            == f"""Error parsing configuration file "{directory}/pgrubic.toml\"{noqa.NEW_LINE}"""  # noqa: E501
+            == f"""Error parsing configuration file "{config_file}\"{noqa.NEW_LINE}"""
         )
 
         assert result.exit_code == 1
