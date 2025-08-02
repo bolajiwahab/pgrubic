@@ -8,7 +8,7 @@ from click import testing
 
 from tests import TEST_FILE
 from pgrubic import WORKERS_ENVIRONMENT_VARIABLE
-from pgrubic.core import noqa, config, errors
+from pgrubic.core import noqa, config
 from pgrubic.__main__ import cli
 
 
@@ -220,11 +220,7 @@ def test_cli_lint_missing_config_error(tmp_path: pathlib.Path) -> None:
     with patch("os.getcwd", return_value=str(directory)):
         result = runner.invoke(cli, ["lint", str(file_fail)])
 
-        with pytest.raises(errors.MissingConfigError) as excinfo:
-            config.parse_config()
-
-        assert excinfo.value.args[0] == "Missing config key: data-type"
-
+        assert result.output == f"""Missing config key: data-type{noqa.NEW_LINE}"""
         assert result.exit_code == 1
 
 
@@ -248,12 +244,9 @@ def test_cli_lint_config_file_from_environment_variable_not_found_error(
     ):
         result = runner.invoke(cli, ["lint", str(file_fail)])
 
-        with pytest.raises(errors.ConfigFileNotFoundError) as excinfo:
-            config.parse_config()
-
         assert (
-            excinfo.value.args[0]
-            == """Config file "pgrubic.toml" not found in the path set in the environment variable PGRUBIC_CONFIG_PATH"""  # noqa: E501
+            result.output
+            == f"""Config file "pgrubic.toml" not found in the path set in the environment variable PGRUBIC_CONFIG_PATH{noqa.NEW_LINE}"""  # noqa: E501
         )
 
         assert result.exit_code == 1
@@ -283,12 +276,9 @@ def test_cli_lint_config_parse_error(
     with patch("os.getcwd", return_value=str(directory)):
         result = runner.invoke(cli, ["lint", str(file_fail)])
 
-        with pytest.raises(errors.ConfigParseError) as excinfo:
-            config.parse_config()
-
         assert (
-            excinfo.value.args[0]
-            == f"""Error parsing configuration file "{directory}/pgrubic.toml\""""
+            result.output
+            == f"""Error parsing configuration file "{directory}/pgrubic.toml\"{noqa.NEW_LINE}"""  # noqa: E501
         )
 
         assert result.exit_code == 1
@@ -566,10 +556,7 @@ def test_cli_format_missing_config_error(tmp_path: pathlib.Path) -> None:
     with patch("os.getcwd", return_value=str(directory)):
         result = runner.invoke(cli, ["format", str(file_fail)])
 
-        with pytest.raises(errors.MissingConfigError) as excinfo:
-            config.parse_config()
-
-        assert excinfo.value.args[0] == "Missing config key: data-type"
+        assert result.output == f"Missing config key: data-type{noqa.NEW_LINE}"
 
         assert result.exit_code == 1
 
@@ -594,12 +581,9 @@ def test_cli_format_config_file_from_environment_variable_not_found_error(
     ):
         result = runner.invoke(cli, ["format", str(file_fail)])
 
-        with pytest.raises(errors.ConfigFileNotFoundError) as excinfo:
-            config.parse_config()
-
         assert (
-            excinfo.value.args[0]
-            == """Config file "pgrubic.toml" not found in the path set in the environment variable PGRUBIC_CONFIG_PATH"""  # noqa: E501
+            result.output
+            == f"""Config file "pgrubic.toml" not found in the path set in the environment variable PGRUBIC_CONFIG_PATH{noqa.NEW_LINE}"""  # noqa: E501
         )
 
         assert result.exit_code == 1
@@ -629,12 +613,9 @@ def test_cli_format_config_parse_error(
     with patch("os.getcwd", return_value=str(directory)):
         result = runner.invoke(cli, ["format", str(file_fail)])
 
-        with pytest.raises(errors.ConfigParseError) as excinfo:
-            config.parse_config()
-
         assert (
-            excinfo.value.args[0]
-            == f"""Error parsing configuration file "{directory}/pgrubic.toml\""""
+            result.output
+            == f"""Error parsing configuration file "{directory}/pgrubic.toml\"{noqa.NEW_LINE}"""  # noqa: E501
         )
 
         assert result.exit_code == 1
