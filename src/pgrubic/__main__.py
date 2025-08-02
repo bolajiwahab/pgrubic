@@ -63,7 +63,7 @@ def cli() -> None:
 )
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
-def lint(  # noqa: C901, PLR0912, PLR0913
+def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
     sources: tuple[pathlib.Path, ...],
     *,
     fix: bool,
@@ -96,7 +96,17 @@ def lint(  # noqa: C901, PLR0912, PLR0913
     """
     core.logger.setLevel(logging.INFO if verbose else logging.WARNING)
 
-    config: core.Config = core.parse_config()
+    try:
+        config = core.parse_config()
+    except errors.MissingConfigError as error:
+        sys.stderr.write(f"{error}{noqa.NEW_LINE}")
+        sys.exit(1)
+    except errors.ConfigParseError as error:
+        sys.stderr.write(f"{error}{noqa.NEW_LINE}")
+        sys.exit(1)
+    except errors.ConfigFileNotFoundError as error:
+        sys.stderr.write(f"{error}{noqa.NEW_LINE}")
+        sys.exit(1)
 
     for key, value in [("fix", fix), ("ignore_noqa", ignore_noqa)]:
         if value:
@@ -243,7 +253,7 @@ def lint(  # noqa: C901, PLR0912, PLR0913
 )
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
-def format_sources(  # noqa: C901, PLR0912, PLR0913
+def format_sources(  # noqa: C901, PLR0912, PLR0913, PLR0915
     sources: tuple[pathlib.Path, ...],
     *,
     check: bool,
@@ -279,7 +289,17 @@ def format_sources(  # noqa: C901, PLR0912, PLR0913
 
     console = Console()
 
-    config: core.Config = core.parse_config()
+    try:
+        config = core.parse_config()
+    except errors.MissingConfigError as error:
+        sys.stderr.write(f"{error}{noqa.NEW_LINE}")
+        sys.exit(1)
+    except errors.ConfigParseError as error:
+        sys.stderr.write(f"{error}{noqa.NEW_LINE}")
+        sys.exit(1)
+    except errors.ConfigFileNotFoundError as error:
+        sys.stderr.write(f"{error}{noqa.NEW_LINE}")
+        sys.exit(1)
 
     for key, value in [("check", check), ("diff", diff), ("no_cache", no_cache)]:
         if value:
