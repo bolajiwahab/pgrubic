@@ -468,6 +468,12 @@ class Linter:
 
             BaseChecker.lint_ignores = lint_ignores
 
+            # Reset the applied fixes for each statement
+            BaseChecker.applied_fixes = []
+
+            BaseChecker.root_statement = statement.text
+            BaseChecker.statement_location = statement.start_location
+
             try:
                 parse_tree: ast.Node = parser.parse_sql(statement.text)
 
