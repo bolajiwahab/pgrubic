@@ -106,12 +106,18 @@ class CheckerMeta(type):
             """Set locations for node."""
             # some nodes have location attribute which is different from node location
             # for example ast.CreateTablespaceStmt while some nodes do not carry
-            # location at all
-            if hasattr(node, "location") and isinstance(node.location, int):
+            # location at all.
+            # If a node has no location or it is an inlined sql statement,
+            # we use the length of the root statement
+            if (
+                hasattr(node, "location")
+                and isinstance(node.location, int)
+                and not checker.in_inline_sql_mode
+            ):
                 checker.node_location = checker.statement_location + node.location
             else:
                 checker.node_location = checker.statement_location + len(
-                    checker.statement,
+                    checker.root_statement,
                 )
 
             # get the position of the newline just before our node location,
@@ -129,11 +135,16 @@ class CheckerMeta(type):
             # We account for a single space thus +1
             checker.column_offset = (checker.node_location - line_start) + 1
 
-            # If a node has no location, we return the whole statement instead
-            if hasattr(node, "location") and isinstance(node.location, int):
+            # If a node has no location or it is an inlined sql statement,
+            # we return the whole root statement instead
+            if (
+                hasattr(node, "location")
+                and isinstance(node.location, int)
+                and not checker.in_inline_sql_mode
+            ):
                 checker.line = checker.source_code[line_start:line_end]
             else:
-                checker.line = checker.statement
+                checker.line = checker.root_statement
 
             return func(checker, ancestors, node)
 
@@ -191,7 +202,9 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):  # type: ignore[misc
     line_number: int
     column_offset: int
     statement: str
+    root_statement: str
     line: str
+    in_inline_sql_mode: bool = False
 
     # Track fixes
     statement_fixes: FixCounter
@@ -405,7 +418,7 @@ class Linter:
                     else None
                 )
 
-    def run(self, *, source_file: str, source_code: str) -> LintResult:  # noqa: C901
+    def run(self, *, source_file: str, source_code: str) -> LintResult:  # noqa: C901, PLR0915
         """Run rules on a source code.
 
         Parameters:
@@ -462,13 +475,11 @@ class Linter:
                     statement=statement,
                 )
 
-                plpgsql_visitor = pgrubic_visitors.PLPGSQLVisitor()
-                plpgsql_visitor(parse_tree)
-                children_sql_statements = plpgsql_visitor.get_sql_statements()
-
-                children_parse_trees = [
-                    parser.parse_sql(sql) for sql in children_sql_statements
-                ]
+                inline_sql_statements = (
+                    pgrubic_visitors.extract_nested_sql_statements_from_plpgsql(
+                        parse_tree,
+                    )
+                )
 
             except parser.ParseError as error:
                 _errors.add(
@@ -485,21 +496,35 @@ class Linter:
                 fixed_statements.append(statement.text.strip(noqa.NEW_LINE))
                 continue
 
-            BaseChecker.statement = statement.text
+            BaseChecker.root_statement = statement.text
             BaseChecker.statement_location = statement.start_location
             # Reset the statement fixes counter per statement
             BaseChecker.statement_fixes.reset()
 
+            # Set in_inline_sql_mode to true
+            BaseChecker.in_inline_sql_mode = True
             # Temporarily disable auto fixes, we do not try to fix children statements
             # inside plpgsql
             with BaseChecker.disable_auto_fix(self.checkers):
-                for child_parse_tree in children_parse_trees:
-                    for child_checker in self.checkers:
-                        child_checker.violations = set()
-                        child_checker(child_parse_tree)
+                for inline_sql_statement in inline_sql_statements:
+                    BaseChecker.statement = inline_sql_statement
+                    for checker in self.checkers:
+                        checker.violations = set()
+                        checker(parser.parse_sql(inline_sql_statement))
 
-                        violations.update(child_checker.violations)
+                        if not self.config.lint.ignore_noqa:
+                            self._skip_suppressed_violations(
+                                source_file=source_file,
+                                checker=checker,
+                                lint_ignores=lint_ignores,
+                            )
 
+                        violations.update(checker.violations)
+
+            # Set in_inline_sql_mode to false
+            BaseChecker.in_inline_sql_mode = False
+            BaseChecker.statement_location = statement.start_location
+            BaseChecker.statement = statement.text
             for checker in self.checkers:
                 checker.violations = set()
 
