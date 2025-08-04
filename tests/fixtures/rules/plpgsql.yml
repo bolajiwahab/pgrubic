@@ -1,0 +1,42 @@
+---
+rule: TP001
+
+test_fail_inline_sql:
+  sql_fail: |
+    DO
+    $$
+    BEGIN
+        ALTER TABLE function_test_table ADD created_at TIMESTAMP(3);
+    END;
+    $$
+    LANGUAGE plpgsql;
+
+test_fail_nested_inline_sql:
+  sql_fail: |
+    DO
+    $$
+    BEGIN
+        CREATE OR REPLACE FUNCTION test_function()
+        RETURNS void AS $func$
+        BEGIN
+            ALTER TABLE function_test_table ADD created_at TIMESTAMP(3);
+        END;
+        $func$ LANGUAGE plpgsql;
+    END;
+    $$
+    LANGUAGE plpgsql;
+
+test_pass_nested_inline_sql_non_plpgsql:
+  sql_pass: |
+    DO
+    $$
+    BEGIN
+        CREATE OR REPLACE FUNCTION test_function()
+        RETURNS void AS $func$
+        BEGIN
+            ALTER TABLE function_test_table ADD created_at TIMESTAMP(3);
+        END;
+        $func$ LANGUAGE plpython3u;
+    END;
+    $$
+    LANGUAGE plpgsql;
