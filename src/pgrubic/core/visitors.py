@@ -6,8 +6,8 @@ from collections import deque
 from pglast import ast, parser, stream, visitors, parse_plpgsql
 
 
-class PLPGSQLVisitor(visitors.Visitor):  # type: ignore[misc]
-    """Visitor for extracting inline SQL statements from PLpgSQL."""
+class InlineSQLVisitor(visitors.Visitor):  # type: ignore[misc]
+    """Visitor for extracting inline SQL statements from PLpgSQL and function calls."""
 
     def __init__(self) -> None:
         """Instantiate variables."""
@@ -33,6 +33,23 @@ class PLPGSQLVisitor(visitors.Visitor):  # type: ignore[misc]
             parse_plpgsql(stream.RawStream()(node)),
         )
         self._sql_statements.extend(_sql_statements)
+
+    def visit_FuncCall(
+        self,
+        ancestors: visitors.Ancestor,
+        node: ast.FuncCall,
+    ) -> None:
+        """Visit FuncCall."""
+        if node.args:
+            for arg in node.args:
+                if isinstance(arg, ast.A_Const) and isinstance(arg.val, ast.String):
+                    try:
+                        # might not be an SQL statement.
+                        statement = stream.RawStream()(arg.val.sval)
+                        # if statement is PLpgSQL, it would be processed at a later pass
+                        self._sql_statements.append(statement)
+                    except parser.ParseError:
+                        continue
 
     def _extract_sql_statements_from_plpgsql(
         self,
@@ -74,16 +91,18 @@ class PLPGSQLVisitor(visitors.Visitor):  # type: ignore[misc]
         return self._sql_statements
 
 
-def visit_plpgsql(node: ast.Node) -> list[str]:
-    """Visit plpgsql."""
-    plpgsql_visitor = PLPGSQLVisitor()
-    plpgsql_visitor(node)
+def visit_inline_sql(node: ast.Node) -> list[str]:
+    """Visit inline SQL."""
+    inline_sql_visitor = InlineSQLVisitor()
+    inline_sql_visitor(node)
 
-    return plpgsql_visitor.get_sql_statements()
+    return inline_sql_visitor.get_sql_statements()
 
 
-def extract_nested_sql_statements_from_plpgsql(node: ast.Node) -> list[str]:
-    """Extract nested SQL statements from plpgsql using iterative breadth-first walk."""
+def extract_nested_inline_sql_statements(node: ast.Node) -> list[str]:
+    """Extract nested inline SQL statements from PLpgSQL and function calls
+    using iterative breadth-first walk.
+    """
     statements: list[str] = []
 
     queue = deque([node])
@@ -91,7 +110,7 @@ def extract_nested_sql_statements_from_plpgsql(node: ast.Node) -> list[str]:
     while queue:
         current_tree = queue.popleft()
 
-        for statement in visit_plpgsql(current_tree):
+        for statement in visit_inline_sql(current_tree):
             statements.append(statement)
             child_tree = parser.parse_sql(statement)
             queue.append(child_tree)
