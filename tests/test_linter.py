@@ -58,12 +58,15 @@ def test_linter_violations_fixed_source_code(
     linting_result = linter.run(
         source_file=SOURCE_FILE,
         source_code="""
-        SELECT a = NULL;
-        SELECT b IS NULL;
-        """,
+SELECT a = NULL;
+SELECT b IS NULL;
+""",
     )
 
-    assert linting_result.fixed_source_code == f"SELECT a IS NULL;{noqa.NEW_LINE}"
+    assert (
+        linting_result.fixed_source_code
+        == f"SELECT a IS NULL;{noqa.NEW_LINE}{noqa.NEW_LINE}SELECT b IS NULL;{noqa.NEW_LINE}"  # noqa: E501
+    )
 
 
 def test_linter_violations_no_fixed_source_code(
