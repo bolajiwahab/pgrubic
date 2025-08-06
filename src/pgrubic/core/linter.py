@@ -18,6 +18,22 @@ if typing.TYPE_CHECKING:
     from collections import abc  # pragma: no cover
 
 
+class FixCounter:
+    """Fix counter."""
+
+    def __init__(self) -> None:
+        """Initialize variables."""
+        self.counter = 0
+
+    def add(self) -> None:
+        """Increment fix counter."""
+        self.counter += 1
+
+    def reset(self) -> None:
+        """Reset fix counter."""
+        self.counter = 0
+
+
 class Violation(typing.NamedTuple):
     """Representation of rule violation."""
 
@@ -143,7 +159,8 @@ class CheckerMeta(type):
 
             result = func(checker, *args, **kwargs)
 
-            checker.applied_fixes.append(True)
+            checker.statement_fixes.add()
+            checker.file_fixes.add()
 
             return result
 
@@ -175,8 +192,9 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):  # type: ignore[misc
     statement: str
     line: str
 
-    # Track applied fixes
-    applied_fixes: list[bool]
+    # Track fixes
+    statement_fixes: FixCounter
+    file_fixes: FixCounter
 
     def __init__(self) -> None:
         """Initialize variables."""
@@ -393,6 +411,9 @@ class Linter:
         BaseChecker.source_file = source_file
         BaseChecker.config = self.config
 
+        BaseChecker.file_fixes = FixCounter()
+        BaseChecker.statement_fixes = FixCounter()
+
         statements = noqa.extract_statements(
             source_code=source_code,
         )
@@ -440,8 +461,8 @@ class Linter:
 
             BaseChecker.statement = statement.text
             BaseChecker.statement_location = statement.start_location
-            # Reset the applied fixes for each statement
-            BaseChecker.applied_fixes = []
+            # Reset the statement fixes counter per statement
+            BaseChecker.statement_fixes.reset()
 
             for checker in self.checkers:
                 checker.violations = set()
@@ -457,8 +478,9 @@ class Linter:
 
                 violations.update(checker.violations)
 
-            # If the tree has been modified due to fixes, we convert it to string
-            if any(BaseChecker.applied_fixes):
+            # If the statement parse tree has been modified due to fixes,
+            # we convert it to string
+            if BaseChecker.statement_fixes.counter > 0:
                 try:
                     fixed_statement = stream.IndentedStream(
                         comments=comments,
@@ -489,9 +511,12 @@ class Linter:
                     )
                     fixed_statements.append(statement.text.strip(noqa.NEW_LINE))
 
+            else:
+                fixed_statements.append(statement.text.strip(noqa.NEW_LINE))
+
         fixed_source_code = None
 
-        if any(BaseChecker.applied_fixes):
+        if BaseChecker.file_fixes.counter > 0:
             fixed_source_code = (
                 noqa.NEW_LINE
                 + (noqa.NEW_LINE * self.config.format.lines_between_statements)
