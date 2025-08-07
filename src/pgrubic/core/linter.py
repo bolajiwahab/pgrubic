@@ -418,7 +418,7 @@ class Linter:
                     else None
                 )
 
-    def run(self, *, source_file: str, source_code: str) -> LintResult:  # noqa: C901, PLR0915
+    def run(self, *, source_file: str, source_code: str) -> LintResult:  # noqa: C901, PLR0912, PLR0915
         """Run rules on a source code.
 
         Parameters:
@@ -507,8 +507,9 @@ class Linter:
             # Reset the statement fixes counter per statement
             BaseChecker.statement_fixes.reset()
 
-            # Set in_inline_sql_mode to true
+            # Signal that we are processing inline sql statements.
             BaseChecker.in_inline_sql_mode = True
+
             # Temporarily disable auto fixes, we do not try to fix children statements
             # inside plpgsql
             with BaseChecker.disable_auto_fix(self.checkers):
@@ -527,8 +528,10 @@ class Linter:
 
                         violations.update(checker.violations)
 
-            # Set in_inline_sql_mode to false
+            # We are done processing inline sql statements
+            # Reset in_inline_sql_mode to false
             BaseChecker.in_inline_sql_mode = False
+
             BaseChecker.statement_location = statement.start_location
             BaseChecker.statement = statement.text
             for checker in self.checkers:
