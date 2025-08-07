@@ -12,7 +12,7 @@ COPY pyproject.toml ./
 RUN tox -e build-dist
 
 # Stage 2: Runtime
-FROM python:3.13-slim
+FROM python:3.13-slim@sha256:6544e0e002b40ae0f59bc3618b07c1e48064c4faed3a15ae2fbd2e8f663e8283 AS runtime
 
 WORKDIR /app
 
