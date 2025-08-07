@@ -70,11 +70,11 @@ dev = [
   "yamllint==1.37.1",
   "conventional-pre-commit==4.2.0",
   "pytest==8.4.1",
-  "coverage==7.10.1",
+  "coverage==7.10.2",
   "tox==4.28.4",
   "types-PyYAML==6.0.12.20250516",
   "types-toml==0.10.8.20240310",
-  "types-colorama==0.4.15.20240311",
+  "types-colorama==0.4.15.20250801",
   "types-click==7.1.8",
   "msgpack-types==0.5.0",
 ]
