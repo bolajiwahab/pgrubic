@@ -282,7 +282,7 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):  # type: ignore[misc
                 checker.is_auto_fixable = False
             yield
         finally:
-            for checker, original_state in zip(checkers, original_states, strict=False):
+            for checker, original_state in zip(checkers, original_states, strict=True):
                 checker.is_auto_fixable = original_state
 
 
