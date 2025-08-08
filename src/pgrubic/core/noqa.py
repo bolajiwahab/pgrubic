@@ -59,7 +59,7 @@ def extract_statements(
     list[Statement]
         List of statements.
     """
-    locations: list[Statement] = []
+    statements: list[Statement] = []
 
     statement_start_location = 0
 
@@ -88,7 +88,8 @@ def extract_statements(
                 # In order to include the last character, we need to increase the end
                 # location by 1
                 actual_end_location = token.end + 1
-                locations.append(
+
+                statements.append(
                     Statement(
                         start_location=statement_start_location,
                         end_location=actual_end_location,
@@ -99,7 +100,7 @@ def extract_statements(
                 statement_start_location = actual_end_location + 1
             else:
                 continue
-    return locations
+    return statements
 
 
 def _get_lint_rules_from_comment(

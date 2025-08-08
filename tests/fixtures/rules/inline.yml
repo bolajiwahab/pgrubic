@@ -1,0 +1,126 @@
+---
+rule: TP001
+
+test_fail_inline_sql_in_plpgsql_block:
+  sql_fail: |
+    DO
+    $$
+    BEGIN
+        ALTER TABLE function_test_table ADD created_at TIMESTAMP(3);
+    END;
+    $$
+    LANGUAGE plpgsql;
+
+test_fail_nested_inline_sql_in_plpgsql_block:
+  sql_fail: |
+    DO
+    $$
+    BEGIN
+        CREATE OR REPLACE FUNCTION test_function()
+        RETURNS void AS $func$
+        BEGIN
+            ALTER TABLE function_test_table ADD created_at TIMESTAMP(3);
+        END;
+        $func$ LANGUAGE plpgsql;
+    END;
+    $$
+    LANGUAGE plpgsql;
+
+test_fail_inline_sql_in_plpgsql_function:
+  sql_fail: |
+    CREATE OR REPLACE FUNCTION test_function()
+    RETURNS void AS $func$
+    BEGIN
+        ALTER TABLE function_test_table ADD created_at TIMESTAMP(3);
+    END;
+    $func$ LANGUAGE plpgsql;
+
+test_pass_nested_inline_sql_non_plpgsql_block:
+  sql_pass: |
+    DO
+    $$
+    BEGIN
+        CREATE OR REPLACE FUNCTION test_function()
+        RETURNS void AS $func$
+        BEGIN
+            ALTER TABLE function_test_table ADD created_at TIMESTAMP(3);
+        END;
+        $func$ LANGUAGE plpython3u;
+    END;
+    $$
+    LANGUAGE plpgsql;
+
+test_pass_nested_inline_sql_non_plpgsql_function:
+  sql_pass: |
+    CREATE OR REPLACE FUNCTION test_function()
+    RETURNS void AS $func$
+    BEGIN
+        ALTER TABLE function_test_table ADD created_at TIMESTAMP(3);
+    END;
+    $func$ LANGUAGE plpython3u;
+
+test_fail_inline_sql_in_plpgsql_block_in_function_call:
+  sql_fail: |
+    SELECT pglogical.replicate_ddl_command(
+    $$
+        DO
+        $script$
+        BEGIN
+            ALTER TABLE function_test_table ADD created_at TIMESTAMP(3);
+        END
+        $script$
+        LANGUAGE plpgsql;
+    $$,
+    '{global}'::text[]);
+
+test_fail_nested_inline_sql_in_plpgsql_block_in_function_call:
+  sql_fail: |
+    SELECT pglogical.replicate_ddl_command(
+    $$
+        DO
+        $script$
+        BEGIN
+          CREATE OR REPLACE FUNCTION test_function()
+          RETURNS void AS $func$
+          BEGIN
+              ALTER TABLE function_test_table ADD created_at TIMESTAMP(3);
+          END;
+          $func$ LANGUAGE plpgsql;
+        END
+        $script$
+        LANGUAGE plpgsql;
+    $$,
+    '{global}'::text[]);
+
+test_fail_inline_sql_in_plpgsql_function_in_function_call:
+  sql_fail: |
+    SELECT pglogical.replicate_ddl_command(
+    $$
+        CREATE OR REPLACE FUNCTION test_function()
+        RETURNS void AS $func$
+        BEGIN
+            ALTER TABLE function_test_table ADD created_at TIMESTAMP(3);
+        END;
+        $func$ LANGUAGE plpgsql;
+    $$,
+    '{global}'::text[]);
+
+test_pass_inline_sql_in_plpgsql_block_in_function_call:
+  sql_pass: |
+    SELECT pglogical.replicate_ddl_command(
+    $$
+        DO
+        $script$
+        BEGIN
+            ALTER TABLE function_test_table ADD created_at timestamptz;
+        END
+        $script$
+        LANGUAGE plpgsql;
+    $$,
+    '{global}'::text[]);
+
+test_pass_no_inline_sql_in_plpgsql_block_in_function_call:
+  sql_pass: |
+    SELECT pglogical.replicate_ddl_command(
+    $$10$$,
+    '{global}'::text[]);
