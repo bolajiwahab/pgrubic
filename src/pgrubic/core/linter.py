@@ -504,13 +504,13 @@ class Linter:
 
             BaseChecker.root_statement = statement.text
             BaseChecker.statement_location = statement.start_location
-            # Reset the statement fixes counter per statement
+            # Reset statement fixes counter per statement
             BaseChecker.statement_fixes.reset()
 
-            # Signal that we are processing inline sql statements.
+            # Signal that we are processing inline sql statements
             BaseChecker.in_inline_sql_mode = True
 
-            # Temporarily disable auto fixes, we do not try to fix children statements
+            # Temporarily disable auto fixes, we do not try to fix inline sql statements
             # inside plpgsql
             with BaseChecker.disable_auto_fix(self.checkers):
                 for inline_sql_statement in inline_sql_statements:

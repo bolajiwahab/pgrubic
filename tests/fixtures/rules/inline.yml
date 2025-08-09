@@ -124,3 +124,55 @@ test_pass_no_inline_sql_in_plpgsql_block_in_function_call:
     SELECT pglogical.replicate_ddl_command(
     $$10$$,
     '{global}'::text[]);
+
+test_pass_procedural_sql_in_plpgsql_block:
+  sql_pass: |
+    DO
+    $$
+    BEGIN
+        RAISE NOTICE 'Hello World';
+        IF 1 = 1 THEN
+            RAISE NOTICE 'True condition';
+        END IF;
+    END;
+    $$
+    LANGUAGE plpgsql;
+
+test_pass_procedural_sql_in_plpgsql_function:
+  sql_pass: |
+    CREATE OR REPLACE FUNCTION test_function()
+    RETURNS void AS $func$
+    BEGIN
+        RAISE NOTICE 'Hello World';
+        IF 1 = 1 THEN
+            RAISE NOTICE 'True condition';
+        END IF;
+    END;
+    $func$ LANGUAGE plpgsql;
+
+test_pass_procedural_sql_in_plpgsql_block_in_function_call:
+  sql_pass: |
+    SELECT pglogical.replicate_ddl_command(
+    $$
+        DO
+        $script$
+        BEGIN
+            RAISE NOTICE 'Hello World';
+            IF 1 = 1 THEN
+                RAISE NOTICE 'True condition';
+            END IF;
+        END
+        $script$
+        LANGUAGE plpgsql;
+    $$,
+    '{global}'::text[]);
+
+test_pass_dynamic_sql_in_plpgsql_block:
+  sql_pass: |
+    DO
+    $$
+    BEGIN
+        EXECUTE 'CREATE TABLE dynamic_table (bad_id varchar(50))';
+    END;
+    $$
+    LANGUAGE plpgsql;
