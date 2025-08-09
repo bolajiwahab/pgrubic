@@ -28,6 +28,7 @@ jobs:
           - docbuild
           - ensure-docs-up-to-date
           - build-dist
+          - pre-commit
     name: ${{ matrix.job }}
     steps:
       - uses: actions/checkout@v4
