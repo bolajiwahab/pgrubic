@@ -48,9 +48,6 @@ For the full list of all supported settings, see [**settings**](settings.md#lint
 ## Fixing violations
 
 There are linting rules whose violations the linter is able to fix on its own, these are called **fixable** violations. See [**Auto-fixable**](rules.md) to know whether a rule supports fixing.
-for more about fixable violations.
-
-to determine whether a rule supports fixing, see Rules
 
 **Fix** mode is controlled via the [**fix**](settings.md#fix) setting and the command line flag `--fix`, with the flag taking precedence.
 
@@ -58,7 +55,7 @@ to determine whether a rule supports fixing, see Rules
 pgrubic lint --fix
 ```
 
-Please note that fixes are formatted.
+Please note that fixes are formatted. Also, inlined sql statements from plpgsql bodies and function calls are not currently fixable.
 
 ## Disabling fixes
 

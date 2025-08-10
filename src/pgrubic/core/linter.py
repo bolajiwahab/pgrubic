@@ -6,13 +6,14 @@ import sys
 import typing
 import fnmatch
 import functools
+from contextlib import contextmanager
 
 from pglast import ast, parser, stream, visitors
 from colorama import Fore, Style
 from caseconverter import kebabcase
 
 from pgrubic import ISSUES_URL, DOCUMENTATION_URL
-from pgrubic.core import noqa, config, errors, formatter
+from pgrubic.core import noqa, config, errors, visitors as pgrubic_visitors, formatter
 
 if typing.TYPE_CHECKING:
     from collections import abc  # pragma: no cover
@@ -105,12 +106,18 @@ class CheckerMeta(type):
             """Set locations for node."""
             # some nodes have location attribute which is different from node location
             # for example ast.CreateTablespaceStmt while some nodes do not carry
-            # location at all
-            if hasattr(node, "location") and isinstance(node.location, int):
+            # location at all.
+            # If a node has no location or it is an inlined sql statement,
+            # we use the length of the root statement
+            if (
+                hasattr(node, "location")
+                and isinstance(node.location, int)
+                and not checker.in_inline_sql_mode
+            ):
                 checker.node_location = checker.statement_location + node.location
             else:
                 checker.node_location = checker.statement_location + len(
-                    checker.statement,
+                    checker.root_statement,
                 )
 
             # get the position of the newline just before our node location,
@@ -128,11 +135,16 @@ class CheckerMeta(type):
             # We account for a single space thus +1
             checker.column_offset = (checker.node_location - line_start) + 1
 
-            # If a node has no location, we return the whole statement instead
-            if hasattr(node, "location") and isinstance(node.location, int):
+            # If a node has no location or it is an inlined sql statement,
+            # we return the whole root statement instead
+            if (
+                hasattr(node, "location")
+                and isinstance(node.location, int)
+                and not checker.in_inline_sql_mode
+            ):
                 checker.line = checker.source_code[line_start:line_end]
             else:
-                checker.line = checker.statement
+                checker.line = checker.root_statement
 
             return func(checker, ancestors, node)
 
@@ -190,7 +202,9 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):  # type: ignore[misc
     line_number: int
     column_offset: int
     statement: str
+    root_statement: str
     line: str
+    in_inline_sql_mode: bool = False
 
     # Track fixes
     statement_fixes: FixCounter
@@ -253,6 +267,23 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):  # type: ignore[misc
                 return False
 
         return True
+
+    @classmethod
+    @contextmanager
+    def disable_auto_fix(
+        cls,
+        checkers: set[BaseChecker],
+    ) -> typing.Generator[None, None, None]:
+        """Disable auto fix for the given checkers."""
+        original_states = [checker.is_auto_fixable for checker in checkers]
+
+        try:
+            for checker in checkers:
+                checker.is_auto_fixable = False
+            yield
+        finally:
+            for checker, original_state in zip(checkers, original_states, strict=True):
+                checker.is_auto_fixable = original_state
 
 
 class Linter:
@@ -387,7 +418,7 @@ class Linter:
                     else None
                 )
 
-    def run(self, *, source_file: str, source_code: str) -> LintResult:
+    def run(self, *, source_file: str, source_code: str) -> LintResult:  # noqa: C901, PLR0912, PLR0915
         """Run rules on a source code.
 
         Parameters:
@@ -437,11 +468,23 @@ class Linter:
 
             BaseChecker.lint_ignores = lint_ignores
 
+            # Reset the applied fixes for each statement
+            BaseChecker.applied_fixes = []
+
+            BaseChecker.root_statement = statement.text
+            BaseChecker.statement_location = statement.start_location
+
             try:
                 parse_tree: ast.Node = parser.parse_sql(statement.text)
 
                 comments = noqa.extract_comments(
                     statement=statement,
+                )
+
+                inline_sql_statements = (
+                    pgrubic_visitors.extract_nested_inline_sql_statements(
+                        parse_tree,
+                    )
                 )
 
             except parser.ParseError as error:
@@ -459,11 +502,38 @@ class Linter:
                 fixed_statements.append(statement.text.strip(noqa.NEW_LINE))
                 continue
 
-            BaseChecker.statement = statement.text
+            BaseChecker.root_statement = statement.text
             BaseChecker.statement_location = statement.start_location
-            # Reset the statement fixes counter per statement
+            # Reset statement fixes counter per statement
             BaseChecker.statement_fixes.reset()
 
+            # Signal that we are processing inline sql statements
+            BaseChecker.in_inline_sql_mode = True
+
+            # Temporarily disable auto fixes, we do not try to fix inline sql statements
+            # inside plpgsql
+            with BaseChecker.disable_auto_fix(self.checkers):
+                for inline_sql_statement in inline_sql_statements:
+                    BaseChecker.statement = inline_sql_statement
+                    for checker in self.checkers:
+                        checker.violations = set()
+                        checker(parser.parse_sql(inline_sql_statement))
+
+                        if not self.config.lint.ignore_noqa:
+                            self._skip_suppressed_violations(
+                                source_file=source_file,
+                                checker=checker,
+                                lint_ignores=lint_ignores,
+                            )
+
+                        violations.update(checker.violations)
+
+            # We are done processing inline sql statements
+            # Reset in_inline_sql_mode to false
+            BaseChecker.in_inline_sql_mode = False
+
+            BaseChecker.statement_location = statement.start_location
+            BaseChecker.statement = statement.text
             for checker in self.checkers:
                 checker.violations = set()
 

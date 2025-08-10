@@ -142,11 +142,11 @@ def create_function_option(  # noqa: PLR0911
             output.print_list(node.arg, standalone_items=False)
             return
 
+        is_sql_function = False
         if isinstance(abs(node.ancestors).node, ast.CreateFunctionStmt):
             # We could use (abs(node.ancestors).node.sql_body) to check if it is a
             # sql function but sql_body is only populated for the new syntax
             # https://www.postgresql.org/docs/14/sql-createfunction.html#:~:text=a%20new%20session.-,sql_body,-The%20body%20of
-            is_sql_function = False
 
             for ancestor in node.ancestors.node:
                 if (
