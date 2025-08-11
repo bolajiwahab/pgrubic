@@ -1,3 +1,16 @@
+## 0.7.0 (2025-08-12)
+
+### Feat
+
+- **linter**: linting of inline statements in plpgsql and function calls (#123)
+- add support for skipping formatting of a whole file, simplify statements extraction, improve column offset for noqa directives (#108)
+
+### Fix
+
+- **linter**: ensure fixes are tracked on statement and file level, ensure unfixed statement are not discarded (#129)
+- handle config errors (#126)
+- generation of fixed source code when there are no fixes, extra new lines when we are unable to generate fixed source code or source code is unparseable (#125)
+
 ## 0.6.3 (2025-07-13)
 
 ### Fix
