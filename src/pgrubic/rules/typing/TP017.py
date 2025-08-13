@@ -7,7 +7,7 @@ from pgrubic.core import linter
 
 class NullableBooleanField(linter.BaseChecker):
     """## **What it does**
-    Checks for usage of numeric with precision.
+    Checks for nullable boolean fields.
 
     ## **Why not?**
     3 possible values is not a boolean. By allowing nulls in a boolean field, you are
