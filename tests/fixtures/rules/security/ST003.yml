@@ -1,0 +1,35 @@
+---
+rule: ST003
+
+test_fail_security_definer_function_without_search_path:
+  sql_fail: |
+    CREATE FUNCTION security_definer()
+    RETURNS TEXT LANGUAGE SQL SECURITY DEFINER AS $$ SELECT 1; $$;
+
+test_pass_security_definer_function_with_search_path:
+  sql_pass: |
+    CREATE FUNCTION security_definer()
+    RETURNS TEXT LANGUAGE SQL SECURITY DEFINER
+    SET search_path = admin, pg_temp AS $$ SELECT 1; $$;
+
+test_pass_security_invoker_function_without_search_path:
+  sql_pass: |
+    CREATE FUNCTION security_invoker()
+    RETURNS TEXT LANGUAGE SQL SECURITY INVOKER AS $$ SELECT 1; $$;
+
+test_pass_security_invoker_function_with_search_path:
+  sql_pass: |
+    CREATE FUNCTION security_invoker()
+    RETURNS TEXT LANGUAGE SQL SECURITY INVOKER
+    SET search_path = admin, pg_temp AS $$ SELECT 1; $$;
+
+test_pass_security_default_function_without_search_path:
+  sql_pass: |
+    CREATE FUNCTION security_default()
+    RETURNS TEXT LANGUAGE SQL AS $$ SELECT 1; $$;
+
+test_pass_security_default_function_with_search_path:
+  sql_pass: |
+    CREATE FUNCTION security_default()
+    RETURNS TEXT LANGUAGE SQL
+    SET search_path = admin, pg_temp AS $$ SELECT 1; $$;
