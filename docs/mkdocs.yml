@@ -23,6 +23,7 @@ plugins:
               - "!^visit"
               - "!^is_fix_applicable"
               - "!^is_fix_enabled"
+              - "!^disable_auto_fix"
   - search
 
 theme:
