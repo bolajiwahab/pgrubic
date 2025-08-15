@@ -3,14 +3,59 @@ rule: ST003
 
 test_fail_security_definer_function_without_search_path:
   sql_fail: |
-    CREATE FUNCTION security_definer()
+    CREATE OR REPLACE FUNCTION security_definer()
     RETURNS TEXT LANGUAGE SQL SECURITY DEFINER AS $$ SELECT 1; $$;
+  sql_fix: |
+    CREATE OR REPLACE FUNCTION security_definer ()
+    RETURNS text
+    LANGUAGE SQL
+    SECURITY DEFINER
+    SET search_path TO '', 'pg_temp'
+    AS $BODY$
+        SELECT 1;
+    $BODY$;
+
+test_fail_security_definer_function_with_default_search_path:
+  sql_fail: |
+    CREATE OR REPLACE FUNCTION security_definer()
+    RETURNS TEXT LANGUAGE SQL SECURITY DEFINER
+    SET search_path TO DEFAULT AS $$ SELECT 1; $$;
+  sql_fix: |
+    CREATE OR REPLACE FUNCTION security_definer ()
+    RETURNS text
+    LANGUAGE SQL
+    SECURITY DEFINER
+    SET search_path TO '', 'pg_temp'
+    AS $BODY$
+        SELECT 1;
+    $BODY$;
+
+test_fail_security_definer_function_with_current_search_path:
+  sql_fail: |
+    CREATE OR REPLACE FUNCTION security_definer()
+    RETURNS TEXT LANGUAGE SQL SECURITY DEFINER
+    SET search_path FROM CURRENT AS $$ SELECT 1; $$;
+  sql_fix: |
+    CREATE OR REPLACE FUNCTION security_definer ()
+    RETURNS text
+    LANGUAGE SQL
+    SECURITY DEFINER
+    SET search_path TO '', 'pg_temp'
+    AS $BODY$
+        SELECT 1;
+    $BODY$;
 
 test_pass_security_definer_function_with_search_path:
   sql_pass: |
     CREATE FUNCTION security_definer()
     RETURNS TEXT LANGUAGE SQL SECURITY DEFINER
-    SET search_path = admin, pg_temp AS $$ SELECT 1; $$;
+    SET search_path = pg_temp AS $$ SELECT 1; $$;
+
+test_pass_security_definer_function_with_empty_search_path:
+  sql_pass: |
+    CREATE FUNCTION security_definer()
+    RETURNS TEXT LANGUAGE SQL SECURITY DEFINER
+    SET search_path = '' AS $$ SELECT 1; $$;
 
 test_pass_security_invoker_function_without_search_path:
   sql_pass: |
@@ -21,7 +66,7 @@ test_pass_security_invoker_function_with_search_path:
   sql_pass: |
     CREATE FUNCTION security_invoker()
     RETURNS TEXT LANGUAGE SQL SECURITY INVOKER
-    SET search_path = admin, pg_temp AS $$ SELECT 1; $$;
+    SET search_path = admin AS $$ SELECT 1; $$;
 
 test_pass_security_default_function_without_search_path:
   sql_pass: |

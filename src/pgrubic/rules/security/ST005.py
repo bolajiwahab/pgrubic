@@ -1,6 +1,4 @@
-"""Checker for pg_temp as the last entry in the search path of security definer
-functions.
-"""
+"""Checker for non-temp schema in search path of security definer functions."""
 
 import typing
 
@@ -9,9 +7,9 @@ from pglast import ast, enums as pglast_enums, visitors
 from pgrubic.core import enums, linter
 
 
-class SecurityDefinerFunctionTempSchemaOrder(linter.BaseChecker):
+class SecurityDefinerFunctionNonTempSchema(linter.BaseChecker):
     """## **What it does**
-    Checks that a security definer function has **pg_temp** as the last entry in the
+    Checks that a security definer function has non-temporary schema in the
     search path.
 
     ## **Why not?**
@@ -27,7 +25,7 @@ class SecurityDefinerFunctionTempSchemaOrder(linter.BaseChecker):
     Never.
 
     ## **Use instead:**
-    Include **pg_temp** as the last entry in the **search_path** of SECURITY
+    Include non-temporary schema in the **search_path** of a SECURITY
     DEFINER functions.
     """
 
@@ -41,7 +39,7 @@ class SecurityDefinerFunctionTempSchemaOrder(linter.BaseChecker):
         """Visit a CreateFunctionStmt."""
         is_security_definer = False
         has_explicit_search_path = False
-        last_entry_in_search_path = None
+        has_non_temp_schema = False
 
         for option in typing.cast(tuple[ast.DefElem], node.options):
             name = option.defname
@@ -56,13 +54,13 @@ class SecurityDefinerFunctionTempSchemaOrder(linter.BaseChecker):
                 and option.arg.kind == pglast_enums.VariableSetKind.VAR_SET_VALUE
             ):
                 has_explicit_search_path = True
-                last_entry_in_search_path = option.arg.args[-1].val.sval
+                if any(
+                    schema.val.sval != "pg_temp"
+                    for schema in typing.cast(tuple[ast.A_Const], option.arg.args)
+                ):
+                    has_non_temp_schema = True
 
-        if (
-            is_security_definer
-            and has_explicit_search_path
-            and last_entry_in_search_path != "pg_temp"
-        ):
+        if is_security_definer and has_explicit_search_path and not has_non_temp_schema:
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,
@@ -72,10 +70,10 @@ class SecurityDefinerFunctionTempSchemaOrder(linter.BaseChecker):
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
-                    description="Security definer function should have pg_temp as the last entry in the search path",  # noqa: E501
+                    description="Security definer function should have non-temp schema in the search path",  # noqa: E501
                     is_auto_fixable=self.is_auto_fixable,
                     is_fix_enabled=self.is_fix_enabled,
-                    help="Include pg_temp as the last entry in the search path",
+                    help="Include non-temp schema in the search path",
                 ),
             )
 
@@ -88,13 +86,7 @@ class SecurityDefinerFunctionTempSchemaOrder(linter.BaseChecker):
                 option.defname == enums.FunctionOption.SET
                 and option.arg.name == "search_path"
             ):
-                non_temp_schemas = tuple(
-                    schema
-                    for schema in typing.cast(tuple[ast.A_Const], option.arg.args)
-                    if schema.val.sval != "pg_temp"
-                )
-
                 option.arg.args = (
-                    *non_temp_schemas,
+                    ast.A_Const(isnull=False, val=ast.String(sval="")),
                     ast.A_Const(isnull=False, val=ast.String(sval="pg_temp")),
                 )

@@ -1,13 +1,15 @@
-"""Checker for security definer functions without search path."""
+"""Checker for security definer functions without explicit search path."""
 
-from pglast import ast, visitors
+import typing
 
-from pgrubic.core import linter
+from pglast import ast, enums as pglast_enums, visitors
+
+from pgrubic.core import enums, linter
 
 
-class SecurityDefinerFunctionWithoutSearchPath(linter.BaseChecker):
+class SecurityDefinerFunctionNoExplicitSearchPath(linter.BaseChecker):
     """## **What it does**
-    Checks that a security definer function has a search path.
+    Checks that a security definer function has explicit search path.
 
     ## **Why not?**
     Because a **SECURITY DEFINER** function is executed with the privileges of the user
@@ -20,8 +22,10 @@ class SecurityDefinerFunctionWithoutSearchPath(linter.BaseChecker):
     Never.
 
     ## **Use instead:**
-    Always set **search_path** on a SECURITY DEFINER function.
+    Set an explicit **search_path** on SECURITY DEFINER functions.
     """
+
+    is_auto_fixable = True
 
     def visit_CreateFunctionStmt(
         self,
@@ -30,17 +34,23 @@ class SecurityDefinerFunctionWithoutSearchPath(linter.BaseChecker):
     ) -> None:
         """Visit a CreateFunctionStmt."""
         is_security_definer = False
-        has_search_path = False
+        has_explicit_search_path = False
 
-        for option in node.options:
-            name = option.defname.upper()
-            if name == "SECURITY" and option.arg.boolval:
+        for option in typing.cast(tuple[ast.DefElem], node.options):
+            name = option.defname
+
+            if name == enums.FunctionOption.SECURITY and option.arg.boolval:
                 is_security_definer = True
 
-            if name == "SET" and option.arg.name == "search_path":
-                has_search_path = True
+            if (
+                name == enums.FunctionOption.SET
+                and option.arg.name == "search_path"
+                and isinstance(option.arg, ast.VariableSetStmt)
+                and option.arg.kind == pglast_enums.VariableSetKind.VAR_SET_VALUE
+            ):
+                has_explicit_search_path = True
 
-        if is_security_definer and not has_search_path:
+        if is_security_definer and not has_explicit_search_path:
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,
@@ -50,9 +60,37 @@ class SecurityDefinerFunctionWithoutSearchPath(linter.BaseChecker):
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
-                    description="Security definer function without search path",
+                    description="Security definer function with no explicit search path",
                     is_auto_fixable=self.is_auto_fixable,
                     is_fix_enabled=self.is_fix_enabled,
-                    help="Set search_path on security definer functions",
+                    help="Set explicit search_path on security definer functions",
                 ),
             )
+
+            self._fix(node)
+
+    def _fix(self, node: ast.CreateFunctionStmt) -> None:
+        """Fix violation."""
+        options_without_search_path = tuple(
+            option
+            for option in typing.cast(tuple[ast.DefElem], node.options)
+            if not (
+                option.defname == enums.FunctionOption.SET
+                and option.arg.name == "search_path"
+            )
+        )
+
+        node.options = (
+            *options_without_search_path,
+            ast.DefElem(
+                defname="set",
+                arg=ast.VariableSetStmt(
+                    kind=pglast_enums.VariableSetKind.VAR_SET_VALUE,
+                    name="search_path",
+                    args=(
+                        ast.A_Const(isnull=False, val=ast.String(sval="")),
+                        ast.A_Const(isnull=False, val=ast.String(sval="pg_temp")),
+                    ),
+                ),
+            ),
+        )
