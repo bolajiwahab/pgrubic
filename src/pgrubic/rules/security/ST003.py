@@ -44,9 +44,9 @@ class SecurityDefinerFunctionNoExplicitSearchPath(linter.BaseChecker):
 
             if (
                 name == enums.FunctionOption.SET
-                and option.arg.name == "search_path"
                 and isinstance(option.arg, ast.VariableSetStmt)
                 and option.arg.kind == pglast_enums.VariableSetKind.VAR_SET_VALUE
+                and option.arg.name == "search_path"
             ):
                 has_explicit_search_path = True
 
