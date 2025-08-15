@@ -50,8 +50,8 @@ class SecurityDefinerFunctionNonTempSchema(linter.BaseChecker):
             if (
                 name == enums.FunctionOption.SET
                 and isinstance(option.arg, ast.VariableSetStmt)
-                and option.arg.kind == pglast_enums.VariableSetKind.VAR_SET_VALUE
                 and option.arg.name == "search_path"
+                and option.arg.kind == pglast_enums.VariableSetKind.VAR_SET_VALUE
             ):
                 has_explicit_search_path = True
                 if any(
