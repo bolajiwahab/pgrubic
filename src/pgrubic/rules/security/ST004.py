@@ -56,6 +56,7 @@ class SecurityDefinerFunctionTempSchemaOrder(linter.BaseChecker):
                 and option.arg.kind == pglast_enums.VariableSetKind.VAR_SET_VALUE
             ):
                 has_explicit_search_path = True
+
                 if option.arg.args:
                     last_entry_in_search_path = option.arg.args[-1].val.sval
 
