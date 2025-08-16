@@ -1,6 +1,6 @@
 """Core functionalities."""
 
-from pgrubic.core import cache, config, visitors
+from pgrubic.core import cache, enums, config, visitors
 from pgrubic.core.cache import Cache
 from pgrubic.core.config import Config, parse_config
 from pgrubic.core.linter import Linter, BaseChecker, ViolationStats
@@ -18,6 +18,7 @@ __all__ = [
     "ViolationStats",
     "cache",
     "config",
+    "enums",
     "filter_sources",
     "load_formatters",
     "load_rules",

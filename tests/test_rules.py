@@ -57,6 +57,8 @@ def test_rules(
             source_code=parsed_test_case.sql_fail,
         )
 
+        assert len(linting_result.errors) == 0, "Test failed: Errors found in test case"
+
         assert any(
             violation.rule_code == rule for violation in linting_result.violations
         ), f"Test failed: No violations found for rule: `{rule}` in `{test_id}`"
@@ -76,6 +78,8 @@ def test_rules(
             source_file=f"{parsed_test_case.rule}.sql",
             source_code=parsed_test_case.sql_pass,
         )
+
+        assert len(linting_result.errors) == 0, "Test failed: Errors found in test case"
 
         assert not any(
             violation.rule_code == rule for violation in linting_result.violations

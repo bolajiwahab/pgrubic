@@ -95,6 +95,9 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 | ------| ---------------------------------------------------------------------------------|------------------- |--------------|
 | ST001 | [extension-whitelist](rules/security/extension-whitelist.md)                     | :white_check_mark: | :x:          |
 | ST002 | [procedural-language-whitelist](rules/security/procedural-language-whitelist.md) | :white_check_mark: | :x:          |
+| ST003 | [security-definer-function-no-explicit-search-path](rules/security/security-definer-function-no-explicit-search-path.md)                             | :white_check_mark: | :white_check_mark: |
+| ST004 | [security-definer-function-temp-schema-order](rules/security/security-definer-function-temp-schema-order.md) | :white_check_mark: | :white_check_mark: |
+| ST005 | [security-definer-function-non-temp-schema](rules/security/security-definer-function-non-temp-schema.md) | :white_check_mark: | :white_check_mark: |
 
 ## typing (TP)
 
