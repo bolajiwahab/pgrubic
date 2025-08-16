@@ -84,6 +84,7 @@ class SecurityDefinerFunctionNonTempSchema(linter.BaseChecker):
         for option in typing.cast(tuple[ast.DefElem], node.options):
             if (
                 option.defname == enums.FunctionOption.SET
+                and isinstance(option.arg, ast.VariableSetStmt)
                 and option.arg.name == "search_path"
             ):
                 option.arg.args = (
