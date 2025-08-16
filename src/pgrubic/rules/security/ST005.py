@@ -54,7 +54,7 @@ class SecurityDefinerFunctionNonTempSchema(linter.BaseChecker):
                 and option.arg.kind == pglast_enums.VariableSetKind.VAR_SET_VALUE
             ):
                 has_explicit_search_path = True
-                if any(
+                if option.arg.args and any(
                     schema.val.sval != "pg_temp"
                     for schema in typing.cast(tuple[ast.A_Const], option.arg.args)
                 ):
