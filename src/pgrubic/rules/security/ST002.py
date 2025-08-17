@@ -11,7 +11,7 @@ class ProceduralLanguageWhitelist(linter.BaseChecker):
 
     ## **Why not?**
     By default, any procedural language can be loaded into the database.
-    This is quite dangerous as some unsafe operations might be introuduced by languages.
+    This is quite dangerous as some unsafe operations might be introduced by languages.
     So you not only want to empower **CREATE LANGUAGE** to database owners, you
     also want to be able to review and explicitly allow procedural languages.
 
