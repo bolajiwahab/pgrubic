@@ -1,13 +1,13 @@
-"""Checker for ordinal number group by."""
+"""Checker for ordinal number order by."""
 
 from pglast import ast, visitors
 
 from pgrubic.core import linter
 
 
-class OrdinalNumberGroupBy(linter.BaseChecker):
+class OrdinalNumberOrderBy(linter.BaseChecker):
     """## **What it does**
-    Checks that GROUP BY does not use numeric ordinals (e.g., GROUP BY 1).
+    Checks that ORDER BY does not use numeric ordinals (e.g., ORDER BY 1).
 
     ## **Why not?**
     Using ordinals reduces readability, makes queries fragile when the **SELECT** list
@@ -26,9 +26,11 @@ class OrdinalNumberGroupBy(linter.BaseChecker):
         node: ast.SelectStmt,
     ) -> None:
         """Visit SelectStmt."""
-        if node.groupClause and any(
-            isinstance(column, ast.A_Const) and isinstance(column.val, ast.Integer)
-            for column in node.groupClause
+        if node.sortClause and any(
+            isinstance(column, ast.SortBy)
+            and isinstance(column.node, ast.A_Const)
+            and isinstance(column.node.val, ast.Integer)
+            for column in node.sortClause
         ):
             self.violations.add(
                 linter.Violation(
@@ -39,7 +41,7 @@ class OrdinalNumberGroupBy(linter.BaseChecker):
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
-                    description="Ordinal numbers in GROUP BY",
+                    description="Ordinal numbers in ORDER BY",
                     is_auto_fixable=self.is_auto_fixable,
                     is_fix_enabled=self.is_fix_enabled,
                     help="Use explicit column names or expressions instead",
