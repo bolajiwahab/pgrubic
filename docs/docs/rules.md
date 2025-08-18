@@ -4,11 +4,12 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 
 1. **constraint**: Rules for constraints
 2. **general**: Rules for best practice
-3. **naming**: Rules for naming
-4. **schema**: Rules for schema
-5. **security**: Rules for security
-6. **typing**: Rules for typing
-7. **unsafe**: Rules for unsafe migrations
+3. **query**: Rules for queries
+4. **naming**: Rules for naming
+5. **schema**: Rules for schema
+6. **security**: Rules for security
+7. **typing**: Rules for typing
+8. **unsafe**: Rules for unsafe migrations
 
 ## constraint (CT)
 
