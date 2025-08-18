@@ -1,0 +1,30 @@
+---
+rule: QY002
+
+test_fail_ordinal_order_by:
+  sql_fail: |
+    SELECT payment_date::date AS payment_date,
+    SUM(amount) sum FROM
+    public.payment
+    ORDER BY 1
+
+test_fail_mixed_ordinal_order_by:
+  sql_fail: |
+    SELECT payment_date::date AS payment_date,
+    SUM(amount) sum FROM
+    public.payment
+    ORDER BY payment_date, 2
+
+test_pass_column_order_by:
+  sql_pass: |
+    SELECT payment_date::date AS payment_date,
+    SUM(amount) sum FROM
+    public.payment
+    ORDER BY payment_date
+
+test_pass_expression_order_by:
+  sql_pass: |
+    SELECT payment_date AS payment_date,
+    SUM(amount) sum FROM
+    public.payment
+    ORDER BY payment_date::date

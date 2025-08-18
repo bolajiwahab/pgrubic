@@ -197,7 +197,6 @@ legacy_tox_ini = """
     commands =
 
     [testenv:dev]
-    extras = dev
 
     [testenv:commitlint]
     commands = conventional-pre-commit .git/COMMIT_EDITMSG
@@ -260,7 +259,7 @@ legacy_tox_ini = """
     commands = bandit --severity-level all -r src
 
     [testenv:docbuild]
-    skip_install = true
+    extras =
     commands =
         # We need to build the project in order to generate the docs.
         # Hence it fails with import errors.
@@ -269,6 +268,7 @@ legacy_tox_ini = """
         python docs/settings_doc_generator.py
 
     [testenv:ensure-docs-up-to-date]
+    extras =
     allowlist_externals = ./tools/ensure_up_to_date_docs.sh
     commands =
         {[testenv:docbuild]commands}
@@ -278,6 +278,7 @@ legacy_tox_ini = """
     commands = pre-commit {posargs:run --hook-stage pre-commit --all-files}
 
     [testenv:build-dist]
+    extras =
     deps = build
     commands = python -m build --sdist --wheel {posargs:{toxinidir}}
 """

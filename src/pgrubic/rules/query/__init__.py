@@ -1,0 +1,1 @@
+"""Rules as regards queries."""

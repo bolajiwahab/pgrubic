@@ -61,6 +61,13 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 | GN034 | [typed-table](rules/general/typed-table.md)                                                         | :white_check_mark: | :x:                |
 | GN035 | [inline-sql-function-body-wrong-language](rules/general/inline-sql-function-body-wrong-language.md) | :white_check_mark: | :white_check_mark: |
 
+## query (QY)
+
+|  Code |                      Name                                              |      Stable        | Auto-fixable       |
+|-------| -----------------------------------------------------------------------|------------------- |--------------------|
+| QY001 | [ordinal-number-group-by](rules/query/ordinal-number-group-by.md)      | :white_check_mark: | :x:                |
+| QY002 | [ordinal-number-order-by](rules/query/ordinal-number-order-by.md)      | :white_check_mark: | :x:                |
+
 ## naming (NM)
 
 | Code  |                      Name                                                              |      Stable        | Auto-fixable       |
