@@ -100,6 +100,9 @@
 | src/pgrubic/rules/naming/NM015.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/naming/NM016.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/naming/\_\_init\_\_.py     |       42 |        0 |     100% |           |
+| src/pgrubic/rules/query/QY001.py             |        6 |        0 |     100% |           |
+| src/pgrubic/rules/query/QY002.py             |        6 |        0 |     100% |           |
+| src/pgrubic/rules/query/\_\_init\_\_.py      |        0 |        0 |     100% |           |
 | src/pgrubic/rules/schema/SM001.py            |       35 |        0 |     100% |           |
 | src/pgrubic/rules/schema/SM002.py            |       29 |        0 |     100% |           |
 | src/pgrubic/rules/schema/\_\_init\_\_.py     |        0 |        0 |     100% |           |
@@ -158,7 +161,7 @@
 | src/pgrubic/rules/unsafe/US029.py            |        5 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US030.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-|                                    **TOTAL** | **3177** |    **0** | **100%** |           |
+|                                    **TOTAL** | **3189** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
