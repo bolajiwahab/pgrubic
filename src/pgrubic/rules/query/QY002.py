@@ -20,14 +20,6 @@ class OrdinalNumberOrderBy(linter.BaseChecker):
     Explicit column names or expressions.
     """
 
-    @staticmethod
-    def _is_ordinal_sort_column(column: ast.SortBy) -> bool:
-        """Check for ordinal sort column."""
-        return isinstance(column.node, ast.A_Const) and isinstance(
-            column.node.val,
-            ast.Integer,
-        )
-
     def visit_SelectStmt(
         self,
         ancestors: visitors.Ancestor,
@@ -35,7 +27,9 @@ class OrdinalNumberOrderBy(linter.BaseChecker):
     ) -> None:
         """Visit SelectStmt."""
         if node.sortClause and any(
-            isinstance(column, ast.SortBy) and self._is_ordinal_sort_column(column)
+            isinstance(column, ast.SortBy)
+            and isinstance(column.node, ast.A_Const)
+            and isinstance(column.node.val, ast.Integer)
             for column in node.sortClause
         ):
             self.violations.add(
