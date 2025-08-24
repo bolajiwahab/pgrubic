@@ -8,7 +8,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Use this feature request template to suggest new features or functionality for pgrubic.
+        Use this feature request template to suggest new features or functionality for **pgrubic**.
 
   - type: checkboxes
     attributes:
@@ -55,4 +55,4 @@ body:
 
   - type: markdown
     attributes:
-      value: "Thanks for completing our form!"
+      value: "Thanks for completing the form!"

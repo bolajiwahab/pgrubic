@@ -100,3 +100,7 @@ body:
     attributes:
       label: Logs or Screenshots
       description: Any additional logs, stack traces, or screenshots that might help.
+
+  - type: markdown
+    attributes:
+      value: "Thanks for completing the form!"
