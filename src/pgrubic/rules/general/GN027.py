@@ -32,9 +32,6 @@ class YodaCondition(linter.BaseChecker):
         "<": ">",
         ">=": "<=",
         "<=": ">=",
-        "=": "=",
-        "!=": "!=",
-        "<>": "<>",
     }
 
     def visit_A_Expr(
@@ -73,7 +70,7 @@ class YodaCondition(linter.BaseChecker):
         """Fix violation."""
         name = node.name
         # Adjust the operator accordingly
-        name[-1].sval = self.operator_replacements[name[-1].sval]
+        name[-1].sval = self.operator_replacements.get(name[-1].sval, name[-1].sval)
 
         lexpr = node.lexpr
         rexpr = node.rexpr
