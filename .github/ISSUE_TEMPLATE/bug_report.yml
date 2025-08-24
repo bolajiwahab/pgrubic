@@ -27,7 +27,7 @@ body:
       label: Actual Behaviour
       description: Describe what actually happened.
       placeholder: >
-        Explain the context and issue you observed (without SQL).
+        Provide the context and issue you observed (without SQL).
         Include any error messages or unexpected behaviour.
     validations:
       required: true
@@ -38,7 +38,7 @@ body:
       label: Expected Behaviour
       description: Describe what you expected to happen.
       placeholder: >
-        Explain the correct output or behaviour you were expecting.
+        Provide the correct output or behaviour you were expecting.
     validations:
       required: true
 
@@ -48,24 +48,10 @@ body:
       label: Minimal SQL to reproduce
       description: Provide a small, self-contained SQL snippet that triggers the bug.
       placeholder: |
-        ```sql
         CREATE TABLE test (id INT PRIMARY KEY);
-        ```
-      render: shell
+      render: sql
     validations:
       required: true
-
-  - type: textarea
-    id: output
-    attributes:
-      label: Actual vs Expected Output
-      description: Show what the **pgrubic** produced vs what you expected.
-      placeholder: |
-        **Actual:**
-        ...
-
-        **Expected:**
-        ...
 
   - type: input
     attributes:
