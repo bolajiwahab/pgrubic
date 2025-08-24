@@ -1,0 +1,58 @@
+---
+# yamllint disable rule:line-length
+name: Feature request
+description: Suggest a new lint rule, formatter option, or improvement
+title: "[Feature] <short description>"
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this feature request template to suggest new features or functionality for **pgrubic**.
+
+  - type: checkboxes
+    attributes:
+      label: Search before submitting
+      description: >
+        Before opening a new issue, please search the existing [issues](https://github.com/bolajiwahab/pgrubic/issues)
+        to see if your question or problem has already been reported.
+      options:
+        - label: >
+            I have searched the [issues](https://github.com/bolajiwahab/pgrubic/issues) and confirmed that no similar issue exists.
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Description
+      description: A short description of the feature
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Use case
+      description: What do you want to happen?
+      placeholder: >
+        Instead of focusing on how the feature might be implemented, please describe the problem you want to solve or
+        the outcome you are aiming for.
+
+  - type: input
+    attributes:
+      label: Option
+      description: Which option does this feature relates to (lint/format)?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Workarounds
+      description: Did you consider other workarounds?
+
+  - type: textarea
+    attributes:
+      label: Implementation Suggestion
+      description: How would you implement this feature?
+
+  - type: markdown
+    attributes:
+      value: "Thanks for completing the form!"

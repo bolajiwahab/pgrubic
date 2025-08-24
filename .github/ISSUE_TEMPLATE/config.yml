@@ -1,0 +1,8 @@
+---
+# yamllint disable rule:line-length
+blank_issues_enabled: false
+
+contact_links:
+  - name: 💬 Questions & Discussions
+    url: https://github.com/bolajiwahab/pgrubic/discussions
+    about: Please ask questions, ideas, or general discussions here instead of opening an issue.
