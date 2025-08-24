@@ -22,11 +22,23 @@ body:
           required: true
 
   - type: textarea
-    id: description
+    id: actual
     attributes:
-      label: Description
-      description: What happened, and what did you expect to happen instead?
-      placeholder: "When running on XYZ.sql, the linter flagged ..., but it should have ..."
+      label: Actual Behaviour
+      description: Describe what actually happened.
+      placeholder: >
+        Explain the context and issue you observed (without SQL).
+        Include any error messages or unexpected behaviour.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behaviour
+      description: Describe what you expected to happen.
+      placeholder: >
+        Explain the correct output or behaviour you were expecting.
     validations:
       required: true
 
@@ -55,7 +67,7 @@ body:
         **Expected:**
         ...
 
-  - type: textarea
+  - type: input
     attributes:
       label: Option
       description: What option did you use to run pgrubic (lint/format)?
@@ -77,6 +89,8 @@ body:
       label: Environment
       description: OS, PostgreSQL version, Python version.
       placeholder: "Ubuntu 22.04, PostgreSQL 15, Python 3.12"
+    validations:
+      required: true
 
   - type: textarea
     attributes:
