@@ -59,8 +59,23 @@ class YodaCondition(linter.BaseChecker):
 
     def _fix(self, node: ast.A_Expr) -> None:
         """Fix violation."""
+        operator_replacements = {
+            ">": "<",
+            "<": ">",
+            ">=": "<=",
+            "<=": ">=",
+            "=": "=",
+            "!=": "!=",
+            "<>": "<>",
+        }
+
+        name = node.name
+        # Adjust the operator accordingly
+        name[-1].sval = operator_replacements[name[-1].sval]
+
         lexpr = node.lexpr
         rexpr = node.rexpr
 
         node.lexpr = rexpr
         node.rexpr = lexpr
+        node.name = name

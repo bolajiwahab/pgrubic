@@ -1,4 +1,4 @@
-"""Checker for yoda conditions."""
+"""Checker for stringified NULL."""
 
 from pglast import ast, enums, visitors
 
