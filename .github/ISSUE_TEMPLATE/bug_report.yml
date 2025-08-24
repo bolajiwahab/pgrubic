@@ -1,0 +1,102 @@
+---
+# yamllint disable rule:line-length
+name: Bug report
+description: Report a problem with the linter or formatter
+title: "[Bug] <short description>"
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please provide as much detail as possible to help us reproduce and fix it.
+
+  - type: checkboxes
+    attributes:
+      label: Search before submitting
+      description: >
+        Before opening a new issue, please search the existing [issues](https://github.com/bolajiwahab/pgrubic/issues)
+        to see if your question or problem has already been reported.
+      options:
+        - label: >
+            I have searched the [issues](https://github.com/bolajiwahab/pgrubic/issues) and confirmed that no similar issue exists.
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened, and what did you expect to happen instead?
+      placeholder: "When running on XYZ.sql, the linter flagged ..., but it should have ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: sql
+    attributes:
+      label: Minimal SQL to reproduce
+      description: Provide a small, self-contained SQL snippet that triggers the bug.
+      placeholder: |
+        ```sql
+        CREATE TABLE test (id INT PRIMARY KEY);
+        ```
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: output
+    attributes:
+      label: Actual vs Expected Output
+      description: Show what the **pgrubic** produced vs what you expected.
+      placeholder: |
+        **Actual:**
+        ...
+
+        **Expected:**
+        ...
+
+  - type: textarea
+    attributes:
+      label: Option
+      description: What option did you use to run pgrubic (lint/format)?
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Run `pgrubic --version` and paste the output.
+      placeholder: "0.7.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, PostgreSQL version, Python version.
+      placeholder: "Ubuntu 22.04, PostgreSQL 15, Python 3.12"
+
+  - type: textarea
+    attributes:
+      label: Configuration
+      description: Include your **pgrubic** configuration (`pgrubic.toml`) here
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: Are you willing to work on and submit a PR to address the issue?
+      description: >
+        Submitting a pull request is completely optional, but we welcome and guide new contributors.
+        If you have an idea for a fix and some understanding of how to implement it, we’d love your help.
+        **pgrubic** is a community-driven project, and your contributions make a big difference!
+      options:
+        - label: Yes, I am willing to submit a PR :)
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or Screenshots
+      description: Any additional logs, stack traces, or screenshots that might help.
