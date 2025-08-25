@@ -44,7 +44,7 @@ FORMATTERS_BASE_MODULE: typing.Final[str] = f"{PACKAGE_NAME}/formatters/"
 
 
 def get_fully_qualified_name(node: tuple[ast.Node]) -> str:
-    """Get fully qualified type name.
+    """Get fully qualified name.
 
     Parameters:
     ----------
@@ -54,7 +54,7 @@ def get_fully_qualified_name(node: tuple[ast.Node]) -> str:
     Returns:
     -------
     str
-        Fully qualified type name.
+        Fully qualified name.
 
     """
     if isinstance(node, ast.String):
