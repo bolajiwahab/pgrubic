@@ -27,7 +27,7 @@ class YodaCondition(linter.BaseChecker):
 
     is_auto_fixable: bool = True
 
-    yoda_operators: typing.ClassVar[dict[str, str]] = {
+    yoda_operators_with_replacements: typing.ClassVar[dict[str, str]] = {
         "=": "=",
         "!=": "!=",
         "<>": "<>",
@@ -50,7 +50,7 @@ class YodaCondition(linter.BaseChecker):
                 ast.A_Const,
             )
             and isinstance(node.rexpr, ast.ColumnRef)
-            and node.name[-1].sval in self.yoda_operators
+            and node.name[-1].sval in self.yoda_operators_with_replacements
         ):
             self.violations.add(
                 linter.Violation(
@@ -79,4 +79,4 @@ class YodaCondition(linter.BaseChecker):
         node.rexpr = lexpr
 
         # Adjust the operator accordingly
-        node.name[-1].sval = self.yoda_operators[node.name[-1].sval]
+        node.name[-1].sval = self.yoda_operators_with_replacements[node.name[-1].sval]
