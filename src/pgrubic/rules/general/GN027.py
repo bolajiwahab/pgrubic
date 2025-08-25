@@ -1,5 +1,7 @@
 """Checker for yoda conditions."""
 
+import typing
+
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
@@ -25,6 +27,16 @@ class YodaCondition(linter.BaseChecker):
 
     is_auto_fixable: bool = True
 
+    yoda_operators_with_replacements: typing.ClassVar[dict[str, str]] = {
+        "=": "=",
+        "!=": "!=",
+        "<>": "<>",
+        "<": ">",
+        "<=": ">=",
+        ">": "<",
+        ">=": "<=",
+    }
+
     def visit_A_Expr(
         self,
         ancestors: visitors.Ancestor,
@@ -38,6 +50,7 @@ class YodaCondition(linter.BaseChecker):
                 ast.A_Const,
             )
             and isinstance(node.rexpr, ast.ColumnRef)
+            and node.name[-1].sval in self.yoda_operators_with_replacements
         ):
             self.violations.add(
                 linter.Violation(
@@ -64,3 +77,6 @@ class YodaCondition(linter.BaseChecker):
 
         node.lexpr = rexpr
         node.rexpr = lexpr
+
+        # Adjust the operator accordingly
+        node.name[-1].sval = self.yoda_operators_with_replacements[node.name[-1].sval]
