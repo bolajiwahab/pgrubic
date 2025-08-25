@@ -27,11 +27,14 @@ class YodaCondition(linter.BaseChecker):
 
     is_auto_fixable: bool = True
 
-    operator_replacements: typing.ClassVar[dict[str, str]] = {
-        ">": "<",
+    yoda_operators: typing.ClassVar[dict[str, str]] = {
+        "=": "=",
+        "!=": "!=",
+        "<>": "<>",
         "<": ">",
-        ">=": "<=",
         "<=": ">=",
+        ">": "<",
+        ">=": "<=",
     }
 
     def visit_A_Expr(
@@ -47,6 +50,7 @@ class YodaCondition(linter.BaseChecker):
                 ast.A_Const,
             )
             and isinstance(node.rexpr, ast.ColumnRef)
+            and node.name[-1].sval in self.yoda_operators
         ):
             self.violations.add(
                 linter.Violation(
@@ -75,7 +79,4 @@ class YodaCondition(linter.BaseChecker):
         node.rexpr = lexpr
 
         # Adjust the operator accordingly
-        node.name[-1].sval = self.operator_replacements.get(
-            node.name[-1].sval,
-            node.name[-1].sval,
-        )
+        node.name[-1].sval = self.yoda_operators[node.name[-1].sval]
