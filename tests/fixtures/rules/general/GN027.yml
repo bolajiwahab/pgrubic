@@ -97,11 +97,11 @@ test_fail_yoda_condition_less_than_or_equal_to_qualified_operator:
       FROM measurement
      WHERE city_id OPERATOR(pg_catalog.>=) 10;
 
-test_pass_yoda_condition_unmapped_unqualified_operator:
+test_pass_yoda_condition_untracked_unqualified_operator:
   sql_pass: |
     SELECT * FROM measurement WHERE 10 && city_id;
 
-test_pass_yoda_condition_unmapped_qualified_operator:
+test_pass_yoda_condition_untracked_qualified_operator:
   sql_pass: |
     SELECT * FROM measurement WHERE 10 OPERATOR(postgis.&&) city_id;
 
