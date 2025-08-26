@@ -59,7 +59,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "ruff==0.12.8",
+  "ruff==0.12.10",
   "mypy==1.17.1",
   "isort==6.0.1",
   "bandit==1.8.6",
@@ -70,9 +70,9 @@ dev = [
   "yamllint==1.37.1",
   "conventional-pre-commit==4.2.0",
   "pytest==8.4.1",
-  "coverage==7.10.3",
+  "coverage==7.10.5",
   "tox==4.28.4",
-  "types-PyYAML==6.0.12.20250809",
+  "types-PyYAML==6.0.12.20250822",
   "types-toml==0.10.8.20240310",
   "types-colorama==0.4.15.20250801",
   "types-click==7.1.8",
@@ -81,9 +81,9 @@ dev = [
 
 doc = [
   "mkdocs==1.6.1",
-  "mkdocs-material==9.6.16",
+  "mkdocs-material==9.6.18",
   "mkdocstrings==0.30.0",
-  "mkdocstrings-python==1.16.12",
+  "mkdocstrings-python==1.17.0",
 ]
 
 release = [
