@@ -12,7 +12,7 @@ on:  # yamllint disable-line rule:truthy
 
 env:
   PACKAGE_NAME: "pgrubic"
-  OWNER: "bolajiwahab"
+  DEFAULT_PYTHON_VERSION: 3.12
 
 jobs:
   details:
@@ -83,7 +83,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
 
       - name: Install dependencies
         run: pip install --no-cache-dir --upgrade pip tox
@@ -180,6 +180,7 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/${{ env.PACKAGE_NAME }}:${{ needs.details.outputs.tag_name }}
+            ghcr.io/${{ github.repository_owner }}/${{ env.PACKAGE_NAME }}:latest
 
       - name: Post Image URL
         run: echo "Docker image published at ghcr.io/${{ github.repository_owner }}/${{ env.PACKAGE_NAME }}:${{ needs.details.outputs.tag_name }}"

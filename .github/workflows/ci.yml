@@ -10,6 +10,9 @@ on:  # yamllint disable-line rule:truthy
     branches:
       - main
 
+env:
+  DEFAULT_PYTHON_VERSION: 3.12
+
 jobs:
   lint:
     permissions:
@@ -35,7 +38,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
       - name: Install dependencies
         run: pip install --no-cache-dir --upgrade pip tox
       - name: Run ${{ matrix.job }}
@@ -123,7 +126,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
 
       - name: Install dependencies
         run: pip install --no-cache-dir --upgrade pip tox
