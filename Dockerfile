@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM python:3.13-slim@sha256:6f79e7a10bb7d0b0a50534a70ebc78823f941fba26143ecd7e6c5dca9d7d7e8a AS build
+FROM python:3.13-slim@sha256:27f90d79cc85e9b7b2560063ef44fa0e9eaae7a7c3f5a9f74563065c5477cc24 AS build
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ COPY pyproject.toml ./
 RUN tox -e build-dist
 
 # Stage 2: Runtime
-FROM python:3.13-slim@sha256:6f79e7a10bb7d0b0a50534a70ebc78823f941fba26143ecd7e6c5dca9d7d7e8a AS runtime
+FROM python:3.13-slim@sha256:27f90d79cc85e9b7b2560063ef44fa0e9eaae7a7c3f5a9f74563065c5477cc24 AS runtime
 
 WORKDIR /app
 
