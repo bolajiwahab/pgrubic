@@ -1,7 +1,5 @@
 """Checker for new not-null column with volatile default."""
 
-import typing
-
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
@@ -42,7 +40,9 @@ class NewNotNullColumnWithVolatileDefault(linter.BaseChecker):
             is_not_null = False
             has_volatile_default = False
 
-            for constraint in typing.cast(tuple[ast.Constraint], node.constraints):
+            constraints: tuple[ast.Constraint] = node.constraints
+
+            for constraint in constraints:
                 if constraint.contype == enums.ConstrType.CONSTR_NOTNULL:
                     is_not_null = True
 
