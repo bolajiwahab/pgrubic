@@ -160,8 +160,9 @@
 | src/pgrubic/rules/unsafe/US028.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US029.py            |        5 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US030.py            |        7 |        0 |     100% |           |
+| src/pgrubic/rules/unsafe/US031.py            |       13 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-|                                    **TOTAL** | **3193** |    **0** | **100%** |           |
+|                                    **TOTAL** | **3206** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
