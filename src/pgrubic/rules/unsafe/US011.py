@@ -1,13 +1,13 @@
-"""Checker for not null constraint on new column with volatile default."""
+"""Checker for new not-null column with volatile default."""
 
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
 
 
-class NotNullConstraintOnNewColumnWithVolatileDefault(linter.BaseChecker):
+class NewNotNullColumnWithVolatileDefault(linter.BaseChecker):
     """## **What it does**
-    Checks **NOT NULL** constraint on a new column with volatile default.
+    Checks new not-null column with volatile default.
 
     ## **Why not?**
     Adding a new column with **NOT NULL** constraint and a volatile default to an already
@@ -22,12 +22,12 @@ class NotNullConstraintOnNewColumnWithVolatileDefault(linter.BaseChecker):
 
     ## **Use instead:**
     1. Create the new column, nullable.
-    2. Set the default value of the new column to the volatile default.
-    3. Backfill the new column for all existing rows.
+    2. Set the default value for the newly created column.
+    3. Backfill the newly created column for all existing rows.
     4. Create a check constraint: **CHECK (column IS NOT NULL) NOT VALID**.
     5. Validate the constraint.
     6. Set the column as NOT NULL.
-    7. Drop the constraint.
+    7. Drop the check constraint.
     """
 
     def visit_ColumnDef(
@@ -38,19 +38,24 @@ class NotNullConstraintOnNewColumnWithVolatileDefault(linter.BaseChecker):
         """Visit ColumnDef."""
         if ancestors.find_nearest(ast.AlterTableCmd) and node.constraints:
             is_not_null = False
-            has_static_default = False
+            has_volatile_default = False
 
-            for constraint in node.constraints:
+            constraints: tuple[ast.Constraint] = node.constraints
+
+            for constraint in constraints:
                 if constraint.contype == enums.ConstrType.CONSTR_NOTNULL:
                     is_not_null = True
 
-                if constraint.contype == enums.ConstrType.CONSTR_DEFAULT and isinstance(
-                    constraint.raw_expr,
-                    ast.A_Const,
+                if (
+                    constraint.contype == enums.ConstrType.CONSTR_DEFAULT
+                    and not isinstance(
+                        constraint.raw_expr,
+                        ast.A_Const,
+                    )
                 ):
-                    has_static_default = True
+                    has_volatile_default = True
 
-            if is_not_null and not has_static_default:
+            if is_not_null and has_volatile_default:
                 self.violations.add(
                     linter.Violation(
                         rule_code=self.code,
@@ -60,7 +65,7 @@ class NotNullConstraintOnNewColumnWithVolatileDefault(linter.BaseChecker):
                         column_offset=self.column_offset,
                         line=self.line,
                         statement_location=self.statement_location,
-                        description="Not null constraint on new column with volatile default",  # noqa: E501
+                        description="New not-null column with volatile default",
                         is_auto_fixable=self.is_auto_fixable,
                         is_fix_enabled=self.is_fix_enabled,
                         help="Split the operation into multiple steps",
