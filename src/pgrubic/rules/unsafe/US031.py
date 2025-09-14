@@ -1,7 +1,5 @@
 """Checker for new column with volatile default."""
 
-import typing
-
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
@@ -37,7 +35,9 @@ class NewColumnWithVolatileDefault(linter.BaseChecker):
         if ancestors.find_nearest(ast.AlterTableCmd) and node.constraints:
             has_volatile_default = False
 
-            for constraint in typing.cast(tuple[ast.Constraint], node.constraints):
+            constraints: tuple[ast.Constraint] = node.constraints
+
+            for constraint in constraints:
                 if (
                     constraint.contype == enums.ConstrType.CONSTR_DEFAULT
                     and not isinstance(
@@ -46,6 +46,7 @@ class NewColumnWithVolatileDefault(linter.BaseChecker):
                     )
                 ):
                     has_volatile_default = True
+                    break
 
             if has_volatile_default:
                 self.violations.add(
