@@ -193,14 +193,7 @@ The project uses [commitizen](https://commitizen-tools.github.io/commitizen/) to
 
 2. Create a pull request and get the changes merged
 
-3. After the changes are merged, checkout to the main branch locally and rebase it with the remote main branch
-
-    ```bash
-    git checkout main
-    git pull --rebase origin main
-    ```
-
-4. Push the tags, along with the latest tag
+3. Push the tags, along with the latest tag
 
     ```bash
     git push origin --tags
