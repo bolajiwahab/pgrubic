@@ -1,3 +1,16 @@
+## 0.8.0 (2025-09-16)
+
+### Feat
+
+- **linter**: flag unsafe new column defaults (#151)
+- **rule**: flag ordinal numbers in groupby and orderby (#141)
+- **rule**: add rules for security definer functions (#140)
+
+### Fix
+
+- **linter**: flag new not-null column with volatile default (#150)
+- **linter**: yoda condition operator fixes (#144)
+
 ## 0.7.0 (2025-08-12)
 
 ### Feat
