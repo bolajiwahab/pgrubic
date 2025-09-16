@@ -163,4 +163,4 @@ There are **100+** rules and all rules are enabled by default. Rule are divided 
 | US028 | [non-concurrent-refresh-materialized-view](rules/unsafe/non-concurrent-refresh-materialized-view.md)                               | :white_check_mark: | :white_check_mark:                                                                                                                                                            |
 | US029 | [truncate-table](rules/unsafe/truncate-table.md)                                                                                   | :white_check_mark: | :x:       |
 | US030 | [mismatch-column-in-data-type-change](rules/unsafe/mismatch-column-in-data-type-change.md)                                         | :white_check_mark: | :x:       |
-| US031 | [new-column-with-volatile-default](rules/unsafe/new-column-with-volatile-default.md)                                         | :white_check_mark: | :x:       |
+| US031 | [new-column-with-volatile-default](rules/unsafe/new-column-with-volatile-default.md)                                               | :white_check_mark: | :x:       |
