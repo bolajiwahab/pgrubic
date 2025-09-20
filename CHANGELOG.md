@@ -1,3 +1,13 @@
+## 0.9.0 (2025-09-20)
+
+### Feat
+
+- **linter**: add lint report (#156)
+
+### Fix
+
+- **formatter**: handle new lines during errors (#157)
+
 ## 0.8.0 (2025-09-16)
 
 ### Feat
