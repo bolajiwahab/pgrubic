@@ -20,6 +20,9 @@ if typing.TYPE_CHECKING:
     from collections import abc  # pragma: no cover
 
 
+DEFAULT_LINT_REPORT_FILE: str = f"{PACKAGE_NAME}-lint-report.md"
+
+
 class FixCounter:
     """Fix counter."""
 
@@ -423,7 +426,7 @@ class Linter:
     def generate_lint_report(
         *,
         lint_results: list[LintResult],
-        report_file: str = f"{PACKAGE_NAME}-lint-report.md",
+        report_file: str = DEFAULT_LINT_REPORT_FILE,
     ) -> None:
         """Generate a report in markdown for lint results.
 
