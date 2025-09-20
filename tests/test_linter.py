@@ -187,8 +187,7 @@ Total errors: **1**
 
 | File | Message | Hint |
 |------|---------|------|
-| linter.sql | syntax error at or near ";", at index 13 | Make sure the statement is valid PostgreSQL statement. If it is, please report this issue at https://github.com/bolajiwahab/pgrubic/issues
- |
+| linter.sql | syntax error at or near ";", at index 13 | Make sure the statement is valid PostgreSQL statement. If it is, please report this issue at https://github.com/bolajiwahab/pgrubic/issues |
 </details>
 """  # noqa: E501
 
