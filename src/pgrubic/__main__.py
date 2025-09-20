@@ -61,6 +61,12 @@ def cli() -> None:
     default=False,
     help="Whether to add file-level noqa directives.",
 )
+@click.option(
+    "--generate-lint-report",
+    is_flag=True,
+    default=False,
+    help="Whether to generate a lint report.",
+)
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
 def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
@@ -69,6 +75,7 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
     fix: bool,
     ignore_noqa: bool,
     add_file_level_general_noqa: bool,
+    generate_lint_report: bool,
     workers: int,
     verbose: bool,
 ) -> None:
@@ -84,6 +91,8 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
         Whether to ignore noqa directives.
     add_file_level_general_noqa: bool
         Whether to add file-level noqa directives.
+    generate_lint_report: bool
+        Whether to generate a lint report.
     workers: int
         Number of workers to use.
     verbose: bool
@@ -158,7 +167,7 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
             pool.apply_async(
                 linter.run,
                 kwds={
-                    "source_file": source.resolve(),
+                    "source_file": str(source.resolve()),
                     "source_code": source.read_text(encoding="utf-8"),
                 },
             )
@@ -195,11 +204,15 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
         total_errors += len(lint_result.errors)
 
         if lint_result.fixed_source_code:
-            with pathlib.Path(lint_result.source_file).open(
-                "w",
+            pathlib.Path(lint_result.source_file).write_text(
+                lint_result.fixed_source_code,
                 encoding="utf-8",
-            ) as sf:
-                sf.write(lint_result.fixed_source_code)
+            )
+
+    if generate_lint_report:
+        linter.generate_lint_report(
+            lint_results=lint_results,
+        )
 
     if total_violations > 0 or total_errors > 0:
         if config.lint.fix:
@@ -387,11 +400,10 @@ def format_sources(  # noqa: C901, PLR0912, PLR0913, PLR0915
                 console.print(Syntax(diff_output, "diff", theme="ansi_dark"))
 
         if not config.format.check and not config.format.diff:
-            with pathlib.Path(formatting_result.source_file).open(
-                "w",
+            pathlib.Path(formatting_result.source_file).write_text(
+                formatting_result.formatted_source_code,
                 encoding="utf-8",
-            ) as sf:
-                sf.write(formatting_result.formatted_source_code)
+            )
 
         errors.print_errors(
             errors=formatting_result.errors,
