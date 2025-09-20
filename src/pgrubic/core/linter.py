@@ -5,6 +5,7 @@ from __future__ import annotations
 import sys
 import typing
 import fnmatch
+import pathlib
 import functools
 from contextlib import contextmanager
 
@@ -12,7 +13,7 @@ from pglast import ast, parser, stream, visitors
 from colorama import Fore, Style
 from caseconverter import kebabcase
 
-from pgrubic import ISSUES_URL, DOCUMENTATION_URL
+from pgrubic import ISSUES_URL, PACKAGE_NAME, DOCUMENTATION_URL
 from pgrubic.core import noqa, config, errors, visitors as pgrubic_visitors, formatter
 
 if typing.TYPE_CHECKING:
@@ -417,6 +418,72 @@ class Linter:
                     if idx == violation.line_number
                     else None
                 )
+
+    @staticmethod
+    def generate_lint_report(
+        *,
+        lint_results: list[LintResult],
+        report_file: str = f"{PACKAGE_NAME}-lint-report.md",
+    ) -> None:
+        """Generate a report in markdown for lint results.
+
+        Parameters:
+        ----------
+        lint_results: list[LintResult]
+            List of lint results.
+        report_file: str
+            Path to the report file.
+
+        Returns:
+        -------
+        None
+        """
+        total_violations = sum(
+            len(lint_result.violations) for lint_result in lint_results
+        )
+        total_errors = sum(len(lint_result.errors) for lint_result in lint_results)
+
+        lines: list[str] = [f"## {PACKAGE_NAME.capitalize()} Lint Report\n"]
+
+        lines.append(f"Total violations: **{total_violations}**\n")
+        lines.append(f"Total errors: **{total_errors}**\n")
+
+        if total_violations > 0:
+            lines.append(
+                f"<details>\n<summary>Violations ({total_violations})</summary>\n",
+            )
+            lines.append("| File | Line | Col | Rule | Description | Help |")
+            lines.append("|------|------|-----|------|-------------|------|")
+
+            for lint_result in lint_results:
+                for violation in lint_result.violations:
+                    lines.append(  # noqa: PERF401
+                        f"| {lint_result.source_file.split('/')[-1]} "
+                        f"| {violation.line_number} "
+                        f"| {violation.column_offset} "
+                        f"| {violation.rule_code} "
+                        f"| {violation.description} "
+                        f"| {violation.help or '-'} |",
+                    )
+
+            lines.append("</details>\n")
+
+        if total_errors > 0:
+            lines.append(f"<details>\n<summary>Errors ({total_errors})</summary>\n")
+            lines.append("| File | Message | Hint |")
+            lines.append("|------|---------|------|")
+
+            for lint_result in lint_results:
+                for error in lint_result.errors:
+                    lines.append(  # noqa: PERF401
+                        f"| {lint_result.source_file.split('/')[-1]} "
+                        f"| {error.message} "
+                        f"| {error.hint or '-'} |",
+                    )
+
+            lines.append("</details>\n")
+
+        pathlib.Path(report_file).write_text("\n".join(lines), encoding="utf-8")
 
     def run(self, *, source_file: str, source_code: str) -> LintResult:  # noqa: C901, PLR0912, PLR0915
         """Run rules on a source code.
