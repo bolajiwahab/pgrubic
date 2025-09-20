@@ -106,7 +106,7 @@ class Formatter:
                             hint=f"""Make sure the statement is valid PostgreSQL statement. If it is, please report this issue at {ISSUES_URL}{noqa.NEW_LINE}""",  # noqa: E501
                         ),
                     )
-                    formatted_statements.append(statement.text)
+                    formatted_statements.append(statement.text.strip(noqa.NEW_LINE))
 
                 except RecursionError as error:  # pragma: no cover
                     _errors.add(
@@ -120,7 +120,7 @@ class Formatter:
                             hint="Maximum format depth exceeded, reduce deeply nested queries",  # noqa: E501
                         ),
                     )
-                    formatted_statements.append(statement.text)
+                    formatted_statements.append(statement.text.strip(noqa.NEW_LINE))
 
             return (
                 noqa.NEW_LINE + (noqa.NEW_LINE * config.format.lines_between_statements)
