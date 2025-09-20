@@ -1,5 +1,7 @@
 """Test linter."""
 
+import pathlib
+
 from pgrubic import core
 from pgrubic.core import noqa
 
@@ -143,3 +145,51 @@ def test_fix_enablement(
     )
 
     assert linting_result.fixed_source_code == f"SELECT a IS NULL;{noqa.NEW_LINE}"
+
+
+def test_linter_generate_lint_report(
+    linter: core.Linter,
+    tmp_path: pathlib.Path,
+) -> None:
+    """Test linter lint report."""
+    directory = tmp_path / "sub"
+    directory.mkdir()
+    report_file = directory / "report.md"
+
+    # The ordering of violations is not guaranteed
+    # So we only check for one violation here
+    lint_result = linter.run(
+        source_file=SOURCE_FILE,
+        source_code="SELECT a = NULL; SELECT b FROM;",
+    )
+
+    linter.generate_lint_report(
+        lint_results=[lint_result],
+        report_file=str(report_file),
+    )
+
+    expected_lint_report = """## Pgrubic Lint Report
+
+Total violations: **1**
+
+Total errors: **1**
+
+<details>
+<summary>Violations (1)</summary>
+
+| File | Line | Col | Rule | Description | Help |
+|------|------|-----|------|-------------|------|
+| linter.sql | 1 | 10 | [GN024](https://bolajiwahab.github.io/pgrubic/rules/general/null-comparison) | Comparison with NULL should be [IS | IS NOT] NULL | Use [IS | IS NOT] NULL |
+</details>
+
+<details>
+<summary>Errors (1)</summary>
+
+| File | Message | Hint |
+|------|---------|------|
+| linter.sql | syntax error at or near ";", at index 13 | Make sure the statement is valid PostgreSQL statement. If it is, please report this issue at https://github.com/bolajiwahab/pgrubic/issues
+ |
+</details>
+"""  # noqa: E501
+
+    assert report_file.read_text() == expected_lint_report
