@@ -428,7 +428,7 @@ class Linter:
         lint_results: list[LintResult],
         report_file: str = DEFAULT_LINT_REPORT_FILE,
     ) -> None:
-        """Generate a report in markdown for lint results.
+        """Generate a report in markdown for lint results. It overwrites the report file.
 
         Parameters:
         ----------
