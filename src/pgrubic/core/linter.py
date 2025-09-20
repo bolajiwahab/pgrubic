@@ -455,16 +455,18 @@ class Linter:
             lines.append("| File | Line | Col | Rule | Description | Help |")
             lines.append("|------|------|-----|------|-------------|------|")
 
-            for lint_result in lint_results:
-                for violation in lint_result.violations:
-                    lines.append(  # noqa: PERF401
-                        f"|{noqa.SPACE}{pathlib.Path(lint_result.source_file).name}{noqa.SPACE}"
-                        f"|{noqa.SPACE}{violation.line_number}{noqa.SPACE}"
-                        f"|{noqa.SPACE}{violation.column_offset}{noqa.SPACE}"
-                        f"|{noqa.SPACE}[{violation.rule_code}]({DOCUMENTATION_URL}/rules/{violation.rule_category}/{violation.rule_name}){noqa.SPACE}"
-                        f"|{noqa.SPACE}{violation.description}{noqa.SPACE}"
-                        f"|{noqa.SPACE}{violation.help or '-'}{noqa.SPACE}|",
-                    )
+            violation_rows = [
+                f"|{noqa.SPACE}{pathlib.Path(lint_result.source_file).name}{noqa.SPACE}"
+                f"|{noqa.SPACE}{violation.line_number}{noqa.SPACE}"
+                f"|{noqa.SPACE}{violation.column_offset}{noqa.SPACE}"
+                f"|{noqa.SPACE}[{violation.rule_code}]({DOCUMENTATION_URL}/rules/{violation.rule_category}/{violation.rule_name}){noqa.SPACE}"
+                f"|{noqa.SPACE}{violation.description}{noqa.SPACE}"
+                f"|{noqa.SPACE}{violation.help or '-'}{noqa.SPACE}|"
+                for lint_result in lint_results
+                for violation in lint_result.violations
+            ]
+
+            lines.extend(violation_rows)
 
             lines.append("</details>\n")
 
@@ -473,13 +475,15 @@ class Linter:
             lines.append("| File | Message | Hint |")
             lines.append("|------|---------|------|")
 
-            for lint_result in lint_results:
-                for error in lint_result.errors:
-                    lines.append(  # noqa: PERF401
-                        f"|{noqa.SPACE}{pathlib.Path(lint_result.source_file).name}{noqa.SPACE}"
-                        f"|{noqa.SPACE}{error.message}{noqa.SPACE}"
-                        f"|{noqa.SPACE}{error.hint or '-'}{noqa.SPACE}|",
-                    )
+            error_rows = [
+                f"|{noqa.SPACE}{pathlib.Path(lint_result.source_file).name}{noqa.SPACE}"
+                f"|{noqa.SPACE}{error.message}{noqa.SPACE}"
+                f"|{noqa.SPACE}{error.hint or '-'}{noqa.SPACE}|"
+                for lint_result in lint_results
+                for error in lint_result.errors
+            ]
+
+            lines.extend(error_rows)
 
             lines.append("</details>\n")
 
