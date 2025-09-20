@@ -5,7 +5,7 @@
 | Name                                         |    Stmts |     Miss |    Cover |   Missing |
 |--------------------------------------------- | -------: | -------: | -------: | --------: |
 | src/pgrubic/\_\_init\_\_.py                  |       32 |        0 |     100% |           |
-| src/pgrubic/\_\_main\_\_.py                  |      146 |        0 |     100% |           |
+| src/pgrubic/\_\_main\_\_.py                  |      147 |        0 |     100% |           |
 | src/pgrubic/core/\_\_init\_\_.py             |        9 |        0 |     100% |           |
 | src/pgrubic/core/cache.py                    |       66 |        0 |     100% |           |
 | src/pgrubic/core/config.py                   |      108 |        0 |     100% |           |
@@ -13,7 +13,7 @@
 | src/pgrubic/core/errors.py                   |       22 |        0 |     100% |           |
 | src/pgrubic/core/filters.py                  |       26 |        0 |     100% |           |
 | src/pgrubic/core/formatter.py                |       40 |        0 |     100% |           |
-| src/pgrubic/core/linter.py                   |      212 |        0 |     100% |           |
+| src/pgrubic/core/linter.py                   |      236 |        0 |     100% |           |
 | src/pgrubic/core/loader.py                   |       25 |        0 |     100% |           |
 | src/pgrubic/core/logger.py                   |        5 |        0 |     100% |           |
 | src/pgrubic/core/noqa.py                     |      140 |        0 |     100% |           |
@@ -162,7 +162,7 @@
 | src/pgrubic/rules/unsafe/US030.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US031.py            |       13 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-|                                    **TOTAL** | **3206** |    **0** | **100%** |           |
+|                                    **TOTAL** | **3231** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
