@@ -458,12 +458,12 @@ class Linter:
             for lint_result in lint_results:
                 for violation in lint_result.violations:
                     lines.append(  # noqa: PERF401
-                        f"| {lint_result.source_file.split('/')[-1]} "
-                        f"| {violation.line_number} "
-                        f"| {violation.column_offset} "
-                        f"| {violation.rule_code} "
-                        f"| {violation.description} "
-                        f"| {violation.help or '-'} |",
+                        f"|{noqa.SPACE}{pathlib.Path(lint_result.source_file).name}{noqa.SPACE}"
+                        f"|{noqa.SPACE}{violation.line_number}{noqa.SPACE}"
+                        f"|{noqa.SPACE}{violation.column_offset}{noqa.SPACE}"
+                        f"|{noqa.SPACE}[{violation.rule_code}]({DOCUMENTATION_URL}/rules/{violation.rule_category}/{violation.rule_name}){noqa.SPACE}"
+                        f"|{noqa.SPACE}{violation.description}{noqa.SPACE}"
+                        f"|{noqa.SPACE}{violation.help or '-'}{noqa.SPACE}|",
                     )
 
             lines.append("</details>\n")
@@ -476,9 +476,9 @@ class Linter:
             for lint_result in lint_results:
                 for error in lint_result.errors:
                     lines.append(  # noqa: PERF401
-                        f"| {lint_result.source_file.split('/')[-1]} "
-                        f"| {error.message} "
-                        f"| {error.hint or '-'} |",
+                        f"|{noqa.SPACE}{pathlib.Path(lint_result.source_file).name}{noqa.SPACE}"
+                        f"|{noqa.SPACE}{error.message}{noqa.SPACE}"
+                        f"|{noqa.SPACE}{error.hint or '-'}{noqa.SPACE}|",
                     )
 
             lines.append("</details>\n")
