@@ -56,7 +56,7 @@ def print_errors(
     """
     for error in errors:
         sys.stdout.write(
-            f"{noqa.NEW_LINE}{source_file}: {error.message}: {error.hint}",
+            f"{noqa.NEW_LINE}{source_file}: {error.message}: {error.hint}{noqa.NEW_LINE}",
         )
 
         line_number = (

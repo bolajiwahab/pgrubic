@@ -8,7 +8,7 @@ from click import testing
 
 from tests import TEST_FILE
 from pgrubic import WORKERS_ENVIRONMENT_VARIABLE
-from pgrubic.core import noqa, config
+from pgrubic.core import noqa, config, linter
 from pgrubic.__main__ import cli
 
 
@@ -104,6 +104,43 @@ def test_cli_lint_with_add_file_level_general_noqa(tmp_path: pathlib.Path) -> No
     )
 
     assert result.exit_code == 0
+
+
+def test_cli_lint_with_generate_lint_report(tmp_path: pathlib.Path) -> None:
+    """Test cli lint with generate_lint_report."""
+    runner = testing.CliRunner()
+
+    sql_fail: str = "SELECT a = NULL;"
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+    report_file = linter.DEFAULT_LINT_REPORT_FILE
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql_fail)
+
+    runner.invoke(cli, ["lint", str(file_fail), "--generate-lint-report"])
+
+    expected_lint_report = """## Pgrubic Lint Report
+
+Total violations: **1**
+
+Total errors: **0**
+
+<details>
+<summary>Violations (1)</summary>
+
+| File | Line | Col | Rule | Description | Help |
+|------|------|-----|------|-------------|------|
+| test.sql | 1 | 10 | [GN024](https://bolajiwahab.github.io/pgrubic/rules/general/null-comparison) | Comparison with NULL should be [IS | IS NOT] NULL | Use [IS | IS NOT] NULL |
+</details>
+"""  # noqa: E501
+
+    assert pathlib.Path(report_file).read_text() == expected_lint_report
+
+    runner.invoke(cli, ["lint", str(file_fail), "--generate-lint-report"])
+
+    assert pathlib.Path(report_file).read_text() == expected_lint_report
 
 
 def test_cli_lint_no_violations(tmp_path: pathlib.Path) -> None:
