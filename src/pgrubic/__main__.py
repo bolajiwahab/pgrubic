@@ -204,11 +204,10 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
         total_errors += len(lint_result.errors)
 
         if lint_result.fixed_source_code:
-            with pathlib.Path(lint_result.source_file).open(
-                "w",
+            pathlib.Path(lint_result.source_file).write_text(
+                lint_result.fixed_source_code,
                 encoding="utf-8",
-            ) as sf:
-                sf.write(lint_result.fixed_source_code)
+            )
 
     if generate_lint_report:
         linter.generate_lint_report(
@@ -401,11 +400,10 @@ def format_sources(  # noqa: C901, PLR0912, PLR0913, PLR0915
                 console.print(Syntax(diff_output, "diff", theme="ansi_dark"))
 
         if not config.format.check and not config.format.diff:
-            with pathlib.Path(formatting_result.source_file).open(
-                "w",
+            pathlib.Path(formatting_result.source_file).write_text(
+                formatting_result.formatted_source_code,
                 encoding="utf-8",
-            ) as sf:
-                sf.write(formatting_result.formatted_source_code)
+            )
 
         errors.print_errors(
             errors=formatting_result.errors,
