@@ -43,6 +43,10 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Whether to add file-level noqa directives.
 
+#### **--generate-lint-report**
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Whether to generate a lint report.
+
 #### **--verbose**
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enable verbose logging.
