@@ -15,6 +15,7 @@ env:
 
 jobs:
   tests:
+    runs-on: ubuntu-latest
     strategy: &python-matrix
       fail-fast: false
       matrix:
