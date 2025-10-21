@@ -14,7 +14,16 @@ env:
   DEFAULT_PYTHON_VERSION: 3.12
 
 jobs:
-  lint:
+  tests:
+    strategy: &python-matrix
+      fail-fast: false
+      matrix:
+        python-version:
+          - 3.12
+          - 3.13
+          - 3.14
+
+  checks:
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -48,12 +57,14 @@ jobs:
     permissions:
       contents: read
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version:
-          - 3.12
-          - 3.13
+    strategy: *python-matrix
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     python-version:
+    #       - 3.12
+    #       - 3.13
+    #       - 3.14
     name: tests-windows-python-${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v5
@@ -76,6 +87,7 @@ jobs:
         python-version:
           - 3.12
           - 3.13
+          - 3.14
     name: tests-linux-python-${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v5
@@ -98,6 +110,7 @@ jobs:
         python-version:
           - 3.12
           - 3.13
+          - 3.14
     name: tests-macos-python-${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v5
