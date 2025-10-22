@@ -15,6 +15,8 @@ env:
 
 jobs:
   tests:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     strategy: &python-matrix
       fail-fast: false
