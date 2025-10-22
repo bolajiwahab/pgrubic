@@ -14,7 +14,21 @@ env:
   DEFAULT_PYTHON_VERSION: 3.12
 
 jobs:
-  lint:
+  tests:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    strategy: &python-matrix
+      fail-fast: false
+      matrix:
+        python-version:
+          - 3.12
+          - 3.13
+          - 3.14
+    steps:
+      - run: echo "Using python version ${{ matrix.python-version }}"
+
+  checks:
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -48,12 +62,7 @@ jobs:
     permissions:
       contents: read
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version:
-          - 3.12
-          - 3.13
+    strategy: *python-matrix
     name: tests-windows-python-${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v5
@@ -70,12 +79,7 @@ jobs:
     permissions:
       contents: read
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version:
-          - 3.12
-          - 3.13
+    strategy: *python-matrix
     name: tests-linux-python-${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v5
@@ -92,12 +96,7 @@ jobs:
     permissions:
       contents: read
     runs-on: macos-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version:
-          - 3.12
-          - 3.13
+    strategy: *python-matrix
     name: tests-macos-python-${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v5
@@ -109,6 +108,35 @@ jobs:
         run: pip install --no-cache-dir --upgrade pip tox
       - name: Run tests
         run: tox -e tests-macos
+
+  build-docker-image:
+    name: Build multi-platform docker image [arch=amd64,arm64]
+    env:
+      image_tag: ${{ github.sha }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up QEMU for ARM
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          push: false
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ env.image_tag }}
 
   coverage:
     runs-on: ubuntu-latest

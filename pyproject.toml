@@ -39,6 +39,7 @@ classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Programming Language :: SQL",
   "Topic :: Database",
   "Topic :: Utilities",
@@ -46,14 +47,14 @@ classifiers = [
 ]
 keywords = ["pgrubic", "sql", "postgres", "postgresql", "linter"]
 dependencies = [
-  "pglast==7.7",
+  "pglast==7.8",
   "case-converter==1.2.0",
   "colorama==0.4.6",
   "toml==0.10.2",
   "click==8.2.1",
   "rich==14.1.0",
   "deepmerge==2.0",
-  "msgpack==1.1.1",
+  "msgpack==1.1.2",
   "GitPython==3.1.45",
 ]
 
