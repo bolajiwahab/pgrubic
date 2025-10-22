@@ -63,13 +63,6 @@ jobs:
       contents: read
     runs-on: windows-latest
     strategy: *python-matrix
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     python-version:
-    #       - 3.12
-    #       - 3.13
-    #       - 3.14
     name: tests-windows-python-${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v5
@@ -86,13 +79,7 @@ jobs:
     permissions:
       contents: read
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version:
-          - 3.12
-          - 3.13
-          - 3.14
+    strategy: *python-matrix
     name: tests-linux-python-${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v5
@@ -109,13 +96,7 @@ jobs:
     permissions:
       contents: read
     runs-on: macos-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version:
-          - 3.12
-          - 3.13
-          - 3.14
+    strategy: *python-matrix
     name: tests-macos-python-${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v5
