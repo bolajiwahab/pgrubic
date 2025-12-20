@@ -162,7 +162,7 @@
 | src/pgrubic/rules/unsafe/US030.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US031.py            |       13 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-|                                    **TOTAL** | **3154** |    **0** | **100%** |           |
+| **TOTAL**                                    | **3154** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
