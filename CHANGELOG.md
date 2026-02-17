@@ -1,3 +1,9 @@
+## 0.10.1 (2026-02-17)
+
+### Fix
+
+- prepare out-of-band release due to core dependency updates (#184)
+
 ## 0.10.0 (2025-10-26)
 
 ### Feat
