@@ -123,13 +123,13 @@ jobs:
           fetch-depth: 0
 
       - name: Set up QEMU for ARM
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Build Docker Image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha
@@ -170,7 +170,7 @@ jobs:
           MAX_FILES_IN_COMMENT: 120
 
       - name: Store Pull Request comment to be posted
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'
         with:
           name: python-coverage-comment-action
