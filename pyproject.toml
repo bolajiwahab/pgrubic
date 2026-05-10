@@ -70,7 +70,7 @@ dev = [
   "pre-commit-hooks==6.0.0",
   "yamllint==1.37.1",
   "conventional-pre-commit==4.3.0",
-  "pytest==9.0.2",
+  "pytest==9.0.3",
   "coverage==7.13.1",
   "tox==4.33.0",
   "types-PyYAML==6.0.12.20250915",
