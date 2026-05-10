@@ -126,7 +126,7 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
     rules: set[core.BaseChecker] = core.load_rules(config=config)
 
     for rule in rules:
-        linter.checkers.add(rule())
+        linter.checkers.add(rule())  # type: ignore [call-arg]
 
     # Use the current working directory if no sources are specified
     if not sources:
@@ -148,11 +148,7 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
 
     # the `--workers` flag when provided, takes precedence over the environment variable
     # the environment variable when provided, takes precedence over the default
-    workers = (
-        workers
-        if workers
-        else int(os.getenv(WORKERS_ENVIRONMENT_VARIABLE, DEFAULT_WORKERS))
-    )
+    workers = workers or int(os.getenv(WORKERS_ENVIRONMENT_VARIABLE, DEFAULT_WORKERS))
 
     # we set the number of processes to the smallest of these values:
     # 1. the number of CPUs
@@ -345,11 +341,7 @@ def format_sources(  # noqa: C901, PLR0912, PLR0913, PLR0915
 
     # the `--workers` flag when specified, takes precedence over the environment variable
     # the environment variable when provided, takes precedence over the default
-    workers = (
-        workers
-        if workers
-        else int(os.getenv(WORKERS_ENVIRONMENT_VARIABLE, DEFAULT_WORKERS))
-    )
+    workers = workers or int(os.getenv(WORKERS_ENVIRONMENT_VARIABLE, DEFAULT_WORKERS))
 
     # we set the number of processes to the smallest of these values:
     # 1. the number of CPUs

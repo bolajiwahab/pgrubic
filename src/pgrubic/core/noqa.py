@@ -26,15 +26,6 @@ NEW_LINE: typing.Final[str] = "\n"
 SPACE: typing.Final[str] = " "
 
 
-class Token(typing.NamedTuple):
-    """Representation of a token."""
-
-    start: int
-    end: int
-    name: str
-    kind: str
-
-
 class Statement(typing.NamedTuple):
     """Representation of an SQL statement."""
 
@@ -63,7 +54,7 @@ def extract_statements(
 
     statement_start_location = 0
 
-    tokens: list[Token] = parser.scan(source_code)
+    tokens: list[parser.Token] = parser.scan(source_code)
 
     inside_block = False  # Tracks if we are inside BEGIN ... END block
 
@@ -179,7 +170,7 @@ def extract_statement_lint_ignores(
     """
     statement_lint_ignores: list[NoQaDirective] = []
 
-    for token in typing.cast(list[Token], parser.scan(statement.text)):
+    for token in parser.scan(statement.text):
         if token.name == SQL_COMMENT:
             actual_start_location = statement.start_location + token.start
 
@@ -240,14 +231,16 @@ def extract_file_lint_ignores(
     """
     file_ignores: list[NoQaDirective] = []
 
-    for token in typing.cast(list[Token], parser.scan(source_code)):
+    for token in parser.scan(source_code):
         if token.start == 0 and token.name == SQL_COMMENT:
             # In order to include the last character, we need to increase the end
             # location by one
             actual_end_location = token.end + 1
 
             comment = (
-                source_code[token.start : actual_end_location].split("--")[-1].strip()
+                source_code[token.start : actual_end_location]
+                .rsplit("--", maxsplit=1)[-1]
+                .strip()
             )
 
             if comment.startswith(f"{PACKAGE_NAME}: {LINT_IGNORE_DIRECTIVE}"):
@@ -289,14 +282,16 @@ def check_file_format_skip(
     bool
         True if format skip is found, False otherwise.
     """
-    for token in typing.cast(list[Token], parser.scan(source_code)):
+    for token in parser.scan(source_code):
         if token.start == 0 and token.name == SQL_COMMENT:
             # In order to include the last character, we need to increase the end
             # location by one
             actual_end_location = token.end + 1
 
             comment = (
-                source_code[token.start : actual_end_location].split("--")[-1].strip()
+                source_code[token.start : actual_end_location]
+                .rsplit("--", maxsplit=1)[-1]
+                .strip()
             )
 
             return bool(
@@ -326,7 +321,7 @@ def _check_statement_format_skip(
     bool
         True if format skip is found, False otherwise.
     """
-    for token in typing.cast(list[Token], parser.scan(statement.text)):
+    for token in parser.scan(statement.text):
         if token.name == SQL_COMMENT:
             # In order to include the last character, we need to increase the end
             # location by one
@@ -459,7 +454,7 @@ def add_file_level_general_lint_ignore(sources: set[pathlib.Path]) -> int:
         skip = False
         source_code = source.read_text()
 
-        for token in typing.cast(list[Token], parser.scan(source_code)):
+        for token in parser.scan(source_code):
             if token.start == 0 and token.name == SQL_COMMENT:
                 # In order to include the last character, we need to increase the end
                 # location by one
