@@ -1,3 +1,11 @@
+## 0.10.2 (2026-05-10)
+
+### Fix
+
+- **deps**: fix vulnerabilities with gitpython (#198)
+- **deps**: bump core deps (pglast, click, rich), dev deps (#196)
+- **deps**: bump gitpython from 3.1.46 to 3.1.47 (#195)
+
 ## 0.10.1 (2026-02-17)
 
 ### Fix
