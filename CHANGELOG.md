@@ -2,7 +2,7 @@
 
 ### Fix
 
-- **deps**: fix vulnerabilities with gitpython (#198)
+- **deps**: fix vulnerabilities with gitpython, bump gitpython from 3.1.47 to 3.1.50 (#198)
 - **deps**: bump core deps (pglast, click, rich), dev deps (#196)
 - **deps**: bump gitpython from 3.1.46 to 3.1.47 (#195)
 
