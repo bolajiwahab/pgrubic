@@ -6,7 +6,7 @@ from collections import deque
 from pglast import ast, parser, stream, visitors, parse_plpgsql
 
 
-class InlineSQLVisitor(visitors.Visitor):  # type: ignore[misc]
+class InlineSQLVisitor(visitors.Visitor):
     """Visitor for extracting inline SQL statements from PLpgSQL and function calls."""
 
     def __init__(self) -> None:
@@ -53,7 +53,7 @@ class InlineSQLVisitor(visitors.Visitor):  # type: ignore[misc]
 
     def _extract_sql_statements_from_plpgsql(
         self,
-        node: dict[str, typing.Any],
+        node: typing.Any,
     ) -> list[str]:
         """Extract SQL statements from PLpgSQL tokens using iterative breadth-first walk.
 
@@ -91,7 +91,7 @@ class InlineSQLVisitor(visitors.Visitor):  # type: ignore[misc]
         return self._sql_statements
 
 
-def visit_inline_sql(node: ast.Node) -> list[str]:
+def visit_inline_sql(node: tuple[ast.RawStmt, ...]) -> list[str]:
     """Visit inline SQL."""
     inline_sql_visitor = InlineSQLVisitor()
     inline_sql_visitor(node)
@@ -99,7 +99,7 @@ def visit_inline_sql(node: ast.Node) -> list[str]:
     return inline_sql_visitor.get_sql_statements()
 
 
-def extract_nested_inline_sql_statements(node: ast.Node) -> list[str]:
+def extract_nested_inline_sql_statements(node: tuple[ast.RawStmt, ...]) -> list[str]:
     """Extract nested inline SQL statements from PLpgSQL and function calls
     using iterative breadth-first walk.
     """

@@ -6,7 +6,7 @@ from pgrubic.formatters.ddl import IF_NOT_EXISTS
 
 
 @printers.node_printer(ast.CreateEnumStmt, override=True)
-def create_enum_stmt(node: ast.Node, output: stream.RawStream) -> None:
+def create_enum_stmt(node: ast.CreateEnumStmt, output: stream.RawStream) -> None:
     """Printer for CreateEnumStmt."""
     output.write("CREATE TYPE")
     output.space()

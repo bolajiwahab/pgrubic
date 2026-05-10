@@ -43,7 +43,7 @@ RULES_BASE_MODULE: typing.Final[str] = f"{PACKAGE_NAME}/rules/"
 FORMATTERS_BASE_MODULE: typing.Final[str] = f"{PACKAGE_NAME}/formatters/"
 
 
-def get_fully_qualified_name(node: tuple[ast.Node]) -> str:
+def get_fully_qualified_name(node: tuple[ast.String] | ast.String) -> str:
     """Get fully qualified name.
 
     Parameters:
@@ -60,7 +60,7 @@ def get_fully_qualified_name(node: tuple[ast.Node]) -> str:
     if isinstance(node, ast.String):
         return str(node.sval)
 
-    return ".".join(n.sval for n in node)
+    return ".".join(n.sval for n in node if n.sval is not None)
 
 
 @enum.unique

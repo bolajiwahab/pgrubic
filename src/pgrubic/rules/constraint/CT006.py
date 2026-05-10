@@ -58,7 +58,7 @@ class DuplicateUniqueKeyColumn(linter.BaseChecker):
 
     def _fix(self, node: ast.Constraint) -> None:
         """Fix violation."""
-        keys: list[ast.IndexElem] = []
+        keys: list[ast.String] = []
 
         for key in node.keys:
             if key.sval not in [column.sval for column in keys]:

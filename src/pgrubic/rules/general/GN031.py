@@ -29,9 +29,13 @@ class StringifiedNull(linter.BaseChecker):
         self,
         ancestors: visitors.Ancestor,
         node: ast.String,
-    ) -> ast.A_Const:
+    ) -> ast.A_Const | None:
         """Visit String that is not part of an A_Expr."""
-        if node.sval.upper() == "NULL" and not ancestors.find_nearest(ast.A_Expr):
+        if (
+            node.sval
+            and node.sval.upper() == "NULL"
+            and not ancestors.find_nearest(ast.A_Expr)
+        ):
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,
@@ -63,15 +67,17 @@ class StringifiedNull(linter.BaseChecker):
         self,
         ancestors: visitors.Ancestor,
         node: ast.A_Expr,
-    ) -> ast.NullTest:
+    ) -> ast.NullTest | None:
         """Visit A_Expr."""
         if (
             isinstance(node.lexpr, ast.A_Const)
             and isinstance(node.lexpr.val, ast.String)
+            and node.lexpr.val.sval
             and node.lexpr.val.sval.upper() == "NULL"
         ) or (
             isinstance(node.rexpr, ast.A_Const)
             and isinstance(node.rexpr.val, ast.String)
+            and node.rexpr.val.sval
             and node.rexpr.val.sval.upper() == "NULL"
         ):
             self.violations.add(
@@ -94,11 +100,12 @@ class StringifiedNull(linter.BaseChecker):
 
         return None  # pragma: no cover
 
-    def _fix_expression(self, node: ast.A_Expr) -> ast.A_Const:
+    def _fix_expression(self, node: ast.A_Expr) -> ast.NullTest:
         """Fix expression violation."""
         if not isinstance(node.rexpr, ast.A_Const) or (
             isinstance(node.rexpr, ast.A_Const)
             and isinstance(node.rexpr.val, ast.String)
+            and node.rexpr.val.sval
             and node.rexpr.val.sval.upper() != "NULL"
         ):
             lexpr = node.rexpr

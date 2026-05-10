@@ -14,8 +14,8 @@ def bool_expr_needs_to_be_wrapped_in_parens(node: ast.BoolExpr) -> bool:
 @printers.node_printer(ast.BoolExpr, override=True)
 def bool_expr(node: ast.BoolExpr, output: stream.RawStream) -> None:
     """Printer for BoolExpr."""
-    in_target_list = isinstance(node.ancestors[0], ast.ResTarget)
-    bool_expr_in_ancestors = ast.BoolExpr in node.ancestors
+    in_target_list = isinstance(node.ancestors[0], ast.ResTarget)  # type: ignore[attr-defined]
+    bool_expr_in_ancestors = ast.BoolExpr in node.ancestors  # type: ignore[attr-defined]
 
     if node.boolop == enums.BoolExprType.AND_EXPR:
         indent_value = -4 if not in_target_list else None

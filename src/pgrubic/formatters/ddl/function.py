@@ -1,3 +1,4 @@
+# mypy: disable-error-code="union-attr"
 """Formatter for function/procedure."""
 
 from pglast import ast, enums, stream, printers
@@ -125,7 +126,7 @@ def create_function_stmt(
     override=True,
 )
 def create_function_option(  # noqa: PLR0911
-    node: ast.CreateFunctionStmt | ast.AlterFunctionStmt | ast.DoStmt,
+    node: ast.CreateFunctionStmt | ast.AlterFunctionStmt | ast.DoStmt | ast.DefElem,
     output: stream.RawStream,
 ) -> None:
     """Printer for function options."""

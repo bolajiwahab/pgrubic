@@ -123,10 +123,10 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
 
     linter: core.Linter = core.Linter(config=config, formatters=core.load_formatters)
 
-    rules: set[core.BaseChecker] = core.load_rules(config=config)
+    rules: set[type[core.BaseChecker]] = core.load_rules(config=config)
 
     for rule in rules:
-        linter.checkers.add(rule())  # type: ignore [call-arg]
+        linter.checkers.add(rule())
 
     # Use the current working directory if no sources are specified
     if not sources:

@@ -53,6 +53,6 @@ class NonConcurrentRefreshMaterializedView(linter.BaseChecker):
 
             self._fix(node)
 
-    def _fix(self, node: ast.PartitionCmd) -> None:
+    def _fix(self, node: ast.RefreshMatViewStmt) -> None:
         """Fix violation."""
         node.concurrent = True
