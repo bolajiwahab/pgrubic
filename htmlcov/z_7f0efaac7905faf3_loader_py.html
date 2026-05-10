@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="z_7f0efaac7905faf3_logger_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.13.5">coverage.py v7.13.5</a>,
-            created at 2026-05-10 11:45 +0000
+            created at 2026-05-10 19:26 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -99,7 +99,7 @@
     <p class="run"><span class="n"><a id="t17" href="#t17">17</a></span><span class="t"><span class="key">from</span> <span class="nam">pgrubic</span><span class="op">.</span><span class="nam">core</span> <span class="key">import</span> <span class="nam">config</span><span class="op">,</span> <span class="nam">linter</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t18" href="#t18">18</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t19" href="#t19">19</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t20" href="#t20">20</a></span><span class="t"><span class="key">def</span> <span class="nam">load_rules</span><span class="op">(</span><span class="nam">config</span><span class="op">:</span> <span class="nam">config</span><span class="op">.</span><span class="nam">Config</span><span class="op">)</span> <span class="op">-></span> <span class="nam">set</span><span class="op">[</span><span class="nam">linter</span><span class="op">.</span><span class="nam">BaseChecker</span><span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t20" href="#t20">20</a></span><span class="t"><span class="key">def</span> <span class="nam">load_rules</span><span class="op">(</span><span class="nam">config</span><span class="op">:</span> <span class="nam">config</span><span class="op">.</span><span class="nam">Config</span><span class="op">)</span> <span class="op">-></span> <span class="nam">set</span><span class="op">[</span><span class="nam">type</span><span class="op">[</span><span class="nam">linter</span><span class="op">.</span><span class="nam">BaseChecker</span><span class="op">]</span><span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t21" href="#t21">21</a></span><span class="t">    <span class="str">"""Load rules.</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t22" href="#t22">22</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t23" href="#t23">23</a></span><span class="t"><span class="str">    Parameters:</span>&nbsp;</span><span class="r"></span></p>
@@ -112,7 +112,7 @@
     <p class="pln"><span class="n"><a id="t30" href="#t30">30</a></span><span class="t"><span class="str">    set[linter.BaseChecker]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t31" href="#t31">31</a></span><span class="t"><span class="str">        Set of rules.</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t32" href="#t32">32</a></span><span class="t"><span class="str">    """</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t33" href="#t33">33</a></span><span class="t">    <span class="nam">rules</span><span class="op">:</span> <span class="nam">set</span><span class="op">[</span><span class="nam">linter</span><span class="op">.</span><span class="nam">BaseChecker</span><span class="op">]</span> <span class="op">=</span> <span class="nam">set</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t33" href="#t33">33</a></span><span class="t">    <span class="nam">rules</span><span class="op">:</span> <span class="nam">set</span><span class="op">[</span><span class="nam">type</span><span class="op">[</span><span class="nam">linter</span><span class="op">.</span><span class="nam">BaseChecker</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="nam">set</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t34" href="#t34">34</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t35" href="#t35">35</a></span><span class="t">    <span class="key">for</span> <span class="nam">path</span> <span class="key">in</span> <span class="nam">sorted</span><span class="op">(</span><span class="nam">RULES_DIRECTORY</span><span class="op">.</span><span class="nam">rglob</span><span class="op">(</span><span class="str">"[!_]*.py"</span><span class="op">)</span><span class="op">,</span> <span class="nam">key</span><span class="op">=</span><span class="key">lambda</span> <span class="nam">x</span><span class="op">:</span> <span class="nam">x</span><span class="op">.</span><span class="nam">name</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t36" href="#t36">36</a></span><span class="t">        <span class="nam">module_path</span> <span class="op">=</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
@@ -184,7 +184,7 @@
             <a class="nav" href="z_7f0efaac7905faf3_logger_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.13.5">coverage.py v7.13.5</a>,
-            created at 2026-05-10 11:45 +0000
+            created at 2026-05-10 19:26 +0000
         </p>
     </div>
 </footer>
