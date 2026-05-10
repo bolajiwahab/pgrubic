@@ -12,7 +12,7 @@ def sub_link(node: ast.SubLink, output: stream.RawStream) -> None:
     elif node.subLinkType == enums.SubLinkType.ALL_SUBLINK:
         output.print_node(node.testexpr)
         output.space()
-        output.write(printers.dml.get_string_value(node.operName))
+        output.write(printers.get_string_value(node.operName))
         output.space()
         output.write("ALL")
         output.space()
@@ -21,7 +21,7 @@ def sub_link(node: ast.SubLink, output: stream.RawStream) -> None:
 
         if node.operName:
             output.space()
-            output.write(printers.dml.get_string_value(node.operName))
+            output.write(printers.get_string_value(node.operName))
             output.space()
             output.write("ANY")
             output.space()
@@ -41,8 +41,8 @@ def sub_link(node: ast.SubLink, output: stream.RawStream) -> None:
         raise NotImplementedError(msg)
 
     with output.expression(need_parens=False):
-        bool_in_ancestors = ast.BoolExpr in node.ancestors
-        nearest_node: ast.Node = abs(node.ancestors).node
+        bool_in_ancestors = ast.BoolExpr in node.ancestors  # type: ignore[attr-defined]
+        nearest_node: ast.Node = abs(node.ancestors).node  # type: ignore[attr-defined]
 
         if (
             isinstance(nearest_node, ast.SelectStmt | ast.UpdateStmt | ast.DeleteStmt)

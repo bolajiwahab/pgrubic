@@ -34,7 +34,7 @@ class NullComparison(linter.BaseChecker):
         self,
         ancestors: visitors.Ancestor,
         node: ast.A_Expr,
-    ) -> ast.NullTest:
+    ) -> ast.NullTest | None:
         """Visit A_Expr."""
         if (
             node.kind == enums.A_Expr_Kind.AEXPR_OP

@@ -219,7 +219,8 @@ select_with_recursive_cte_with_search:
         SELECT t.id, t.link, t.data
         FROM tree t, search_tree st
         WHERE t.id = st.link
-    ) SEARCH DEPTH FIRST BY id SET ordercol
+    ) SEARCH DEPTH FIRST BY id
+    SET ordercol
     SELECT * FROM search_tree ORDER BY ordercol;
   expected: |
     WITH RECURSIVE search_tree (id, link, data) AS (
@@ -234,7 +235,8 @@ select_with_recursive_cte_with_search:
           FROM tree AS t
              , search_tree AS st
          WHERE t.id = st.link
-    ) SEARCH DEPTH FIRST BY id SET ordercol
+    ) SEARCH DEPTH FIRST BY id
+    SET ordercol
     SELECT *
       FROM search_tree
      ORDER BY ordercol;
@@ -265,7 +267,9 @@ select_with_recursive_cte_with_cycle:
           FROM graph AS g
              , search_graph AS sg
          WHERE g.id = sg.link
-    ) CYCLE id SET is_cycle TO TRUE DEFAULT FALSE USING path
+    ) CYCLE id
+    SET is_cycle TO TRUE DEFAULT FALSE
+    USING path
     SELECT *
       FROM search_graph;
 

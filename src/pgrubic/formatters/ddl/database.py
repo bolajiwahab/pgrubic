@@ -21,7 +21,8 @@ def create_db_stmt_def_elem(node: ast.DefElem, output: stream.RawStream) -> None
             output.write(node.arg.sval)
         elif isinstance(node.arg, ast.String):
             if option.lower() in ("encoding", "locale", "strategy"):
-                output.write_quoted_string(node.arg.sval.upper())
+                if node.arg.sval:
+                    output.write_quoted_string(node.arg.sval.upper())
             else:
                 output.write_quoted_string(node.arg.sval)
         else:

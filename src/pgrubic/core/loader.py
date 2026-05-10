@@ -17,7 +17,7 @@ from pgrubic import (
 from pgrubic.core import config, linter
 
 
-def load_rules(config: config.Config) -> set[linter.BaseChecker]:
+def load_rules(config: config.Config) -> set[type[linter.BaseChecker]]:
     """Load rules.
 
     Parameters:
@@ -30,7 +30,7 @@ def load_rules(config: config.Config) -> set[linter.BaseChecker]:
     set[linter.BaseChecker]
         Set of rules.
     """
-    rules: set[linter.BaseChecker] = set()
+    rules: set[type[linter.BaseChecker]] = set()
 
     for path in sorted(RULES_DIRECTORY.rglob("[!_]*.py"), key=lambda x: x.name):
         module_path = (

@@ -17,7 +17,7 @@ def linter() -> core.Linter:
 
     core.BaseChecker.config = config
 
-    rules: set[core.BaseChecker] = core.load_rules(config=config)
+    rules: set[type[core.BaseChecker]] = core.load_rules(config=config)
 
     linter = core.Linter(config=config, formatters=core.load_formatters)
 

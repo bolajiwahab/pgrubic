@@ -183,7 +183,7 @@ class CheckerMeta(type):
         return wrapper
 
 
-class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):  # type: ignore[misc]
+class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):
     """Define a lint rule, and store all the nodes that violate it."""
 
     # Should not be set directly
@@ -224,7 +224,7 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):  # type: ignore[misc
         cls.name = kebabcase(cls.__name__)
         cls.category = cls.__module__.split(".")[-2]
 
-    def visit(self, ancestors: visitors.Ancestor, node: ast.Node) -> None:
+    def visit(self, ancestors: visitors.Ancestor, node: ast.Node) -> None:  # type: ignore[override]
         """Visit the node."""
 
     @property
@@ -546,7 +546,7 @@ class Linter:
             BaseChecker.statement_location = statement.start_location
 
             try:
-                parse_tree: ast.Node = parser.parse_sql(statement.text)
+                parse_tree: tuple[ast.RawStmt, ...] = parser.parse_sql(statement.text)
 
                 comments = noqa.extract_comments(
                     statement=statement,

@@ -131,7 +131,7 @@ def create_stmt(
     """Printer for CreateStmt."""
     output.writes("CREATE")
 
-    if isinstance(node.ancestors[0], ast.CreateForeignTableStmt):
+    if isinstance(node.ancestors[0], ast.CreateForeignTableStmt):  # type: ignore[attr-defined]
         output.writes("FOREIGN")
     elif node.relation.relpersistence == enums.RELPERSISTENCE_TEMP:
         output.writes("TEMPORARY")
