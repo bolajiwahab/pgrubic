@@ -224,7 +224,7 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):
         cls.name = kebabcase(cls.__name__)
         cls.category = cls.__module__.split(".")[-2]
 
-    def visit(self, ancestors: visitors.Ancestor, node: ast.Node) -> None:  # type: ignore[override]
+    def visit(self, ancestors: visitors.Ancestor, node: ast.Node) -> None:
         """Visit the node."""
 
     @property

@@ -120,7 +120,7 @@ disallow_untyped_decorators = false
 disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
-module = ["pglast.*", "caseconverter.*", "pgrubic.*", "deepmerge.*"]
+module = ["pglast.*", "caseconverter.*", "pgrubic.*", "deepmerge.*", "msgpack.*"]
 ignore_missing_imports = true
 
 [tool.ruff]
