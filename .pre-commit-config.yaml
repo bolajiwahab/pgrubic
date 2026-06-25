@@ -79,6 +79,7 @@ repos:
         language: python
         types: [python]
         args: [--config-file=./pyproject.toml]
+        require_serial: true
       - id: interrogate
         name: Docstrings coverage
         entry: interrogate
