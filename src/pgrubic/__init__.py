@@ -8,6 +8,8 @@ import importlib.metadata
 
 from pglast import ast
 
+from pgrubic.postgres import functions
+
 PACKAGE_NAME: typing.Final[str] = "pgrubic"
 
 WORKERS_ENVIRONMENT_VARIABLE: typing.Final[str] = f"{PACKAGE_NAME.upper()}_WORKERS"
@@ -69,3 +71,32 @@ class Operators(enum.StrEnum):
 
     EQ = "="
     NOT_EQ = "<>"
+
+
+def is_non_volatile_function(
+    *,
+    function: ast.FuncCall,
+    non_volatile_functions: list[str] = functions.NON_VOLATILE_FUNCTIONS,
+) -> bool:
+    """Check if function is non volatile.
+
+    Parameters:
+    ----------
+    function: ast.Node
+        Function to check.
+
+    Returns:
+    -------
+    bool
+        True if function is non volatile, False otherwise.
+
+    """
+    # Use pg_catalog if function is not schema qualified.
+    if len(function.funcname) == 1:
+        function.funcname = (ast.String(sval="pg_catalog"), *function.funcname)
+
+    return (
+        isinstance(function, ast.FuncCall)
+        and function.funcname
+        and get_fully_qualified_name(function.funcname) in non_volatile_functions
+    )

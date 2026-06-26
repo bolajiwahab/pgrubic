@@ -2,6 +2,7 @@
 
 from pglast import ast, enums, visitors
 
+from pgrubic import is_non_volatile_function
 from pgrubic.core import linter
 
 
@@ -11,56 +12,52 @@ class NewColumnWithVolatileDefault(linter.BaseChecker):
 
     ## **Why not?**
     Adding a new column with a volatile default to an already populated table will have
-    to backfill the newly added column with the default, causing the table to be locked
-    and rewritten, in which no other operations can be performed on the table for
-    the duration of the rewrite. This will cause downtime if the table is concurrently
-    being accessed by other clients.
+    to backfill the newly added column with the default, causing the table to be locked,
+    in which no other operations can be performed on the table for the duration of the
+    backfill. This will cause downtime if the table is concurrently being accessed by
+    other clients.
 
     ## **When should you?**
     If the table is empty.
     If the table is not empty but is not being concurrently accessed.
 
+    ## **Note**
+    Unqualified references to known non-volatile built-in functions are assumed to resolve
+    to pg_catalog. Shadowing built-in functions via search_path is not modeled and may
+    lead to missed diagnostics.
+
     ## **Use instead:**
-    1. Create the new column, nullable and without the volatile default.
+    1. Create the new column, nullable.
     2. Set the default value for the newly created column.
     3. Backfill the newly created column for all existing rows.
     """
 
-    def visit_ColumnDef(
+    def visit_FuncCall(
         self,
         ancestors: visitors.Ancestor,
-        node: ast.ColumnDef,
+        node: ast.FuncCall,
     ) -> None:
-        """Visit ColumnDef."""
-        if ancestors.find_nearest(ast.AlterTableCmd) and node.constraints:
-            has_volatile_default = False
-
-            constraints: tuple[ast.Constraint] = node.constraints
-
-            for constraint in constraints:
-                if (
-                    constraint.contype == enums.ConstrType.CONSTR_DEFAULT
-                    and not isinstance(
-                        constraint.raw_expr,
-                        ast.A_Const,
-                    )
-                ):
-                    has_volatile_default = True
-                    break
-
-            if has_volatile_default:
-                self.violations.add(
-                    linter.Violation(
-                        rule_code=self.code,
-                        rule_name=self.name,
-                        rule_category=self.category,
-                        line_number=self.line_number,
-                        column_offset=self.column_offset,
-                        line=self.line,
-                        statement_location=self.statement_location,
-                        description="New column with volatile default",
-                        is_auto_fixable=self.is_auto_fixable,
-                        is_fix_enabled=self.is_fix_enabled,
-                        help="Split the operation into multiple steps",
-                    ),
-                )
+        """Visit FuncCall."""
+        if (
+            ancestors.find_nearest(ast.AlterTableCmd)
+            and ancestors.find_nearest(ast.ColumnDef)
+            and ancestors.find_nearest(ast.Constraint)
+            and ancestors.find_nearest(ast.Constraint).node.contype
+            == enums.ConstrType.CONSTR_DEFAULT
+            and not is_non_volatile_function(function=node)
+        ):
+            self.violations.add(
+                linter.Violation(
+                    rule_code=self.code,
+                    rule_name=self.name,
+                    rule_category=self.category,
+                    line_number=self.line_number,
+                    column_offset=self.column_offset,
+                    line=self.line,
+                    statement_location=self.statement_location,
+                    description="New column with a volatile default",
+                    is_auto_fixable=self.is_auto_fixable,
+                    is_fix_enabled=self.is_fix_enabled,
+                    help="Split the operation into multiple steps",
+                ),
+            )
