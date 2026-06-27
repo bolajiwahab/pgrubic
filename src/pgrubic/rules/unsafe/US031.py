@@ -11,19 +11,21 @@ class NewColumnWithVolatileDefault(linter.BaseChecker):
     Checks new column with volatile default.
 
     ## **Why not?**
-    Adding a new column with a volatile default to an already populated table will have
-    to backfill the newly added column with the default, causing the table to be locked,
-    in which no other operations can be performed on the table for the duration of the
-    backfill. This will cause downtime if the table is concurrently being accessed by
-    other clients.
+    Adding a new column with a volatile default triggers a table rewrite in PostgreSQL.
+    A table rewrite creates a new physical copy of the table and replaces the original,
+    requiring an ACCESS EXCLUSIVE lock for the duration of the rewrite.
+
+    This lock blocks all concurrent reads and writes on the table until the rewrite
+    completes, effectively making the table unavailable during the operation and
+    potentially causing downtime for applications concurrently accessing it.
 
     ## **When should you?**
     If the table is empty.
     If the table is not empty but is not being concurrently accessed.
 
     ## **Note**
-    Unqualified references to known non-volatile built-in functions are assumed to resolve
-    to pg_catalog. Shadowing built-in functions via search_path is not modeled and may
+    Unqualified references to known non-volatile built-in functions resolve to pg_catalog.
+    Shadowing built-in functions via search_path is not modeled and may
     lead to missed diagnostics.
 
     ## **Use instead:**
