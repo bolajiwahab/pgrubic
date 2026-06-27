@@ -1,4 +1,4 @@
-"""PostgreSQL in-built functions."""
+"""PostgreSQL built-in functions."""
 
 # Sourced from PostgreSQL with
 # SELECT string_agg(format('%1$I', nspname || '.' || proname), E',\n' ORDER BY proname)
