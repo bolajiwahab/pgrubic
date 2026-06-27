@@ -8,8 +8,6 @@ import importlib.metadata
 
 from pglast import ast
 
-from pgrubic.postgres import functions
-
 PACKAGE_NAME: typing.Final[str] = "pgrubic"
 
 WORKERS_ENVIRONMENT_VARIABLE: typing.Final[str] = f"{PACKAGE_NAME.upper()}_WORKERS"
@@ -76,7 +74,7 @@ class Operators(enum.StrEnum):
 def is_non_volatile_function(
     *,
     function: ast.FuncCall,
-    non_volatile_functions: list[str] = functions.NON_VOLATILE_FUNCTIONS,
+    non_volatile_functions: list[str],
 ) -> bool:
     """Check if function is non volatile.
 

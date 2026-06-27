@@ -5,19 +5,9 @@
 #   FROM pg_catalog.pg_namespace AS np
 #   JOIN pg_catalog.pg_proc AS pc
 #     ON np.oid = pc.pronamespace
+#    AND np.nspname = 'pg_catalog'
 #  WHERE provolatile != 'v';
 NON_VOLATILE_FUNCTIONS: list[str] = [
-    "information_schema._pg_char_max_length",
-    "information_schema._pg_char_octet_length",
-    "information_schema._pg_datetime_precision",
-    "information_schema._pg_expandarray",
-    "information_schema._pg_index_position",
-    "information_schema._pg_interval_type",
-    "information_schema._pg_numeric_precision",
-    "information_schema._pg_numeric_precision_radix",
-    "information_schema._pg_numeric_scale",
-    "information_schema._pg_truetypid",
-    "information_schema._pg_truetypmod",
     "pg_catalog.abbrev",
     "pg_catalog.abbrev",
     "pg_catalog.abs",
@@ -967,7 +957,6 @@ NON_VOLATILE_FUNCTIONS: list[str] = [
     "pg_catalog.hash_aclitem_extended",
     "pg_catalog.hash_array",
     "pg_catalog.hash_array_extended",
-    "public.hash_key",
     "pg_catalog.hash_multirange",
     "pg_catalog.hash_multirange_extended",
     "pg_catalog.hash_numeric",
@@ -1657,7 +1646,6 @@ NON_VOLATILE_FUNCTIONS: list[str] = [
     "pg_catalog.max",
     "pg_catalog.md5",
     "pg_catalog.md5",
-    "pgpartium.merge_configs",
     "pg_catalog.mic_to_big5",
     "pg_catalog.mic_to_euc_cn",
     "pg_catalog.mic_to_euc_jp",
@@ -1804,9 +1792,7 @@ NON_VOLATILE_FUNCTIONS: list[str] = [
     "pg_catalog.notlike",
     "pg_catalog.notlike",
     "pg_catalog.notlike",
-    "override.now",
     "pg_catalog.now",
-    "mock.now",
     "pg_catalog.npoints",
     "pg_catalog.npoints",
     "pg_catalog.nth_value",
@@ -2485,7 +2471,6 @@ NON_VOLATILE_FUNCTIONS: list[str] = [
     "pg_catalog.regtypeout",
     "pg_catalog.regtyperecv",
     "pg_catalog.regtypesend",
-    "pgpartium.render_template",
     "pg_catalog.repeat",
     "pg_catalog.replace",
     "pg_catalog.reverse",
