@@ -74,7 +74,7 @@ class Operators(enum.StrEnum):
 def is_non_volatile_function(
     *,
     function: ast.FuncCall,
-    non_volatile_functions: list[str],
+    non_volatile_functions: set[str],
 ) -> bool:
     """Check if function is non volatile.
 
