@@ -89,9 +89,11 @@ def is_non_volatile_function(
         True if function is non volatile, False otherwise.
 
     """
+    function_name = function.funcname
+
     # Use pg_catalog if function is not schema qualified.
-    if len(function.funcname) == 1:
-        function.funcname = (ast.String(sval="pg_catalog"), *function.funcname)
+    if function_name and len(function_name) == 1:
+        function_name = (ast.String(sval="pg_catalog"), *function_name)
 
     return (
         isinstance(function, ast.FuncCall)
