@@ -96,7 +96,6 @@ def is_non_volatile_function(
         function_name = (ast.String(sval="pg_catalog"), *function_name)
 
     return (
-        isinstance(function, ast.FuncCall)
-        and function.funcname
-        and get_fully_qualified_name(function.funcname) in non_volatile_functions
+        function_name
+        and get_fully_qualified_name(function_name) in non_volatile_functions
     )

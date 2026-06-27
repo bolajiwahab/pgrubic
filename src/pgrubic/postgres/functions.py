@@ -15,7 +15,7 @@
 #                AND np.nspname = 'pg_catalog'
 #              WHERE pc.provolatile != 'v'
 #        ) s;
-NON_VOLATILE_FUNCTIONS: list[str] = [
+NON_VOLATILE_FUNCTIONS: set[str] = {
     "pg_catalog.abbrev",
     "pg_catalog.abs",
     "pg_catalog.aclcontains",
@@ -2556,4 +2556,4 @@ NON_VOLATILE_FUNCTIONS: list[str] = [
     "pg_catalog.xmlvalidate",
     "pg_catalog.xpath",
     "pg_catalog.xpath_exists",
-]
+}
