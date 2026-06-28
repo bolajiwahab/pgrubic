@@ -60,4 +60,4 @@ test_pass_normal_function_call:
     SELECT public.my_function(1, 'test');
     SELECT clock_timestamp();
     SELECT pg_catalog.clock_timestamp();
-    SELECT nextval('tbl_id_seq')
+    SELECT nextval('tbl_id_seq');
