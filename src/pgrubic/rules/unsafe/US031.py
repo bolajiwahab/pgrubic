@@ -41,12 +41,13 @@ class NewColumnWithVolatileDefault(linter.BaseChecker):
         node: ast.FuncCall,
     ) -> None:
         """Visit FuncCall."""
+        constraint = ancestors.find_nearest(ast.Constraint)
+
         if (
             ancestors.find_nearest(ast.AlterTableCmd)
             and ancestors.find_nearest(ast.ColumnDef)
-            and ancestors.find_nearest(ast.Constraint)
-            and ancestors.find_nearest(ast.Constraint).node.contype
-            == enums.ConstrType.CONSTR_DEFAULT
+            and constraint
+            and constraint.node.contype == enums.ConstrType.CONSTR_DEFAULT
             and not is_non_volatile_function(
                 function=node,
                 non_volatile_functions=functions.NON_VOLATILE_FUNCTIONS,
