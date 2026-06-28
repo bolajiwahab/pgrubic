@@ -2,9 +2,8 @@
 
 from pglast import ast, visitors
 
+from pgrubic import SCHEMA_QUALIFIED_LENGTH
 from pgrubic.core import linter
-
-SCHEMA_QUALIFIED_LENGTH = 2
 
 
 class SchemaUnqualifiedObject(linter.BaseChecker):

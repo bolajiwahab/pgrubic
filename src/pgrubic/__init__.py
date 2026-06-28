@@ -14,6 +14,8 @@ WORKERS_ENVIRONMENT_VARIABLE: typing.Final[str] = f"{PACKAGE_NAME.upper()}_WORKE
 
 DEFAULT_WORKERS: typing.Final[int] = 4
 
+SCHEMA_QUALIFIED_LENGTH: typing.Final[int] = 2
+
 REPOSITORY_URL: typing.Final[str] = "https://github.com/bolajiwahab/pgrubic"
 
 ISSUES_URL: typing.Final[str] = f"{REPOSITORY_URL}/issues"
@@ -92,10 +94,7 @@ def is_non_volatile_function(
     function_name = function.funcname
 
     # Use pg_catalog if function is not schema qualified.
-    if function_name and len(function_name) == 1:
+    if len(function_name) < SCHEMA_QUALIFIED_LENGTH:
         function_name = (ast.String(sval="pg_catalog"), *function_name)
 
-    return (
-        function_name
-        and get_fully_qualified_name(function_name) in non_volatile_functions
-    )
+    return get_fully_qualified_name(function_name) in non_volatile_functions
