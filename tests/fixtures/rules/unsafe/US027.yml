@@ -13,7 +13,7 @@ test_pass_non_concurrent_partition_detachment_version_before_14:
     ALTER TABLE tbl DETACH PARTITION tbl_y2006m02;
   config:
     lint:
-      target_postgres_version: 13
+      postgres_target_version: 13
 
 test_pass_concurrent_partition_detachment:
   sql_pass: |
