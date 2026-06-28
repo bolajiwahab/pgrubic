@@ -53,3 +53,11 @@ test_pass_new_column_sql_value_function:
 test_pass_new_column_no_default:
   sql_pass: |
     ALTER TABLE tbl ADD COLUMN tbl_id bigint;
+
+test_pass_normal_function_call:
+  sql_pass: |
+    SELECT my_function();
+    SELECT public.my_function(1, 'test');
+    SELECT clock_timestamp();
+    SELECT pg_catalog.clock_timestamp();
+    SELECT nextval('tbl_id_seq')
