@@ -30,9 +30,15 @@ class NewColumnWithVolatileDefault(linter.BaseChecker):
     lead to missed diagnostics.
 
     ## **Use instead:**
-    1. Create the new column, nullable.
-    2. Set the default value for the newly created column.
-    3. Backfill the newly created column for all existing rows.
+    1. Add the new column, nullable, without the volatile default.
+    2. Set the volatile default for the newly added column.
+    3. If the column should be non-nullable:
+        - Add a check constraint with: **CHECK (column IS NOT NULL) NOT VALID**.
+        - Backfill the newly added column for all existing rows.
+        - Validate the check constraint.
+        - Set the column as NOT NULL.
+        - Drop the check constraint.
+    4. If (3) is not executed, backfill the newly added column for all existing rows.
     """
 
     def visit_FuncCall(
