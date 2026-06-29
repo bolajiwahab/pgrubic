@@ -53,7 +53,7 @@ class Column:
 class Lint:
     # fmt: off
     """
-### **postgres-target-version**
+### **target-postgres-version**
 The target version of Postgres to lint against. This is used to either enable or
 disable certain linting rules. For example, `DETACH PARTITION CONCURRENTLY`
 was introduced from Postgres 14.
@@ -68,7 +68,30 @@ was introduced from Postgres 14.
 
 ```toml
 [lint]
-postgres-target-version = 12
+target-postgres-version = 12
+```
+</details>
+
+### **additional-non-volatile-functions**
+List of additional non-volatile functions. This is used to add to the list of known
+non-volatile functions, to check if a default value is volatile or not.
+For example, `pg_catalog.clock_timestamp()` is a volatile function, but if you have a
+custom function that is non-volatile, you can add it to this list in form
+of `schema.function_name`.
+
+Should be used judiciously.
+
+**Type**: `list[str]`
+
+**Default**: `[]`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+[lint]
+additional-non-volatile-functions = ["my_schema.my_non_volatile_function"]
 ```
 </details>
 
@@ -483,7 +506,8 @@ regex-sequence = r"^[a-z0-9_]+$"
 </details>
     """  # noqa: D212, D207 # fmt: on
 
-    postgres_target_version: int
+    target_postgres_version: int
+    additional_non_volatile_functions: list[str]
     select: list[str]
     ignore: list[str]
     include: list[str]
@@ -930,7 +954,10 @@ def parse_config() -> Config:
             exclude=merged_config["exclude"],
             respect_gitignore=merged_config["respect-gitignore"],
             lint=Lint(
-                postgres_target_version=config_lint["target-postgres-version"],
+                target_postgres_version=config_lint["target-postgres-version"],
+                additional_non_volatile_functions=config_lint[
+                    "additional-non-volatile-functions"
+                ],
                 select=config_lint["select"],
                 ignore=config_lint["ignore"],
                 include=config_lint["include"] + merged_config["include"],

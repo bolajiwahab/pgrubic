@@ -4,6 +4,7 @@ exclude = []
 respect-gitignore = true
 [lint]
 target-postgres-version = 14
+additional-non-volatile-functions = []
 select = []
 ignore = []
 include = []
