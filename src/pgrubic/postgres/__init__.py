@@ -1,0 +1,1 @@
+"""PostgreSQL module for pgrubic."""

@@ -194,7 +194,7 @@ legacy_tox_ini = """
         prepare-release
 
     [testenv]
-    extras = dev
+    extras = dev, doc
     deps =
     commands =
 

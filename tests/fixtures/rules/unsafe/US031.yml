@@ -1,14 +1,63 @@
 ---
+# yamllint disable rule:line-length
 rule: US031
 
-test_fail_new_column_volatile_default:
+test_fail_new_column_volatile_default_inbuilt_non_schema_qualified:
   sql_fail: |
-    ALTER TABLE tbl ADD COLUMN created_at timestamptz DEFAULT now();
+    ALTER TABLE tbl ADD COLUMN created_at timestamptz DEFAULT clock_timestamp();
 
-test_pass_new_column_non_volatile_default:
+test_fail_new_column_volatile_default_inbuilt_schema_qualified:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN created_at uuid DEFAULT pg_catalog.gen_random_uuid();
+
+test_fail_new_column_user_defined_volatile_default_non_schema_qualified:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN created_at timestamptz DEFAULT user_defined_function();
+
+test_fail_new_column_user_defined_volatile_default_schema_qualified:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN created_at timestamptz DEFAULT public.user_defined_function();
+
+test_fail_new_column_volatile_default_in_array:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN created_at timestamptz[] DEFAULT ARRAY[now(), current_date, clock_timestamp()];
+
+test_fail_new_column_volatile_default_binary_expression:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN created_at timestamptz DEFAULT clock_timestamp() + interval '1 day';
+
+test_fail_new_column_sequence_default:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN tbl_id bigint DEFAULT nextval('tbl_id_seq');
+
+test_pass_new_column_constant_default:
   sql_pass: |
     ALTER TABLE tbl ADD COLUMN tbl_id bigint DEFAULT 1;
+
+test_pass_new_column_constant_default_binary_expression:
+  sql_pass: |
+    ALTER TABLE tbl ADD COLUMN tbl_id bigint DEFAULT 1 + 1;
+
+test_pass_new_column_non_volatile_default_inbuilt_non_schema_qualified:
+  sql_pass: |
+    ALTER TABLE tbl ADD COLUMN created_at timestamptz DEFAULT now();
+
+test_pass_new_column_non_volatile_default_inbuilt_schema_qualified:
+  sql_pass: |
+    ALTER TABLE tbl ADD COLUMN created_at timestamptz DEFAULT pg_catalog.now();
+
+test_pass_new_column_sql_value_function:
+  sql_pass: |
+    ALTER TABLE tbl ADD COLUMN created_at timestamptz DEFAULT CURRENT_TIMESTAMP;
 
 test_pass_new_column_no_default:
   sql_pass: |
     ALTER TABLE tbl ADD COLUMN tbl_id bigint;
+
+test_pass_normal_function_call:
+  sql_pass: |
+    SELECT my_function();
+    SELECT public.my_function(1, 'test');
+    SELECT clock_timestamp();
+    SELECT pg_catalog.clock_timestamp();
+    SELECT nextval('tbl_id_seq');

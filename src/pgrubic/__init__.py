@@ -14,6 +14,8 @@ WORKERS_ENVIRONMENT_VARIABLE: typing.Final[str] = f"{PACKAGE_NAME.upper()}_WORKE
 
 DEFAULT_WORKERS: typing.Final[int] = 4
 
+SCHEMA_QUALIFIED_LENGTH: typing.Final[int] = 2
+
 REPOSITORY_URL: typing.Final[str] = "https://github.com/bolajiwahab/pgrubic"
 
 ISSUES_URL: typing.Final[str] = f"{REPOSITORY_URL}/issues"
@@ -69,3 +71,30 @@ class Operators(enum.StrEnum):
 
     EQ = "="
     NOT_EQ = "<>"
+
+
+def is_non_volatile_function(
+    *,
+    function: ast.FuncCall,
+    non_volatile_functions: set[str],
+) -> bool:
+    """Check if function is non volatile.
+
+    Parameters:
+    ----------
+    function: ast.Node
+        Function to check.
+
+    Returns:
+    -------
+    bool
+        True if function is non volatile, False otherwise.
+
+    """
+    function_name = function.funcname
+
+    # Use pg_catalog if function is not schema qualified.
+    if len(function_name) < SCHEMA_QUALIFIED_LENGTH:
+        function_name = (ast.String(sval="pg_catalog"), *function_name)
+
+    return get_fully_qualified_name(function_name) in non_volatile_functions
