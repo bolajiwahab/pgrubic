@@ -15,14 +15,12 @@ def linter() -> core.Linter:
     """Setup linter."""
     config: core.Config = core.parse_config()
 
-    core.BaseChecker.config = config
-
     rules: set[type[core.BaseChecker]] = core.load_rules(config=config)
 
     linter = core.Linter(config=config, formatters=core.load_formatters)
 
     for rule in rules:
-        linter.checkers.add(rule())
+        linter.checkers.add(rule(config=config))
 
     return linter
 

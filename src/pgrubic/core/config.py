@@ -507,7 +507,7 @@ regex-sequence = r"^[a-z0-9_]+$"
     """  # noqa: D212, D207 # fmt: on
 
     target_postgres_version: int
-    additional_non_volatile_functions: list[str]
+    additional_non_volatile_functions: frozenset[str]
     select: list[str]
     ignore: list[str]
     include: list[str]
@@ -955,9 +955,9 @@ def parse_config() -> Config:
             respect_gitignore=merged_config["respect-gitignore"],
             lint=Lint(
                 target_postgres_version=config_lint["target-postgres-version"],
-                additional_non_volatile_functions=config_lint[
-                    "additional-non-volatile-functions"
-                ],
+                additional_non_volatile_functions=frozenset(
+                    config_lint["additional-non-volatile-functions"],
+                ),
                 select=config_lint["select"],
                 ignore=config_lint["ignore"],
                 include=config_lint["include"] + merged_config["include"],
