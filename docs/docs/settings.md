@@ -84,7 +84,7 @@ was introduced from Postgres 14.
 
 ```toml
 [lint]
-target-postgres-version = 12
+target-postgres-version = 14
 ```
 </details>
 

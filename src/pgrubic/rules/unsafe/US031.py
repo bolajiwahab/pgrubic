@@ -56,7 +56,9 @@ class NewColumnWithVolatileDefault(linter.BaseChecker):
             and constraint.node.contype == enums.ConstrType.CONSTR_DEFAULT
             and not is_non_volatile_function(
                 function=node,
-                non_volatile_functions=functions.NON_VOLATILE_FUNCTIONS,
+                non_volatile_functions=functions.NON_VOLATILE_FUNCTIONS.union(
+                    self.config.lint.additional_non_volatile_functions,
+                ),
             )
         ):
             self.violations.add(
