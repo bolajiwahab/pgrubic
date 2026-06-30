@@ -126,7 +126,7 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
     rules: set[type[core.BaseChecker]] = core.load_rules(config=config)
 
     for rule in rules:
-        linter.checkers.add(rule(config=config))
+        linter.checkers.add(rule())
 
     # Use the current working directory if no sources are specified
     if not sources:

@@ -13,11 +13,7 @@ from pglast import ast, parser, stream, visitors
 from colorama import Fore, Style
 from caseconverter import kebabcase
 
-from pgrubic import (
-    ISSUES_URL,
-    PACKAGE_NAME,
-    DOCUMENTATION_URL,
-)
+from pgrubic import ISSUES_URL, PACKAGE_NAME, DOCUMENTATION_URL
 from pgrubic.core import noqa, config, errors, visitors as pgrubic_visitors, formatter
 from pgrubic.postgres import functions as postgres_functions
 
@@ -201,6 +197,7 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):
     is_auto_fixable: bool = False
 
     # Attributes shared among all subclasses
+    config: config.Config
     lint_ignores: list[noqa.NoQaDirective]
     source_file: str
     source_code: str
@@ -218,10 +215,9 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):
     statement_fixes: FixCounter
     file_fixes: FixCounter
 
-    def __init__(self, config: config.Config) -> None:
+    def __init__(self) -> None:
         """Initialize variables."""
         self.violations: set[Violation] = set()
-        self.config = config
 
     def __init_subclass__(cls, **kwargs: typing.Any) -> None:
         """Set code, name and category attributes for subclasses."""
@@ -526,6 +522,7 @@ class Linter:
 
         BaseChecker.source_code = source_code
         BaseChecker.source_file = source_file
+        BaseChecker.config = self.config
 
         BaseChecker.file_fixes = FixCounter()
         BaseChecker.statement_fixes = FixCounter()
@@ -552,6 +549,8 @@ class Linter:
             lint_ignores.extend(statement_lint_ignores)
 
             BaseChecker.lint_ignores = lint_ignores
+            BaseChecker.root_statement = statement.text
+            BaseChecker.statement_location = statement.start_location
 
             try:
                 parse_tree: tuple[ast.RawStmt, ...] = parser.parse_sql(statement.text)
