@@ -15,6 +15,7 @@ from caseconverter import kebabcase
 
 from pgrubic import ISSUES_URL, PACKAGE_NAME, DOCUMENTATION_URL
 from pgrubic.core import noqa, config, errors, visitors as pgrubic_visitors, formatter
+from pgrubic.postgres import functions as postgres_functions
 
 if typing.TYPE_CHECKING:
     from collections import abc  # pragma: no cover
@@ -226,6 +227,13 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):
 
     def visit(self, ancestors: visitors.Ancestor, node: ast.Node) -> None:
         """Visit the node."""
+
+    def is_non_volatile_function(self, function: ast.FuncCall) -> bool:
+        """Check if function is non-volatile."""
+        return postgres_functions.is_non_volatile_function(
+            function=function,
+            additional_non_volatile_functions=self.config.lint.additional_non_volatile_functions,
+        )
 
     @property
     def is_fix_enabled(self) -> bool:
@@ -541,7 +549,6 @@ class Linter:
             lint_ignores.extend(statement_lint_ignores)
 
             BaseChecker.lint_ignores = lint_ignores
-
             BaseChecker.root_statement = statement.text
             BaseChecker.statement_location = statement.start_location
 

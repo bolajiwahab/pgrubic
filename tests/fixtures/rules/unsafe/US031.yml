@@ -14,10 +14,6 @@ test_fail_new_column_user_defined_volatile_default_non_schema_qualified:
   sql_fail: |
     ALTER TABLE tbl ADD COLUMN created_at timestamptz DEFAULT user_defined_function();
 
-test_fail_new_column_user_defined_volatile_default_schema_qualified:
-  sql_fail: |
-    ALTER TABLE tbl ADD COLUMN created_at timestamptz DEFAULT public.user_defined_function();
-
 test_fail_new_column_volatile_default_in_array:
   sql_fail: |
     ALTER TABLE tbl ADD COLUMN created_at timestamptz[] DEFAULT ARRAY[now(), current_date, clock_timestamp()];
@@ -61,3 +57,15 @@ test_pass_normal_function_call:
     SELECT clock_timestamp();
     SELECT pg_catalog.clock_timestamp();
     SELECT nextval('tbl_id_seq');
+
+test_fail_new_column_user_defined_volatile_default_schema_qualified:
+  sql_fail: |
+    ALTER TABLE tbl ADD COLUMN created_at timestamptz DEFAULT public.user_defined_function();
+
+test_pass_additional_non_volatile_function:
+  sql_pass: |
+    ALTER TABLE tbl ADD COLUMN created_at timestamptz DEFAULT public.user_defined_function();
+  config:
+    lint:
+      additional_non_volatile_functions:
+        - public.user_defined_function

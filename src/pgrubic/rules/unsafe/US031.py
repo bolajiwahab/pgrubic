@@ -2,9 +2,7 @@
 
 from pglast import ast, enums, visitors
 
-from pgrubic import is_non_volatile_function
 from pgrubic.core import linter
-from pgrubic.postgres import functions
 
 
 class NewColumnWithVolatileDefault(linter.BaseChecker):
@@ -54,10 +52,7 @@ class NewColumnWithVolatileDefault(linter.BaseChecker):
             and ancestors.find_nearest(ast.ColumnDef)
             and constraint
             and constraint.node.contype == enums.ConstrType.CONSTR_DEFAULT
-            and not is_non_volatile_function(
-                function=node,
-                non_volatile_functions=functions.NON_VOLATILE_FUNCTIONS,
-            )
+            and not self.is_non_volatile_function(function=node)
         ):
             self.violations.add(
                 linter.Violation(

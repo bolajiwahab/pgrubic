@@ -34,7 +34,10 @@ exclude = []
 
 [lint]
 # Target version 14 of PostgreSQL by default
-postgres-target-version = 14
+target-postgres-version = 14
+
+# Additional non-volatile functions
+additional-non-volatile-functions = []
 
 # Enable all rules by default
 select = []

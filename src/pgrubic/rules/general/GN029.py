@@ -36,7 +36,7 @@ class MissingReplaceInView(linter.BaseChecker):
         """Visit ViewStmt."""
         create_or_replace_postgres_version = 14
         if (
-            self.config.lint.postgres_target_version >= create_or_replace_postgres_version
+            self.config.lint.target_postgres_version >= create_or_replace_postgres_version
             and not node.replace
         ):
             self.violations.add(

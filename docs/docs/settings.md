@@ -69,7 +69,7 @@ respect-gitignore = false
 </details>
 ## Lint
 
-### **postgres-target-version**
+### **target-postgres-version**
 The target version of Postgres to lint against. This is used to either enable or
 disable certain linting rules. For example, `DETACH PARTITION CONCURRENTLY`
 was introduced from Postgres 14.
@@ -84,7 +84,30 @@ was introduced from Postgres 14.
 
 ```toml
 [lint]
-postgres-target-version = 12
+target-postgres-version = 14
+```
+</details>
+
+### **additional-non-volatile-functions**
+List of additional non-volatile functions. This is used to add to the list of known
+non-volatile functions, to check if a default value is volatile or not.
+For example, `pg_catalog.clock_timestamp()` is a volatile function, but if you have a
+custom function that is non-volatile, you can add it to this list in form
+of `schema.function_name`.
+
+Should be used judiciously.
+
+**Type**: `list[str]`
+
+**Default**: `[]`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+[lint]
+additional-non-volatile-functions = ["my_schema.my_non_volatile_function"]
 ```
 </details>
 
