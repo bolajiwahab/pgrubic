@@ -22,7 +22,7 @@ def linter() -> core.Linter:
     linter = core.Linter(config=config, formatters=core.load_formatters)
 
     for rule in rules:
-        linter.checkers.add(rule())
+        linter.checkers.add(rule(config=config))
 
     return linter
 
