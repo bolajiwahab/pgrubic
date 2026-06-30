@@ -1,5 +1,7 @@
 """PostgreSQL built-in functions."""
 
+import typing
+
 from pglast import ast
 
 from pgrubic import SCHEMA_QUALIFIED_LENGTH, get_fully_qualified_name
@@ -19,7 +21,7 @@ from pgrubic import SCHEMA_QUALIFIED_LENGTH, get_fully_qualified_name
 #                AND np.nspname = 'pg_catalog'
 #              WHERE pc.provolatile != 'v'
 #        ) s;
-BUILTIN_NON_VOLATILE_FUNCTIONS: frozenset[str] = frozenset(
+BUILTIN_NON_VOLATILE_FUNCTIONS: typing.Final[frozenset[str]] = frozenset(
     {
         "pg_catalog.abbrev",
         "pg_catalog.abs",
@@ -2578,7 +2580,7 @@ def is_non_volatile_function(
     function: ast.Node
         Function to check.
 
-    additional_non_volatile_functions: set[str]
+    additional_non_volatile_functions: frozenset[str]
         Additional non volatile functions to check against.
 
     Returns:

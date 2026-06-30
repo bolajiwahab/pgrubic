@@ -17,9 +17,9 @@ from pgrubic import (
     ISSUES_URL,
     PACKAGE_NAME,
     DOCUMENTATION_URL,
-    postgres,
 )
 from pgrubic.core import noqa, config, errors, visitors as pgrubic_visitors, formatter
+from pgrubic.postgres import functions
 
 if typing.TYPE_CHECKING:
     from collections import abc  # pragma: no cover
@@ -234,7 +234,7 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):
 
     def is_non_volatile_function(self, function: ast.FuncCall) -> bool:
         """Check if function is non-volatile."""
-        return postgres.functions.is_non_volatile_function(
+        return functions.is_non_volatile_function(
             function=function,
             additional_non_volatile_functions=self.config.lint.additional_non_volatile_functions,
         )
