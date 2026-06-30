@@ -13,6 +13,7 @@ version_scheme = "semver2"
 version_provider = "pep621"
 update_changelog_on_bump = true
 bump_message = "chore(bump): version $current_version → $new_version"
+breaking_change_exclamation_in_title = true
 version_files = [
     "README.md:rev",
     "docs/docs/tutorial.md:rev",
