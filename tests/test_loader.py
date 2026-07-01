@@ -5,7 +5,7 @@ from pgrubic import core
 
 def test_load_rules_deprecated_not_included(linter: core.Linter) -> None:
     """Test loading rules not including deprecated."""
-    expected_number_of_rules = 114
+    expected_number_of_rules = 113
 
     rules = core.load_rules(config=linter.config)
 
@@ -14,7 +14,7 @@ def test_load_rules_deprecated_not_included(linter: core.Linter) -> None:
 
 def test_load_rules_deprecated_included(linter: core.Linter) -> None:
     """Test loading rules including deprecated."""
-    expected_number_of_rules = 115
+    expected_number_of_rules = 114
 
     rules = core.load_rules(config=linter.config, include_deprecated=True)
 
