@@ -7,6 +7,7 @@ import typing
 import fnmatch
 import pathlib
 import functools
+import dataclasses
 from contextlib import contextmanager
 
 from pglast import ast, parser, stream, visitors
@@ -184,6 +185,13 @@ class CheckerMeta(type):
         return wrapper
 
 
+@dataclasses.dataclass(frozen=True)
+class Deprecation:
+    """Deprecation details."""
+
+    message: str = "This rule is deprecated and would be removed in future versions."
+
+
 class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):
     """Define a lint rule, and store all the nodes that violate it."""
 
@@ -195,6 +203,8 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):
 
     # Is this rule automatically fixable?
     is_auto_fixable: bool = False
+
+    deprecation: typing.ClassVar[Deprecation | None] = None
 
     # Attributes shared among all subclasses
     lint_ignores: list[noqa.NoQaDirective]

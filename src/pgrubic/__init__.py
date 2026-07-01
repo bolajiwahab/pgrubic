@@ -1,5 +1,6 @@
 """pgrubic."""
 
+import os
 import enum
 import typing
 import pathlib
@@ -20,7 +21,13 @@ REPOSITORY_URL: typing.Final[str] = "https://github.com/bolajiwahab/pgrubic"
 
 ISSUES_URL: typing.Final[str] = f"{REPOSITORY_URL}/issues"
 
-DOCUMENTATION_URL: typing.Final[str] = "https://bolajiwahab.github.io/pgrubic"
+BUILD_ENV = os.getenv("BUILD_ENV", "production")
+
+DOCUMENTATION_URL: typing.Final[str] = (
+    "http://127.0.0.1:8000"
+    if BUILD_ENV == "local"
+    else "https://bolajiwahab.github.io/pgrubic"
+)
 
 PACKAGE_DIRECTORY: typing.Final[pathlib.Path] = pathlib.Path(__file__).resolve().parent
 

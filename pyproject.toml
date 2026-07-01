@@ -198,6 +198,7 @@ legacy_tox_ini = """
     extras = dev, doc
     deps =
     commands =
+    pass_env = BUILD_ENV
 
     [testenv:dev]
 
@@ -269,6 +270,7 @@ legacy_tox_ini = """
         pip install .
         python docs/rule_docs_generator.py
         python docs/settings_doc_generator.py
+        python docs/rule_metadata_generator.py
 
     [testenv:ensure-docs-up-to-date]
     extras =

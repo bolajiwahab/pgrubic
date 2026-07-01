@@ -34,7 +34,7 @@ ignore = ["TP015"]
 
 </details>
 
-will enable all the rules with the prefix `TP`, which falls under the [**typing**](rules.md/#typing-tp) category, with the exception of [**TP015**](../rules/typing/wrongly-typed-required-column).
+will enable all the rules with the prefix `TP`, which falls under the [**typing**](rules.md/#typing-tp) category, with the exception of [**TP015**](rules/typing/wrongly-typed-required-column.md).
 
 When working with the default configuration, it is important to note that:
 
@@ -72,7 +72,7 @@ unfixable = ["TP015"]
 
 </details>
 
-will enable fixes for all the rules with the prefix `TP`, which falls under the [**typing**](rules.md/#typing-tp) category, with the exception of [**TP015**](../rules/typing/wrongly-typed-required-column). Please note that **unfixable** takes precedence over **fixable**.
+will enable fixes for all the rules with the prefix `TP`, which falls under the [**typing**](rules.md/#typing-tp) category, with the exception of [**TP015**](rules/typing/wrongly-typed-required-column.md). Please note that **unfixable** takes precedence over **fixable**.
 
 ## Ignoring Violations
 

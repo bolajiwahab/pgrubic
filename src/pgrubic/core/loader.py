@@ -17,7 +17,11 @@ from pgrubic import (
 from pgrubic.core import config, linter
 
 
-def load_rules(config: config.Config) -> set[type[linter.BaseChecker]]:
+def load_rules(
+    *,
+    config: config.Config,
+    include_deprecated: bool = False,
+) -> set[type[linter.BaseChecker]]:
     """Load rules.
 
     Parameters:
@@ -47,6 +51,7 @@ def load_rules(config: config.Config) -> set[type[linter.BaseChecker]]:
         ):
             if (
                 issubclass(rule, linter.BaseChecker)
+                and (include_deprecated or not rule.deprecation)
                 and not rule.__name__.startswith(
                     "_",
                 )

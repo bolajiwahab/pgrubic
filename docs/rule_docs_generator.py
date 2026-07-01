@@ -10,7 +10,7 @@ from pgrubic import core
 
 rules_path = pathlib.Path.cwd() / "docs/docs/rules"
 
-rules = core.load_rules(config=core.parse_config())
+rules = core.load_rules(config=core.parse_config(), include_deprecated=True)
 
 # remove existing documentations
 shutil.rmtree(rules_path)
@@ -22,6 +22,10 @@ for rule in rules:
         rules_path / rule.category / f"{kebabcase(rule.__name__)}.md",
         "w",
     ) as file:
+        if rule.deprecation:
+            file.write(
+                f"#DEPRECATED\n**{rule.deprecation.message}**\n",
+            )
         file.write(f"# {kebabcase(rule.__name__)} ({rule.code})\n\n")
 
         if rule.is_auto_fixable:

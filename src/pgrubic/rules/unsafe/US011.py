@@ -2,6 +2,7 @@
 
 from pglast import ast, enums, visitors
 
+from pgrubic import DOCUMENTATION_URL
 from pgrubic.core import linter
 
 
@@ -29,6 +30,12 @@ class NewNotNullColumnWithVolatileDefault(linter.BaseChecker):
     6. Set the column as NOT NULL.
     7. Drop the check constraint.
     """
+
+    deprecation = linter.Deprecation(
+        message=f"""This rule is deprecated and has been superseded by
+[US031]({DOCUMENTATION_URL}/rules/unsafe/new-column-with-volatile-default).
+It is no longer available for linting and will be removed in a future release.""",
+    )
 
     def visit_ColumnDef(
         self,

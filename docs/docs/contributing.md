@@ -167,10 +167,16 @@ tox -e tests -- "tests/test_formatters.py::test_formatters[VIEW-VIEW_drop_view-t
 
 ## Documentation
 
-To update the documentation, use:
+To update the documentation for production environment, use:
 
 ```bash
 tox -e docbuild
+```
+
+To ensure links resolve locally, use:
+
+```bash
+BUILD_ENV=local tox -e docbuild
 ```
 
 To preview changes to the documentation, from the parent directory, use:
