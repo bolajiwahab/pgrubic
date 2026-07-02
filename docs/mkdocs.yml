@@ -28,6 +28,7 @@ plugins:
   - search
 
 theme:
+  variant: classic
   name: material
   logo: assets/logo.png
   favicon: assets/logo.png

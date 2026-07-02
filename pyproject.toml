@@ -82,10 +82,8 @@ dev = [
 ]
 
 doc = [
-  "mkdocs==1.6.1",
-  "mkdocs-material==9.7.6",
-  "mkdocstrings==1.0.4",
-  "mkdocstrings-python==2.0.5",
+  "zensical>=0.0.46",
+  "mkdocstrings[python] >=1.0.4",
 ]
 
 release = [
