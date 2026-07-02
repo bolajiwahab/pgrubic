@@ -7,13 +7,14 @@ import typing
 import fnmatch
 import pathlib
 import functools
+import dataclasses
 from contextlib import contextmanager
 
 from pglast import ast, parser, stream, visitors
 from colorama import Fore, Style
 from caseconverter import kebabcase
 
-from pgrubic import ISSUES_URL, PACKAGE_NAME, DOCUMENTATION_URL
+from pgrubic import ISSUES_URL, PACKAGE_NAME, DOCUMENTATION_URL, RULE_DOCUMENTATION_BASE
 from pgrubic.core import noqa, config, errors, visitors as pgrubic_visitors, formatter
 from pgrubic.postgres import functions as postgres_functions
 
@@ -184,6 +185,13 @@ class CheckerMeta(type):
         return wrapper
 
 
+@dataclasses.dataclass(frozen=True)
+class Deprecation:
+    """Deprecation details."""
+
+    message: str = "This rule is deprecated and will be removed in future versions."
+
+
 class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):
     """Define a lint rule, and store all the nodes that violate it."""
 
@@ -195,6 +203,8 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):
 
     # Is this rule automatically fixable?
     is_auto_fixable: bool = False
+
+    deprecation: typing.ClassVar[Deprecation | None] = None
 
     # Attributes shared among all subclasses
     lint_ignores: list[noqa.NoQaDirective]
@@ -405,7 +415,7 @@ class Linter:
         for violation in violations:
             sys.stdout.write(
                 f"{noqa.NEW_LINE}{source_file}:{violation.line_number}:{violation.column_offset}:"
-                f"{noqa.SPACE}\033]8;;{DOCUMENTATION_URL}/rules/{violation.rule_category}/{violation.rule_name}{Style.RESET_ALL}{Fore.RED}{Style.BRIGHT}{violation.rule_code}\033]8;;{Style.RESET_ALL}:"
+                f"{noqa.SPACE}\033]8;;{DOCUMENTATION_URL}/{RULE_DOCUMENTATION_BASE}/{violation.rule_category}/{violation.rule_name}{Style.RESET_ALL}{Fore.RED}{Style.BRIGHT}{violation.rule_code}\033]8;;{Style.RESET_ALL}:"
                 f"{noqa.SPACE}{violation.description}{noqa.NEW_LINE}",
             )
 
@@ -470,7 +480,7 @@ class Linter:
                 f"|{noqa.SPACE}{pathlib.Path(lint_result.source_file).name}{noqa.SPACE}"
                 f"|{noqa.SPACE}{violation.line_number}{noqa.SPACE}"
                 f"|{noqa.SPACE}{violation.column_offset}{noqa.SPACE}"
-                f"|{noqa.SPACE}[{violation.rule_code}]({DOCUMENTATION_URL}/rules/{violation.rule_category}/{violation.rule_name}){noqa.SPACE}"
+                f"|{noqa.SPACE}[{violation.rule_code}]({DOCUMENTATION_URL}/{RULE_DOCUMENTATION_BASE}/{violation.rule_category}/{violation.rule_name}){noqa.SPACE}"
                 f"|{noqa.SPACE}{violation.description}{noqa.SPACE}"
                 f"|{noqa.SPACE}{violation.help or '-'}{noqa.SPACE}|"
                 for lint_result in lint_results

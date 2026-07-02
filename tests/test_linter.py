@@ -2,7 +2,7 @@
 
 import pathlib
 
-from pgrubic import core
+from pgrubic import DOCUMENTATION_URL, RULE_DOCUMENTATION_BASE, core
 from pgrubic.core import noqa
 
 SOURCE_FILE = "linter.sql"
@@ -168,7 +168,7 @@ def test_linter_generate_lint_report(
         report_file=str(report_file),
     )
 
-    expected_lint_report = """## Pgrubic Lint Report
+    expected_lint_report = f"""## Pgrubic Lint Report
 
 Total violations: **1**
 
@@ -179,7 +179,7 @@ Total errors: **1**
 
 | File | Line | Col | Rule | Description | Help |
 |------|------|-----|------|-------------|------|
-| linter.sql | 1 | 10 | [GN024](https://bolajiwahab.github.io/pgrubic/rules/general/null-comparison) | Comparison with NULL should be [IS | IS NOT] NULL | Use [IS | IS NOT] NULL |
+| linter.sql | 1 | 10 | [GN024]({DOCUMENTATION_URL}/{RULE_DOCUMENTATION_BASE}/general/null-comparison) | Comparison with NULL should be [IS | IS NOT] NULL | Use [IS | IS NOT] NULL |
 </details>
 
 <details>

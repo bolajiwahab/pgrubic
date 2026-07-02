@@ -24,6 +24,7 @@ plugins:
               - "!^is_fix_applicable"
               - "!^is_fix_enabled"
               - "!^disable_auto_fix"
+              - "!^is_non_volatile_function"
   - search
 
 theme:
