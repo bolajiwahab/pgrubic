@@ -1,6 +1,6 @@
 # Rules
 
-There are **115** rules, all enabled by default except deprecated
+There are **114** rules, all enabled by default except deprecated
 ones, which are not part of the active rule set.
 
 Rules are divided into 8 categories:
@@ -167,4 +167,3 @@ Rules are divided into 8 categories:
 | US029 | [truncate-table](rules/unsafe/truncate-table.md) | :white_check_mark: Stable | :x: |
 | US030 | [mismatch-column-in-data-type-change](rules/unsafe/mismatch-column-in-data-type-change.md) | :white_check_mark: Stable | :x: |
 | US031 | [new-column-with-volatile-default](rules/unsafe/new-column-with-volatile-default.md) | :white_check_mark: Stable | :x: |
-| US032 | [new-not-null-column-with-no-non-volatile-default](rules/unsafe/new-not-null-column-with-no-non-volatile-default.md) | :white_check_mark: Stable | :x: |
