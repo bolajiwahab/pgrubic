@@ -28,6 +28,8 @@ def load_rules(
     ----------
     config: config.Config
         Config.
+    include_deprecated: bool
+        Include deprecated rules.
 
     Returns:
     -------
