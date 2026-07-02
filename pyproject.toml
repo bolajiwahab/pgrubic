@@ -52,7 +52,7 @@ dependencies = [
   "case-converter==1.2.0",
   "colorama==0.4.6",
   "toml==0.10.2",
-  "click==8.4.1",
+  "click==8.4.2",
   "rich==15.0.0",
   "deepmerge==2.1.0",
   "msgpack==1.2.1",
@@ -61,7 +61,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "ruff==0.15.18",
+  "ruff==0.15.20",
   "mypy==2.1.0",
   "isort==8.0.1",
   "bandit==1.9.4",
@@ -72,8 +72,8 @@ dev = [
   "yamllint==1.38.0",
   "conventional-pre-commit==4.4.0",
   "pytest==9.1.1",
-  "coverage==7.14.2",
-  "tox==4.55.1",
+  "coverage==7.14.3",
+  "tox==4.56.1",
   "types-PyYAML==6.0.12.20260518",
   "types-toml==0.10.8.20260518",
   "types-colorama==0.4.15.20260508",
