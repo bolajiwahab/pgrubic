@@ -18,8 +18,8 @@ from pgrubic.core import config, linter
 
 
 def load_rules(
-    *,
     config: config.Config,
+    *,
     include_deprecated: bool = False,
 ) -> set[type[linter.BaseChecker]]:
     """Load rules.

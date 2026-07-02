@@ -24,7 +24,7 @@ for rule in rules:
     ) as file:
         if rule.deprecation:
             file.write(
-                f"#DEPRECATED\n**{rule.deprecation.message}**\n",
+                f"#DEPRECATED\n\n**{rule.deprecation.message}**\n\n",
             )
         file.write(f"# {kebabcase(rule.__name__)} ({rule.code})\n\n")
 
