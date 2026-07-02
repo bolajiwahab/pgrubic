@@ -1,3 +1,19 @@
+## 1.0.0 (2026-07-02)
+
+### Feat
+
+- migrate docs from MkDocs to Zensical (#217)
+- deprecate US011 in favour of US031 (#216)
+- make config dependency of rules explicit (#215)
+- additional allow list of non volatile functions (#211)
+
+### Fix
+
+- new column with volatile default (#210)
+- **deps**: bump the python-packages group across 1 directory with 16 updates (#208)
+- **deps**: bump the github-actions group across 1 directory with 2 updates (#207)
+- **deps**: bump python from `bc389f7` to `1697e8e` in the docker group (#202)
+
 ## 0.10.2 (2026-05-10)
 
 ### Fix
