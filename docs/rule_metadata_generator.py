@@ -33,9 +33,6 @@ grouped_rules: dict[str, list[type[core.BaseChecker]]] = defaultdict(list)
 for rule in sorted(rules, key=lambda rule: rule.code):
     grouped_rules[rule.category].append(rule)
 
-# for path in sorted(RULES_DIRECTORY.rglob("[!_]*.py"), key=lambda x: x.name):
-
-
 with pathlib.Path.open(
     rule_metadata_file,
     "a",
