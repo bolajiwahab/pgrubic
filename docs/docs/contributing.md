@@ -167,13 +167,15 @@ tox -e tests -- "tests/test_formatters.py::test_formatters[VIEW-VIEW_drop_view-t
 
 ## Documentation
 
+The documentation uses [Zensical](https://zensical.org).
+
 To update the documentation for production environment, use:
 
 ```bash
 tox -e docbuild
 ```
 
-To ensure links resolve locally, use:
+To ensure links resolve locally (not for production), use:
 
 ```bash
 PGRUBIC_BUILD_ENV=local tox -e docbuild
@@ -182,7 +184,7 @@ PGRUBIC_BUILD_ENV=local tox -e docbuild
 To preview changes to the documentation, from the parent directory, use:
 
 ```bash
-mkdocs serve --config-file docs/mkdocs.yml
+zensical serve --config-file docs/mkdocs.yml --dev-addr 127.0.0.1:8000
 ```
 
 ## Release
