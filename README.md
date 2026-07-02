@@ -4,7 +4,7 @@
 
 | Name                                         |    Stmts |     Miss |    Cover |   Missing |
 |--------------------------------------------- | -------: | -------: | -------: | --------: |
-| src/pgrubic/\_\_init\_\_.py                  |       33 |        0 |     100% |           |
+| src/pgrubic/\_\_init\_\_.py                  |       36 |        0 |     100% |           |
 | src/pgrubic/\_\_main\_\_.py                  |      147 |        0 |     100% |           |
 | src/pgrubic/core/\_\_init\_\_.py             |        9 |        0 |     100% |           |
 | src/pgrubic/core/cache.py                    |       63 |        0 |     100% |           |
@@ -13,7 +13,7 @@
 | src/pgrubic/core/errors.py                   |       15 |        0 |     100% |           |
 | src/pgrubic/core/filters.py                  |       26 |        0 |     100% |           |
 | src/pgrubic/core/formatter.py                |       36 |        0 |     100% |           |
-| src/pgrubic/core/linter.py                   |      235 |        0 |     100% |           |
+| src/pgrubic/core/linter.py                   |      240 |        0 |     100% |           |
 | src/pgrubic/core/loader.py                   |       25 |        0 |     100% |           |
 | src/pgrubic/core/logger.py                   |        5 |        0 |     100% |           |
 | src/pgrubic/core/noqa.py                     |      124 |        0 |     100% |           |
@@ -142,7 +142,7 @@
 | src/pgrubic/rules/unsafe/US008.py            |        5 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US009.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US010.py            |        6 |        0 |     100% |           |
-| src/pgrubic/rules/unsafe/US011.py            |       15 |        0 |     100% |           |
+| src/pgrubic/rules/unsafe/US011.py            |       17 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US012.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US013.py            |       10 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US014.py            |        6 |        0 |     100% |           |
@@ -164,7 +164,7 @@
 | src/pgrubic/rules/unsafe/US030.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US031.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-| **TOTAL**                                    | **3159** |    **0** | **100%** |           |
+| **TOTAL**                                    | **3169** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
