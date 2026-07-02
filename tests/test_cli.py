@@ -7,7 +7,11 @@ import pytest
 from click import testing
 
 from tests import TEST_FILE
-from pgrubic import DOCUMENTATION_URL, WORKERS_ENVIRONMENT_VARIABLE
+from pgrubic import (
+    DOCUMENTATION_URL,
+    RULE_DOCUMENTATION_BASE,
+    WORKERS_ENVIRONMENT_VARIABLE,
+)
 from pgrubic.core import noqa, config, linter
 from pgrubic.__main__ import cli
 
@@ -132,7 +136,7 @@ Total errors: **0**
 
 | File | Line | Col | Rule | Description | Help |
 |------|------|-----|------|-------------|------|
-| test.sql | 1 | 10 | [GN024]({DOCUMENTATION_URL}/rules/general/null-comparison) | Comparison with NULL should be [IS | IS NOT] NULL | Use [IS | IS NOT] NULL |
+| test.sql | 1 | 10 | [GN024]({DOCUMENTATION_URL}/{RULE_DOCUMENTATION_BASE}/general/null-comparison) | Comparison with NULL should be [IS | IS NOT] NULL | Use [IS | IS NOT] NULL |
 </details>
 """  # noqa: E501
 

@@ -2,7 +2,7 @@
 
 from pglast import ast, enums, visitors
 
-from pgrubic import DOCUMENTATION_URL
+from pgrubic import DOCUMENTATION_URL, RULE_DOCUMENTATION_BASE
 from pgrubic.core import linter
 
 
@@ -33,7 +33,7 @@ class NewNotNullColumnWithVolatileDefault(linter.BaseChecker):
 
     deprecation = linter.Deprecation(
         message=f"""This rule is deprecated and has been superseded by
-[US031]({DOCUMENTATION_URL}/rules/unsafe/new-column-with-volatile-default).
+[US031]({DOCUMENTATION_URL}/{RULE_DOCUMENTATION_BASE}/unsafe/new-column-with-volatile-default).
 It is no longer available for linting and will be removed in a future release.""",
     )
 

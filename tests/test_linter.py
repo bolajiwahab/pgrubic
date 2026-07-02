@@ -2,7 +2,7 @@
 
 import pathlib
 
-from pgrubic import DOCUMENTATION_URL, core
+from pgrubic import DOCUMENTATION_URL, RULE_DOCUMENTATION_BASE, core
 from pgrubic.core import noqa
 
 SOURCE_FILE = "linter.sql"
@@ -179,7 +179,7 @@ Total errors: **1**
 
 | File | Line | Col | Rule | Description | Help |
 |------|------|-----|------|-------------|------|
-| linter.sql | 1 | 10 | [GN024]({DOCUMENTATION_URL}/rules/general/null-comparison) | Comparison with NULL should be [IS | IS NOT] NULL | Use [IS | IS NOT] NULL |
+| linter.sql | 1 | 10 | [GN024]({DOCUMENTATION_URL}/{RULE_DOCUMENTATION_BASE}/general/null-comparison) | Comparison with NULL should be [IS | IS NOT] NULL | Use [IS | IS NOT] NULL |
 </details>
 
 <details>

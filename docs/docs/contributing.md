@@ -176,7 +176,7 @@ tox -e docbuild
 To ensure links resolve locally, use:
 
 ```bash
-BUILD_ENV=local tox -e docbuild
+PGRUBIC_BUILD_ENV=local tox -e docbuild
 ```
 
 To preview changes to the documentation, from the parent directory, use:

@@ -198,7 +198,7 @@ legacy_tox_ini = """
     extras = dev, doc
     deps =
     commands =
-    pass_env = BUILD_ENV
+    pass_env = PGRUBIC_BUILD_ENV
 
     [testenv:dev]
 
