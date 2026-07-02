@@ -37,11 +37,12 @@ jobs:
       - name: Install dependencies
         run: pip install --no-cache-dir --upgrade pip ".[doc]"
       - name: Build site
+        working-directory: ./docs
         run: zensical build --clean
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: site
+          path: docs/site
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         id: deployment
