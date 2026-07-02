@@ -1,4 +1,4 @@
-#DEPRECATED
+# DEPRECATED
 
 **This rule is deprecated and has been superseded by
 [US031](https://bolajiwahab.github.io/pgrubic/rules/unsafe/new-column-with-volatile-default).
