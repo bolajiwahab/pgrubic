@@ -1,0 +1,28 @@
+---
+rule: GN036
+
+test_pass_select_self_assignment:
+  sql_pass: |
+    SELECT a = a;
+
+test_fail_update_self_assignment:
+  sql_fail: |
+    UPDATE tbl
+       SET a = a;
+
+# test_fail_inequality_update_self_assignment:
+#   sql_fail: |
+#     UPDATE table tbl
+#        SET a != a;
+
+# test_pass_is_null:
+#   sql_pass: |
+#     SELECT a IS NULL;
+
+# test_pass_is_not_null:
+#   sql_pass: |
+#     SELECT a IS NOT NULL;
+
+# test_pass_comparison_with_stringified_null:
+#   sql_pass: |
+#     SELECT a = 'NULL';
