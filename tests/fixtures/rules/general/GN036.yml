@@ -1,28 +1,82 @@
 ---
 rule: GN036
 
-test_pass_select_self_assignment:
+test_pass_select_column_equality:
   sql_pass: |
     SELECT a = a;
 
-test_fail_update_self_assignment:
+test_fail_self_assignment:
   sql_fail: |
     UPDATE tbl
        SET a = a;
 
-# test_fail_inequality_update_self_assignment:
-#   sql_fail: |
-#     UPDATE table tbl
-#        SET a != a;
+test_fail_self_assignment_with_table_qualifier:
+  sql_fail: |
+    UPDATE tbl
+       SET a = tbl.a;
 
-# test_pass_is_null:
-#   sql_pass: |
-#     SELECT a IS NULL;
+test_fail_self_assignment_with_table_alias:
+  sql_fail: |
+    UPDATE tbl AS t
+       SET a = t.a;
 
-# test_pass_is_not_null:
-#   sql_pass: |
-#     SELECT a IS NOT NULL;
+test_fail_self_assignment_with_table_schema_qualifier:
+  sql_fail: |
+    UPDATE public.tbl
+       SET a = public.tbl.a;
 
-# test_pass_comparison_with_stringified_null:
-#   sql_pass: |
-#     SELECT a = 'NULL';
+test_fail_self_assignment_with_table_schema_database_qualifier:
+  sql_fail: |
+    UPDATE postgres.public.tbl
+       SET a = postgres.public.tbl.a;
+
+test_fail_self_assignment_from_other_table:
+  sql_fail: |
+    UPDATE tbl AS t
+       SET a = t.a
+      FROM other;
+
+test_pass_assignment_from_other_table:
+  sql_pass: |
+    UPDATE tbl AS t
+       SET a = other.a
+      FROM other;
+
+test_pass_assignment_from_other_table_with_alias:
+  sql_pass: |
+    UPDATE tbl AS t
+       SET a = o.a
+      FROM other AS o;
+
+test_pass_assignment_with_target_table_dependent_on_search_path:
+  sql_pass: |
+    UPDATE tbl
+       SET a = public.tbl.a
+      FROM other.tbl;
+
+test_fail_self_assignment_with_target_table_schema_missing_column_schema:
+  sql_fail: |
+    UPDATE public.tbl
+       SET a = tbl.a;
+
+test_fail_self_assignment_with_target_table_schema_database_missing_column_database:
+  sql_fail: |
+    UPDATE postgres.public.tbl
+       SET a = public.tbl.a;
+
+test_fail_self_assignment_with_target_table_schema_database_missing_column_database_schema:
+  sql_fail: |
+    UPDATE postgres.public.tbl
+       SET a = tbl.a;
+
+test_fail_self_assignment_with_target_table_schema_missing_column_schema_ambiguous_table:
+  sql_fail: |
+    UPDATE public.tbl
+       SET a = tbl.a
+      FROM other.tbl;
+
+test_fail_self_assignment_with_target_table_schema_database_missing_column_database_schema_ambiguous_table:
+  sql_fail: |
+    UPDATE postgres.public.tbl
+       SET a = tbl.a
+      FROM other.tbl;

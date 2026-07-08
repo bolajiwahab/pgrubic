@@ -71,6 +71,13 @@ def get_fully_qualified_name(node: tuple[ast.String] | ast.String) -> str:
     if isinstance(node, ast.String):
         return str(node.sval)
 
+    if isinstance(node, ast.RangeVar):
+        return ".".join(
+            part
+            for part in (node.catalogname, node.schemaname, node.relname)
+            if part is not None
+        )
+
     return ".".join(n.sval for n in node if n.sval is not None)
 
 
