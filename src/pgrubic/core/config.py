@@ -868,15 +868,20 @@ def _load_user_config() -> dict[str, typing.Any]:
     return {}  # pragma: no cover
 
 
-def _merge_config() -> dict[str, typing.Any]:
-    """Merge default and user config.
+def _merge_config(*, overrides: dict[str, typing.Any]) -> dict[str, typing.Any]:
+    """Merge default and user config, with overrides.
 
     Returns:
     -------
     dict[str, typing.Any]
         The merged config.
     """
-    return dict(always_merger.merge(_load_default_config(), _load_user_config()))
+    return dict(
+        always_merger.merge(
+            _load_default_config(),
+            always_merger.merge(_load_user_config(), overrides),
+        ),
+    )
 
 
 def _get_config_file_absolute_path(
@@ -930,8 +935,13 @@ def _get_config_file_absolute_path(
     return None  # pragma: no cover
 
 
-def parse_config() -> Config:
+def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
     """Parse config.
+
+    Parameters
+    ----------
+    overrides : dict[str, typing.Any] | None, optional
+        The overrides to apply to the config, by default None
 
     Returns:
     -------
@@ -943,7 +953,10 @@ def parse_config() -> Config:
     MissingConfigError
         Raised when a config is missing.
     """
-    merged_config = _merge_config()
+    if not overrides:
+        overrides = {}
+
+    merged_config = _merge_config(overrides=overrides)
     config_lint = merged_config["lint"]
     config_format = merged_config["format"]
 
