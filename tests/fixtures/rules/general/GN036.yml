@@ -5,6 +5,11 @@ test_pass_select_column_equality:
   sql_pass: |
     SELECT a = a;
 
+test_pass_non_self_assignment:
+  sql_pass: |
+    UPDATE tbl
+      SET a = b;
+
 test_fail_self_assignment:
   sql_fail: |
     UPDATE tbl

@@ -25,9 +25,9 @@ class SelfAssigningColumn(linter.BaseChecker):
     Use the correct value or remove the assignment entirely.
     """
 
-    def _target_alias(self, update_statement: visitors.Ancestor) -> str:
+    def _target_alias(self, update_statement: ast.UpdateStmt) -> str:
         """Get the target alias of the update statement."""
-        relation = update_statement.node.relation
+        relation = update_statement.relation
 
         if relation.alias is not None:
             return str(relation.alias.aliasname)
@@ -36,12 +36,13 @@ class SelfAssigningColumn(linter.BaseChecker):
 
     def _is_self_assignment(
         self,
-        update_statement: visitors.Ancestor,
-        column: ast.ColumnRef,
+        *,
+        node: ast.UpdateStmt,
+        target_column: str,
+        expression: ast.ColumnRef,
     ) -> bool:
         """Check if the assignment is a self-assignment."""
-        fields = [field.sval for field in column.fields]
-        target_column = column.fields[-1].sval
+        fields = [field.sval for field in expression.fields]
 
         unqualified_column_length = 1
         table_qualified_column_length = 2
@@ -60,14 +61,14 @@ class SelfAssigningColumn(linter.BaseChecker):
                 column == target_column
                 and relation
                 == self._target_alias(
-                    update_statement,
+                    node,
                 ),
             )
 
         # schema.table.column
         if len(fields) == schema_table_qualified_column_length:
             schema, table, column = fields
-            relation = update_statement.node.relation
+            relation = node.relation
 
             return bool(
                 column == target_column
@@ -79,7 +80,7 @@ class SelfAssigningColumn(linter.BaseChecker):
         if len(fields) == catalog_schema_table_qualified_column_length:
             catalog, schema, table, column = fields
 
-            relation = update_statement.node.relation
+            relation = node.relation
 
             return bool(
                 column == target_column
@@ -96,12 +97,16 @@ class SelfAssigningColumn(linter.BaseChecker):
         node: ast.ResTarget,
     ) -> None:
         """Visit ResTarget."""
-        update_stmt = ancestors.find_nearest(ast.UpdateStmt)
+        update_statement = ancestors.find_nearest(ast.UpdateStmt)
 
-        if not update_stmt or not isinstance(node.val, ast.ColumnRef):
+        if not update_statement or not isinstance(node.val, ast.ColumnRef):
             return
 
-        if self._is_self_assignment(update_stmt, node.val):
+        if self._is_self_assignment(
+            node=update_statement.node,
+            target_column=node.name,
+            expression=node.val,
+        ):
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,
