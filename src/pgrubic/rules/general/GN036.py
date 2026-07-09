@@ -99,7 +99,16 @@ class SelfAssigningColumn(linter.BaseChecker):
         """Visit ResTarget."""
         update_statement = ancestors.find_nearest(ast.UpdateStmt)
 
-        if not update_statement or not isinstance(node.val, ast.ColumnRef):
+        if not update_statement:
+            return
+
+        target_list = update_statement.node.targetList or []
+
+        if (
+            node not in target_list
+            or not node.name
+            or not isinstance(node.val, ast.ColumnRef)
+        ):
             return
 
         if self._is_self_assignment(

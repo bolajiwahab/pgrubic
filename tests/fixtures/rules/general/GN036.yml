@@ -95,3 +95,36 @@ test_fail_self_assignment_with_target_table_schema_column_database_schema:
   sql_fail: |
     UPDATE public.tbl
        SET a = postgres.public.tbl.a;
+
+test_fail_returning_clause_with_self_assignment:
+  sql_fail: |
+    UPDATE tbl
+       SET a = a
+     RETURNING *;
+
+test_pass_returning_clause_asterisk:
+  sql_pass: |
+    UPDATE tbl
+       SET a = b
+     RETURNING *;
+
+test_pass_returning_clause_non_asterisk:
+  sql_pass: |
+    UPDATE tbl
+       SET a = b
+     RETURNING a AS a;
+
+test_pass_subquery_with_self_assignment:
+  sql_pass: |
+    UPDATE tbl
+       SET a = (SELECT a FROM tbl WHERE id = 1);
+
+test_pass_constant_assignment:
+  sql_pass: |
+    UPDATE tbl
+       SET a = 1;
+
+test_pass_scalar_assignment:
+  sql_pass: |
+    UPDATE tbl
+       SET a = 'apple';
