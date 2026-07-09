@@ -945,7 +945,7 @@ def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
 
     Parameters
     ----------
-    overrides : dict[str, typing.Any] | None, optional
+    overrides: dict[str, typing.Any] | None, optional
         Overrides applied on top of the user config.
 
     Returns:
