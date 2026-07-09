@@ -871,6 +871,11 @@ def _load_user_config() -> dict[str, typing.Any]:
 def _merge_config(*, overrides: dict[str, typing.Any]) -> dict[str, typing.Any]:
     """Merge default and user config, with overrides.
 
+    Parameters:
+    ----------
+    overrides: dict[str, typing.Any]
+        Overrides applied on top of the user config.
+
     Returns:
     -------
     dict[str, typing.Any]
@@ -941,7 +946,7 @@ def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
     Parameters
     ----------
     overrides : dict[str, typing.Any] | None, optional
-        The overrides to apply to the config, by default None
+        Overrides applied on top of the user config.
 
     Returns:
     -------
