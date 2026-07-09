@@ -108,3 +108,23 @@ def test_config_parse_error(tmp_path: pathlib.Path) -> None:
             excinfo.value.args[0]
             == f"""Error parsing configuration file "{config_file}\""""
         )
+
+
+def test_config_user_overrides(tmp_path: pathlib.Path) -> None:
+    """Test config user overrides."""
+    config_content = """
+    [lint]
+    fix = false
+    """
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    config_file = directory / config.CONFIG_FILE
+    config_file.write_text(config_content)
+
+    with patch.dict(
+        "os.environ",
+        {config.CONFIG_PATH_ENVIRONMENT_VARIABLE: str(directory)},
+    ):
+        parsed_config = config.parse_config(overrides={"lint": {"fix": True}})
+        assert parsed_config.lint.fix is True
