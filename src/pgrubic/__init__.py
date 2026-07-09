@@ -71,7 +71,7 @@ def get_fully_qualified_name(node: tuple[ast.String] | ast.String | ast.RangeVar
     if isinstance(node, ast.String):
         return str(node.sval)
 
-    if isinstance(node, ast.RangeVar):
+    if isinstance(node, ast.RangeVar):  # pragma: no cover
         return ".".join(
             part
             for part in (node.catalogname, node.schemaname, node.relname)

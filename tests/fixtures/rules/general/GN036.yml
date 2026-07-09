@@ -10,6 +10,11 @@ test_pass_non_self_assignment:
     UPDATE tbl
       SET a = b;
 
+test_pass_non_self_assignment_expression:
+  sql_pass: |
+    UPDATE tbl
+      SET a = a + 1;
+
 test_fail_self_assignment:
   sql_fail: |
     UPDATE tbl
@@ -85,3 +90,8 @@ test_fail_self_assignment_with_target_table_schema_database_missing_column_datab
     UPDATE postgres.public.tbl
        SET a = tbl.a
       FROM other.tbl;
+
+test_fail_self_assignment_with_target_table_schema_column_database_schema:
+  sql_fail: |
+    UPDATE public.tbl
+       SET a = postgres.public.tbl.a;

@@ -1,4 +1,4 @@
-"""Checker for self assigning column."""
+"""Checker for self-assigning column."""
 
 from pglast import ast, visitors
 
@@ -7,7 +7,7 @@ from pgrubic.core import linter
 
 class SelfAssigningColumn(linter.BaseChecker):
     """## **What it does**
-    Checks for self assigning columns.
+    Checks for self-assigning columns.
 
     ## **Why not?**
     Assigning a column to itself does not change its value but still causes PostgreSQL to
@@ -84,12 +84,12 @@ class SelfAssigningColumn(linter.BaseChecker):
 
             return bool(
                 column == target_column
-                and catalog == relation.catalogname
+                and (not relation.catalogname or catalog == relation.catalogname)
                 and schema == relation.schemaname
                 and table == relation.relname,
             )
 
-        return False
+        return False  # pragma: no cover
 
     def visit_ResTarget(
         self,
@@ -116,7 +116,7 @@ class SelfAssigningColumn(linter.BaseChecker):
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
-                    description="Self assigning column",
+                    description="Self-assigning column",
                     is_auto_fixable=self.is_auto_fixable,
                     is_fix_enabled=self.is_fix_enabled,
                     help="Avoid self-assignments in UPDATE statements",
