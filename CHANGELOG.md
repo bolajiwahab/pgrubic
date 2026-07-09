@@ -1,3 +1,16 @@
+## 1.1.0 (2026-07-09)
+
+### Feat
+
+- support config overrides (#221)
+- flag self assigning column in updates (#219)
+
+### Fix
+
+- **deps**: bump the python-packages group with 3 updates (#220)
+- **deps**: bump python from `1697e8e` to `b877e50` in the docker group (#212)
+- **deps**: bump the python-packages group across 1 directory with 4 updates (#214)
+
 ## 1.0.0 (2026-07-02)
 
 ### Feat
