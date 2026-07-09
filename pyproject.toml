@@ -48,7 +48,7 @@ classifiers = [
 ]
 keywords = ["pgrubic", "sql", "postgres", "postgresql", "linter"]
 dependencies = [
-  "pglast==7.14",
+  "pglast==7.15",
   "case-converter==1.2.0",
   "colorama==0.4.6",
   "toml==0.10.2",
@@ -72,7 +72,7 @@ dev = [
   "yamllint==1.38.0",
   "conventional-pre-commit==4.4.0",
   "pytest==9.1.1",
-  "coverage==7.14.3",
+  "coverage==7.15.0",
   "tox==4.56.1",
   "types-PyYAML==6.0.12.20260518",
   "types-toml==0.10.8.20260518",
@@ -82,7 +82,7 @@ dev = [
 ]
 
 doc = [
-  "zensical==0.0.46",
+  "zensical==0.0.47",
   "mkdocstrings[python]==1.0.4",
 ]
 
