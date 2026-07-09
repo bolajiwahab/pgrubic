@@ -943,7 +943,7 @@ def _get_config_file_absolute_path(
 def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
     """Parse config.
 
-    Parameters
+    Parameters:
     ----------
     overrides: dict[str, typing.Any] | None, optional
         Overrides applied on top of the user config.
