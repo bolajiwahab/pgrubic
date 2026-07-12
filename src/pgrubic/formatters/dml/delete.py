@@ -1,5 +1,7 @@
 """Formatters for delete."""
 
+import typing
+
 from pglast import ast, stream, printers
 
 
@@ -31,11 +33,14 @@ def delete_stmt(node: ast.DeleteStmt, output: stream.RawStream) -> None:
             output.space()
             output.print_node(node.whereClause)
 
-        if node.returningList:
+        if node.returningClause:
             output.newline()
             output.write("RETURNING")
             output.space()
-            output.print_list(node.returningList, standalone_items=False)
+            output.print_list(
+                typing.cast(typing.Sequence[typing.Any], node.returningClause.exprs),
+                standalone_items=True,
+            )
 
         if node.withClause:
             output.dedent()

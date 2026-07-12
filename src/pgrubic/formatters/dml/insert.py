@@ -1,5 +1,7 @@
 """Formatter for insert."""
 
+import typing
+
 from pglast import ast, enums, stream, printers
 
 
@@ -40,7 +42,7 @@ def on_conflict_clause(node: ast.OnConflictClause, output: stream.RawStream) -> 
         with output.push_indent(4):
             output.write("DO UPDATE SET")
             output.space()
-            output.print_list(node.targetList)
+            output.print_list(typing.cast(typing.Sequence[typing.Any], node.targetList))
             if node.whereClause:
                 output.newline()
                 output.space(4)
@@ -91,11 +93,14 @@ def insert_stmt(node: ast.InsertStmt, output: stream.RawStream) -> None:
             output.space() if node.onConflictClause.infer else output.write("")
             output.print_node(node.onConflictClause)
 
-        if node.returningList:
+        if node.returningClause:
             output.newline()
             output.write("RETURNING")
             output.space()
-            output.print_name(node.returningList, ",")
+            output.print_list(
+                typing.cast(typing.Sequence[typing.Any], node.returningClause.exprs),
+                standalone_items=True,
+            )
 
         if node.withClause:
             output.dedent()

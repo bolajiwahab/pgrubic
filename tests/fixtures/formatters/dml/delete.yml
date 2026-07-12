@@ -15,7 +15,8 @@ delete:
                SELECT id
                  FROM orders
            )
-    RETURNING u.id, o.user_id;
+    RETURNING u.id
+            , o.user_id;
 
 delete_with_cte:
   sql: |

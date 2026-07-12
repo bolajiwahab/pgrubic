@@ -1,5 +1,7 @@
 """Formatter for UPDATE statements."""
 
+import typing
+
 from pglast import ast, stream, printers
 
 
@@ -20,7 +22,10 @@ def update_stmt(node: ast.UpdateStmt, output: stream.RawStream) -> None:
         output.space(3)
         output.write("SET")
         output.space()
-        output.print_list(node.targetList, standalone_items=False)
+        output.print_list(
+            typing.cast(typing.Sequence[typing.Any], node.targetList),
+            standalone_items=False,
+        )
 
         if node.fromClause:
             output.newline()
@@ -36,11 +41,14 @@ def update_stmt(node: ast.UpdateStmt, output: stream.RawStream) -> None:
             output.space()
             output.print_node(node.whereClause)
 
-            if node.returningList:
+            if node.returningClause:
                 output.newline()
                 output.write("RETURNING")
                 output.space()
-                output.print_list(node.returningList)
+                output.print_list(
+                    typing.cast(typing.Sequence[typing.Any], node.returningClause.exprs),
+                    standalone_items=True,
+                )
 
         if node.withClause:
             output.dedent()
