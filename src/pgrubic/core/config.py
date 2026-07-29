@@ -677,6 +677,24 @@ remove-pg-catalog-from-functions = false
 ```
 </details>
 
+### **remove-default-index-access-method**
+If `true`, remove the `USING btree` clause from index definitions. Btree is the default
+index access method in Postgres and thus can be omitted.
+
+**Type**: `bool`
+
+**Default**: `true`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+[format]
+remove-default-index-access-method = false
+```
+</details>
+
 ### **diff**
 When `true`, report the difference between the current file and how it will look when
 formatted, without making any changes to the file. If there is a difference, it exits
@@ -747,6 +765,7 @@ no-cache = true
     new_line_before_semicolon: bool
     lines_between_statements: int
     remove_pg_catalog_from_functions: bool
+    remove_default_index_access_method: bool
     diff: bool
     check: bool
     no_cache: bool
@@ -1028,6 +1047,9 @@ def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
                 lines_between_statements=config_format["lines-between-statements"],
                 remove_pg_catalog_from_functions=config_format[
                     "remove-pg-catalog-from-functions"
+                ],
+                remove_default_index_access_method=config_format[
+                    "remove-default-index-access-method"
                 ],
                 diff=config_format["diff"],
                 check=config_format["check"],

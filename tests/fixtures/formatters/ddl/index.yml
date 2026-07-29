@@ -23,7 +23,8 @@ create_index_btree:
     CREATE INDEX idx_gin ON t_hash USING gin (md5 gin_trgm_ops);
   expected: |
     CREATE INDEX idx_gin
-        ON t_hash USING gin (md5 gin_trgm_ops);
+        ON t_hash
+     USING gin (md5 gin_trgm_ops);
 
 reindex_index:
   sql: |
@@ -48,3 +49,28 @@ drop_index_concurrently:
     DROP INDEX CONCURRENTLY IF EXISTS idx_orders;
   expected: |
     DROP INDEX CONCURRENTLY IF EXISTS idx_orders;
+
+create_index_default_method:
+  sql: |
+    CREATE INDEX idx_orders ON orders USING btree (id);
+  expected: |
+    CREATE INDEX idx_orders
+        ON orders (id);
+
+create_index_no_name:
+  sql: |
+    CREATE INDEX ON orders USING btree (id);
+  expected: |
+    CREATE INDEX
+        ON orders (id);
+
+create_index_remove_default_method:
+  sql: |
+    CREATE INDEX idx_orders ON orders USING btree (id);
+  expected: |
+    CREATE INDEX idx_orders
+        ON orders
+     USING btree (id);
+  config:
+    format:
+      remove_default_index_access_method: false

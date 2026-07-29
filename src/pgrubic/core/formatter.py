@@ -17,6 +17,15 @@ class FormatResult(typing.NamedTuple):
     errors: set[errors.Error]
 
 
+class IndentedStream(stream.IndentedStream):
+    """Indented SQL parse tree writer."""
+
+    def __init__(self, config: config.Config, **options: typing.Any) -> None:
+        """Initialize IndentedStream with config."""
+        super().__init__(**options)
+        self.config = config
+
+
 class Formatter:
     """Format source code."""
 
@@ -79,7 +88,8 @@ class Formatter:
                 try:
                     parser.parse_sql(statement.text)
 
-                    formatted_statement = stream.IndentedStream(
+                    formatted_statement = IndentedStream(
+                        config=config,
                         comments=comments,
                         semicolon_after_last_statement=False,
                         remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,

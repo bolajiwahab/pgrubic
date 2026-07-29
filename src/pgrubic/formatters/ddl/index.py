@@ -1,12 +1,13 @@
 """Formatter for index."""
 
-from pglast import ast, stream, printers
+from pglast import ast, printers
 
+from pgrubic.core import formatter
 from pgrubic.formatters.ddl import IF_NOT_EXISTS
 
 
 @printers.node_printer(ast.IndexStmt, override=True)
-def index_stmt(node: ast.IndexStmt, output: stream.RawStream) -> None:
+def index_stmt(node: ast.IndexStmt, output: formatter.IndentedStream) -> None:
     """Printer for IndexStmt."""
     output.write("CREATE")
     output.space()
@@ -36,7 +37,12 @@ def index_stmt(node: ast.IndexStmt, output: stream.RawStream) -> None:
         output.space()
         output.print_node(node.relation)
 
-        if node.accessMethod != "btree":
+        if (
+            node.accessMethod != "btree"
+            or not output.config.format.remove_default_index_access_method
+        ):
+            output.newline()
+            output.indent(1)
             output.write("USING")
             output.space()
             output.print_name(node.accessMethod)
