@@ -660,6 +660,24 @@ remove-pg-catalog-from-functions = false
 ```
 </details>
 
+### **remove-default-index-access-method**
+If `true`, remove the `USING btree` clause from index definitions. Btree is the default
+index access method in Postgres and thus can be omitted.
+
+**Type**: `bool`
+
+**Default**: `true`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+[format]
+remove-default-index-access-method = false
+```
+</details>
+
 ### **diff**
 When `true`, report the difference between the current file and how it will look when
 formatted, without making any changes to the file. If there is a difference, it exits
