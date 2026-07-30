@@ -1,9 +1,13 @@
 """Formatter for index."""
 
+import typing
+
 from pglast import ast, printers
 
 from pgrubic.core import formatter
 from pgrubic.formatters.ddl import IF_NOT_EXISTS
+
+DEFAULT_INDEX_ACCESS_METHOD: typing.Final[str] = "btree"
 
 
 @printers.node_printer(ast.IndexStmt, override=True)
@@ -38,7 +42,7 @@ def index_stmt(node: ast.IndexStmt, output: formatter.IndentedStream) -> None:
         output.print_node(node.relation)
 
         if (
-            node.accessMethod != "btree"
+            node.accessMethod != DEFAULT_INDEX_ACCESS_METHOD
             or not output.config.format.remove_default_index_access_method
         ):
             output.newline()
