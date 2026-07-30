@@ -661,8 +661,8 @@ remove-pg-catalog-from-functions = false
 </details>
 
 ### **remove-default-index-access-method**
-If `true`, remove the `USING btree` clause from index definitions. Btree is the default
-index access method in Postgres and thus can be omitted.
+If `true`, remove the `USING btree` clause from index definitions. B-tree is the default
+index access method in PostgreSQL and thus can be omitted.
 
 **Type**: `bool`
 
