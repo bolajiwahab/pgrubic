@@ -10,7 +10,7 @@ import functools
 import dataclasses
 from contextlib import contextmanager
 
-from pglast import ast, parser, stream, visitors
+from pglast import ast, parser, visitors
 from colorama import Fore, Style
 from caseconverter import kebabcase
 
@@ -637,7 +637,8 @@ class Linter:
             # we convert it to string
             if BaseChecker.statement_fixes.counter > 0:
                 try:
-                    fixed_statement = stream.IndentedStream(
+                    fixed_statement = formatter.IndentedStream(
+                        config=self.config,
                         comments=comments,
                         semicolon_after_last_statement=False,
                         special_functions=True,

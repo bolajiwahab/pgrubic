@@ -35,6 +35,7 @@ exclude = []
 comma-at-beginning = true
 new-line-before-semicolon = false
 remove-pg-catalog-from-functions = true
+remove-default-index-access-method = true
 lines-between-statements = 1
 check = false
 diff = false
