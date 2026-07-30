@@ -12,11 +12,15 @@ create_index:
     WHERE name IS NOT NULL;
   expected: |
     CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS idx_orders
-        ON orders (id ASC NULLS LAST) INCLUDE (name)
-     NULLS NOT DISTINCT
-      WITH (fillfactor = 90, deduplicate_items = off)
+            ON orders (id ASC NULLS LAST)
+       INCLUDE (name)
+         NULLS NOT DISTINCT
+          WITH (
+                  fillfactor = 90
+                , deduplicate_items = off
+          )
     TABLESPACE pg_default
-     WHERE name IS NOT NULL;
+         WHERE name IS NOT NULL;
 
 create_index_btree:
   sql: |
