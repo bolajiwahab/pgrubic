@@ -5,8 +5,60 @@ formatter: INDEX
 create_index:
   sql: |
     CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS
-    idx_orders ON orders USING btree (id ASC NULLS LAST, status COLLATE pg_catalog."default" ASC NULLS LAST)
+    idx_orders ON orders USING btree (id ASC NULLS LAST)
     INCLUDE (first_name, last_name)
+    NULLS NOT DISTINCT
+    WITH (fillfactor = 90, deduplicate_items = off)
+    TABLESPACE pg_default
+    WHERE name IS NOT NULL;
+  expected: |
+    CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS idx_orders
+            ON orders (id ASC NULLS LAST)
+       INCLUDE (first_name, last_name)
+         NULLS NOT DISTINCT
+          WITH (fillfactor = 90, deduplicate_items = off)
+    TABLESPACE pg_default
+         WHERE name IS NOT NULL;
+
+create_index_long_lists:
+  sql: |
+    CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS idx_orders ON orders (account_identifier ASC NULLS LAST, customer_identifier ASC NULLS LAST, order_reference ASC NULLS LAST)
+    INCLUDE (first_name, last_name, preferred_name, billing_address, shipping_address, customer_reference)
+    NULLS NOT DISTINCT
+    WITH (fillfactor = 90, deduplicate_items = off, fastupdate = off, autosummarize = on, gin_pending_list_limit = 4096)
+    TABLESPACE pg_default
+    WHERE name IS NOT NULL;
+  expected: |
+    CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS idx_orders
+            ON orders (
+                account_identifier ASC NULLS LAST
+              , customer_identifier ASC NULLS LAST
+              , order_reference ASC NULLS LAST
+            )
+       INCLUDE (
+           first_name
+         , last_name
+         , preferred_name
+         , billing_address
+         , shipping_address
+         , customer_reference
+       )
+         NULLS NOT DISTINCT
+          WITH (
+              fillfactor = 90
+            , deduplicate_items = off
+            , fastupdate = off
+            , autosummarize = 'on'
+            , gin_pending_list_limit = 4096
+          )
+    TABLESPACE pg_default
+         WHERE name IS NOT NULL;
+
+create_index_single_item_parentheses:
+  sql: |
+    CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS
+    idx_orders ON orders USING btree (id ASC NULLS LAST)
+    INCLUDE (first_name)
     NULLS NOT DISTINCT
     WITH (fillfactor = 90)
     TABLESPACE pg_default
@@ -14,12 +66,9 @@ create_index:
   expected: |
     CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS idx_orders
             ON orders (id ASC NULLS LAST)
-       INCLUDE (name)
+       INCLUDE (first_name)
          NULLS NOT DISTINCT
-          WITH (
-                  fillfactor = 90
-                , deduplicate_items = off
-          )
+          WITH (fillfactor = 90)
     TABLESPACE pg_default
          WHERE name IS NOT NULL;
 
@@ -68,6 +117,31 @@ create_index_no_name:
   expected: |
     CREATE INDEX
         ON orders (id);
+
+create_index_custom_line_length:
+  sql: |
+    CREATE INDEX idx_orders ON orders (id) INCLUDE (first_name, last_name);
+  expected: |
+    CREATE INDEX idx_orders
+         ON orders (id)
+    INCLUDE (
+        first_name
+      , last_name
+    );
+  config:
+    format:
+      compact_lists_margin: 30
+
+create_index_within_line_length:
+  sql: |
+    CREATE INDEX idx_orders ON orders (id) INCLUDE (first_name, last_name);
+  expected: |
+    CREATE INDEX idx_orders
+         ON orders (id)
+    INCLUDE (first_name, last_name);
+  config:
+    format:
+      compact_lists_margin: 100
 
 create_index_remove_default_method:
   sql: |

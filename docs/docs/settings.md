@@ -590,6 +590,24 @@ comma-at-beginning = false
 ```
 </details>
 
+### **compact-lists-margin**
+Use a compact, single-line form for a list when it does not exceed this right
+margin. Set it to `0` to always expand lists.
+
+**Type**: `int`
+
+**Default**: `90`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+[format]
+compact-lists-margin = 100
+```
+</details>
+
 ### **new-line-before-semicolon**
 If `true`, add a new line before each semicolon.
 

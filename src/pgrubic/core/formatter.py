@@ -2,7 +2,7 @@
 
 import typing
 
-from pglast import parser, stream
+from pglast import ast, parser, stream
 
 from pgrubic import ISSUES_URL
 from pgrubic.core import noqa, config, errors
@@ -24,6 +24,32 @@ class IndentedStream(stream.IndentedStream):
         """Initialize IndentedStream with config."""
         super().__init__(**options)
         self.config = config
+
+    def print_parenthesized_list(
+        self,
+        nodes: tuple[ast.Node, ...],
+        *,
+        closing_indent: int,
+        continuation_indent: int = 4,
+    ) -> None:
+        """Print a parenthesized list in compact or expanded form."""
+        compact_list = self._concat_nodes(nodes)
+        compact_lists_margin = self.config.format.compact_lists_margin
+        is_compact = (
+            compact_lists_margin > 0
+            and self.current_column + len("(") + len(compact_list) < compact_lists_margin
+        )
+
+        self.write("(")
+        if is_compact:
+            self.print_list(nodes, standalone_items=False)
+        else:
+            self.newline()
+            self.space(continuation_indent)
+            self.print_list(nodes, standalone_items=True)
+            self.newline()
+            self.indent(closing_indent)
+        self.write(")")
 
 
 class Formatter:

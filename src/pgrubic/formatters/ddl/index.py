@@ -43,10 +43,12 @@ def index_stmt(node: ast.IndexStmt, output: formatter.IndentedStream) -> None:
     output.space()
     output.print_node(node.relation)
 
-    if (
+    print_access_method = (
         node.accessMethod != DEFAULT_INDEX_ACCESS_METHOD
         or not output.config.format.remove_default_index_access_method
-    ):
+    )
+
+    if print_access_method:
         output.newline()
         output.indent(gutter - len("USING"))
         output.write("USING")
@@ -54,37 +56,38 @@ def index_stmt(node: ast.IndexStmt, output: formatter.IndentedStream) -> None:
         output.print_name(node.accessMethod)
 
     output.space()
-    output.swrite("(")
-    output.print_list(node.indexParams, standalone_items=False)
-    output.swrite(")")
+    output.print_parenthesized_list(
+        node.indexParams,
+        closing_indent=gutter - len("ON"),
+    )
 
     if node.indexIncludingParams:
+        keyword = "INCLUDE"
         output.newline()
-        output.indent(gutter - len("INCLUDE"))
-        output.write("INCLUDE")
+        output.indent(gutter - len(keyword))
+        output.write(keyword)
         output.space()
-        output.swrite("(")
-        output.print_list(node.indexIncludingParams, standalone_items=False)
-        output.swrite(")")
+        output.print_parenthesized_list(
+            node.indexIncludingParams,
+            closing_indent=gutter - len(keyword),
+        )
 
     if node.nulls_not_distinct:
+        keyword = "NULLS"
         output.newline()
-        output.indent(gutter - len("NULLS"))
-        output.write("NULLS NOT DISTINCT")
+        output.indent(gutter - len(keyword))
+        output.write(f"{keyword} NOT DISTINCT")
 
     if node.options:
+        keyword = "WITH"
         output.newline()
-        output.indent(gutter - len("WITH"))
-        output.write("WITH")
+        output.indent(gutter - len(keyword))
+        output.write(keyword)
         output.space()
-        with output.expression(need_parens=True):
-            output.newline() if len(node.options) > 1 else output.space(0)
-            output.space(gutter - len("WITH") + 2) if len(
-                node.options,
-            ) > 1 else output.space(0)
-            output.print_list(node.options, standalone_items=True)
-            output.newline() if len(node.options) > 1 else output.space(0)
-            output.indent(gutter - len("WITH"))
+        output.print_parenthesized_list(
+            node.options,
+            closing_indent=gutter - len(keyword),
+        )
 
     if node.tableSpace:
         output.newline()
@@ -94,8 +97,9 @@ def index_stmt(node: ast.IndexStmt, output: formatter.IndentedStream) -> None:
         output.print_name(node.tableSpace)
 
     if node.whereClause:
+        keyword = "WHERE"
         output.newline()
-        output.indent(gutter - len("WHERE"))
-        output.write("WHERE")
+        output.indent(gutter - len(keyword))
+        output.write(keyword)
         output.space()
         output.print_node(node.whereClause)
