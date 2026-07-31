@@ -1,13 +1,14 @@
 ---
+# yamllint disable rule:line-length
 formatter: INDEX
 
 create_index:
   sql: |
     CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS
-    idx_orders ON orders USING btree (id ASC NULLS LAST)
-    INCLUDE (name)
+    idx_orders ON orders USING btree (id ASC NULLS LAST, status COLLATE pg_catalog."default" ASC NULLS LAST)
+    INCLUDE (first_name, last_name)
     NULLS NOT DISTINCT
-    WITH (fillfactor = 90, deduplicate_items = off)
+    WITH (fillfactor = 90)
     TABLESPACE pg_default
     WHERE name IS NOT NULL;
   expected: |

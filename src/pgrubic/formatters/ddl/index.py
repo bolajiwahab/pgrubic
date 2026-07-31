@@ -78,10 +78,12 @@ def index_stmt(node: ast.IndexStmt, output: formatter.IndentedStream) -> None:
         output.write("WITH")
         output.space()
         with output.expression(need_parens=True):
-            output.newline()
-            output.space(gutter - len("WITH") + 2)
+            output.newline() if len(node.options) > 1 else output.space(0)
+            output.space(gutter - len("WITH") + 2) if len(
+                node.options,
+            ) > 1 else output.space(0)
             output.print_list(node.options, standalone_items=True)
-            output.newline()
+            output.newline() if len(node.options) > 1 else output.space(0)
             output.indent(gutter - len("WITH"))
 
     if node.tableSpace:
