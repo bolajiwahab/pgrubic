@@ -25,6 +25,27 @@ class IndentedStream(stream.IndentedStream):
         super().__init__(**options)
         self.config = config
 
+    def _concatenate_nodes(
+        self,
+        *,
+        nodes: tuple[ast.Node, ...],
+        sep: str = noqa.SPACE,
+        are_names: bool = False,
+    ) -> str:
+        """Concatenate the given `nodes`, using `sep` as the separator."""
+        output = stream.RawStream(
+            special_functions=self.special_functions,
+            comma_at_eoln=self.comma_at_eoln,
+            remove_pg_catalog_from_functions=self.remove_pg_catalog_from_functions,
+        )
+        output.print_list(
+            nodes=nodes,
+            sep=sep,
+            standalone_items=False,
+            are_names=are_names,
+        )
+        return output.getvalue()
+
     def print_parenthesized_list(
         self,
         nodes: tuple[ast.Node, ...],
@@ -33,11 +54,12 @@ class IndentedStream(stream.IndentedStream):
         continuation_indent: int = 4,
     ) -> None:
         """Print a parenthesized list in compact or expanded form."""
-        compact_list = self._concat_nodes(nodes)
+        compact_list = self._concatenate_nodes(nodes=nodes)
         compact_lists_margin = self.config.format.compact_lists_margin
-        is_compact = (
-            compact_lists_margin > 0
-            and self.current_column + len("(") + len(compact_list) < compact_lists_margin
+        length_of_parentheses = 2
+        is_compact = compact_lists_margin > 0 and (
+            (self.current_column + len(compact_list) + length_of_parentheses)
+            <= compact_lists_margin
         )
 
         self.write("(")

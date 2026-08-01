@@ -143,6 +143,17 @@ create_index_within_line_length:
     format:
       compact_lists_margin: 100
 
+create_index_at_compact_list_margin:
+  sql: |
+    CREATE INDEX idx_orders ON orders (id) INCLUDE (first_name, last_name);
+  expected: |
+    CREATE INDEX idx_orders
+         ON orders (id)
+    INCLUDE (first_name, last_name);
+  config:
+    format:
+      compact_lists_margin: 31
+
 create_index_remove_default_method:
   sql: |
     CREATE INDEX idx_orders ON orders USING btree (id);
@@ -153,3 +164,20 @@ create_index_remove_default_method:
   config:
     format:
       remove_default_index_access_method: false
+
+create_index_without_compact_lists:
+  sql: |
+    CREATE INDEX idx_orders ON orders (id) INCLUDE (first_name, last_name);
+  expected: |
+    CREATE INDEX idx_orders
+         ON orders (
+             id
+         )
+    INCLUDE (
+        first_name
+      , last_name
+    );
+  config:
+    format:
+      compact_lists_margin: 0
+      remove_default_index_access_method: true
