@@ -590,9 +590,9 @@ comma-at-beginning = false
 ```
 </details>
 
-### **compact-lists-margin**
-Use a compact, single-line form for a list when it does not exceed this
-margin. Set it to `0` to always expand lists.
+### **compact-parenthesized-lists-margin**
+Use a compact, single-line form for a parenthesized list when it does not exceed this
+margin. Set it to `0` to always expand parenthesized lists.
 
 **Type**: `int`
 
@@ -604,7 +604,7 @@ margin. Set it to `0` to always expand lists.
 
 ```toml
 [format]
-compact-lists-margin = 100
+compact-parenthesized-lists-margin = 100
 ```
 </details>
 

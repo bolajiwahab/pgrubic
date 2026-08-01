@@ -55,11 +55,13 @@ class IndentedStream(stream.IndentedStream):
     ) -> None:
         """Print a parenthesized list in compact or expanded form."""
         compact_list = self._concatenate_nodes(nodes=nodes)
-        compact_lists_margin = self.config.format.compact_lists_margin
+        compact_parenthesized_lists_margin = (
+            self.config.format.compact_parenthesized_lists_margin
+        )
         length_of_parentheses = 2
-        is_compact = compact_lists_margin > 0 and (
+        is_compact = compact_parenthesized_lists_margin > 0 and (
             (self.current_column + len(compact_list) + length_of_parentheses)
-            <= compact_lists_margin
+            <= compact_parenthesized_lists_margin
         )
 
         self.write("(")
