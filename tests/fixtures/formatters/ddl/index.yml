@@ -130,7 +130,7 @@ create_index_custom_line_length:
     );
   config:
     format:
-      compact_lists_margin: 30
+      compact_parenthesized_lists_margin: 30
 
 create_index_within_line_length:
   sql: |
@@ -141,9 +141,9 @@ create_index_within_line_length:
     INCLUDE (first_name, last_name);
   config:
     format:
-      compact_lists_margin: 100
+      compact_parenthesized_lists_margin: 100
 
-create_index_at_compact_list_margin:
+create_index_at_compact_parenthesized_lists_margin:
   sql: |
     CREATE INDEX idx_orders ON orders (id) INCLUDE (first_name, last_name);
   expected: |
@@ -152,7 +152,7 @@ create_index_at_compact_list_margin:
     INCLUDE (first_name, last_name);
   config:
     format:
-      compact_lists_margin: 31
+      compact_parenthesized_lists_margin: 31
 
 create_index_remove_default_method:
   sql: |
@@ -165,7 +165,7 @@ create_index_remove_default_method:
     format:
       remove_default_index_access_method: false
 
-create_index_without_compact_lists:
+create_index_without_compact_parenthesized_lists_margin:
   sql: |
     CREATE INDEX idx_orders ON orders (id) INCLUDE (first_name, last_name);
   expected: |
@@ -179,5 +179,5 @@ create_index_without_compact_lists:
     );
   config:
     format:
-      compact_lists_margin: 0
+      compact_parenthesized_lists_margin: 0
       remove_default_index_access_method: true
