@@ -8,6 +8,7 @@ from pgrubic.core import formatter
 from pgrubic.formatters.ddl import IF_NOT_EXISTS
 
 DEFAULT_INDEX_ACCESS_METHOD: typing.Final[str] = "btree"
+DEFAULT_GUTTER: typing.Final[int] = 6
 
 
 @printers.node_printer(ast.IndexStmt, override=True)
@@ -34,59 +35,71 @@ def index_stmt(node: ast.IndexStmt, output: formatter.IndentedStream) -> None:
         output.space()
         output.print_name(node.idxname)
 
+    gutter = 10 if node.tableSpace else 7 if node.indexIncludingParams else DEFAULT_GUTTER
+
     output.newline()
+    output.indent(gutter - len("ON"))
+    output.write("ON")
+    output.space()
+    output.print_node(node.relation)
 
-    with output.push_indent(4):
-        output.write("ON")
+    print_access_method = (
+        node.accessMethod != DEFAULT_INDEX_ACCESS_METHOD
+        or not output.config.format.remove_default_index_access_method
+    )
+
+    if print_access_method:
+        output.newline()
+        output.indent(gutter - len("USING"))
+        output.write("USING")
         output.space()
-        output.print_node(node.relation)
+        output.print_name(node.accessMethod)
 
-        if (
-            node.accessMethod != DEFAULT_INDEX_ACCESS_METHOD
-            or not output.config.format.remove_default_index_access_method
-        ):
-            output.newline()
-            output.indent(1)
-            output.write("USING")
-            output.space()
-            output.print_name(node.accessMethod)
+    output.space()
+    output.print_parenthesized_list(
+        node.indexParams,
+        closing_indent=gutter - len("ON"),
+    )
 
+    if node.indexIncludingParams:
+        keyword = "INCLUDE"
+        output.newline()
+        output.indent(gutter - len(keyword))
+        output.write(keyword)
         output.space()
-        output.swrite("(")
-        output.print_list(node.indexParams, standalone_items=False)
-        output.swrite(")")
+        output.print_parenthesized_list(
+            node.indexIncludingParams,
+            closing_indent=gutter - len(keyword),
+        )
 
-        if node.indexIncludingParams:
-            output.space()
-            output.write("INCLUDE")
-            output.space()
-            output.swrite("(")
-            output.print_list(node.indexIncludingParams, standalone_items=False)
-            output.swrite(")")
+    if node.nulls_not_distinct:
+        keyword = "NULLS"
+        output.newline()
+        output.indent(gutter - len(keyword))
+        output.write(f"{keyword} NOT DISTINCT")
 
-        if node.nulls_not_distinct:
-            output.newline()
-            output.indent(1)
-            output.write("NULLS NOT DISTINCT")
+    if node.options:
+        keyword = "WITH"
+        output.newline()
+        output.indent(gutter - len(keyword))
+        output.write(keyword)
+        output.space()
+        output.print_parenthesized_list(
+            node.options,
+            closing_indent=gutter - len(keyword),
+        )
 
-        if node.options:
-            output.newline()
-            output.indent(2)
-            output.write("WITH")
-            output.space()
-            with output.expression(need_parens=True):
-                output.print_list(node.options, standalone_items=False)
+    if node.tableSpace:
+        output.newline()
+        output.indent()
+        output.write("TABLESPACE")
+        output.space()
+        output.print_name(node.tableSpace)
 
-        if node.tableSpace:
-            output.newline()
-            output.indent()
-            output.write("TABLESPACE")
-            output.space()
-            output.print_name(node.tableSpace)
-
-        if node.whereClause:
-            output.newline()
-            output.indent(1)
-            output.write("WHERE")
-            output.space()
-            output.print_node(node.whereClause)
+    if node.whereClause:
+        keyword = "WHERE"
+        output.newline()
+        output.indent(gutter - len(keyword))
+        output.write(keyword)
+        output.space()
+        output.print_node(node.whereClause)

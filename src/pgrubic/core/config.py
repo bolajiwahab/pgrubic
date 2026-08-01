@@ -607,6 +607,24 @@ comma-at-beginning = false
 ```
 </details>
 
+### **compact-lists-margin**
+Use a compact, single-line form for a list when it does not exceed this
+margin. Set it to `0` to always expand lists.
+
+**Type**: `int`
+
+**Default**: `90`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+[format]
+compact-lists-margin = 100
+```
+</details>
+
 ### **new-line-before-semicolon**
 If `true`, add a new line before each semicolon.
 
@@ -762,6 +780,7 @@ no-cache = true
     include: list[str]
     exclude: list[str]
     comma_at_beginning: bool
+    compact_lists_margin: int
     new_line_before_semicolon: bool
     lines_between_statements: int
     remove_pg_catalog_from_functions: bool
@@ -1043,6 +1062,7 @@ def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
                 include=config_format["include"] + merged_config["include"],
                 exclude=config_format["exclude"] + merged_config["exclude"],
                 comma_at_beginning=config_format["comma-at-beginning"],
+                compact_lists_margin=config_format["compact-lists-margin"],
                 new_line_before_semicolon=config_format["new-line-before-semicolon"],
                 lines_between_statements=config_format["lines-between-statements"],
                 remove_pg_catalog_from_functions=config_format[

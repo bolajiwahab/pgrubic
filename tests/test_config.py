@@ -30,9 +30,11 @@ def test_config_from_environment_variable(tmp_path: pathlib.Path) -> None:
 
 def test_config_from_current_working_directory(tmp_path: pathlib.Path) -> None:
     """Test config from current working directory."""
+    expected_compact_lists_margin = 100
     config_content = """
     [format]
     diff = true
+    compact-lists-margin = 100
     """
     directory = tmp_path / "sub"
     directory.mkdir()
@@ -45,6 +47,7 @@ def test_config_from_current_working_directory(tmp_path: pathlib.Path) -> None:
 
         parsed_config = config.parse_config()
         assert parsed_config.format.diff is True
+        assert parsed_config.format.compact_lists_margin == expected_compact_lists_margin
 
 
 def test_missing_config_error(tmp_path: pathlib.Path) -> None:

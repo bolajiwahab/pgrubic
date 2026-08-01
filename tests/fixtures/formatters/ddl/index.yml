@@ -1,22 +1,76 @@
 ---
+# yamllint disable rule:line-length
 formatter: INDEX
 
 create_index:
   sql: |
     CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS
     idx_orders ON orders USING btree (id ASC NULLS LAST)
-    INCLUDE (name)
+    INCLUDE (first_name, last_name)
     NULLS NOT DISTINCT
     WITH (fillfactor = 90, deduplicate_items = off)
     TABLESPACE pg_default
     WHERE name IS NOT NULL;
   expected: |
     CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS idx_orders
-        ON orders (id ASC NULLS LAST) INCLUDE (name)
-     NULLS NOT DISTINCT
-      WITH (fillfactor = 90, deduplicate_items = off)
+            ON orders (id ASC NULLS LAST)
+       INCLUDE (first_name, last_name)
+         NULLS NOT DISTINCT
+          WITH (fillfactor = 90, deduplicate_items = off)
     TABLESPACE pg_default
-     WHERE name IS NOT NULL;
+         WHERE name IS NOT NULL;
+
+create_index_long_lists:
+  sql: |
+    CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS idx_orders ON orders (account_identifier ASC NULLS LAST, customer_identifier ASC NULLS LAST, order_reference ASC NULLS LAST)
+    INCLUDE (first_name, last_name, preferred_name, billing_address, shipping_address, customer_reference)
+    NULLS NOT DISTINCT
+    WITH (fillfactor = 90, deduplicate_items = off, fastupdate = off, autosummarize = on, gin_pending_list_limit = 4096)
+    TABLESPACE pg_default
+    WHERE name IS NOT NULL;
+  expected: |
+    CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS idx_orders
+            ON orders (
+                account_identifier ASC NULLS LAST
+              , customer_identifier ASC NULLS LAST
+              , order_reference ASC NULLS LAST
+            )
+       INCLUDE (
+           first_name
+         , last_name
+         , preferred_name
+         , billing_address
+         , shipping_address
+         , customer_reference
+       )
+         NULLS NOT DISTINCT
+          WITH (
+              fillfactor = 90
+            , deduplicate_items = off
+            , fastupdate = off
+            , autosummarize = 'on'
+            , gin_pending_list_limit = 4096
+          )
+    TABLESPACE pg_default
+         WHERE name IS NOT NULL;
+
+create_index_single_item_parentheses:
+  sql: |
+    CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS
+    idx_orders ON orders USING btree (id ASC NULLS LAST)
+    INCLUDE (first_name)
+    NULLS NOT DISTINCT
+    WITH (fillfactor = 90)
+    TABLESPACE pg_default
+    WHERE name IS NOT NULL;
+  expected: |
+    CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS idx_orders
+            ON orders (id ASC NULLS LAST)
+       INCLUDE (first_name)
+         NULLS NOT DISTINCT
+          WITH (fillfactor = 90)
+    TABLESPACE pg_default
+         WHERE name IS NOT NULL;
 
 create_index_btree:
   sql: |
@@ -64,6 +118,42 @@ create_index_no_name:
     CREATE INDEX
         ON orders (id);
 
+create_index_custom_line_length:
+  sql: |
+    CREATE INDEX idx_orders ON orders (id) INCLUDE (first_name, last_name);
+  expected: |
+    CREATE INDEX idx_orders
+         ON orders (id)
+    INCLUDE (
+        first_name
+      , last_name
+    );
+  config:
+    format:
+      compact_lists_margin: 30
+
+create_index_within_line_length:
+  sql: |
+    CREATE INDEX idx_orders ON orders (id) INCLUDE (first_name, last_name);
+  expected: |
+    CREATE INDEX idx_orders
+         ON orders (id)
+    INCLUDE (first_name, last_name);
+  config:
+    format:
+      compact_lists_margin: 100
+
+create_index_at_compact_list_margin:
+  sql: |
+    CREATE INDEX idx_orders ON orders (id) INCLUDE (first_name, last_name);
+  expected: |
+    CREATE INDEX idx_orders
+         ON orders (id)
+    INCLUDE (first_name, last_name);
+  config:
+    format:
+      compact_lists_margin: 31
+
 create_index_remove_default_method:
   sql: |
     CREATE INDEX idx_orders ON orders USING btree (id);
@@ -74,3 +164,20 @@ create_index_remove_default_method:
   config:
     format:
       remove_default_index_access_method: false
+
+create_index_without_compact_lists:
+  sql: |
+    CREATE INDEX idx_orders ON orders (id) INCLUDE (first_name, last_name);
+  expected: |
+    CREATE INDEX idx_orders
+         ON orders (
+             id
+         )
+    INCLUDE (
+        first_name
+      , last_name
+    );
+  config:
+    format:
+      compact_lists_margin: 0
+      remove_default_index_access_method: true
