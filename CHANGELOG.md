@@ -1,3 +1,9 @@
+## 1.2.1 (2026-08-01)
+
+### Fix
+
+- **formatter**: rename compact-lists-margin to compact-parenthesized-lists-margin to match its actual intent (#234)
+
 ## 1.2.0 (2026-08-01)
 
 ### Feat
