@@ -1,3 +1,16 @@
+## 1.2.0 (2026-08-01)
+
+### Feat
+
+- **formatter**: Improve create index printer with adaptive list layouts and clause alignment (#232)
+- **formatter**: make printing of default index access method configurable (#231)
+
+### Fix
+
+- **deps**: bump python from `b877e50` to `cea0e60` in the docker group across 1 directory (#225)
+- **deps**: bump actions/setup-python from 6 to 7 in the github-actions group (#226)
+- **deps**: bump gitpython from 3.1.50 to 3.1.54 (#229)
+
 ## 1.1.0 (2026-07-09)
 
 ### Feat
