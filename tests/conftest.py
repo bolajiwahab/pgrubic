@@ -143,6 +143,7 @@ def _restore_config(*, config: typing.Any, previous_config: typing.Any) -> None:
 
 @contextlib.contextmanager
 def update_config(
+    *,
     config: core.Config,
     overrides: dict[str, typing.Any],
 ) -> typing.Iterator[None]:

@@ -45,7 +45,7 @@ def test_rules(
         test_case.get("config", {}),
     )
 
-    with conftest.update_config(linter.config, config_overrides):
+    with conftest.update_config(config=linter.config, overrides=config_overrides):
         if parsed_test_case.sql_fail:
             # Set fix flag
             linter.config.lint.fix = bool(parsed_test_case.sql_fix)

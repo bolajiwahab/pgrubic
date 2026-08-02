@@ -30,7 +30,7 @@ def test_formatters(
         test_case.get("config", {}),
     )
 
-    with conftest.update_config(formatter.config, config_overrides):
+    with conftest.update_config(config=formatter.config, overrides=config_overrides):
         result = formatter.format(
             source_file=TEST_FILE,
             source_code=test_case["sql"],
@@ -61,8 +61,8 @@ def test_new_line_before_semicolon(formatter: core.Formatter) -> None:
     expected_output: str = f"SELECT 1{noqa.NEW_LINE};{noqa.NEW_LINE}"
 
     with conftest.update_config(
-        formatter.config,
-        {"format": {"new_line_before_semicolon": True}},
+        config=formatter.config,
+        overrides={"format": {"new_line_before_semicolon": True}},
     ):
         result = formatter.format(
             source_file=TEST_FILE,
@@ -88,8 +88,8 @@ select foo as "FROM"
 """
 
     with conftest.update_config(
-        formatter.config,
-        {"format": {"uppercase_keywords": False}},
+        config=formatter.config,
+        overrides={"format": {"uppercase_keywords": False}},
     ):
         result = formatter.format(
             source_file=TEST_FILE,

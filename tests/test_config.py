@@ -65,8 +65,8 @@ def test_update_config_restores_previous_values() -> None:
     new_compact_parenthesized_lists_margin = 20
 
     with conftest.update_config(
-        parsed_config,
-        {
+        config=parsed_config,
+        overrides={
             "format": {
                 "compact_parenthesized_lists_margin": new_compact_parenthesized_lists_margin,  # noqa: E501
             },
