@@ -26,7 +26,7 @@ class IndentedStream(stream.IndentedStream):
         self.config = config
 
     def apply_keyword_case(self, *, text: str) -> str:
-        """Apply the configured casing to keywords in formatted output.
+        """Apply the configured casing to keywords in the given text.
 
         Parameters:
         ----------
