@@ -70,3 +70,26 @@ def test_new_line_before_semicolon(formatter: core.Formatter) -> None:
     )
 
     assert result.formatted_source_code == expected_output
+
+
+def test_lowercase_keywords_preserves_other_tokens(formatter: core.Formatter) -> None:
+    """Test lowercase keywords preserve other SQL token values."""
+    source_code = (
+        "SELECT Foo AS \"FROM\", 'WHERE' FROM Café -- JOIN\nWHERE Foo::TEXT IS NOT NULL;"
+    )
+    expected_output = (
+        '-- JOIN\nselect foo as "FROM"\n'
+        "     , 'WHERE'\n"
+        '  from "café"\n'
+        " where cast(foo as text) is not null;\n"
+    )
+
+    formatter.config.format.uppercase_keywords = False
+    formatter.config.format.new_line_before_semicolon = False
+
+    result = formatter.format(
+        source_file=TEST_FILE,
+        source_code=source_code,
+    )
+
+    assert result.formatted_source_code == expected_output

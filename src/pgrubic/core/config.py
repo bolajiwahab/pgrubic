@@ -625,6 +625,24 @@ compact-parenthesized-lists-margin = 100
 ```
 </details>
 
+### **uppercase-keywords**
+Whether to format SQL keywords in uppercase. When `false`, keywords are formatted in
+lowercase.
+
+**Type**: `bool`
+
+**Default**: `true`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+[format]
+uppercase-keywords = false
+```
+</details>
+
 ### **new-line-before-semicolon**
 If `true`, add a new line before each semicolon.
 
@@ -781,6 +799,7 @@ no-cache = true
     exclude: list[str]
     comma_at_beginning: bool
     compact_parenthesized_lists_margin: int
+    uppercase_keywords: bool
     new_line_before_semicolon: bool
     lines_between_statements: int
     remove_pg_catalog_from_functions: bool
@@ -1065,6 +1084,7 @@ def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
                 compact_parenthesized_lists_margin=config_format[
                     "compact-parenthesized-lists-margin"
                 ],
+                uppercase_keywords=config_format["uppercase-keywords"],
                 new_line_before_semicolon=config_format["new-line-before-semicolon"],
                 lines_between_statements=config_format["lines-between-statements"],
                 remove_pg_catalog_from_functions=config_format[

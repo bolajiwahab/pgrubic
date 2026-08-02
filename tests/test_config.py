@@ -35,6 +35,7 @@ def test_config_from_current_working_directory(tmp_path: pathlib.Path) -> None:
     [format]
     diff = true
     compact-parenthesized-lists-margin = 100
+    uppercase-keywords = false
     """
     directory = tmp_path / "sub"
     directory.mkdir()
@@ -47,6 +48,7 @@ def test_config_from_current_working_directory(tmp_path: pathlib.Path) -> None:
 
         parsed_config = config.parse_config()
         assert parsed_config.format.diff is True
+        assert parsed_config.format.uppercase_keywords is False
         assert (
             parsed_config.format.compact_parenthesized_lists_margin
             == expected_compact_parenthesized_lists_margin
