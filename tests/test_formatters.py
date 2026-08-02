@@ -88,6 +88,8 @@ select foo as "FROM"
    and name ilike '%postgres%';
 """
 
+    current_uppercase_keywords = formatter.config.format.uppercase_keywords
+
     formatter.config.format.uppercase_keywords = False
 
     result = formatter.format(
@@ -95,23 +97,6 @@ select foo as "FROM"
         source_code=source_code,
     )
 
-    assert result.formatted_source_code == expected_output
-
-    formatter.config.format.uppercase_keywords = True
-
-
-def test_uppercase_keywords_includes_postgresql_keywords(
-    formatter: core.Formatter,
-) -> None:
-    """Test uppercase formatting includes PostgreSQL-specific keywords."""
-    source_code = "select name ilike '%postgres%' from projects;"
-    expected_output = "SELECT name ILIKE '%postgres%'\n  FROM projects;\n"
-
-    formatter.config.format.uppercase_keywords = True
-
-    result = formatter.format(
-        source_file=TEST_FILE,
-        source_code=source_code,
-    )
+    formatter.config.format.uppercase_keywords = current_uppercase_keywords
 
     assert result.formatted_source_code == expected_output

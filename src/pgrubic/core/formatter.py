@@ -248,15 +248,17 @@ class Formatter:
     def format_ast(
         self,
         *,
-        source_ast: ast.Node | tuple[ast.RawStmt, ...],
+        source_ast: tuple[ast.RawStmt, ...],
         comments: list[noqa.Comment],
     ) -> str:
         """Format source code from AST.
 
         Parameters:
         ----------
-        source_ast: ast.Node
+        source_ast: tuple[ast.RawStmt, ...]
             Source AST to format.
+        comments: list[noqa.Comment]
+            Comments extracted from the original statement.
 
         Returns:
         -------
