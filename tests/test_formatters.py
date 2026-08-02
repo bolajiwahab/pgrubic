@@ -62,15 +62,17 @@ def test_new_line_before_semicolon(formatter: core.Formatter) -> None:
     source_code = "select 1;"
     expected_output: str = f"SELECT 1{noqa.NEW_LINE};{noqa.NEW_LINE}"
 
+    current_new_line_before_semicolon = formatter.config.format.new_line_before_semicolon
+
     formatter.config.format.new_line_before_semicolon = True
 
     result = formatter.format(
         source_file=TEST_FILE,
         source_code=source_code,
     )
+    formatter.config.format.new_line_before_semicolon = current_new_line_before_semicolon
 
     assert result.formatted_source_code == expected_output
-    formatter.config.format.new_line_before_semicolon = False
 
 
 def test_lowercase_keywords_preserves_other_tokens(formatter: core.Formatter) -> None:
