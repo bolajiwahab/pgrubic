@@ -77,7 +77,7 @@ def test_update_config_restores_previous_values() -> None:
             parsed_config.format.compact_parenthesized_lists_margin
             == new_compact_parenthesized_lists_margin
         )
-        assert parsed_config.lint.fix
+        assert parsed_config.lint.fix == (not previous_fix)
 
     assert parsed_config.format.compact_parenthesized_lists_margin == previous_margin
     assert parsed_config.lint.fix is previous_fix
