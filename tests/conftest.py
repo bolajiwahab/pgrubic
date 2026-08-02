@@ -1,8 +1,11 @@
 """Conftest."""
 
+import copy
 import enum
 import typing
 import pathlib
+import contextlib
+import dataclasses
 
 import yaml
 import pytest
@@ -83,13 +86,12 @@ def load_test_cases(
     return test_cases
 
 
-def update_config(config: core.Config, overrides: dict[str, typing.Any]) -> None:
-    """Update config object with overrides."""
+def _update_config(*, config: typing.Any, overrides: dict[str, typing.Any]) -> None:
+    """Update a config object with overrides."""
     for key, value in overrides.items():
         if isinstance(value, dict):
             # If value is a dictionary, recursively update the nested config attribute
-            sub_config = getattr(config, key)
-            update_config(sub_config, value)
+            _update_config(config=getattr(config, key), overrides=value)
         elif key == "required_columns":
             # Ensure required_columns is a list of columns
             setattr(
@@ -131,3 +133,24 @@ def update_config(config: core.Config, overrides: dict[str, typing.Any]) -> None
         else:
             # Set the attribute directly, e.g., config.format.lines_between_statements = 1
             setattr(config, key, value)
+
+
+def _restore_config(*, config: typing.Any, previous_config: typing.Any) -> None:
+    """Restore a config snapshot while preserving the root object."""
+    for field in dataclasses.fields(config):
+        setattr(config, field.name, getattr(previous_config, field.name))
+
+
+@contextlib.contextmanager
+def update_config(
+    *,
+    config: core.Config,
+    overrides: dict[str, typing.Any],
+) -> typing.Iterator[None]:
+    """Temporarily update a config object with overrides."""
+    previous_config = copy.deepcopy(config)
+    try:
+        _update_config(config=config, overrides=overrides)
+        yield
+    finally:
+        _restore_config(config=config, previous_config=previous_config)
