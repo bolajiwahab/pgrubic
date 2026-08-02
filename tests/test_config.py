@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 import pytest
 
+from tests import conftest
 from pgrubic.core import config, errors
 
 
@@ -53,6 +54,33 @@ def test_config_from_current_working_directory(tmp_path: pathlib.Path) -> None:
             parsed_config.format.compact_parenthesized_lists_margin
             == expected_compact_parenthesized_lists_margin
         )
+
+
+def test_update_config_restores_previous_values() -> None:
+    """Test temporary config overrides are restored on context exit."""
+    parsed_config = config.parse_config()
+    previous_margin = parsed_config.format.compact_parenthesized_lists_margin
+    previous_fix = parsed_config.lint.fix
+
+    new_compact_parenthesized_lists_margin = 20
+
+    with conftest.update_config(
+        parsed_config,
+        {
+            "format": {
+                "compact_parenthesized_lists_margin": new_compact_parenthesized_lists_margin,  # noqa: E501
+            },
+            "lint": {"fix": not previous_fix},
+        },
+    ):
+        assert (
+            parsed_config.format.compact_parenthesized_lists_margin
+            == new_compact_parenthesized_lists_margin
+        )
+        assert parsed_config.lint.fix
+
+    assert parsed_config.format.compact_parenthesized_lists_margin == previous_margin
+    assert parsed_config.lint.fix is previous_fix
 
 
 def test_missing_config_error(tmp_path: pathlib.Path) -> None:

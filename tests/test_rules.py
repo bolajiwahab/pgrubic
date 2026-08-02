@@ -45,44 +45,46 @@ def test_rules(
         test_case.get("config", {}),
     )
 
-    # Apply overrides to global configuration
-    conftest.update_config(linter.config, config_overrides)
+    with conftest.update_config(linter.config, config_overrides):
+        if parsed_test_case.sql_fail:
+            # Set fix flag
+            linter.config.lint.fix = bool(parsed_test_case.sql_fix)
 
-    if parsed_test_case.sql_fail:
-        # Set fix flag
-        linter.config.lint.fix = bool(parsed_test_case.sql_fix)
+            linting_result = linter.run(
+                source_file=f"{parsed_test_case.rule}.sql",
+                source_code=parsed_test_case.sql_fail,
+            )
 
-        linting_result = linter.run(
-            source_file=f"{parsed_test_case.rule}.sql",
-            source_code=parsed_test_case.sql_fail,
-        )
+            assert len(linting_result.errors) == 0, (
+                "Test failed: Errors found in test case"
+            )
 
-        assert len(linting_result.errors) == 0, "Test failed: Errors found in test case"
+            assert any(
+                violation.rule_code == rule for violation in linting_result.violations
+            ), f"Test failed: No violations found for rule: `{rule}` in `{test_id}`"
 
-        assert any(
-            violation.rule_code == rule for violation in linting_result.violations
-        ), f"Test failed: No violations found for rule: `{rule}` in `{test_id}`"
+            if parsed_test_case.sql_fix:
+                assert linting_result.fixed_source_code == parsed_test_case.sql_fix
 
-        if parsed_test_case.sql_fix:
-            assert linting_result.fixed_source_code == parsed_test_case.sql_fix
+                # Check that the fixed source_code is valid
+                try:
+                    parser.parse_sql(linting_result.fixed_source_code)
+                except parser.ParseError as error:
+                    msg = f"Formatted code is not a valid syntax: {error!s}"
+                    raise ValueError(msg) from error
 
-            # Check that the fixed source_code is valid
-            try:
-                parser.parse_sql(linting_result.fixed_source_code)
-            except parser.ParseError as error:
-                msg = f"Formatted code is not a valid syntax: {error!s}"
-                raise ValueError(msg) from error
+        if parsed_test_case.sql_pass:
+            linting_result = linter.run(
+                source_file=f"{parsed_test_case.rule}.sql",
+                source_code=parsed_test_case.sql_pass,
+            )
 
-    if parsed_test_case.sql_pass:
-        linting_result = linter.run(
-            source_file=f"{parsed_test_case.rule}.sql",
-            source_code=parsed_test_case.sql_pass,
-        )
+            assert len(linting_result.errors) == 0, (
+                "Test failed: Errors found in test case"
+            )
 
-        assert len(linting_result.errors) == 0, "Test failed: Errors found in test case"
-
-        assert not any(
-            violation.rule_code == rule for violation in linting_result.violations
-        ), (
-            f"""Test failed: Violations found for rule: `{rule}` in `{test_id}` which should pass"""  # noqa: E501
-        )
+            assert not any(
+                violation.rule_code == rule for violation in linting_result.violations
+            ), (
+                f"""Test failed: Violations found for rule: `{rule}` in `{test_id}` which should pass"""  # noqa: E501
+            )
