@@ -25,13 +25,13 @@ class IndentedStream(stream.IndentedStream):
         super().__init__(**options)
         self.config = config
 
-    def apply_keyword_case(self, *, formatted_output: str) -> str:
+    def apply_keyword_case(self, *, text: str) -> str:
         """Apply the configured casing to keywords in formatted output.
 
         Parameters:
         ----------
-        formatted_output: str
-            Formatted output.
+        text: str
+            Text to apply keyword casing to.
 
         Returns:
         -------
@@ -39,12 +39,12 @@ class IndentedStream(stream.IndentedStream):
             Formatted output with keyword casing applied.
         """
         if self.config.format.uppercase_keywords:
-            return formatted_output
+            return text
 
-        output = list(formatted_output)
-        for token in parser.scan(formatted_output):
+        output = list(text)
+        for token in parser.scan(text):
             if token.kind != "NO_KEYWORD":
-                output[token.start : token.end + 1] = formatted_output[
+                output[token.start : token.end + 1] = text[
                     token.start : token.end + 1
                 ].lower()
 
@@ -172,7 +172,7 @@ class Formatter:
                         special_functions=True,
                     )
                     formatted_statement = output.apply_keyword_case(
-                        formatted_output=output(statement.text),
+                        text=output(statement.text),
                     )
 
                     if config.format.new_line_before_semicolon:
@@ -272,4 +272,4 @@ class Formatter:
             comma_at_eoln=not (self.config.format.comma_at_beginning),
             special_functions=True,
         )
-        return output.apply_keyword_case(formatted_output=output(source_ast))
+        return output.apply_keyword_case(text=output(source_ast))

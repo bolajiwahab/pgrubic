@@ -70,22 +70,44 @@ def test_new_line_before_semicolon(formatter: core.Formatter) -> None:
     )
 
     assert result.formatted_source_code == expected_output
+    formatter.config.format.new_line_before_semicolon = False
 
 
 def test_lowercase_keywords_preserves_other_tokens(formatter: core.Formatter) -> None:
     """Test lowercase keywords preserve other SQL token values."""
-    source_code = (
-        "SELECT Foo AS \"FROM\", 'WHERE' FROM Café -- JOIN\nWHERE Foo::TEXT IS NOT NULL;"
-    )
-    expected_output = (
-        '-- JOIN\nselect foo as "FROM"\n'
-        "     , 'WHERE'\n"
-        '  from "café"\n'
-        " where cast(foo as text) is not null;\n"
-    )
+    source_code = """
+SELECT Foo AS "FROM", 'WHERE' FROM Café -- JOIN
+WHERE Foo::TEXT IS NOT NULL and name ILIKE '%postgres%';
+"""
+
+    expected_output = """-- JOIN
+select foo as "FROM"
+     , 'WHERE'
+  from "café"
+ where cast(foo as text) is not null
+   and name ilike '%postgres%';
+"""
 
     formatter.config.format.uppercase_keywords = False
-    formatter.config.format.new_line_before_semicolon = False
+
+    result = formatter.format(
+        source_file=TEST_FILE,
+        source_code=source_code,
+    )
+
+    assert result.formatted_source_code == expected_output
+
+    formatter.config.format.uppercase_keywords = True
+
+
+def test_uppercase_keywords_includes_postgresql_keywords(
+    formatter: core.Formatter,
+) -> None:
+    """Test uppercase formatting includes PostgreSQL-specific keywords."""
+    source_code = "select name ilike '%postgres%' from projects;"
+    expected_output = "SELECT name ILIKE '%postgres%'\n  FROM projects;\n"
+
+    formatter.config.format.uppercase_keywords = True
 
     result = formatter.format(
         source_file=TEST_FILE,
