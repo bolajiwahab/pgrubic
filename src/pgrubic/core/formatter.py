@@ -25,6 +25,31 @@ class IndentedStream(stream.IndentedStream):
         super().__init__(**options)
         self.config = config
 
+    def apply_keyword_case(self, *, text: str) -> str:
+        """Apply the configured casing to keywords in the given text.
+
+        Parameters:
+        ----------
+        text: str
+            Text to apply keyword casing to.
+
+        Returns:
+        -------
+        str
+            Formatted output with keyword casing applied.
+        """
+        if self.config.format.uppercase_keywords:
+            return text
+
+        output = list(text)
+        for token in parser.scan(text):
+            if token.kind != "NO_KEYWORD":
+                output[token.start : token.end + 1] = text[
+                    token.start : token.end + 1
+                ].lower()
+
+        return "".join(output)
+
     def _concatenate_nodes(
         self,
         *,
@@ -138,14 +163,17 @@ class Formatter:
                 try:
                     parser.parse_sql(statement.text)
 
-                    formatted_statement = IndentedStream(
+                    output = IndentedStream(
                         config=config,
                         comments=comments,
                         semicolon_after_last_statement=False,
                         remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
                         comma_at_eoln=not (config.format.comma_at_beginning),
                         special_functions=True,
-                    )(statement.text)
+                    )
+                    formatted_statement = output.apply_keyword_case(
+                        text=output(statement.text),
+                    )
 
                     if config.format.new_line_before_semicolon:
                         formatted_statement += noqa.NEW_LINE + noqa.SEMI_COLON
@@ -216,3 +244,34 @@ class Formatter:
             formatted_source_code=formatted_source_code,
             errors=errors,
         )
+
+    def format_ast(
+        self,
+        *,
+        source_ast: tuple[ast.RawStmt, ...],
+        comments: list[noqa.Comment],
+    ) -> str:
+        """Format source code from AST.
+
+        Parameters:
+        ----------
+        source_ast: tuple[ast.RawStmt, ...]
+            Source AST to format.
+        comments: list[noqa.Comment]
+            Comments extracted from the original statement.
+
+        Returns:
+        -------
+        str
+            Formatted source code.
+        """
+        output = IndentedStream(
+            config=self.config,
+            comments=comments,
+            semicolon_after_last_statement=False,
+            separate_statements=self.config.format.lines_between_statements,
+            remove_pg_catalog_from_functions=self.config.format.remove_pg_catalog_from_functions,
+            comma_at_eoln=not (self.config.format.comma_at_beginning),
+            special_functions=True,
+        )
+        return output.apply_keyword_case(text=output(source_ast))

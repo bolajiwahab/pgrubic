@@ -634,18 +634,13 @@ class Linter:
                 violations.update(checker.violations)
 
             # If the statement parse tree has been modified due to fixes,
-            # we convert it to string
+            # we output the fixed statement, otherwise we output the original statement
             if BaseChecker.statement_fixes.counter > 0:
                 try:
-                    fixed_statement = formatter.IndentedStream(
-                        config=self.config,
+                    fixed_statement = self.formatter.format_ast(
+                        source_ast=parse_tree,
                         comments=comments,
-                        semicolon_after_last_statement=False,
-                        special_functions=True,
-                        separate_statements=self.config.format.lines_between_statements,
-                        remove_pg_catalog_from_functions=self.config.format.remove_pg_catalog_from_functions,
-                        comma_at_eoln=not (self.config.format.comma_at_beginning),
-                    )(parse_tree)
+                    )
 
                     if self.config.format.new_line_before_semicolon:
                         fixed_statement += noqa.NEW_LINE + noqa.SEMI_COLON

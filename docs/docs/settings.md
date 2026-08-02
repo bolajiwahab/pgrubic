@@ -608,6 +608,24 @@ compact-parenthesized-lists-margin = 100
 ```
 </details>
 
+### **uppercase-keywords**
+Whether to format SQL keywords in uppercase. When `false`, keywords are formatted in
+lowercase.
+
+**Type**: `bool`
+
+**Default**: `true`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+[format]
+uppercase-keywords = false
+```
+</details>
+
 ### **new-line-before-semicolon**
 If `true`, add a new line before each semicolon.
 

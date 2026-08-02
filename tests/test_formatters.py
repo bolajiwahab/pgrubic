@@ -62,11 +62,43 @@ def test_new_line_before_semicolon(formatter: core.Formatter) -> None:
     source_code = "select 1;"
     expected_output: str = f"SELECT 1{noqa.NEW_LINE};{noqa.NEW_LINE}"
 
+    current_new_line_before_semicolon = formatter.config.format.new_line_before_semicolon
+
     formatter.config.format.new_line_before_semicolon = True
 
     result = formatter.format(
         source_file=TEST_FILE,
         source_code=source_code,
     )
+    formatter.config.format.new_line_before_semicolon = current_new_line_before_semicolon
+
+    assert result.formatted_source_code == expected_output
+
+
+def test_lowercase_keywords_preserves_other_tokens(formatter: core.Formatter) -> None:
+    """Test lowercase keywords preserve other SQL token values."""
+    source_code = """
+SELECT Foo AS "FROM", 'WHERE' FROM Café -- JOIN
+WHERE Foo::TEXT IS NOT NULL and name ILIKE '%postgres%';
+"""
+
+    expected_output = """-- JOIN
+select foo as "FROM"
+     , 'WHERE'
+  from "café"
+ where cast(foo as text) is not null
+   and name ilike '%postgres%';
+"""
+
+    current_uppercase_keywords = formatter.config.format.uppercase_keywords
+
+    formatter.config.format.uppercase_keywords = False
+
+    result = formatter.format(
+        source_file=TEST_FILE,
+        source_code=source_code,
+    )
+
+    formatter.config.format.uppercase_keywords = current_uppercase_keywords
 
     assert result.formatted_source_code == expected_output
