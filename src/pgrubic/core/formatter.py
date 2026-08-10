@@ -71,6 +71,10 @@ class IndentedStream(stream.IndentedStream):
         )
         return output.getvalue()
 
+    def write_blank_space(self) -> None:
+        """Write an blank space."""
+        super().write("")
+
     def print_parenthesized_list(
         self,
         nodes: tuple[ast.Node, ...],
@@ -99,6 +103,8 @@ class IndentedStream(stream.IndentedStream):
             self.newline()
             self.indent(closing_indent)
         self.write(")")
+        if not is_compact:
+            self.dedent()
 
 
 class Formatter:

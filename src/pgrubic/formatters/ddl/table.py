@@ -2,11 +2,12 @@
 
 from pglast import ast, enums, stream, printers
 
+from pgrubic.core import formatter
 from pgrubic.formatters.ddl import IF_EXISTS, IF_NOT_EXISTS
 
 
 @printers.node_printer(ast.IntoClause, override=True)
-def into_clause(node: ast.IntoClause, output: stream.RawStream) -> None:
+def into_clause(node: ast.IntoClause, output: formatter.IndentedStream) -> None:
     """Printer for IntoClause."""
     output.print_node(node.rel)
 
@@ -17,24 +18,25 @@ def into_clause(node: ast.IntoClause, output: stream.RawStream) -> None:
 
     if node.accessMethod:
         output.newline()
+        output.write("USING")
         output.space()
-        output.writes("USING")
         output.print_name(node.accessMethod)
 
     if node.options:
         output.newline()
-        output.space(2)
         output.write("WITH")
         output.space()
-        with output.expression(need_parens=True):
-            output.newline()
-            output.space(6)
-            output.print_list(node.options)
-            output.newline()
-            output.space(2)
+        output.print_parenthesized_list(
+            node.options,
+            closing_indent=0,
+            continuation_indent=4,
+        )
 
     if node.onCommit != enums.OnCommitAction.ONCOMMIT_NOOP:
-        output.space()
+        if node.accessMethod or node.options:
+            output.newline()
+        else:
+            output.space()
         output.write("ON COMMIT")
         output.space()
         if node.onCommit == enums.OnCommitAction.ONCOMMIT_PRESERVE_ROWS:
@@ -126,9 +128,11 @@ def create_foreign_table_stmt(
 @printers.node_printer(ast.CreateStmt, override=True)
 def create_stmt(
     node: ast.CreateStmt,
-    output: stream.RawStream,
+    output: formatter.IndentedStream,
 ) -> None:
     """Printer for CreateStmt."""
+    clause_indent = 4 if node.partbound else 0
+
     output.writes("CREATE")
 
     if isinstance(node.ancestors[0], ast.CreateForeignTableStmt):  # type: ignore[attr-defined]
@@ -164,13 +168,15 @@ def create_stmt(
             x for x in node.tableElts if isinstance(x, ast.Constraint)
         ]
         output.space()
+
         with output.expression(need_parens=True):
             output.newline()
-            output.space(4)
+            output.space(clause_indent + 4)
             output.print_list(columns)
             output.newline()
+            output.space(clause_indent)
     elif node.partbound:
-        output.write("")
+        output.write_blank_space()
     elif not node.ofTypename:
         output.space()
         output.write("()")
@@ -205,24 +211,25 @@ def create_stmt(
 
     if node.accessMethod:
         output.newline()
+        output.space(clause_indent)
+        output.write("USING")
         output.space()
-        output.writes("USING")
         output.print_name(node.accessMethod)
 
     if node.options:
         output.newline()
-        output.space(2)
+        output.space(clause_indent)
         output.write("WITH")
         output.space()
-        with output.expression(need_parens=True):
-            output.newline()
-            output.space(6)
-            output.print_list(node.options)
-            output.newline()
-            output.space(2)
+        output.print_parenthesized_list(
+            node.options,
+            closing_indent=clause_indent,
+            continuation_indent=clause_indent + 4,
+        )
 
     if node.tablespacename:
         output.newline()
+        output.space(clause_indent)
         output.write("TABLESPACE")
         output.space()
         output.print_name(node.tablespacename)
