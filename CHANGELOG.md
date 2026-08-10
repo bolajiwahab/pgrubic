@@ -1,3 +1,15 @@
+## 1.3.0 (2026-08-10)
+
+### Feat
+
+- improve table formatter (#241)
+- Add configurable uppercase and lowercase SQL keyword formatting (#236)
+
+### Fix
+
+- **deps**: bump python from `cea0e60` to `a7fb1e6` in the docker group (#240)
+- **deps**: bump gitpython from 3.1.54 to 3.1.58 (#238)
+
 ## 1.2.1 (2026-08-01)
 
 ### Fix
