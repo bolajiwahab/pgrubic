@@ -33,10 +33,7 @@ def into_clause(node: ast.IntoClause, output: formatter.IndentedStream) -> None:
         )
 
     if node.onCommit != enums.OnCommitAction.ONCOMMIT_NOOP:
-        if node.accessMethod or node.options:
-            output.newline()
-        else:
-            output.space()
+        output.space()
         output.write("ON COMMIT")
         output.space()
         if node.onCommit == enums.OnCommitAction.ONCOMMIT_PRESERVE_ROWS:
