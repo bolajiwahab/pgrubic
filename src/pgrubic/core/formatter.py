@@ -73,7 +73,7 @@ class IndentedStream(stream.IndentedStream):
 
     def write_blank_space(self) -> None:
         """Write an blank space."""
-        super().write("")
+        self.write("")
 
     def print_parenthesized_list(
         self,
