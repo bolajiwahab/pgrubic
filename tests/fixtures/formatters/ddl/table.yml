@@ -1,4 +1,5 @@
 ---
+# yamllint disable rule:line-length
 formatter: TABLE
 
 create_table:
@@ -10,23 +11,33 @@ create_table:
         a text
       , b text
     )
-     USING heap
-      WITH (
-          fillfactor = 10
-      )
+    USING heap
+    WITH (fillfactor = 10)
     TABLESPACE pg_default;
 
 create_temporary_table:
   sql: |
-    CREATE TEMPORARY TABLE mood ();
+    CREATE TEMPORARY TABLE mood (a text, b text) USING heap WITH (fillfactor = 10) TABLESPACE pg_default;
   expected: |
-    CREATE TEMPORARY TABLE mood ();
+    CREATE TEMPORARY TABLE mood (
+        a text
+      , b text
+    )
+    USING heap
+    WITH (fillfactor = 10)
+    TABLESPACE pg_default;
 
 create_unlogged_table:
   sql: |
-    CREATE UNLOGGED TABLE mood ();
+    CREATE UNLOGGED TABLE mood (a text, b text) USING heap WITH (fillfactor = 10) TABLESPACE pg_default;
   expected: |
-    CREATE UNLOGGED TABLE mood ();
+    CREATE UNLOGGED TABLE mood (
+        a text
+      , b text
+    )
+    USING heap
+    WITH (fillfactor = 10)
+    TABLESPACE pg_default;
 
 create_temporary_table_on_commit_drop:
   sql: |
@@ -133,10 +144,8 @@ create_table_ctas:
     TABLESPACE pg_default AS SELECT * FROM tbl;
   expected: |
     CREATE TABLE mood (a, b)
-     USING heap
-      WITH (
-          fillfactor = 10
-      )
+    USING heap
+    WITH (fillfactor = 10)
     TABLESPACE pg_default AS
     SELECT *
       FROM tbl;
@@ -225,6 +234,66 @@ create_table_partition:
         PARTITION OF measurement
         FOR VALUES FROM ('2016-07-01') TO ('2016-08-01');
 
+create_partition_with_storage_parameters:
+  sql: |
+    CREATE TABLE measurement_y2016m07
+    PARTITION OF measurement FOR VALUES FROM ('2016-07-01') TO ('2016-08-01')
+    WITH (fillfactor = 10, parallel_workers = 4);
+  expected: |
+    CREATE TABLE measurement_y2016m07
+        PARTITION OF measurement
+        FOR VALUES FROM ('2016-07-01') TO ('2016-08-01')
+        WITH (fillfactor = 10, parallel_workers = 4);
+
+create_partition_with_tablespace:
+  sql: |
+    CREATE TABLE measurement_y2016m07
+    PARTITION OF measurement FOR VALUES FROM ('2016-07-01') TO ('2016-08-01')
+    TABLESPACE pg_default;
+  expected: |
+    CREATE TABLE measurement_y2016m07
+        PARTITION OF measurement
+        FOR VALUES FROM ('2016-07-01') TO ('2016-08-01')
+        TABLESPACE pg_default;
+
+create_partition_with_expanded_storage_parameters_and_tablespace:
+  sql: |
+    CREATE TABLE measurement_y2016m07
+    PARTITION OF measurement FOR VALUES FROM ('2016-07-01') TO ('2016-08-01')
+    WITH (autovacuum_enabled = true, fillfactor = 70, vacuum_index_cleanup = off,
+    toast.vacuum_truncate = false, toast.vacuum_index_cleanup = off)
+    TABLESPACE pg_default;
+  expected: |
+    CREATE TABLE measurement_y2016m07
+        PARTITION OF measurement
+        FOR VALUES FROM ('2016-07-01') TO ('2016-08-01')
+        WITH (
+            autovacuum_enabled = 'true'
+          , fillfactor = 70
+          , vacuum_index_cleanup = off
+          , toast.vacuum_truncate = 'false'
+          , toast.vacuum_index_cleanup = off
+        )
+        TABLESPACE pg_default;
+
+create_partition_with_constraints:
+  sql: |
+    CREATE TABLE measurement_y2016m07
+        PARTITION OF measurement (
+            CONSTRAINT measurement_y2016m07_pkey PRIMARY KEY (city_id, logdate),
+            CONSTRAINT measurement_y2016m07_state_fkey FOREIGN KEY (state) REFERENCES test.states (state)
+        )
+        FOR VALUES FROM ('2016-07-01') TO ('2016-08-01')
+        TABLESPACE pg_default;
+  expected: |
+    CREATE TABLE measurement_y2016m07
+        PARTITION OF measurement (
+            CONSTRAINT measurement_y2016m07_pkey PRIMARY KEY (city_id, logdate)
+          , CONSTRAINT measurement_y2016m07_state_fkey FOREIGN KEY (state) REFERENCES test.states (state)
+        )
+        FOR VALUES FROM ('2016-07-01') TO ('2016-08-01')
+        TABLESPACE pg_default;
+
 create_table_inheritance:
   sql: |
     CREATE TABLE capitals (
@@ -259,10 +328,8 @@ create_materialized_view:
     TABLESPACE pg_default AS SELECT * FROM tbl;
   expected: |
     CREATE MATERIALIZED VIEW mv (a, b)
-     USING heap
-      WITH (
-          fillfactor = 10
-      )
+    USING heap
+    WITH (fillfactor = 10)
     TABLESPACE pg_default AS
     SELECT *
       FROM tbl;
@@ -273,3 +340,43 @@ rename_table:
   expected: |
     ALTER TABLE IF EXISTS mood
         RENAME TO mood2;
+
+create_table_with_storage_parameters:
+  sql: |
+    CREATE TABLE mood (a text, b text) WITH (fillfactor = 10, parallel_workers = 4);
+  expected: |
+    CREATE TABLE mood (
+        a text
+      , b text
+    )
+    WITH (fillfactor = 10, parallel_workers = 4);
+
+create_table_with_tablespace:
+  sql: |
+    CREATE TABLE mood (a text, b text) TABLESPACE pg_default;
+  expected: |
+    CREATE TABLE mood (
+        a text
+      , b text
+    )
+    TABLESPACE pg_default;
+
+create_table_with_expanded_storage_parameters_and_tablespace:
+  sql: |
+    CREATE TABLE mood (a text, b text)
+    WITH (autovacuum_enabled = true, fillfactor = 70, vacuum_index_cleanup = off,
+    toast.vacuum_truncate = false, toast.vacuum_index_cleanup = off)
+    TABLESPACE pg_default;
+  expected: |
+    CREATE TABLE mood (
+        a text
+      , b text
+    )
+    WITH (
+        autovacuum_enabled = 'true'
+      , fillfactor = 70
+      , vacuum_index_cleanup = off
+      , toast.vacuum_truncate = 'false'
+      , toast.vacuum_index_cleanup = off
+    )
+    TABLESPACE pg_default;
