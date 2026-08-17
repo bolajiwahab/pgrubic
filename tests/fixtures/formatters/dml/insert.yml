@@ -21,7 +21,8 @@ insert_values:
     VALUES ('Pulp Fiction', 'Quentin Tarantino')
          , ('The Green Mile', 'Frank Darabont')
          , ('Inglourious Basterds', 'Quentin Tarantino')
-    RETURNING title, description;
+    RETURNING title
+            , description;
 
 insert_select:
   sql: |
