@@ -8,9 +8,6 @@ test_fail_nullable_boolean_new_table:
     CREATE TABLE tbl (
         is_active boolean NOT NULL
     );
-  config:
-    lint:
-      required_columns: []
 
 test_fail_nullable_boolean_existing_table:
   sql_fail: |
@@ -22,9 +19,6 @@ test_fail_nullable_boolean_existing_table:
 test_pass_numeric_new_table:
   sql_pass: |
     CREATE TABLE tbl (is_active boolean NOT NULL);
-  config:
-    lint:
-      required_columns: []
 
 test_pass_numeric_existing_table:
   sql_pass: |

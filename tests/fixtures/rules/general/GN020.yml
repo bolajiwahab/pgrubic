@@ -8,9 +8,6 @@ test_fail_current_time_new_table:
     CREATE TABLE tbl (
         created_at time DEFAULT CURRENT_TIMESTAMP
     );
-  config:
-    lint:
-      required_columns: []
 
 test_fail_current_time_existing_table_new_column:
   sql_fail: |

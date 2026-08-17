@@ -8,9 +8,6 @@ test_fail_id_column_new_table:
     CREATE TABLE tbl (
         tbl_id bigint
     );
-  config:
-    lint:
-      required_columns: []
 
 test_fail_id_column_existing_table:
   sql_fail: |

@@ -8,9 +8,6 @@ test_fail_int_new_table:
     CREATE TABLE tbl (
         retry_count bigint
     );
-  config:
-    lint:
-      required_columns: []
 
 test_fail_int_existing_table_new_column:
   sql_fail: |

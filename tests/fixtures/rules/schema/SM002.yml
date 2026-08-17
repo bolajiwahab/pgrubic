@@ -101,32 +101,68 @@ test_fail_disallowed_schema_procedure:
           reason: test
           use_instead: app
 
-test_pass_schame_unqualified_table:
+test_pass_schema_unqualified_table:
   sql_pass: |
     CREATE TABLE card();
+  config:
+    lint:
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
 
-test_pass_schame_unqualified_materialized_view:
+test_pass_schema_unqualified_materialized_view:
   sql_pass: |
     CREATE MATERIALIZED VIEW card AS SELECT * FROM public.account;
+  config:
+    lint:
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
 
-test_pass_schame_unqualified_view:
+test_pass_schema_unqualified_view:
   sql_pass: |
     CREATE VIEW card AS SELECT * FROM public.account;
+  config:
+    lint:
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
 
 test_pass_schema_unqualified_type:
   sql_pass: |
     CREATE TYPE mood AS ENUM ('sad', 'ok');
+  config:
+    lint:
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
 
-test_pass_schame_unqualified_function:
+test_pass_schema_unqualified_function:
   sql_pass: |
     CREATE FUNCTION dup(bigint) RETURNS TABLE(f1 bigint, f2 text) LANGUAGE SQL
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  config:
+    lint:
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
 
-test_pass_schame_unqualified_procedure:
+test_pass_schema_unqualified_procedure:
   sql_pass: |
     CREATE OR REPLACE PROCEDURE dup(bigint)
     LANGUAGE sql
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
+  config:
+    lint:
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
 
 test_pass_allowed_schema_table:
   sql_pass: |
@@ -143,21 +179,30 @@ test_pass_allowed_schema_materialized_view:
     CREATE MATERIALIZED VIEW public.card AS SELECT * FROM public.account;
   config:
     lint:
-      disallowed_schemas: []
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
 
 test_pass_allowed_schema_view:
   sql_pass: |
     CREATE VIEW public.card AS SELECT * FROM public.account;
   config:
     lint:
-      disallowed_schemas: []
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
 
 test_pass_allowed_schema_type:
   sql_pass: |
     CREATE TYPE public.mood AS ENUM ('sad', 'ok');
   config:
     lint:
-      disallowed_schemas: []
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
 
 test_pass_allowed_schema_function:
   sql_pass: |
@@ -165,7 +210,10 @@ test_pass_allowed_schema_function:
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
   config:
     lint:
-      disallowed_schemas: []
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
 
 test_pass_allowed_schema_procedure:
   sql_pass: |
@@ -174,4 +222,7 @@ test_pass_allowed_schema_procedure:
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
   config:
     lint:
-      disallowed_schemas: []
+      disallowed_schemas:
+        - name: test
+          reason: test
+          use_instead: app
