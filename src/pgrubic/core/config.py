@@ -1031,8 +1031,10 @@ def _parse_type_casting_style(value: object) -> enums.TypeCastingStyle:
         suggestion = []
 
     msg = f'Invalid config value for key "format.type-casting-style": "{value}".'
+
     if suggestion:
         msg += f' Did you mean "{suggestion[0]}"?'
+
     valid_values_str = ", ".join(f'"{v}"' for v in valid_values)
     msg += f" Expected one of: {valid_values_str}"
 
