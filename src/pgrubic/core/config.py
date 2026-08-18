@@ -645,9 +645,10 @@ uppercase-keywords = false
 </details>
 
 ### **type-casting-style**
-The type-casting style to use. Can be one of `native` or `standard`.
+The type-casting style to use. Can be one of `native`, `standard` or `literal`.
 
-Native style uses `::type_name` while standard style uses `CAST(type_name AS type_name)`
+Native style uses `value::type_name`, standard style uses `CAST(value AS type_name)`
+and literal style uses `type_name value`.
 
 **Type**: `str`
 

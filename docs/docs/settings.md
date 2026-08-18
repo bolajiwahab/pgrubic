@@ -250,8 +250,8 @@ List of required columns along with their data types for every table.
 ```toml
 [lint]
 required-columns = [
-    { name = "created_at", data_type = "timestamptz" },
-    { name = "updated_at", data_type = "timestamptz" },
+    { name = "created_at", data-type = "timestamptz" },
+    { name = "updated_at", data-type = "timestamptz" },
 ]
 ```
 </details>
@@ -627,9 +627,10 @@ uppercase-keywords = false
 </details>
 
 ### **type-casting-style**
-The type-casting style to use. Can be one of `native` or `standard`.
+The type-casting style to use. Can be one of `native`, `standard` or `literal`.
 
-Native style uses `::type_name` while standard style uses `CAST(type_name AS type_name)`
+Native style uses `value::type_name`, standard style uses `CAST(value AS type_name)`
+and literal style uses `type_name value`.
 
 **Type**: `str`
 
