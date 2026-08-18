@@ -266,7 +266,7 @@ def test_cli_lint_missing_config_error(tmp_path: pathlib.Path) -> None:
 
 
 @pytest.mark.parametrize("command", ["lint", "format"])
-def test_cli_invalid_config_value_error(
+def test_cli_invalid_type_casting_style_error(
     command: str,
     tmp_path: pathlib.Path,
 ) -> None:
