@@ -17,6 +17,15 @@ class FormatResult(typing.NamedTuple):
     errors: set[errors.Error]
 
 
+class RawStream(stream.RawStream):
+    """Raw SQL parse tree writer."""
+
+    def __init__(self, config: config.Config, **options: object) -> None:
+        """Initialize RawStream with config."""
+        super().__init__(**options)
+        self.config = config
+
+
 class IndentedStream(stream.IndentedStream):
     """Indented SQL parse tree writer."""
 
@@ -58,7 +67,8 @@ class IndentedStream(stream.IndentedStream):
         are_names: bool = False,
     ) -> str:
         """Concatenate the given `nodes`, using `sep` as the separator."""
-        output = stream.RawStream(
+        output = RawStream(
+            config=self.config,
             special_functions=self.special_functions,
             comma_at_eoln=self.comma_at_eoln,
             remove_pg_catalog_from_functions=self.remove_pg_catalog_from_functions,

@@ -2,6 +2,7 @@
 
 import os
 import typing
+import difflib
 import pathlib
 import dataclasses
 
@@ -9,7 +10,7 @@ import toml
 from deepmerge import always_merger
 
 from pgrubic import PACKAGE_NAME
-from pgrubic.core import errors
+from pgrubic.core import enums, errors
 from pgrubic.core.logger import logger
 
 CONFIG_FILE: typing.Final[str] = f"{PACKAGE_NAME}.toml"
@@ -234,8 +235,8 @@ List of required columns along with their data types for every table.
 ```toml
 [lint]
 required-columns = [
-    { name = "created_at", data_type = "timestamptz" },
-    { name = "updated_at", data_type = "timestamptz" },
+    { name = "created_at", data-type = "timestamptz" },
+    { name = "updated_at", data-type = "timestamptz" },
 ]
 ```
 </details>
@@ -643,6 +644,25 @@ uppercase-keywords = false
 ```
 </details>
 
+### **type-casting-style**
+The type-casting style to use. Can be one of `native` or `standard`.
+
+Native style uses `::type_name` while standard style uses `CAST(type_name AS type_name)`
+
+**Type**: `str`
+
+**Default**: `standard`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+[format]
+type-casting-style = "native"
+```
+</details>
+
 ### **new-line-before-semicolon**
 If `true`, add a new line before each semicolon.
 
@@ -800,6 +820,7 @@ no-cache = true
     comma_at_beginning: bool
     compact_parenthesized_lists_margin: int
     uppercase_keywords: bool
+    type_casting_style: enums.TypeCastingStyle
     new_line_before_semicolon: bool
     lines_between_statements: int
     remove_pg_catalog_from_functions: bool
@@ -997,6 +1018,27 @@ def _get_config_file_absolute_path(
     return None  # pragma: no cover
 
 
+def _parse_type_casting_style(value: object) -> enums.TypeCastingStyle:
+    """Parse the configured type-casting style."""
+    valid_values = tuple(style.value for style in enums.TypeCastingStyle)
+
+    if isinstance(value, str):
+        try:
+            return enums.TypeCastingStyle(value)
+        except ValueError:
+            suggestion = difflib.get_close_matches(value, valid_values, n=1)
+    else:
+        suggestion = []
+
+    msg = f'Invalid config value for key "format.type-casting-style": "{value}".'
+    if suggestion:
+        msg += f' Did you mean "{suggestion[0]}"?'
+    valid_values_str = ", ".join(f'"{v}"' for v in valid_values)
+    msg += f" Expected one of: {valid_values_str}"
+
+    raise errors.InvalidConfigValueError(msg) from None
+
+
 def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
     """Parse config.
 
@@ -1014,6 +1056,8 @@ def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
     ------
     MissingConfigError
         Raised when a config is missing.
+    InvalidConfigValueError
+        Raised when a config value is invalid.
     """
     if not overrides:
         overrides = {}
@@ -1085,6 +1129,9 @@ def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
                     "compact-parenthesized-lists-margin"
                 ],
                 uppercase_keywords=config_format["uppercase-keywords"],
+                type_casting_style=_parse_type_casting_style(
+                    config_format["type-casting-style"],
+                ),
                 new_line_before_semicolon=config_format["new-line-before-semicolon"],
                 lines_between_statements=config_format["lines-between-statements"],
                 remove_pg_catalog_from_functions=config_format[

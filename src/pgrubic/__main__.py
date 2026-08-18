@@ -110,6 +110,9 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
     except errors.MissingConfigError as error:
         sys.stderr.write(f"{error}{noqa.NEW_LINE}")
         sys.exit(1)
+    except errors.InvalidConfigValueError as error:
+        sys.stderr.write(f"{error}{noqa.NEW_LINE}")
+        sys.exit(1)
     except errors.ConfigParseError as error:
         sys.stderr.write(f"{error}{noqa.NEW_LINE}")
         sys.exit(1)
@@ -301,6 +304,9 @@ def format_sources(  # noqa: C901, PLR0912, PLR0913, PLR0915
     try:
         config = core.parse_config()
     except errors.MissingConfigError as error:
+        sys.stderr.write(f"{error}{noqa.NEW_LINE}")
+        sys.exit(1)
+    except errors.InvalidConfigValueError as error:
         sys.stderr.write(f"{error}{noqa.NEW_LINE}")
         sys.exit(1)
     except errors.ConfigParseError as error:

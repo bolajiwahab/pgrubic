@@ -626,6 +626,25 @@ uppercase-keywords = false
 ```
 </details>
 
+### **type-casting-style**
+The type-casting style to use. Can be one of `native` or `standard`.
+
+Native style uses `::type_name` while standard style uses `CAST(type_name AS type_name)`
+
+**Type**: `str`
+
+**Default**: `standard`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+[format]
+type-casting-style = "native"
+```
+</details>
+
 ### **new-line-before-semicolon**
 If `true`, add a new line before each semicolon.
 

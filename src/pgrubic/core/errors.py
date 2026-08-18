@@ -16,6 +16,10 @@ class MissingConfigError(BaseError):
     """Raised when a config is missing."""
 
 
+class InvalidConfigValueError(BaseError):
+    """Raised when a config value is invalid."""
+
+
 class ConfigFileNotFoundError(BaseError):
     """Raised when a config file is not found."""
 

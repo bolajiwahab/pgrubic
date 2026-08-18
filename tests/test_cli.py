@@ -265,6 +265,35 @@ def test_cli_lint_missing_config_error(tmp_path: pathlib.Path) -> None:
         assert result.exit_code == 1
 
 
+@pytest.mark.parametrize("command", ["lint", "format"])
+def test_cli_invalid_config_value_error(
+    command: str,
+    tmp_path: pathlib.Path,
+) -> None:
+    """Test CLI invalid config value errors."""
+    config_content = """
+    [format]
+    type-casting-style = "invalid"
+    """
+    directory = tmp_path / "sub"
+    directory.mkdir()
+    (directory / config.CONFIG_FILE).write_text(config_content)
+
+    source_file = directory / TEST_FILE
+    source_file.write_text("SELECT 1;")
+
+    runner = testing.CliRunner()
+    with patch("os.getcwd", return_value=str(directory)):
+        result = runner.invoke(cli, [command, str(source_file)])
+
+    assert result.output == (
+        'Invalid config value for key "format.type-casting-style": "invalid". '
+        'Expected one of: "native", "standard", "literal"'
+        f"{noqa.NEW_LINE}"
+    )
+    assert result.exit_code == 1
+
+
 def test_cli_lint_config_file_from_environment_variable_not_found_error(
     tmp_path: pathlib.Path,
 ) -> None:
