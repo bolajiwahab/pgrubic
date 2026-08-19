@@ -5,10 +5,15 @@ from pglast import ast, printers
 from pgrubic import get_fully_qualified_name
 from pgrubic.core import enums, formatter
 
+NATIVE_CAST_OPERATOR = "::"
+
 
 def native_cast_argument_needs_parentheses(node: ast.Node) -> bool:
     """Check whether a native cast argument needs parentheses."""
-    return isinstance(node, ast.A_Expr | ast.BoolExpr)
+    return isinstance(
+        node,
+        ast.A_Expr | ast.BoolExpr | ast.BooleanTest | ast.NullTest,
+    )
 
 
 def is_string_constant(node: ast.Node) -> bool:
@@ -16,17 +21,65 @@ def is_string_constant(node: ast.Node) -> bool:
     return isinstance(node, ast.A_Const) and isinstance(node.val, ast.String)
 
 
+def is_char_type(node: ast.Node) -> bool:
+    """Check whether a node is PostgreSQL's internal char type."""
+    return (
+        isinstance(node, ast.TypeName)
+        and get_fully_qualified_name(node.names) == "pg_catalog.bpchar"
+    )
+
+
+def is_native_cast(
+    node: ast.TypeCast,
+    output: formatter.RawStream | formatter.IndentedStream,
+) -> bool:
+    """Check whether a cast originated from PostgreSQL's ``::`` syntax."""
+    native_cast_operator_length = len(NATIVE_CAST_OPERATOR)
+    if output.source_code is not None and node.location is not None:
+        return (
+            output.source_code[
+                node.location : node.location + native_cast_operator_length
+            ]
+            == NATIVE_CAST_OPERATOR
+        )
+
+    return (
+        node.location is not None
+        and node.typeName.location is not None
+        and node.typeName.location == node.location + native_cast_operator_length
+    )
+
+
+def char_has_default_length(node: ast.TypeName) -> bool:
+    """Check whether a char type has the implicit default length of one."""
+    default_char_length = 1
+    expected_typmod_count = 1
+    if not node.typmods or len(node.typmods) != expected_typmod_count:
+        return False
+
+    typmod = node.typmods[0]
+    return (
+        isinstance(typmod, ast.A_Const)
+        and isinstance(typmod.val, ast.Integer)
+        and typmod.val.ival == default_char_length
+    )
+
+
 @printers.node_printer(ast.TypeCast, override=True)
 def type_cast(
     node: ast.TypeCast,
-    output: formatter.RawStream,
+    output: formatter.RawStream | formatter.IndentedStream,
 ) -> None:
     """Printer for TypeCast."""
+    # An unmodified CHAR typed literal is not interchangeable with an implicit
+    # char cast: CHAR 'xyz' retains all three characters, while both
+    # CAST('xyz' AS char) and 'xyz'::char mean char(1). PostgreSQL represents
+    # the typed literal with typmods=None, so preserve that form and only
+    # convert other char casts to literal syntax when they have a safe,
+    # explicit non-default length.
     if (
         is_string_constant(node.arg)
-        and isinstance(node.typeName, ast.TypeName)
-        and get_fully_qualified_name(node.typeName.names)
-        == "pg_catalog.bpchar"  # internal representation of char type
+        and is_char_type(node.typeName)
         and node.typeName.typmods is None
     ):
         output.write("char")
@@ -40,17 +93,32 @@ def type_cast(
         ):
             output.print_node(node.arg)
 
-        output.write("::")
+        output.write(NATIVE_CAST_OPERATOR)
         output.print_node(node.typeName)
         return
 
     if (
         output.config.format.type_casting_style == enums.TypeCastingStyle.LITERAL
         and is_string_constant(node.arg)
+        and (
+            not is_char_type(node.typeName) or not char_has_default_length(node.typeName)
+        )
     ):
         output.print_node(node.typeName)
         output.space()
         output.print_node(node.arg)
+        return
+
+    if (
+        output.config.format.type_casting_style == enums.TypeCastingStyle.LITERAL
+        and is_native_cast(node, output)
+    ):
+        with output.expression(
+            need_parens=native_cast_argument_needs_parentheses(node.arg),
+        ):
+            output.print_node(node.arg)
+        output.write(NATIVE_CAST_OPERATOR)
+        output.print_node(node.typeName)
         return
 
     output.write("CAST")

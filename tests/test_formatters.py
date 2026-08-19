@@ -4,11 +4,11 @@ import typing
 import pathlib
 
 import pytest
-from pglast import parser
+from pglast import parser, stream as pglast_stream
 
 from tests import TEST_FILE, conftest
 from pgrubic import core
-from pgrubic.core import noqa
+from pgrubic.core import noqa, formatter as formatter_module
 
 
 @pytest.mark.parametrize(
@@ -46,6 +46,33 @@ def test_formatters(
         except parser.ParseError as error:
             msg = f"Formatted code is not a valid syntax: {error!s}"
             raise ValueError(msg) from error
+
+
+def test_configured_streams(formatter: core.Formatter) -> None:
+    """Test configured streams extend their corresponding pglast streams."""
+    raw_stream = formatter_module.RawStream(config=formatter.config)
+    indented_stream = formatter_module.IndentedStream(config=formatter.config)
+
+    assert isinstance(raw_stream, pglast_stream.RawStream)
+    assert raw_stream.config is formatter.config
+    assert isinstance(indented_stream, pglast_stream.IndentedStream)
+    assert indented_stream.config is formatter.config
+
+
+def test_concatenate_nodes_with_type_cast(formatter: core.Formatter) -> None:
+    """Test raw node concatenation uses the configured type-casting style."""
+    with conftest.update_config(
+        config=formatter.config,
+        overrides={"format": {"type_casting_style": core.enums.TypeCastingStyle.NATIVE}},
+    ):
+        result = formatter.format(
+            source_file=TEST_FILE,
+            source_code="CREATE INDEX idx ON tbl ((CAST(value AS text)));",
+        )
+
+    assert result.formatted_source_code == (
+        "CREATE INDEX idx\n    ON tbl ((value::text));\n"
+    )
 
 
 def test_format_parse_error(formatter: core.Formatter) -> None:

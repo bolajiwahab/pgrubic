@@ -182,6 +182,15 @@ typecast_native_to_literal:
     format:
       type_casting_style: literal
 
+typecast_native_non_string_to_literal:
+  sql: |
+    SELECT 1::text;
+  expected: |
+    SELECT 1::text;
+  config:
+    format:
+      type_casting_style: literal
+
 typecast_literal_to_literal:
   sql: |
     SELECT text '1';
@@ -209,11 +218,83 @@ typecast_literal_char_to_literal:
     format:
       type_casting_style: literal
 
+typecast_standard_char_to_literal:
+  sql: |
+    SELECT CAST('xyz' AS char);
+  expected: |
+    SELECT CAST('xyz' AS char);
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_native_char_to_literal:
+  sql: |
+    SELECT 'xyz'::char;
+  expected: |
+    SELECT 'xyz'::char;
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_standard_char_with_length_to_literal:
+  sql: |
+    SELECT CAST('xyz' AS char(3));
+  expected: |
+    SELECT char(3) 'xyz';
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_native_char_with_length_to_literal:
+  sql: |
+    SELECT 'xyz'::char(3);
+  expected: |
+    SELECT char(3) 'xyz';
+  config:
+    format:
+      type_casting_style: literal
+
 typecast_standard_expression_to_literal:
   sql: |
     SELECT CAST(1 + 1 AS text);
   expected: |
     SELECT CAST(1 + 1 AS text);
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_native_expression_to_literal:
+  sql: |
+    SELECT (1 + 1)::text;
+  expected: |
+    SELECT (1 + 1)::text;
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_native_null_test_to_native:
+  sql: |
+    SELECT CAST(value IS NULL AS text);
+  expected: |
+    SELECT (value IS NULL)::text;
+  config:
+    format:
+      type_casting_style: native
+
+typecast_native_boolean_test_to_native:
+  sql: |
+    SELECT CAST(value IS TRUE AS text);
+  expected: |
+    SELECT (value IS TRUE)::text;
+  config:
+    format:
+      type_casting_style: native
+
+typecast_native_with_whitespace_to_literal:
+  sql: |
+    SELECT 1 ::  text;
+  expected: |
+    SELECT 1::text;
   config:
     format:
       type_casting_style: literal
@@ -231,7 +312,7 @@ typecast_literal_nested_casts_to_literal:
   sql: |
     SELECT text '1'::text;
   expected: |
-    SELECT CAST(text '1' AS text);
+    SELECT text '1'::text;
   config:
     format:
       type_casting_style: literal
@@ -241,6 +322,15 @@ typecast_standard_array_to_literal:
     SELECT CAST(ARRAY[1, 2] AS text[]);
   expected: |
     SELECT CAST(ARRAY[1, 2] AS text[]);
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_native_array_to_literal:
+  sql: |
+    SELECT ARRAY[1, 2]::text[];
+  expected: |
+    SELECT ARRAY[1, 2]::text[];
   config:
     format:
       type_casting_style: literal

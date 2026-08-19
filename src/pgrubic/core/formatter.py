@@ -20,19 +20,31 @@ class FormatResult(typing.NamedTuple):
 class RawStream(stream.RawStream):
     """Raw SQL parse tree writer."""
 
-    def __init__(self, config: config.Config, **options: object) -> None:
-        """Initialize RawStream with config."""
+    def __init__(
+        self,
+        config: config.Config,
+        source_code: str | None = None,
+        **options: object,
+    ) -> None:
+        """Extend RawStream with config."""
         super().__init__(**options)
         self.config = config
+        self.source_code = source_code
 
 
 class IndentedStream(stream.IndentedStream):
     """Indented SQL parse tree writer."""
 
-    def __init__(self, config: config.Config, **options: typing.Any) -> None:
+    def __init__(
+        self,
+        config: config.Config,
+        source_code: str | None = None,
+        **options: object,
+    ) -> None:
         """Initialize IndentedStream with config."""
         super().__init__(**options)
         self.config = config
+        self.source_code = source_code
 
     def apply_keyword_case(self, *, text: str) -> str:
         """Apply the configured casing to keywords in the given text.
@@ -69,16 +81,18 @@ class IndentedStream(stream.IndentedStream):
         """Concatenate the given `nodes`, using `sep` as the separator."""
         output = RawStream(
             config=self.config,
+            source_code=self.source_code,
             special_functions=self.special_functions,
-            comma_at_eoln=self.comma_at_eoln,
             remove_pg_catalog_from_functions=self.remove_pg_catalog_from_functions,
         )
+
         output.print_list(
             nodes=nodes,
             sep=sep,
             standalone_items=False,
             are_names=are_names,
         )
+
         return output.getvalue()
 
     def write_empty_space(self) -> None:
@@ -181,6 +195,7 @@ class Formatter:
 
                     output = IndentedStream(
                         config=config,
+                        source_code=statement.text,
                         comments=comments,
                         semicolon_after_last_statement=False,
                         remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
@@ -265,6 +280,7 @@ class Formatter:
         self,
         *,
         source_ast: tuple[ast.RawStmt, ...],
+        source_code: str | None = None,
         comments: list[noqa.Comment],
     ) -> str:
         """Format source code from AST.
@@ -273,6 +289,8 @@ class Formatter:
         ----------
         source_ast: tuple[ast.RawStmt, ...]
             Source AST to format.
+        source_code: str | None
+            Original source code associated with the AST.
         comments: list[noqa.Comment]
             Comments extracted from the original statement.
 
@@ -283,6 +301,7 @@ class Formatter:
         """
         output = IndentedStream(
             config=self.config,
+            source_code=source_code,
             comments=comments,
             semicolon_after_last_statement=False,
             separate_statements=self.config.format.lines_between_statements,
