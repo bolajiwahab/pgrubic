@@ -94,33 +94,21 @@ test_fail_disallowed_data_type_procedure:
           reason: deprecated
           use_instead: text
 
-test_pass_allowed_data_type_table:
+test_pass_all_data_types_allowed_by_default_create_table:
   sql_pass: |
     CREATE TABLE public.card(location point);
-  config:
-    lint:
-      disallowed_data_types: []
 
-test_pass_allowed_data_type_function:
+test_pass_all_data_types_allowed_by_default_create_function:
   sql_pass: |
     CREATE FUNCTION public.dup(bigint) RETURNS TABLE(f1 point, f2 text) LANGUAGE SQL
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
-  config:
-    lint:
-      disallowed_data_types: []
 
-test_pass_allowed_data_type_procedure:
+test_pass_all_data_types_allowed_by_default_create_procedure:
   sql_pass: |
     CREATE PROCEDURE public.dup(bigint)
     LANGUAGE sql
     AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$;
-  config:
-    lint:
-      disallowed_data_types: []
 
-test_pass_select_allowed_data_type:
+test_pass_all_data_types_allowed_by_default_select:
   sql_pass: |
     SELECT a::text FROM public.card;
-  config:
-    lint:
-      disallowed_data_types: []

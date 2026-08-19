@@ -180,4 +180,3 @@ create_index_without_compact_parenthesized_lists_margin:
   config:
     format:
       compact_parenthesized_lists_margin: 0
-      remove_default_index_access_method: true

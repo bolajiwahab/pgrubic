@@ -8,9 +8,6 @@ test_fail_timetz_new_table:
     CREATE TABLE tbl (
         created_at timestamptz
     );
-  config:
-    lint:
-      required_columns: []
 
 test_fail_timetz_existing_table_new_column:
   sql_fail: |

@@ -1,14 +1,11 @@
 ---
 rule: ST001
 
-test_fail_disallowed_extensions:
+test_fail_no_extensions_allowed_by_default:
   sql_fail: |
     CREATE EXTENSION logical_ddl;
-  config:
-    lint:
-      allowed_extensions: []
 
-test_fail_disallowed_extension:
+test_fail_extension_not_in_allowed_list:
   sql_fail: |
     CREATE EXTENSION logical_ddl;
   config:
@@ -16,7 +13,7 @@ test_fail_disallowed_extension:
       allowed_extensions:
         - pg_stat_statements
 
-test_pass_allowed_extension:
+test_pass_extension_in_allowed_list:
   sql_pass: |
     CREATE EXTENSION pg_stat_statements;
   config:

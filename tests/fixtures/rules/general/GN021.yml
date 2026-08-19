@@ -8,9 +8,6 @@ test_fail_null_constraint_new_table:
     CREATE TABLE tbl (
         age bigint
     );
-  config:
-    lint:
-      required_columns: []
 
 test_fail_null_constraint_existing_table:
   sql_fail: |

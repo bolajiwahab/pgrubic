@@ -1,14 +1,11 @@
 ---
 rule: ST002
 
-test_fail_disallowed_procedural_languages:
+test_fail_no_procedural_language_allowed_by_default:
   sql_fail: |
     CREATE LANGUAGE plsample HANDLER plsample_call_handler;
-  config:
-    lint:
-      allowed_languages: []
 
-test_fail_disallowed_procedural_language:
+test_fail_procedural_language_not_in_allowed_list:
   sql_fail: |
     CREATE LANGUAGE plsample HANDLER plsample_call_handler;
   config:
@@ -16,10 +13,10 @@ test_fail_disallowed_procedural_language:
       allowed_languages:
         - plpgsql
 
-test_pass_allowed_extension:
+test_pass_procedural_language_in_allowed_list:
   sql_pass: |
-    CREATE LANGUAGE plpgsql;
+    CREATE LANGUAGE plsample HANDLER plsample_call_handler;
   config:
     lint:
-      allowed_extensions:
-        - pg_stat_statements
+      allowed_languages:
+        - plsample

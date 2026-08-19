@@ -8,9 +8,6 @@ test_fail_hstore_new_table:
     CREATE TABLE tbl (
         details jsonb
     );
-  config:
-    lint:
-      required_columns: []
 
 test_fail_hstore_existing_table_new_column:
   sql_fail: |

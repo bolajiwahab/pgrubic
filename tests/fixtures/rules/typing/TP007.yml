@@ -8,9 +8,6 @@ test_fail_smallserial_new_table:
     CREATE TABLE tbl (
         tbl_id bigint GENERATED ALWAYS AS IDENTITY
     );
-  config:
-    lint:
-      required_columns: []
 
 test_fail_smallserial_existing_table_new_column:
   sql_fail: |
@@ -26,9 +23,6 @@ test_fail_serial_new_table:
     CREATE TABLE tbl (
         tbl_id bigint GENERATED ALWAYS AS IDENTITY
     );
-  config:
-    lint:
-      required_columns: []
 
 test_fail_serial_existing_table_new_column:
   sql_fail: |
@@ -44,9 +38,6 @@ test_fail_bigserial_new_table:
     CREATE TABLE tbl (
         tbl_id bigint GENERATED ALWAYS AS IDENTITY
     );
-  config:
-    lint:
-      required_columns: []
 
 test_fail_bigserial_existing_table_new_column:
   sql_fail: |

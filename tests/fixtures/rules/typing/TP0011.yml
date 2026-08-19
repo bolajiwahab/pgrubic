@@ -8,9 +8,6 @@ test_fail_float_new_table:
     CREATE TABLE tbl (
         retry_count numeric
     );
-  config:
-    lint:
-      required_columns: []
 
 test_fail_float_existing_table_new_column:
   sql_fail: |
@@ -33,9 +30,6 @@ test_fail_double_precision_new_table:
     CREATE TABLE tbl (
         retry_count numeric
     );
-  config:
-    lint:
-      required_columns: []
 
 test_fail_double_precision_existing_table_new_column:
   sql_fail: |

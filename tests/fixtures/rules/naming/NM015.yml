@@ -11,7 +11,6 @@ test_fail_timestamp_column_without_suffix_new_table:
   config:
     lint:
       timestamp_column_suffix: "_at"
-      required_columns: []
 
 test_fail_timestamp_column_without_suffix_existing_table:
   sql_fail: |
@@ -22,20 +21,17 @@ test_fail_timestamp_column_without_suffix_existing_table:
   config:
     lint:
       timestamp_column_suffix: "_at"
-      required_columns: []
 
-test_pass_timestamp_column_without_suffix_new_table:
+test_pass_timestamp_column_with_suffix_new_table:
   sql_pass: |
     CREATE TABLE tbl (activated_at timestamptz);
   config:
     lint:
       timestamp_column_suffix: "_at"
-      required_columns: []
 
-test_pass_timestamp_column_without_suffix_existing_table:
+test_pass_timestamp_column_with_suffix_existing_table:
   sql_pass: |
     ALTER TABLE tbl ADD COLUMN activated_at timestamptz;
   config:
     lint:
       timestamp_column_suffix: "_at"
-      required_columns: []
