@@ -5,14 +5,14 @@
 | Name                                         |    Stmts |     Miss |    Cover |   Missing |
 |--------------------------------------------- | -------: | -------: | -------: | --------: |
 | src/pgrubic/\_\_init\_\_.py                  |       36 |        0 |     100% |           |
-| src/pgrubic/\_\_main\_\_.py                  |      147 |        0 |     100% |           |
+| src/pgrubic/\_\_main\_\_.py                  |      153 |        0 |     100% |           |
 | src/pgrubic/core/\_\_init\_\_.py             |        9 |        0 |     100% |           |
 | src/pgrubic/core/cache.py                    |       63 |        0 |     100% |           |
-| src/pgrubic/core/config.py                   |       63 |        0 |     100% |           |
-| src/pgrubic/core/enums.py                    |        5 |        0 |     100% |           |
-| src/pgrubic/core/errors.py                   |       15 |        0 |     100% |           |
+| src/pgrubic/core/config.py                   |       78 |        0 |     100% |           |
+| src/pgrubic/core/enums.py                    |        9 |        0 |     100% |           |
+| src/pgrubic/core/errors.py                   |       16 |        0 |     100% |           |
 | src/pgrubic/core/filters.py                  |       26 |        0 |     100% |           |
-| src/pgrubic/core/formatter.py                |       74 |        0 |     100% |           |
+| src/pgrubic/core/formatter.py                |       80 |        0 |     100% |           |
 | src/pgrubic/core/linter.py                   |      240 |        0 |     100% |           |
 | src/pgrubic/core/loader.py                   |       25 |        0 |     100% |           |
 | src/pgrubic/core/logger.py                   |        5 |        0 |     100% |           |
@@ -38,6 +38,7 @@
 | src/pgrubic/formatters/dml/insert.py         |       77 |        0 |     100% |           |
 | src/pgrubic/formatters/dml/join.py           |       62 |        0 |     100% |           |
 | src/pgrubic/formatters/dml/select.py         |      193 |        0 |     100% |           |
+| src/pgrubic/formatters/dml/typecast.py       |       51 |        0 |     100% |           |
 | src/pgrubic/formatters/dml/update.py         |       36 |        0 |     100% |           |
 | src/pgrubic/postgres/\_\_init\_\_.py         |        0 |        0 |     100% |           |
 | src/pgrubic/postgres/functions.py            |       10 |        0 |     100% |           |
@@ -165,7 +166,7 @@
 | src/pgrubic/rules/unsafe/US030.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US031.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-| **TOTAL**                                    | **3247** |    **0** | **100%** |           |
+| **TOTAL**                                    | **3330** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
