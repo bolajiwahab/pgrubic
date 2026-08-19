@@ -71,7 +71,9 @@ def test_concatenate_nodes_with_type_cast(formatter: core.Formatter) -> None:
         )
 
     assert result.formatted_source_code == (
-        "CREATE INDEX idx\n    ON tbl ((value::text));\n"
+        """CREATE INDEX idx
+    ON tbl ((value::text));
+"""
     )
 
 
