@@ -686,6 +686,25 @@ type-casting-style = "native"
 ```
 </details>
 
+### **rewrite-function-calls-as-equivalent-syntax**
+If `true`, rewrite some function calls using their equivalent SQL syntax. For example,
+`pg_catalog.timezone('UTC', value)` is formatted as
+`value AT TIME ZONE 'UTC'`.
+
+**Type**: `bool`
+
+**Default**: `true`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+[format]
+rewrite-function-calls-as-equivalent-syntax = false
+```
+</details>
+
 ### **new-line-before-semicolon**
 If `true`, add a new line before each semicolon.
 
@@ -844,6 +863,7 @@ no-cache = true
     compact_parenthesized_lists_margin: int
     uppercase_keywords: bool
     type_casting_style: enums.TypeCastingStyle
+    rewrite_function_calls_as_equivalent_syntax: bool
     new_line_before_semicolon: bool
     lines_between_statements: int
     remove_pg_catalog_from_functions: bool
@@ -1157,6 +1177,9 @@ def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
                 type_casting_style=_parse_type_casting_style(
                     config_format["type-casting-style"],
                 ),
+                rewrite_function_calls_as_equivalent_syntax=config_format[
+                    "rewrite-function-calls-as-equivalent-syntax"
+                ],
                 new_line_before_semicolon=config_format["new-line-before-semicolon"],
                 lines_between_statements=config_format["lines-between-statements"],
                 remove_pg_catalog_from_functions=config_format[

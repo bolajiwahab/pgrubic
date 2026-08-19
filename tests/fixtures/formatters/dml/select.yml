@@ -1,6 +1,22 @@
 ---
 formatter: SELECT
 
+select_rewrite_function_call_as_equivalent_syntax:
+  sql: |
+    SELECT pg_catalog.timezone('UTC', value);
+  expected: |
+    SELECT value AT TIME ZONE 'UTC';
+
+select_do_not_rewrite_function_call_as_equivalent_syntax:
+  sql: |
+    SELECT pg_catalog.timezone('UTC', value);
+  expected: |
+    SELECT pg_catalog.timezone('UTC', value);
+  config:
+    format:
+      remove_pg_catalog_from_functions: false
+      rewrite_function_calls_as_equivalent_syntax: false
+
 simple_select:
   sql: |
     SELECT a, b, c FROM films WHERE date_prod >= '2002-01-01'

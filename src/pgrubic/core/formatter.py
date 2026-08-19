@@ -200,7 +200,7 @@ class Formatter:
                         semicolon_after_last_statement=False,
                         remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
                         comma_at_eoln=not (config.format.comma_at_beginning),
-                        special_functions=True,
+                        special_functions=config.format.rewrite_function_calls_as_equivalent_syntax,
                     )
                     formatted_statement = output.apply_keyword_case(
                         text=output(statement.text),
@@ -307,6 +307,6 @@ class Formatter:
             separate_statements=self.config.format.lines_between_statements,
             remove_pg_catalog_from_functions=self.config.format.remove_pg_catalog_from_functions,
             comma_at_eoln=not (self.config.format.comma_at_beginning),
-            special_functions=True,
+            special_functions=self.config.format.rewrite_function_calls_as_equivalent_syntax,
         )
         return output.apply_keyword_case(text=output(source_ast))

@@ -206,6 +206,10 @@ new-line-before-semicolon = false
 # Remove pg_catalog from functions by default
 remove-pg-catalog-from-functions = true
 
+# Rewrite supported function calls using equivalent SQL syntax by default,
+# e.g. pg_catalog.timezone('UTC', value) as value AT TIME ZONE 'UTC'
+rewrite-function-calls-as-equivalent-syntax = true
+
 # Separate statements by a certain number by of new line, 1 by default
 lines-between-statements = 1
 
