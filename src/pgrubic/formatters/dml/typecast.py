@@ -8,11 +8,23 @@ from pgrubic.core import enums, formatter
 NATIVE_CAST_OPERATOR = "::"
 
 
-def native_cast_argument_needs_parentheses(node: ast.Node) -> bool:
+def native_cast_argument_needs_parentheses(
+    node: ast.Node,
+    output: formatter.RawStream | formatter.IndentedStream,
+) -> bool:
     """Check whether a native cast argument needs parentheses."""
-    return isinstance(
+    if isinstance(node, ast.FuncCall):
+        function_name = get_fully_qualified_name(node.funcname)
+        return output.get_printer_for_function(function_name, node) is not None
+
+    return not isinstance(
         node,
-        ast.A_Expr | ast.BoolExpr | ast.BooleanTest | ast.NullTest,
+        ast.A_ArrayExpr
+        | ast.A_Const
+        | ast.A_Indirection
+        | ast.ColumnRef
+        | ast.ParamRef
+        | ast.TypeCast,
     )
 
 
@@ -80,7 +92,7 @@ def type_cast(
 
     if output.config.format.type_casting_style == enums.TypeCastingStyle.NATIVE:
         with output.expression(
-            need_parens=native_cast_argument_needs_parentheses(node.arg),
+            need_parens=native_cast_argument_needs_parentheses(node.arg, output),
         ):
             output.print_node(node.arg)
 
@@ -109,7 +121,7 @@ def type_cast(
         and is_native_cast(node, output)
     ):
         with output.expression(
-            need_parens=native_cast_argument_needs_parentheses(node.arg),
+            need_parens=native_cast_argument_needs_parentheses(node.arg, output),
         ):
             output.print_node(node.arg)
         output.write(NATIVE_CAST_OPERATOR)

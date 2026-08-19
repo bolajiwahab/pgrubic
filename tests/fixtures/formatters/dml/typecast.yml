@@ -173,6 +173,24 @@ typecast_standard_array_to_native:
     format:
       type_casting_style: native
 
+typecast_standard_function_to_native:
+  sql: |
+    SELECT CAST(lower(value) AS text);
+  expected: |
+    SELECT lower(value)::text;
+  config:
+    format:
+      type_casting_style: native
+
+typecast_standard_special_function_to_native:
+  sql: |
+    SELECT CAST(value AT TIME ZONE 'UTC' AS text);
+  expected: |
+    SELECT (value AT TIME ZONE 'UTC')::text;
+  config:
+    format:
+      type_casting_style: native
+
 typecast_native_to_literal:
   sql: |
     SELECT '1'::text;
@@ -268,6 +286,15 @@ typecast_native_expression_to_literal:
     SELECT (1 + 1)::text;
   expected: |
     SELECT (1 + 1)::text;
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_native_special_function_to_literal:
+  sql: |
+    SELECT (value AT TIME ZONE 'UTC')::text;
+  expected: |
+    SELECT (value AT TIME ZONE 'UTC')::text;
   config:
     format:
       type_casting_style: literal
