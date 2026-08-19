@@ -35,29 +35,20 @@ def is_native_cast(
 ) -> bool:
     """Check whether a cast originated from PostgreSQL's ``::`` syntax."""
     native_cast_operator_length = len(NATIVE_CAST_OPERATOR)
-    if output.source_code is not None and node.location is not None:
-        return (
-            output.source_code[
-                node.location : node.location + native_cast_operator_length
-            ]
-            == NATIVE_CAST_OPERATOR
-        )
-
     return (
-        node.location is not None
-        and node.typeName.location is not None
-        and node.typeName.location == node.location + native_cast_operator_length
+        output.source_code is not None
+        and node.location is not None
+        and output.source_code[
+            node.location : node.location + native_cast_operator_length
+        ]
+        == NATIVE_CAST_OPERATOR
     )
 
 
-def char_has_default_length(node: ast.TypeName) -> bool:
+def char_has_default_length(typmods: tuple[ast.Node, ...]) -> bool:
     """Check whether a char type has the implicit default length of one."""
     default_char_length = 1
-    expected_typmod_count = 1
-    if not node.typmods or len(node.typmods) != expected_typmod_count:
-        return False
-
-    typmod = node.typmods[0]
+    typmod = typmods[0]
     return (
         isinstance(typmod, ast.A_Const)
         and isinstance(typmod.val, ast.Integer)
@@ -101,7 +92,11 @@ def type_cast(
         output.config.format.type_casting_style == enums.TypeCastingStyle.LITERAL
         and is_string_constant(node.arg)
         and (
-            not is_char_type(node.typeName) or not char_has_default_length(node.typeName)
+            not is_char_type(node.typeName)
+            or (
+                node.typeName.typmods is not None
+                and not char_has_default_length(node.typeName.typmods)
+            )
         )
     ):
         output.print_node(node.typeName)
