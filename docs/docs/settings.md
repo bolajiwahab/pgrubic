@@ -250,8 +250,8 @@ List of required columns along with their data types for every table.
 ```toml
 [lint]
 required-columns = [
-    { name = "created_at", data_type = "timestamptz" },
-    { name = "updated_at", data_type = "timestamptz" },
+    { name = "created_at", data-type = "timestamptz" },
+    { name = "updated_at", data-type = "timestamptz" },
 ]
 ```
 </details>
@@ -623,6 +623,48 @@ lowercase.
 ```toml
 [format]
 uppercase-keywords = false
+```
+</details>
+
+### **type-casting-style**
+The type-casting style to use. Can be one of `native`, `standard` or `literal`.
+
+Native style uses `value::type_name`, standard style uses `CAST(value AS type_name)`
+and literal style uses `type_name value`.
+
+!!! note
+    Literal style is applied only when the typed-literal syntax is semantically
+    equivalent. When a cast cannot be converted safely, such as an implicit-length
+    `char` cast or a cast of a non-string expression, its original standard or
+    native syntax is preserved.
+
+    For example, these casts can safely use literal syntax:
+
+    ```sql
+    CAST('xyz' AS text)    -> text 'xyz'
+    'xyz'::char(3)         -> char(3) 'xyz'
+    ```
+
+    These casts retain their original syntax:
+
+    ```sql
+    CAST('xyz' AS char)    -> CAST('xyz' AS char)
+    'xyz'::char            -> 'xyz'::char
+    1::text                -> 1::text
+    CAST(1 + 1 AS text)    -> CAST(1 + 1 AS text)
+    ```
+
+**Type**: `str`
+
+**Default**: `standard`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+[format]
+type-casting-style = "native"
 ```
 </details>
 

@@ -106,6 +106,79 @@ def test_missing_config_error(tmp_path: pathlib.Path) -> None:
         assert excinfo.value.args[0] == "Missing config key: data-type"
 
 
+def test_invalid_type_casting_style_error(tmp_path: pathlib.Path) -> None:
+    """Test invalid type casting style error."""
+    config_content = """
+    [format]
+    type-casting-style = "invalid"
+    """
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    config_file = directory / config.CONFIG_FILE
+    config_file.write_text(config_content)
+
+    with patch("os.getcwd", return_value=str(directory)):
+        assert pathlib.Path.cwd() == directory
+
+        with pytest.raises(errors.InvalidConfigValueError) as excinfo:
+            config.parse_config()
+
+        assert (
+            excinfo.value.args[0]
+            == 'Invalid config value for key "format.type-casting-style": '
+            '"invalid". Expected one of: "native", "standard", "literal"'
+        )
+
+
+def test_invalid_type_casting_style_error_suggests_close_match(
+    tmp_path: pathlib.Path,
+) -> None:
+    """Test invalid type casting style error suggests a close match."""
+    config_content = """
+    [format]
+    type-casting-style = "stand"
+    """
+    directory = tmp_path / "sub"
+    directory.mkdir()
+    (directory / config.CONFIG_FILE).write_text(config_content)
+
+    with (
+        patch("os.getcwd", return_value=str(directory)),
+        pytest.raises(errors.InvalidConfigValueError) as excinfo,
+    ):
+        config.parse_config()
+
+    assert (
+        excinfo.value.args[0]
+        == 'Invalid config value for key "format.type-casting-style": "stand". '
+        'Did you mean "standard"? Expected one of: "native", "standard", "literal"'
+    )
+
+
+def test_invalid_non_string_type_casting_style_error(tmp_path: pathlib.Path) -> None:
+    """Test invalid non-string type casting style error."""
+    config_content = """
+    [format]
+    type-casting-style = 1
+    """
+    directory = tmp_path / "sub"
+    directory.mkdir()
+    (directory / config.CONFIG_FILE).write_text(config_content)
+
+    with (
+        patch("os.getcwd", return_value=str(directory)),
+        pytest.raises(errors.InvalidConfigValueError) as excinfo,
+    ):
+        config.parse_config()
+
+    assert (
+        excinfo.value.args[0]
+        == 'Invalid config value for key "format.type-casting-style": "1". '
+        'Expected one of: "native", "standard", "literal"'
+    )
+
+
 def test_config_file_from_environment_variable_not_found_error() -> None:
     """Test config from environment variable not found error."""
     with patch.dict(

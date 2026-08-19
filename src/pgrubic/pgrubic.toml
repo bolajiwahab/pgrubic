@@ -35,6 +35,7 @@ exclude = []
 comma-at-beginning = true
 compact-parenthesized-lists-margin = 90
 uppercase-keywords = true
+type-casting-style = "standard"
 new-line-before-semicolon = false
 remove-pg-catalog-from-functions = true
 remove-default-index-access-method = true

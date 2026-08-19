@@ -1,0 +1,373 @@
+---
+formatter: TYPECAST
+
+typecast_native_to_default:
+  sql: |
+    SELECT '1'::text;
+  expected: |
+    SELECT CAST('1' AS text);
+
+typecast_standard_to_default:
+  sql: |
+    SELECT CAST('1' AS text);
+  expected: |
+    SELECT CAST('1' AS text);
+
+typecast_literal_to_default:
+  sql: |
+    SELECT text '1';
+  expected: |
+    SELECT CAST('1' AS text);
+
+typecast_literal_char_to_default:
+  sql: |
+    SELECT char '1';
+  expected: |
+    SELECT char '1';
+
+typecast_native_expression_to_default:
+  sql: |
+    SELECT (1 + 1)::text;
+  expected: |
+    SELECT CAST(1 + 1 AS text);
+
+typecast_standard_expression_to_default:
+  sql: |
+    SELECT CAST(1 + 1 AS text);
+  expected: |
+    SELECT CAST(1 + 1 AS text);
+
+typecast_native_binary_expression_to_default:
+  sql: |
+    SELECT (TRUE AND FALSE)::text
+  expected: |
+    SELECT CAST(TRUE AND FALSE AS text);
+
+typecast_native_nested_casts_to_default:
+  sql: |
+    SELECT 1::text::text;
+  expected: |
+    SELECT CAST(CAST(1 AS text) AS text);
+
+typecast_standard_nested_casts_to_default:
+  sql: |
+    SELECT CAST(CAST(1 AS text) AS text);
+  expected: |
+    SELECT CAST(CAST(1 AS text) AS text);
+
+typecast_native_array_to_default:
+  sql: |
+    SELECT ARRAY[1, 2]::text[];
+  expected: |
+    SELECT CAST(ARRAY[1, 2] AS text[]);
+
+typecast_standard_array_to_default:
+  sql: |
+    SELECT CAST(ARRAY[1, 2] AS integer[]);
+  expected: |
+    SELECT CAST(ARRAY[1, 2] AS integer[]);
+
+typecast_literal_array_to_default:
+  sql: |
+    SELECT ARRAY[text '1', text '2'];
+  expected: |
+    SELECT ARRAY[CAST('1' AS text)
+               , CAST('2' AS text)];
+
+typecast_native_to_standard:
+  sql: |
+    SELECT '1'::text;
+  expected: |
+    SELECT CAST('1' AS text);
+  config:
+    format:
+      type_casting_style: standard
+
+typecast_standard_to_standard:
+  sql: |
+    SELECT CAST('1' AS text);
+  expected: |
+    SELECT CAST('1' AS text);
+  config:
+    format:
+      type_casting_style: standard
+
+typecast_literal_to_standard:
+  sql: |
+    SELECT text '1';
+  expected: |
+    SELECT CAST('1' AS text);
+  config:
+    format:
+      type_casting_style: standard
+
+typecast_native_to_native:
+  sql: |
+    SELECT '1'::text;
+  expected: |
+    SELECT '1'::text;
+  config:
+    format:
+      type_casting_style: native
+
+typecast_standard_to_native:
+  sql: |
+    SELECT CAST('1' AS text);
+  expected: |
+    SELECT '1'::text;
+  config:
+    format:
+      type_casting_style: native
+
+typecast_literal_to_native:
+  sql: |
+    SELECT text '1';
+  expected: |
+    SELECT '1'::text;
+  config:
+    format:
+      type_casting_style: native
+
+typecast_literal_char_to_native:
+  sql: |
+    SELECT char 'xyz';
+  expected: |
+    SELECT char 'xyz';
+  config:
+    format:
+      type_casting_style: native
+
+typecast_standard_expression_to_native:
+  sql: |
+    SELECT CAST(1 + 1 AS text);
+  expected: |
+    SELECT (1 + 1)::text;
+  config:
+    format:
+      type_casting_style: native
+
+typecast_standard_binary_expression_to_native:
+  sql: |
+    SELECT CAST(TRUE AND FALSE AS text);
+  expected: |
+    SELECT (TRUE AND FALSE)::text;
+  config:
+    format:
+      type_casting_style: native
+
+typecast_standard_nested_casts_to_native:
+  sql: |
+    SELECT CAST(CAST(1 AS text) AS text);
+  expected: |
+    SELECT 1::text::text;
+  config:
+    format:
+      type_casting_style: native
+
+typecast_standard_array_to_native:
+  sql: |
+    SELECT CAST(ARRAY[1, 2] AS text[]);
+  expected: |
+    SELECT ARRAY[1, 2]::text[];
+  config:
+    format:
+      type_casting_style: native
+
+typecast_standard_function_to_native:
+  sql: |
+    SELECT CAST(lower(value) AS text);
+  expected: |
+    SELECT lower(value)::text;
+  config:
+    format:
+      type_casting_style: native
+
+typecast_standard_special_function_to_native:
+  sql: |
+    SELECT CAST(value AT TIME ZONE 'UTC' AS text);
+  expected: |
+    SELECT (value AT TIME ZONE 'UTC')::text;
+  config:
+    format:
+      type_casting_style: native
+
+typecast_native_to_literal:
+  sql: |
+    SELECT '1'::text;
+  expected: |
+    SELECT text '1';
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_native_non_string_to_literal:
+  sql: |
+    SELECT 1::text;
+  expected: |
+    SELECT 1::text;
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_literal_to_literal:
+  sql: |
+    SELECT text '1';
+  expected: |
+    SELECT text '1';
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_standard_to_literal:
+  sql: |
+    SELECT CAST('1' AS text);
+  expected: |
+    SELECT text '1';
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_literal_char_to_literal:
+  sql: |
+    SELECT char 'xyz';
+  expected: |
+    SELECT char 'xyz';
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_standard_char_to_literal:
+  sql: |
+    SELECT CAST('xyz' AS char);
+  expected: |
+    SELECT CAST('xyz' AS char);
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_native_char_to_literal:
+  sql: |
+    SELECT 'xyz'::char;
+  expected: |
+    SELECT 'xyz'::char;
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_standard_char_with_length_to_literal:
+  sql: |
+    SELECT CAST('xyz' AS char(3));
+  expected: |
+    SELECT char(3) 'xyz';
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_native_char_with_length_to_literal:
+  sql: |
+    SELECT 'xyz'::char(3);
+  expected: |
+    SELECT char(3) 'xyz';
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_standard_expression_to_literal:
+  sql: |
+    SELECT CAST(1 + 1 AS text);
+  expected: |
+    SELECT CAST(1 + 1 AS text);
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_native_expression_to_literal:
+  sql: |
+    SELECT (1 + 1)::text;
+  expected: |
+    SELECT (1 + 1)::text;
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_native_special_function_to_literal:
+  sql: |
+    SELECT (value AT TIME ZONE 'UTC')::text;
+  expected: |
+    SELECT (value AT TIME ZONE 'UTC')::text;
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_native_null_test_to_native:
+  sql: |
+    SELECT CAST(value IS NULL AS text);
+  expected: |
+    SELECT (value IS NULL)::text;
+  config:
+    format:
+      type_casting_style: native
+
+typecast_native_boolean_test_to_native:
+  sql: |
+    SELECT CAST(value IS TRUE AS text);
+  expected: |
+    SELECT (value IS TRUE)::text;
+  config:
+    format:
+      type_casting_style: native
+
+typecast_native_with_whitespace_to_literal:
+  sql: |
+    SELECT 1 ::  text;
+  expected: |
+    SELECT 1::text;
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_standard_binary_expression_to_literal:
+  sql: |
+    SELECT CAST(TRUE AND FALSE AS text);
+  expected: |
+    SELECT CAST(TRUE AND FALSE AS text);
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_literal_nested_casts_to_literal:
+  sql: |
+    SELECT text '1'::text;
+  expected: |
+    SELECT text '1'::text;
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_standard_array_to_literal:
+  sql: |
+    SELECT CAST(ARRAY[1, 2] AS text[]);
+  expected: |
+    SELECT CAST(ARRAY[1, 2] AS text[]);
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_native_array_to_literal:
+  sql: |
+    SELECT ARRAY[1, 2]::text[];
+  expected: |
+    SELECT ARRAY[1, 2]::text[];
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_literal_array_to_literal:
+  sql: |
+    SELECT ARRAY[text '1', text '2'];
+  expected: |
+    SELECT ARRAY[text '1'
+               , text '2'];
+  config:
+    format:
+      type_casting_style: literal

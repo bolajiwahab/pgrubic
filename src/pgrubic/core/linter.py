@@ -639,6 +639,7 @@ class Linter:
                 try:
                     fixed_statement = self.formatter.format_ast(
                         source_ast=parse_tree,
+                        source_code=statement.text,
                         comments=comments,
                     )
 
