@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="z_7f0efaac7905faf3_linter_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
-            created at 2026-08-19 21:01 +0000
+            created at 2026-08-19 21:59 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -282,7 +282,7 @@
     <p class="run run2"><span class="n"><a id="t200" href="#t200">200</a></span><span class="t">                        <span class="nam">semicolon_after_last_statement</span><span class="op">=</span><span class="key">False</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="run run2"><span class="n"><a id="t201" href="#t201">201</a></span><span class="t">                        <span class="nam">remove_pg_catalog_from_functions</span><span class="op">=</span><span class="nam">config</span><span class="op">.</span><span class="nam">format</span><span class="op">.</span><span class="nam">remove_pg_catalog_from_functions</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="run run2"><span class="n"><a id="t202" href="#t202">202</a></span><span class="t">                        <span class="nam">comma_at_eoln</span><span class="op">=</span><span class="key">not</span> <span class="op">(</span><span class="nam">config</span><span class="op">.</span><span class="nam">format</span><span class="op">.</span><span class="nam">comma_at_beginning</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t203" href="#t203">203</a></span><span class="t">                        <span class="nam">special_functions</span><span class="op">=</span><span class="key">True</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t203" href="#t203">203</a></span><span class="t">                        <span class="nam">special_functions</span><span class="op">=</span><span class="nam">config</span><span class="op">.</span><span class="nam">format</span><span class="op">.</span><span class="nam">rewrite_function_calls_as_equivalent_syntax</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="run run2"><span class="n"><a id="t204" href="#t204">204</a></span><span class="t">                    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t205" href="#t205">205</a></span><span class="t">                    <span class="nam">formatted_statement</span> <span class="op">=</span> <span class="nam">output</span><span class="op">.</span><span class="nam">apply_keyword_case</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="run run2"><span class="n"><a id="t206" href="#t206">206</a></span><span class="t">                        <span class="nam">text</span><span class="op">=</span><span class="nam">output</span><span class="op">(</span><span class="nam">statement</span><span class="op">.</span><span class="nam">text</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -389,7 +389,7 @@
     <p class="run run2"><span class="n"><a id="t307" href="#t307">307</a></span><span class="t">            <span class="nam">separate_statements</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">config</span><span class="op">.</span><span class="nam">format</span><span class="op">.</span><span class="nam">lines_between_statements</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="run run2"><span class="n"><a id="t308" href="#t308">308</a></span><span class="t">            <span class="nam">remove_pg_catalog_from_functions</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">config</span><span class="op">.</span><span class="nam">format</span><span class="op">.</span><span class="nam">remove_pg_catalog_from_functions</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="run run2"><span class="n"><a id="t309" href="#t309">309</a></span><span class="t">            <span class="nam">comma_at_eoln</span><span class="op">=</span><span class="key">not</span> <span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">config</span><span class="op">.</span><span class="nam">format</span><span class="op">.</span><span class="nam">comma_at_beginning</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t310" href="#t310">310</a></span><span class="t">            <span class="nam">special_functions</span><span class="op">=</span><span class="key">True</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t310" href="#t310">310</a></span><span class="t">            <span class="nam">special_functions</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">config</span><span class="op">.</span><span class="nam">format</span><span class="op">.</span><span class="nam">rewrite_function_calls_as_equivalent_syntax</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="run run2"><span class="n"><a id="t311" href="#t311">311</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t312" href="#t312">312</a></span><span class="t">        <span class="key">return</span> <span class="nam">output</span><span class="op">.</span><span class="nam">apply_keyword_case</span><span class="op">(</span><span class="nam">text</span><span class="op">=</span><span class="nam">output</span><span class="op">(</span><span class="nam">source_ast</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </main>
@@ -401,7 +401,7 @@
             <a class="nav" href="z_7f0efaac7905faf3_linter_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
-            created at 2026-08-19 21:01 +0000
+            created at 2026-08-19 21:59 +0000
         </p>
     </div>
 </footer>
