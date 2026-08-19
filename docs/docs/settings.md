@@ -668,6 +668,25 @@ type-casting-style = "native"
 ```
 </details>
 
+### **rewrite-function-calls-as-equivalent-syntax**
+If `true`, rewrite some function calls using their equivalent SQL syntax. For example,
+`pg_catalog.timezone('UTC', value)` is formatted as
+`value AT TIME ZONE 'UTC'`.
+
+**Type**: `bool`
+
+**Default**: `true`
+
+**Example**:
+<details open>
+<summary><strong>pgrubic.toml</strong></summary>
+
+```toml
+[format]
+rewrite-function-calls-as-equivalent-syntax = false
+```
+</details>
+
 ### **new-line-before-semicolon**
 If `true`, add a new line before each semicolon.
 

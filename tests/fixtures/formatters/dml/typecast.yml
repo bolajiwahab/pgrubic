@@ -101,6 +101,15 @@ typecast_literal_to_standard:
     format:
       type_casting_style: standard
 
+typecast_native_function_with_equivalent_syntax_to_standard:
+  sql: |
+    SELECT pg_catalog.timezone('UTC', value)::text;
+  expected: |
+    SELECT CAST(value AT TIME ZONE 'UTC' AS text);
+  config:
+    format:
+      type_casting_style: standard
+
 typecast_native_to_native:
   sql: |
     SELECT '1'::text;
@@ -182,9 +191,9 @@ typecast_standard_function_to_native:
     format:
       type_casting_style: native
 
-typecast_standard_special_function_to_native:
+typecast_standard_function_with_equivalent_syntax_to_native:
   sql: |
-    SELECT CAST(value AT TIME ZONE 'UTC' AS text);
+    SELECT CAST(pg_catalog.timezone('UTC', value) AS text);
   expected: |
     SELECT (value AT TIME ZONE 'UTC')::text;
   config:
@@ -290,16 +299,65 @@ typecast_native_expression_to_literal:
     format:
       type_casting_style: literal
 
-typecast_native_special_function_to_literal:
+typecast_standard_function_to_literal:
   sql: |
-    SELECT (value AT TIME ZONE 'UTC')::text;
+    SELECT CAST(lower(value) AS text);
+  expected: |
+    SELECT CAST(lower(value) AS text);
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_native_function_to_literal:
+  sql: |
+    SELECT lower(value)::text;
+  expected: |
+    SELECT lower(value)::text;
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_standard_function_with_equivalent_syntax_to_literal:
+  sql: |
+    SELECT CAST(pg_catalog.timezone('UTC', value) AS text);
+  expected: |
+    SELECT CAST(value AT TIME ZONE 'UTC' AS text);
+  config:
+    format:
+      type_casting_style: literal
+
+typecast_native_function_with_equivalent_syntax_to_literal:
+  sql: |
+    SELECT pg_catalog.timezone('UTC', value)::text;
   expected: |
     SELECT (value AT TIME ZONE 'UTC')::text;
   config:
     format:
       type_casting_style: literal
 
-typecast_native_null_test_to_native:
+typecast_standard_function_to_literal_without_equivalent_syntax_rewrite:
+  sql: |
+    SELECT CAST(pg_catalog.timezone('UTC', value) AS text);
+  expected: |
+    SELECT CAST(pg_catalog.timezone('UTC', value) AS text);
+  config:
+    format:
+      type_casting_style: literal
+      rewrite_function_calls_as_equivalent_syntax: false
+      remove_pg_catalog_from_functions: false
+
+typecast_native_function_to_literal_without_equivalent_syntax_rewrite:
+  sql: |
+    SELECT pg_catalog.timezone('UTC', value)::text;
+  expected: |
+    SELECT pg_catalog.timezone('UTC', value)::text;
+  config:
+    format:
+      type_casting_style: literal
+      rewrite_function_calls_as_equivalent_syntax: false
+      remove_pg_catalog_from_functions: false
+
+typecast_standard_null_test_to_native:
   sql: |
     SELECT CAST(value IS NULL AS text);
   expected: |
@@ -308,7 +366,7 @@ typecast_native_null_test_to_native:
     format:
       type_casting_style: native
 
-typecast_native_boolean_test_to_native:
+typecast_standard_boolean_test_to_native:
   sql: |
     SELECT CAST(value IS TRUE AS text);
   expected: |

@@ -118,6 +118,9 @@ new-line-before-semicolon = false
 # Remove pg_catalog from functions by default
 remove-pg-catalog-from-functions = true
 
+# Rewrite some function calls using their equivalent SQL syntax by default
+rewrite-function-calls-as-equivalent-syntax = true
+
 # Separate statements by a certain number by of new line, 1 by default
 lines-between-statements = 1
 
