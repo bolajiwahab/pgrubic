@@ -8,64 +8,88 @@ import pathlib
 import multiprocessing
 from collections import abc
 
+import toml
 import click
 from rich.syntax import Syntax
 from rich.console import Console
 
-from pgrubic import PACKAGE_NAME, DEFAULT_WORKERS, WORKERS_ENVIRONMENT_VARIABLE, core
+from pgrubic import DEFAULT_WORKERS, WORKERS_ENVIRONMENT_VARIABLE, core, cli_help
 from pgrubic.core import noqa, errors
 
 
 def common_options[T](func: abc.Callable[..., T]) -> abc.Callable[..., T]:
     """Decorator to add common options to each subcommand."""
-    func = click.version_option()(func)
-    func = click.option("--workers", type=int, help="Number of workers to use.")(func)
-    return click.option("--verbose", is_flag=True, help="Enable verbose logging.")(func)
+    func = click.version_option(None, "-v", "--version")(func)
+    func = click.option(
+        "--workers",
+        type=int,
+        help=f"Number of workers to use. Defaults to the number of CPUs or the value of {WORKERS_ENVIRONMENT_VARIABLE}.",  # noqa: E501
+    )(func)
+    func = click.option("--verbose", is_flag=True, help="Enable verbose logging.")(func)
+    return click.option(
+        "--config",
+        "config_overrides",
+        multiple=True,
+        metavar="<CONFIG_OPTION>",
+        help=cli_help.CONFIG_OVERRIDE_HELP,
+    )(func)
+
+
+def _parse_config_overrides(
+    config_overrides: tuple[str, ...],
+) -> dict[str, object]:
+    """Parse CLI configuration overrides as TOML key-value pairs."""
+    if not config_overrides:
+        return {}
+
+    config_override = "\n".join(config_overrides)
+
+    try:
+        return dict(toml.loads(config_override))
+    except toml.decoder.TomlDecodeError as error:
+        msg = f'Error parsing configuration override "{config_override}"'
+        raise errors.ConfigParseError(msg) from error
 
 
 @click.group(
+    cls=cli_help.Group,
     context_settings={"help_option_names": ["-h", "--help"]},
-    epilog=f"""
-Examples:{noqa.NEW_LINE}
-   {PACKAGE_NAME} lint{noqa.NEW_LINE}
-   {PACKAGE_NAME} lint .{noqa.NEW_LINE}
-   {PACKAGE_NAME} lint *.sql{noqa.NEW_LINE}
-   {PACKAGE_NAME} lint example.sql{noqa.NEW_LINE}
-   {PACKAGE_NAME} format file.sql{noqa.NEW_LINE}
-   {PACKAGE_NAME} format migrations/{noqa.NEW_LINE}
-""",
+    epilog=cli_help.ROOT_EPILOG,
 )
-@click.version_option()
+@click.version_option(None, "-v", "--version")
 def cli() -> None:
-    """Pgrubic: PostgreSQL linter and formatter for schema migrations
+    """Pgrubic: A PostgreSQL linter and formatter for schema migrations
     and design best practices.
     """
 
 
-@cli.command(name="lint")
+@cli.command(
+    name="lint",
+    help="Run the SQL linter on the given files or directories.",
+)
 @click.option(
     "--fix",
     is_flag=True,
     default=False,
-    help="Fix lint violations automatically.",
+    help="Apply fixes to resolve lint violations.",
 )
 @click.option(
     "--ignore-noqa",
     is_flag=True,
     default=False,
-    help="Whether to ignore noqa directives.",
+    help="Ignore inline `-- noqa` directives.",
 )
 @click.option(
     "--add-file-level-general-noqa",
     is_flag=True,
     default=False,
-    help="Whether to add file-level noqa directives.",
+    help="Add `-- pgrubic: noqa` to the beginning of each SQL file, causing the entire file to be ignored by the linter.",  # noqa: E501
 )
 @click.option(
     "--generate-lint-report",
     is_flag=True,
     default=False,
-    help="Whether to generate a lint report.",
+    help="Generate a lint report.",
 )
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
@@ -76,6 +100,7 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
     ignore_noqa: bool,
     add_file_level_general_noqa: bool,
     generate_lint_report: bool,
+    config_overrides: tuple[str, ...],
     workers: int,
     verbose: bool,
 ) -> None:
@@ -93,6 +118,8 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
         Whether to add file-level noqa directives.
     generate_lint_report: bool
         Whether to generate a lint report.
+    config_overrides: tuple[str, ...]
+        TOML key-value pairs overriding configuration options.
     workers: int
         Number of workers to use.
     verbose: bool
@@ -106,7 +133,9 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
     core.logger.setLevel(logging.INFO if verbose else logging.WARNING)
 
     try:
-        config = core.parse_config()
+        config = core.parse_config(
+            overrides=_parse_config_overrides(config_overrides),
+        )
     except errors.MissingConfigError as error:
         sys.stderr.write(f"{error}{noqa.NEW_LINE}")
         sys.exit(1)
@@ -242,26 +271,27 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
         sys.stdout.write(f"All checks passed!{noqa.NEW_LINE}")
 
 
-@cli.command(name="format")
+@cli.command(
+    name="format",
+    help="Run the SQL formatter on the given files or directories.",
+)
 @click.option(
     "--check",
     is_flag=True,
     default=False,
-    help="Check if any files would have been modified.",
+    help="Check if any files would be reformatted.",
 )
 @click.option(
     "--diff",
     is_flag=True,
     default=False,
-    help="""
-    Report the difference between the current file and
-    how the formatted file would look like.""",
+    help="Report the difference between the current file and what the formatted file would look like.",  # noqa: E501
 )
 @click.option(
     "--no-cache",
     is_flag=True,
     default=False,
-    help="Whether to read the cache.",
+    help="Disable cache reads.",
 )
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
@@ -271,6 +301,7 @@ def format_sources(  # noqa: C901, PLR0912, PLR0913, PLR0915
     check: bool,
     diff: bool,
     no_cache: bool,
+    config_overrides: tuple[str, ...],
     workers: int,
     verbose: bool,
 ) -> None:
@@ -281,12 +312,14 @@ def format_sources(  # noqa: C901, PLR0912, PLR0913, PLR0915
     sources: tuple[pathlib.Path, ...]
         List of sources to format.
     check: bool
-        Check if any files would have been modified.
+        Check if any files would be reformatted.
     diff: bool
         Report the difference between the current file and
         how the formatted file would look like.
     no_cache: bool
         Whether to read the cache.
+    config_overrides: tuple[str, ...]
+        TOML key-value pairs overriding configuration options.
     workers: int
         Number of workers to use.
     verbose: bool
@@ -302,7 +335,9 @@ def format_sources(  # noqa: C901, PLR0912, PLR0913, PLR0915
     console = Console()
 
     try:
-        config = core.parse_config()
+        config = core.parse_config(
+            overrides=_parse_config_overrides(config_overrides),
+        )
     except errors.MissingConfigError as error:
         sys.stderr.write(f"{error}{noqa.NEW_LINE}")
         sys.exit(1)

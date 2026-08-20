@@ -3,6 +3,7 @@
 import pathlib
 from unittest.mock import patch
 
+import click
 import pytest
 from click import testing
 
@@ -14,6 +15,57 @@ from pgrubic import (
 )
 from pgrubic.core import noqa, config, linter
 from pgrubic.__main__ import cli
+
+
+@pytest.mark.parametrize(
+    ("args", "description", "usage_command"),
+    [
+        (["--help"], "Pgrubic: A PostgreSQL linter", "cli"),
+        (
+            ["lint", "--help"],
+            "Run the SQL linter on the given files or directories.",
+            "cli lint",
+        ),
+    ],
+)
+def test_cli_help_colors(
+    args: list[str],
+    description: str,
+    usage_command: str,
+) -> None:
+    """Test help colors are emitted only when color output is enabled."""
+    runner = testing.CliRunner()
+
+    colored_result = runner.invoke(cli, args, color=True)
+    plain_result = runner.invoke(cli, args)
+
+    assert colored_result.exit_code == 0
+    assert "\x1b[" in colored_result.output
+    assert click.style(usage_command, fg="green", bold=True) in colored_result.output
+    assert plain_result.exit_code == 0
+    assert "\x1b[" not in plain_result.output
+    assert plain_result.output.index(description) < plain_result.output.index("Usage:")
+    assert "Parameters:" not in plain_result.output
+    assert '--config "lint.target-postgres-version = 17"' in plain_result.output
+    if args == ["lint", "--help"]:
+        normalized_output = " ".join(plain_result.output.split())
+        assert "Ignore inline `-- noqa` directives." in normalized_output
+        assert "causing the entire file to be ignored by the linter." in normalized_output
+    if args == ["--help"]:
+        assert plain_result.output.index("\nCommands:\n") < plain_result.output.index(
+            "\nOptions:\n",
+        )
+        assert "\nConfiguration overrides:\n" in plain_result.output
+        assert "\nExamples:\n" in plain_result.output
+
+
+@pytest.mark.parametrize("args", [["-v"], ["lint", "-v"]])
+def test_cli_short_version_option(args: list[str]) -> None:
+    """Test the short version option on the root and subcommands."""
+    result = testing.CliRunner().invoke(cli, args)
+
+    assert result.exit_code == 0
+    assert " version " in result.output
 
 
 def test_cli_lint_file(tmp_path: pathlib.Path) -> None:
@@ -86,6 +138,31 @@ def test_cli_lint_complete_fix(tmp_path: pathlib.Path) -> None:
     result = runner.invoke(cli, ["lint", str(file_fail), "--fix"])
 
     assert result.exit_code == 0
+
+
+def test_cli_lint_config_override(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test overriding lint configuration from the CLI."""
+    runner = testing.CliRunner()
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / config.CONFIG_FILE).write_text(
+        """
+[lint]
+fix = false
+""",
+    )
+    source_file = tmp_path / TEST_FILE
+    source_file.write_text("SELECT a = NULL;")
+
+    result = runner.invoke(
+        cli,
+        ["lint", "--config", "lint.fix = true", str(source_file)],
+    )
+
+    assert result.exit_code == 0
+    assert source_file.read_text() == f"SELECT a IS NULL;{noqa.NEW_LINE}"
 
 
 def test_cli_lint_with_add_file_level_general_noqa(tmp_path: pathlib.Path) -> None:
@@ -629,6 +706,60 @@ def test_cli_format_missing_config_error(tmp_path: pathlib.Path) -> None:
         assert result.output == f"Missing config key: data-type{noqa.NEW_LINE}"
 
         assert result.exit_code == 1
+
+
+def test_cli_format_config_overrides(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test overriding multiple format options from the CLI."""
+    runner = testing.CliRunner()
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / config.CONFIG_FILE).write_text(
+        """
+[format]
+uppercase-keywords = true
+type-casting-style = "literal"
+""",
+    )
+    source_file = tmp_path / TEST_FILE
+    source_file.write_text("SELECT CAST(value AS text);")
+
+    result = runner.invoke(
+        cli,
+        [
+            "format",
+            "--config",
+            "format.uppercase-keywords = false",
+            "--config",
+            'format.type-casting-style = "native"',
+            str(source_file),
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert source_file.read_text() == f"select value::text;{noqa.NEW_LINE}"
+
+
+@pytest.mark.parametrize("command", ["lint", "format"])
+def test_cli_invalid_config_override(
+    command: str,
+    tmp_path: pathlib.Path,
+) -> None:
+    """Test invalid CLI configuration overrides."""
+    runner = testing.CliRunner()
+    source_file = tmp_path / TEST_FILE
+    source_file.write_text("SELECT 1;")
+
+    result = runner.invoke(
+        cli,
+        [command, "--config", "format.uppercase-keywords", str(source_file)],
+    )
+
+    assert result.exit_code == 1
+    assert result.output == (
+        f'Error parsing configuration override "format.uppercase-keywords"{noqa.NEW_LINE}'
+    )
 
 
 def test_cli_format_config_file_from_environment_variable_not_found_error(
