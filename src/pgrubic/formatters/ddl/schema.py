@@ -1,12 +1,16 @@
 """Printers for SchemaStmt."""
 
-from pglast import ast, enums, stream, printers
+from pglast import ast, enums, printers
 
+from pgrubic.core import formatter
 from pgrubic.formatters.ddl import IF_EXISTS, IF_NOT_EXISTS
 
 
 @printers.node_printer(ast.CreateSchemaStmt, override=True)
-def create_schema_stmt(node: ast.CreateSchemaStmt, output: stream.RawStream) -> None:
+def create_schema_stmt(
+    node: ast.CreateSchemaStmt,
+    output: formatter.PrinterOutput,
+) -> None:
     """Print a CreateSchemaStmt node."""
     output.writes("CREATE SCHEMA")
 
@@ -32,7 +36,7 @@ def create_schema_stmt(node: ast.CreateSchemaStmt, output: stream.RawStream) -> 
 @printers.node_printer(ast.AlterObjectSchemaStmt, override=True)
 def alter_object_schema_stmt(
     node: ast.AlterObjectSchemaStmt,
-    output: stream.RawStream,
+    output: formatter.PrinterOutput,
 ) -> None:
     """Print an AlterObjectSchemaStmt node."""
     objtype = node.objectType

@@ -1,11 +1,13 @@
 """Formatter for rename."""
 
-from pglast import ast, enums, stream, printers
+from pglast import ast, enums, printers
 from pglast.printers.ddl import OBJECT_NAMES
+
+from pgrubic.core import formatter
 
 
 @printers.node_printer(ast.RenameStmt, override=True)
-def rename_stmt(node: ast.RenameStmt, output: stream.RawStream) -> None:
+def rename_stmt(node: ast.RenameStmt, output: formatter.PrinterOutput) -> None:
     """Printer for RenameStmt."""
     objtype = node.renameType
     output.write("ALTER")

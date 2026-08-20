@@ -1,13 +1,13 @@
 """Formatter for table."""
 
-from pglast import ast, enums, stream, printers
+from pglast import ast, enums, printers
 
 from pgrubic.core import formatter
 from pgrubic.formatters.ddl import IF_EXISTS, IF_NOT_EXISTS
 
 
 @printers.node_printer(ast.IntoClause, override=True)
-def into_clause(node: ast.IntoClause, output: formatter.IndentedStream) -> None:
+def into_clause(node: ast.IntoClause, output: formatter.PrinterOutput) -> None:
     """Printer for IntoClause."""
     output.print_node(node.rel)
 
@@ -51,7 +51,7 @@ def into_clause(node: ast.IntoClause, output: formatter.IndentedStream) -> None:
 
 
 @printers.node_printer(ast.PartitionSpec, override=True)
-def partition_spec(node: ast.PartitionSpec, output: stream.RawStream) -> None:
+def partition_spec(node: ast.PartitionSpec, output: formatter.PrinterOutput) -> None:
     """Printer for PartitionSpec."""
     strategy = {
         enums.PartitionStrategy.PARTITION_STRATEGY_LIST: "LIST",
@@ -66,7 +66,10 @@ def partition_spec(node: ast.PartitionSpec, output: stream.RawStream) -> None:
 
 
 @printers.node_printer(ast.CreateTableAsStmt, override=True)
-def create_table_as_stmt(node: ast.CreateTableAsStmt, output: stream.RawStream) -> None:
+def create_table_as_stmt(
+    node: ast.CreateTableAsStmt,
+    output: formatter.PrinterOutput,
+) -> None:
     """Printer for CreateTableAsStmt."""
     output.writes("CREATE")
     output.space()
@@ -95,7 +98,7 @@ def create_table_as_stmt(node: ast.CreateTableAsStmt, output: stream.RawStream) 
 @printers.node_printer(ast.CreateForeignTableStmt, override=True)
 def create_foreign_table_stmt(
     node: ast.CreateForeignTableStmt,
-    output: stream.RawStream,
+    output: formatter.PrinterOutput,
 ) -> None:
     """Printer for CreateForeignTableStmt."""
     output.print_node(node.base)
@@ -125,7 +128,7 @@ def create_foreign_table_stmt(
 @printers.node_printer(ast.CreateStmt, override=True)
 def create_stmt(
     node: ast.CreateStmt,
-    output: formatter.IndentedStream,
+    output: formatter.PrinterOutput,
 ) -> None:
     """Printer for CreateStmt."""
     clause_indent = 4 if node.partbound else 0
@@ -164,7 +167,7 @@ def create_stmt(
         columns = [x for x in node.tableElts if not isinstance(x, ast.Constraint)] + [
             x for x in node.tableElts if isinstance(x, ast.Constraint)
         ]
-        output.space()
+        output.space(force=True)
 
         with output.expression(need_parens=True):
             output.newline()
@@ -173,7 +176,7 @@ def create_stmt(
             output.newline()
             output.space(clause_indent)
     elif node.partbound:
-        output.write_empty_space()
+        output.write_empty_string()
     elif not node.ofTypename:
         output.space()
         output.write("()")
@@ -233,7 +236,10 @@ def create_stmt(
 
 
 @printers.node_printer(ast.AlterTableStmt, override=True)
-def alter_table_stmt(node: ast.AlterTableStmt, output: stream.RawStream) -> None:
+def alter_table_stmt(
+    node: ast.AlterTableStmt,
+    output: formatter.PrinterOutput,
+) -> None:
     """Printer for AlterTableStmt."""
     output.write("ALTER")
     output.space()

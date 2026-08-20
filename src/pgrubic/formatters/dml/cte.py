@@ -1,10 +1,12 @@
 """Formatter for CTEs."""
 
-from pglast import ast, stream, printers
+from pglast import ast, printers
+
+from pgrubic.core import formatter
 
 
 @printers.node_printer(ast.WithClause, override=True)
-def with_clause(node: ast.WithClause, output: stream.RawStream) -> None:
+def with_clause(node: ast.WithClause, output: formatter.PrinterOutput) -> None:
     """Printer for WithClause."""
     relative_indent = -2
 
@@ -15,7 +17,10 @@ def with_clause(node: ast.WithClause, output: stream.RawStream) -> None:
 
 
 @printers.node_printer(ast.CommonTableExpr, override=True)
-def common_table_expr(node: ast.CommonTableExpr, output: stream.RawStream) -> None:
+def common_table_expr(
+    node: ast.CommonTableExpr,
+    output: formatter.PrinterOutput,
+) -> None:
     """Printer for CommonTableExpr."""
     output.print_name(node.ctename)
     if node.aliascolnames:

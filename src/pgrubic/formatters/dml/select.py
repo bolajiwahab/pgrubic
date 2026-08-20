@@ -1,10 +1,12 @@
 """Formatter for SELECT statements."""
 
-from pglast import ast, enums, stream, printers
+from pglast import ast, enums, printers
+
+from pgrubic.core import formatter
 
 
 @printers.node_printer(ast.SubLink, override=True)
-def sub_link(node: ast.SubLink, output: stream.RawStream) -> None:
+def sub_link(node: ast.SubLink, output: formatter.PrinterOutput) -> None:
     """Printer for SubLink."""
     if node.subLinkType == enums.SubLinkType.EXISTS_SUBLINK:
         output.write("EXISTS")
@@ -83,7 +85,7 @@ def subexpression_needs_parentheses(node: ast.SelectStmt) -> bool:
 
 
 @printers.node_printer(ast.SelectStmt, override=True)
-def select_stmt(node: ast.SelectStmt, output: stream.RawStream) -> None:
+def select_stmt(node: ast.SelectStmt, output: formatter.PrinterOutput) -> None:
     """Printer for SelectStmt."""
     with output.push_indent():
         if node.withClause:
@@ -256,7 +258,7 @@ def select_stmt(node: ast.SelectStmt, output: stream.RawStream) -> None:
 
 
 @printers.node_printer(ast.RangeSubselect, override=True)
-def range_subselect(node: ast.RangeSubselect, output: stream.RawStream) -> None:
+def range_subselect(node: ast.RangeSubselect, output: formatter.PrinterOutput) -> None:
     """Printer for RangeSubselect."""
     if node.lateral:
         output.write("LATERAL")

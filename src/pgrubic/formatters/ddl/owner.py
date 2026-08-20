@@ -1,10 +1,15 @@
 """Printer for AlterOwnerStmt."""
 
-from pglast import ast, enums, stream, printers
+from pglast import ast, enums, printers
+
+from pgrubic.core import formatter
 
 
 @printers.node_printer(ast.AlterOwnerStmt, override=True)
-def alter_owner_stmt(node: ast.AlterOwnerStmt, output: stream.RawStream) -> None:
+def alter_owner_stmt(
+    node: ast.AlterOwnerStmt,
+    output: formatter.PrinterOutput,
+) -> None:
     """Printer for AlterOwnerStmt."""
     output.write("ALTER")
     output.space()

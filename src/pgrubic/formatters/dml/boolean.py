@@ -1,6 +1,8 @@
 """Formatter for boolean expressions."""
 
-from pglast import ast, enums, stream, printers
+from pglast import ast, enums, printers
+
+from pgrubic.core import formatter
 
 
 def bool_expr_needs_to_be_wrapped_in_parens(node: ast.BoolExpr) -> bool:
@@ -12,7 +14,7 @@ def bool_expr_needs_to_be_wrapped_in_parens(node: ast.BoolExpr) -> bool:
 
 
 @printers.node_printer(ast.BoolExpr, override=True)
-def bool_expr(node: ast.BoolExpr, output: stream.RawStream) -> None:
+def bool_expr(node: ast.BoolExpr, output: formatter.PrinterOutput) -> None:
     """Printer for BoolExpr."""
     in_target_list = isinstance(node.ancestors[0], ast.ResTarget)  # type: ignore[attr-defined]
     bool_expr_in_ancestors = ast.BoolExpr in node.ancestors  # type: ignore[attr-defined]

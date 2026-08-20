@@ -105,6 +105,27 @@ test_fail_inline_sql_in_plpgsql_function_in_function_call:
     $$,
     '{global}'::text[]);
 
+test_fail_inline_create_table_with_storage_options_in_function_call:
+  sql_fail: |
+    SELECT pglogical.replicate_ddl_command(
+    $$
+        CREATE TABLE events (created_at timestamp)
+        WITH (fillfactor = 90);
+
+        CREATE TABLE events_2026 PARTITION OF events
+        FOR VALUES FROM ('2026-01-01') TO ('2027-01-01');
+    $$,
+    '{global}'::text[]);
+
+test_fail_inline_create_index_in_function_call:
+  sql_fail: |
+    SELECT pglogical.replicate_ddl_command(
+    $$
+        CREATE INDEX events_created_at_idx ON events (created_at, processed_at);
+        ALTER TABLE events ADD COLUMN processed_at timestamp;
+    $$,
+    '{global}'::text[]);
+
 test_pass_inline_sql_in_plpgsql_block_in_function_call:
   sql_pass: |
     SELECT pglogical.replicate_ddl_command(

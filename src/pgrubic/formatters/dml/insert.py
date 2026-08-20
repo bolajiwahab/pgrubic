@@ -1,10 +1,12 @@
 """Formatter for insert."""
 
-from pglast import ast, enums, stream, printers
+from pglast import ast, enums, printers
+
+from pgrubic.core import formatter
 
 
 @printers.node_printer(ast.InferClause, override=True)
-def infer_clause(node: ast.InferClause, output: stream.RawStream) -> None:
+def infer_clause(node: ast.InferClause, output: formatter.PrinterOutput) -> None:
     """Printer for InferClause."""
     if node.conname:
         output.swrite("ON CONSTRAINT")
@@ -25,7 +27,10 @@ def infer_clause(node: ast.InferClause, output: stream.RawStream) -> None:
 
 
 @printers.node_printer(ast.OnConflictClause, override=True)
-def on_conflict_clause(node: ast.OnConflictClause, output: stream.RawStream) -> None:
+def on_conflict_clause(
+    node: ast.OnConflictClause,
+    output: formatter.PrinterOutput,
+) -> None:
     """Printer for OnConflictClause."""
     on_conflict_action = enums.OnConflictAction
     if node.infer:
@@ -50,7 +55,7 @@ def on_conflict_clause(node: ast.OnConflictClause, output: stream.RawStream) -> 
 
 
 @printers.node_printer(ast.InsertStmt, override=True)
-def insert_stmt(node: ast.InsertStmt, output: stream.RawStream) -> None:
+def insert_stmt(node: ast.InsertStmt, output: formatter.PrinterOutput) -> None:
     """Printer for InsertStmt."""
     with output.push_indent():
         if node.withClause:

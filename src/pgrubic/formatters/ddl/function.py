@@ -1,9 +1,9 @@
 # mypy: disable-error-code="union-attr"
 """Formatter for function/procedure."""
 
-from pglast import ast, enums, stream, printers
+from pglast import ast, enums, printers
 
-from pgrubic.core import Formatter, noqa, config
+from pgrubic.core import Formatter, noqa, config, formatter
 
 _config: config.Config = config.parse_config()
 
@@ -11,7 +11,7 @@ _config: config.Config = config.parse_config()
 @printers.node_printer(ast.CreateFunctionStmt, override=True)
 def create_function_stmt(
     node: ast.CreateFunctionStmt,
-    output: stream.RawStream,
+    output: formatter.PrinterOutput,
 ) -> None:
     """Printer for CreateFunctionStmt."""
     output.write("CREATE")
@@ -127,7 +127,7 @@ def create_function_stmt(
 )
 def create_function_option(  # noqa: PLR0911
     node: ast.CreateFunctionStmt | ast.AlterFunctionStmt | ast.DoStmt | ast.DefElem,
-    output: stream.RawStream,
+    output: formatter.PrinterOutput,
 ) -> None:
     """Printer for function options."""
     option = node.defname
@@ -255,7 +255,10 @@ def create_function_option(  # noqa: PLR0911
 
 
 @printers.node_printer(ast.AlterFunctionStmt, override=True)
-def alter_function_stmt(node: ast.AlterFunctionStmt, output: stream.RawStream) -> None:
+def alter_function_stmt(
+    node: ast.AlterFunctionStmt,
+    output: formatter.PrinterOutput,
+) -> None:
     """Printer for AlterFunctionStmt."""
     output.write("ALTER")
     output.space()

@@ -1,10 +1,12 @@
 """Formatter for JOIN statements."""
 
-from pglast import ast, enums, stream, printers
+from pglast import ast, enums, printers
+
+from pgrubic.core import formatter
 
 
 @printers.node_printer(ast.JoinExpr, override=True)
-def join_expr(node: ast.JoinExpr, output: stream.RawStream) -> None:
+def join_expr(node: ast.JoinExpr, output: formatter.PrinterOutput) -> None:
     """Printer for JoinExpr."""
     indent = (
         -6

@@ -1,10 +1,12 @@
 """Formatters for delete."""
 
-from pglast import ast, stream, printers
+from pglast import ast, printers
+
+from pgrubic.core import formatter
 
 
 @printers.node_printer(ast.DeleteStmt, override=True)
-def delete_stmt(node: ast.DeleteStmt, output: stream.RawStream) -> None:
+def delete_stmt(node: ast.DeleteStmt, output: formatter.PrinterOutput) -> None:
     """Printer for DeleteStmt."""
     with output.push_indent():
         if node.withClause:
