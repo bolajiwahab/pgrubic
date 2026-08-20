@@ -176,7 +176,7 @@ def create_stmt(
             output.newline()
             output.space(clause_indent)
     elif node.partbound:
-        output.write_empty_space()
+        output.write_empty_string()
     elif not node.ofTypename:
         output.space()
         output.write("()")

@@ -31,8 +31,8 @@ class RawStream(stream.RawStream):
         self.config = config
         self.source_code = source_code
 
-    def write_empty_space(self) -> None:
-        """Write an empty space."""
+    def write_empty_string(self) -> None:
+        """Write an empty string (no-op)."""
         self.write("")
 
     def print_parenthesized_list(
@@ -43,6 +43,8 @@ class RawStream(stream.RawStream):
         continuation_indent: int = 4,
     ) -> None:
         """Print a compact parenthesized list."""
+        # RawStream suppresses pending separators before "(", so force the
+        # caller-requested space to match pglast's DDL serialization.
         self.space(force=True)
         with self.expression(need_parens=True):
             self.print_list(nodes, standalone_items=False)
@@ -111,8 +113,8 @@ class IndentedStream(stream.IndentedStream):
 
         return output.getvalue()
 
-    def write_empty_space(self) -> None:
-        """Write an empty space."""
+    def write_empty_string(self) -> None:
+        """Write an empty string (no-op)."""
         self.write("")
 
     def print_parenthesized_list(
