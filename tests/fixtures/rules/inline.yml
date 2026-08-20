@@ -111,6 +111,9 @@ test_fail_inline_create_table_with_storage_options_in_function_call:
     $$
         CREATE TABLE events (created_at timestamp)
         WITH (fillfactor = 90);
+
+        CREATE TABLE events_2026 PARTITION OF events
+        FOR VALUES FROM ('2026-01-01') TO ('2027-01-01');
     $$,
     '{global}'::text[]);
 
