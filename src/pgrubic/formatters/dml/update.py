@@ -1,10 +1,12 @@
 """Formatter for UPDATE statements."""
 
-from pglast import ast, stream, printers
+from pglast import ast, printers
+
+from pgrubic.core import formatter
 
 
 @printers.node_printer(ast.UpdateStmt, override=True)
-def update_stmt(node: ast.UpdateStmt, output: stream.RawStream) -> None:
+def update_stmt(node: ast.UpdateStmt, output: formatter.PrinterOutput) -> None:
     """Printer for UpdateStmt."""
     with output.push_indent():
         if node.withClause:

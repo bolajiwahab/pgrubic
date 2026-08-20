@@ -1,10 +1,12 @@
 """Formatter for column."""
 
-from pglast import ast, enums, stream, printers
+from pglast import ast, enums, printers
+
+from pgrubic.core import formatter
 
 
 @printers.node_printer(ast.ColumnDef, override=True)
-def column_def(node: ast.ColumnDef, output: stream.RawStream) -> None:
+def column_def(node: ast.ColumnDef, output: formatter.PrinterOutput) -> None:
     """Printer for ColumnDef."""
     if node.colname:
         output.print_name(node.colname)

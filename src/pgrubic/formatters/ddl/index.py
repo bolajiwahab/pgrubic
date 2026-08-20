@@ -12,7 +12,7 @@ DEFAULT_GUTTER: typing.Final[int] = 6
 
 
 @printers.node_printer(ast.IndexStmt, override=True)
-def index_stmt(node: ast.IndexStmt, output: formatter.IndentedStream) -> None:
+def index_stmt(node: ast.IndexStmt, output: formatter.PrinterOutput) -> None:
     """Printer for IndexStmt."""
     output.write("CREATE")
     output.space()

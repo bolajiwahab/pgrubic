@@ -1,10 +1,12 @@
 """Formatter for view."""
 
-from pglast import ast, enums, stream, printers
+from pglast import ast, enums, printers
+
+from pgrubic.core import formatter
 
 
 @printers.node_printer(ast.ViewStmt, override=True)
-def view_stmt(node: ast.ViewStmt, output: stream.RawStream) -> None:
+def view_stmt(node: ast.ViewStmt, output: formatter.PrinterOutput) -> None:
     """Printer for ViewStmt."""
     output.write("CREATE")
     output.space()

@@ -1,12 +1,16 @@
 """Formatter for database."""
 
-from pglast import ast, stream, printers
+from pglast import ast, printers
 
 from pgrubic import Operators
+from pgrubic.core import formatter
 
 
 @printers.node_printer(ast.CreatedbStmt, ast.DefElem, override=True)
-def create_db_stmt_def_elem(node: ast.DefElem, output: stream.RawStream) -> None:
+def create_db_stmt_def_elem(
+    node: ast.DefElem,
+    output: formatter.PrinterOutput,
+) -> None:
     """Printer for CreatedbStmt defelem."""
     option = node.defname
     if option == "connection_limit":
@@ -30,7 +34,7 @@ def create_db_stmt_def_elem(node: ast.DefElem, output: stream.RawStream) -> None
 
 
 @printers.node_printer(ast.DropdbStmt, override=True)
-def drop_db_stmt(node: ast.DropdbStmt, output: stream.RawStream) -> None:
+def drop_db_stmt(node: ast.DropdbStmt, output: formatter.PrinterOutput) -> None:
     """Printer for DropdbStmt."""
     output.write("DROP DATABASE")
     if node.missing_ok:
@@ -50,6 +54,6 @@ def drop_db_stmt(node: ast.DropdbStmt, output: stream.RawStream) -> None:
 
 
 @printers.node_printer(ast.DropdbStmt, ast.DefElem, override=True)
-def drop_db_stmt_def_elem(node: ast.DefElem, output: stream.RawStream) -> None:
+def drop_db_stmt_def_elem(node: ast.DefElem, output: formatter.PrinterOutput) -> None:
     """Printer for DropdbStmt defelem."""
     output.write(node.defname.upper())

@@ -1,12 +1,13 @@
 """Formatter for constraint."""
 
-from pglast import ast, enums, stream, printers
+from pglast import ast, enums, printers
 
 from pgrubic import Operators
+from pgrubic.core import formatter
 
 
 @printers.node_printer(ast.Constraint, override=True)
-def constraint(node: ast.Constraint, output: stream.RawStream) -> None:
+def constraint(node: ast.Constraint, output: formatter.PrinterOutput) -> None:
     """Printer for Constraint."""
     if node.conname:
         output.swrite("CONSTRAINT")
@@ -60,7 +61,7 @@ def constraint(node: ast.Constraint, output: stream.RawStream) -> None:
 
 
 @printers.node_printer(ast.Constraint, ast.DefElem, override=True)
-def constraint_def_elem(node: ast.DefElem, output: stream.RawStream) -> None:
+def constraint_def_elem(node: ast.DefElem, output: formatter.PrinterOutput) -> None:
     """Printer for Constraint defelem."""
     output.print_name(node.defname)
     if node.arg:

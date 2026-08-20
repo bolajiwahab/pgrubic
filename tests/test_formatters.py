@@ -59,6 +59,36 @@ def test_configured_streams(formatter: core.Formatter) -> None:
     assert indented_stream.config is formatter.config
 
 
+def test_create_raw_stream_factory(formatter: core.Formatter) -> None:
+    """Test the formatter creates fresh, consistently configured raw streams."""
+    first_stream = formatter.create_raw_stream()
+    second_stream = formatter.create_raw_stream()
+
+    assert first_stream is not second_stream
+    assert first_stream.config is formatter.config
+    assert (
+        first_stream.special_functions
+        is formatter.config.format.rewrite_function_calls_as_equivalent_syntax
+    )
+    assert (
+        first_stream.remove_pg_catalog_from_functions
+        is formatter.config.format.remove_pg_catalog_from_functions
+    )
+
+
+def test_raw_stream_supports_custom_printers(formatter: core.Formatter) -> None:
+    """Test custom printers support raw stream rendering."""
+    assert formatter.create_raw_stream()("CREATE INDEX idx ON tbl (value)") == (
+        "CREATE INDEX idx ON tbl (value)"
+    )
+    assert (
+        formatter.create_raw_stream()(
+            "CREATE TABLE tbl (value integer) WITH (fillfactor = 90)",
+        )
+        == "CREATE TABLE tbl (value integer) WITH (fillfactor = 90)"
+    )
+
+
 def test_concatenate_nodes_with_type_cast(formatter: core.Formatter) -> None:
     """Test raw node concatenation uses the configured type-casting style."""
     with conftest.update_config(

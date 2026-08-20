@@ -1,12 +1,16 @@
 """Formatter for enum."""
 
-from pglast import ast, stream, printers
+from pglast import ast, printers
 
+from pgrubic.core import formatter
 from pgrubic.formatters.ddl import IF_NOT_EXISTS
 
 
 @printers.node_printer(ast.CreateEnumStmt, override=True)
-def create_enum_stmt(node: ast.CreateEnumStmt, output: stream.RawStream) -> None:
+def create_enum_stmt(
+    node: ast.CreateEnumStmt,
+    output: formatter.PrinterOutput,
+) -> None:
     """Printer for CreateEnumStmt."""
     output.write("CREATE TYPE")
     output.space()
@@ -21,7 +25,7 @@ def create_enum_stmt(node: ast.CreateEnumStmt, output: stream.RawStream) -> None
 
 
 @printers.node_printer(ast.AlterEnumStmt, override=True)
-def alter_enum_stmt(node: ast.AlterEnumStmt, output: stream.RawStream) -> None:
+def alter_enum_stmt(node: ast.AlterEnumStmt, output: formatter.PrinterOutput) -> None:
     """Printer for AlterEnumStmt."""
     output.write("ALTER TYPE")
     output.space()

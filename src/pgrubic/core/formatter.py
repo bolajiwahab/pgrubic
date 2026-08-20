@@ -31,6 +31,22 @@ class RawStream(stream.RawStream):
         self.config = config
         self.source_code = source_code
 
+    def write_empty_space(self) -> None:
+        """Write an empty space."""
+        self.write("")
+
+    def print_parenthesized_list(
+        self,
+        nodes: tuple[ast.Node, ...],
+        *,
+        closing_indent: int,
+        continuation_indent: int = 4,
+    ) -> None:
+        """Print a compact parenthesized list."""
+        self.space(force=True)
+        with self.expression(need_parens=True):
+            self.print_list(nodes, standalone_items=False)
+
 
 class IndentedStream(stream.IndentedStream):
     """Indented SQL parse tree writer."""
@@ -131,6 +147,9 @@ class IndentedStream(stream.IndentedStream):
             self.dedent()
 
 
+type PrinterOutput = RawStream | IndentedStream
+
+
 class Formatter:
     """Format source code."""
 
@@ -143,6 +162,18 @@ class Formatter:
         """Initialize variables."""
         self.formatters = formatters()
         self.config = config
+
+    def create_raw_stream(self) -> RawStream:
+        """Create a raw stream with the formatter's configuration."""
+        return RawStream(
+            config=self.config,
+            special_functions=(
+                self.config.format.rewrite_function_calls_as_equivalent_syntax
+            ),
+            remove_pg_catalog_from_functions=(
+                self.config.format.remove_pg_catalog_from_functions
+            ),
+        )
 
     @staticmethod
     def run(

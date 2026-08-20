@@ -10,7 +10,7 @@ NATIVE_CAST_OPERATOR = "::"
 
 def native_cast_argument_needs_parentheses(
     node: ast.Node,
-    output: formatter.RawStream | formatter.IndentedStream,
+    output: formatter.PrinterOutput,
 ) -> bool:
     """Check whether a native cast argument needs parentheses."""
     if isinstance(node, ast.FuncCall):
@@ -43,7 +43,7 @@ def is_char_type(node: ast.Node) -> bool:
 
 def is_native_cast(
     node: ast.TypeCast,
-    output: formatter.RawStream | formatter.IndentedStream,
+    output: formatter.PrinterOutput,
 ) -> bool:
     """Check whether a cast originated from PostgreSQL's ``::`` syntax."""
     native_cast_operator_length = len(NATIVE_CAST_OPERATOR)
@@ -71,7 +71,7 @@ def char_has_default_length(typmods: tuple[ast.Node, ...]) -> bool:
 @printers.node_printer(ast.TypeCast, override=True)
 def type_cast(
     node: ast.TypeCast,
-    output: formatter.RawStream | formatter.IndentedStream,
+    output: formatter.PrinterOutput,
 ) -> None:
     """Printer for TypeCast."""
     # An unmodified CHAR typed literal is not interchangeable with an implicit

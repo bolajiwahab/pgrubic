@@ -568,7 +568,8 @@ class Linter:
 
                 inline_sql_statements = (
                     pgrubic_visitors.extract_nested_inline_sql_statements(
-                        parse_tree,
+                        node=parse_tree,
+                        raw_stream_factory=self.formatter.create_raw_stream,
                     )
                 )
 
