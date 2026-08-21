@@ -1089,6 +1089,24 @@ def _parse_type_casting_style(value: object) -> enums.TypeCastingStyle:
     raise errors.InvalidConfigValueError(msg) from None
 
 
+def _validate_config_section(
+    *,
+    config: dict[str, typing.Any],
+    key: str,
+) -> dict[str, typing.Any]:
+    """Validate and return a configuration section."""
+    value = config[key]
+
+    if not isinstance(value, dict):
+        msg = (
+            f'Invalid config value for key "{key}": "{value}". '
+            "Expected a configuration section."
+        )
+        raise errors.InvalidConfigValueError(msg)
+
+    return value
+
+
 def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
     """Parse config.
 
@@ -1113,10 +1131,11 @@ def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
         overrides = {}
 
     merged_config = _merge_config(overrides=overrides)
-    config_lint = merged_config["lint"]
-    config_format = merged_config["format"]
 
     try:
+        config_lint = _validate_config_section(config=merged_config, key="lint")
+        config_format = _validate_config_section(config=merged_config, key="format")
+
         return Config(
             cache_dir=pathlib.Path(merged_config["cache-dir"]),
             include=merged_config["include"],
