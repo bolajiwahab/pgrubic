@@ -2,85 +2,87 @@
 
 ## pgrubic
 
-  PostgreSQL linter and formatter for schema migrations and design
-  best practices.
+```text
+Pgrubic: A PostgreSQL linter and formatter for schema migrations and design best
+practices.
 
-### **Options**
+Usage: pgrubic [OPTIONS] COMMAND [ARGS]...
 
-#### **--version**
+Commands:
+  format  Run the SQL formatter on the given files or directories.
+  lint    Run the SQL linter on the given files or directories.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Show the version and exit.
+Options:
+  -v, --version  Show the version and exit.
+  -h, --help     Show this message and exit.
 
-  Examples:
+Configuration overrides:
+  Pass a TOML `<KEY> = <VALUE>` pair. May be repeated.
+    --config "lint.target-postgres-version = 17"
+    --config 'format.type-casting-style = "native"'
 
-     pgrubic lint
+Examples:
+  pgrubic lint .
+  pgrubic lint --fix migrations/
+  pgrubic format schema.sql
+  pgrubic format --check migrations/
+```
 
-     pgrubic lint .
+## lint
 
-     pgrubic lint *.sql
+```text
+Run the SQL linter on the given files or directories.
 
-     pgrubic lint example.sql
+Usage: pgrubic lint [OPTIONS] [SOURCES]...
 
-     pgrubic format file.sql
+Options:
+  --fix                          Apply fixes to resolve lint violations.
+  --ignore-noqa                  Ignore inline `-- noqa` directives.
+  --add-file-level-general-noqa  Add `-- pgrubic: noqa` to the beginning of each
+                                 SQL file, causing the entire file to be ignored
+                                 by the linter.
+  --generate-lint-report         Generate a lint report.
+  --config <CONFIG_OPTION>       A TOML `<KEY> = <VALUE>` pair overriding a
+                                 configuration option. May be repeated. Command-
+                                 line overrides always take precedence over
+                                 configuration files.
 
-     pgrubic format migrations/
+                                 Examples:
+                                   --config "lint.target-postgres-version = 17"
+                                   --config 'format.type-casting-style = "native"'
+  --verbose                      Enable verbose logging.
+  --workers INTEGER              Number of workers to use. Defaults to the
+                                 number of CPUs or the value of PGRUBIC_WORKERS.
+  -v, --version                  Show the version and exit.
+  -h, --help                     Show this message and exit.
+```
 
-## **lint**
+## format
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lint SQL files.
+```text
+Run the SQL formatter on the given files or directories.
 
-### **Options**
+Usage: pgrubic format [OPTIONS] [SOURCES]...
 
-#### **--fix**
+Options:
+  --check                   Check if any files would be reformatted.
+  --diff                    Report the difference between the current file and
+                            what the formatted file would look like.
+  --no-cache                Disable cache reads.
+  --config <CONFIG_OPTION>  A TOML `<KEY> = <VALUE>` pair overriding a
+                            configuration option. May be repeated. Command-line
+                            overrides always take precedence over configuration
+                            files.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fix lint violations automatically.
-
-#### **--ignore-noqa**
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Whether to ignore noqa directives.
-
-#### **--add-file-level-general-noqa**
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Whether to add file-level noqa directives.
-
-#### **--generate-lint-report**
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Whether to generate a lint report.
-
-#### **--verbose**
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enable verbose logging.
-
-#### **--workers**
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Number of workers to use.
-
-## **format**
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Format SQL files.
-
-### **Options**
-
-#### **--check**
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Check if any files would have been modified.
-
-#### **--diff**
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Report the difference between the current file and how the
-formatted file would look like.
-
-#### **--no-cache**
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Whether to read the cache.
-
-#### **--verbose**
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enable verbose logging.
-
-#### **--workers**
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Number of workers to use.
+                            Examples:
+                              --config "lint.target-postgres-version = 17"
+                              --config 'format.type-casting-style = "native"'
+  --verbose                 Enable verbose logging.
+  --workers INTEGER         Number of workers to use. Defaults to the number of
+                            CPUs or the value of PGRUBIC_WORKERS.
+  -v, --version             Show the version and exit.
+  -h, --help                Show this message and exit.
+```
 
 ## Exit codes
 
