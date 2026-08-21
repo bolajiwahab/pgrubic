@@ -7,7 +7,7 @@ import pathlib
 import dataclasses
 
 import toml
-from deepmerge import always_merger
+from deepmerge import merger
 
 from pgrubic import PACKAGE_NAME
 from pgrubic.core import enums, errors
@@ -21,6 +21,12 @@ DEFAULT_CONFIG: typing.Final[pathlib.Path] = (
 
 CONFIG_PATH_ENVIRONMENT_VARIABLE: typing.Final[str] = (
     f"{PACKAGE_NAME.upper()}_CONFIG_PATH"
+)
+
+_CONFIG_MERGER: typing.Final[merger.Merger] = merger.Merger(
+    [(dict, ["merge"]), (list, ["override"])],
+    ["override"],
+    ["override"],
 )
 
 
@@ -1002,12 +1008,11 @@ def _merge_config(*, overrides: dict[str, typing.Any]) -> dict[str, typing.Any]:
     dict[str, typing.Any]
         The merged config.
     """
-    return dict(
-        always_merger.merge(
-            _load_default_config(),
-            always_merger.merge(_load_user_config(), overrides),
-        ),
+    merged_config = _CONFIG_MERGER.merge(
+        _load_default_config(),
+        _load_user_config(),
     )
+    return dict(_CONFIG_MERGER.merge(merged_config, overrides))
 
 
 def _get_config_file_absolute_path(
