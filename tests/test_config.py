@@ -182,6 +182,18 @@ def test_invalid_non_string_type_casting_style_error(tmp_path: pathlib.Path) -> 
     )
 
 
+@pytest.mark.parametrize("section", ["lint", "format"])
+def test_invalid_config_section(section: str) -> None:
+    """Test configuration sections must be TOML tables."""
+    with pytest.raises(errors.InvalidConfigValueError) as excinfo:
+        config.parse_config(overrides={section: 1})
+
+    assert excinfo.value.args[0] == (
+        f'Invalid config value for key "{section}": "1". '
+        "Expected a configuration section."
+    )
+
+
 def test_config_file_from_environment_variable_not_found_error() -> None:
     """Test config from environment variable not found error."""
     with patch.dict(

@@ -762,6 +762,28 @@ def test_cli_invalid_config_override(
     )
 
 
+@pytest.mark.parametrize("command", ["lint", "format"])
+def test_cli_invalid_config_override_section(
+    command: str,
+    tmp_path: pathlib.Path,
+) -> None:
+    """Test structurally invalid CLI configuration overrides."""
+    source_file = tmp_path / TEST_FILE
+    source_file.write_text("SELECT 1;")
+
+    result = testing.CliRunner().invoke(
+        cli,
+        [command, "--config", "format = 1", str(source_file)],
+    )
+
+    assert result.exit_code == 1
+    assert result.output == (
+        'Invalid config value for key "format": "1". '
+        "Expected a configuration section."
+        f"{noqa.NEW_LINE}"
+    )
+
+
 def test_cli_format_config_file_from_environment_variable_not_found_error(
     tmp_path: pathlib.Path,
 ) -> None:
