@@ -320,6 +320,22 @@ def test_parsed_config_can_be_used_as_overrides() -> None:
     assert reparsed_config == parsed_config
 
 
+def test_parsed_config_reused_as_overrides_does_not_duplicate_include() -> None:
+    """Reparsing a model_dump() must not duplicate lint/format include-exclude."""
+    parsed_config = config.parse_config(
+        overrides={"include": ["V*.sql"], "exclude": ["test*.sql"]},
+    )
+
+    reparsed_config = config.parse_config(
+        overrides=parsed_config.model_dump(by_alias=True),
+    )
+
+    assert reparsed_config.lint.include == ["V*.sql"]
+    assert reparsed_config.lint.exclude == ["test*.sql"]
+    assert reparsed_config.format.include == ["V*.sql"]
+    assert reparsed_config.format.exclude == ["test*.sql"]
+
+
 def test_user_config_list_replaces_default(tmp_path: pathlib.Path) -> None:
     """Test user-configured lists replace default lists."""
     default_config = dict(toml.load(config.DEFAULT_CONFIG))

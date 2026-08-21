@@ -30,6 +30,13 @@ _CONFIG_MERGER: typing.Final[merger.Merger] = merger.Merger(
 )
 
 
+_LIST_APPEND_UNIQUE_MERGER: typing.Final[merger.Merger] = merger.Merger(
+    type_strategies=[(list, ["append_unique"])],
+    fallback_strategies=["override"],
+    type_conflict_strategies=["override"],
+)
+
+
 def _parse_type_casting_style(value: object) -> enums.TypeCastingStyle:
     """Parse the configured type-casting style."""
     valid_values = tuple(style.value for style in enums.TypeCastingStyle)
@@ -1174,9 +1181,21 @@ def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
     except ValidationError as error:
         _raise_config_validation_error(error)
 
-    config.lint.include += config.include
-    config.lint.exclude += config.exclude
-    config.format.include += config.include
-    config.format.exclude += config.exclude
+    config.lint.include = _LIST_APPEND_UNIQUE_MERGER.merge(
+        config.lint.include,
+        config.include,
+    )
+    config.lint.exclude = _LIST_APPEND_UNIQUE_MERGER.merge(
+        config.lint.exclude,
+        config.exclude,
+    )
+    config.format.include = _LIST_APPEND_UNIQUE_MERGER.merge(
+        config.format.include,
+        config.include,
+    )
+    config.format.exclude = _LIST_APPEND_UNIQUE_MERGER.merge(
+        config.format.exclude,
+        config.exclude,
+    )
 
     return config
