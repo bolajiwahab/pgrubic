@@ -55,6 +55,25 @@ create_sql_function_with_as:
           FROM tbl;
     $BODY$;
 
+create_sql_function_body_with_config:
+  sql: |
+    CREATE FUNCTION add(integer, integer) RETURNS integer
+    AS 'SELECT $1 + $2'
+    LANGUAGE SQL;
+  config:
+    format:
+      uppercase_keywords: false
+  expected: |
+    create function add (
+        integer
+      , integer
+    )
+    returns integer
+    language sql
+    as $BODY$
+        select $1 + $2;
+    $BODY$;
+
 create_plpgsql_conforming_style_function:
   sql: |
     CREATE FUNCTION add(a integer, b integer) RETURNS integer
@@ -195,7 +214,35 @@ create_sql_conforming_style_procedure:
         VALUES (b);
     END;
 
-create_sql_non_conforming_stype_procedure:
+create_sql_procedure_body_with_config:
+  sql: |
+    CREATE PROCEDURE insert_data(a integer, b integer)
+    LANGUAGE SQL
+    BEGIN ATOMIC
+      INSERT INTO tbl VALUES (a);
+      INSERT INTO tbl VALUES (b);
+    END;
+  config:
+    format:
+      new_line_before_semicolon: true
+      lines_between_statements: 0
+  expected: |
+    CREATE PROCEDURE insert_data (
+        a integer
+      , b integer
+    )
+    LANGUAGE SQL
+    BEGIN ATOMIC
+        INSERT INTO tbl
+        VALUES (a)
+    ;
+        INSERT INTO tbl
+        VALUES (b)
+    ;
+    END
+    ;
+
+create_sql_non_conforming_style_procedure:
   sql: |
     CREATE PROCEDURE insert_data(a integer, b integer)
     LANGUAGE SQL

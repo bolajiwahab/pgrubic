@@ -3,9 +3,7 @@
 
 from pglast import ast, enums, printers
 
-from pgrubic.core import Formatter, noqa, config, formatter
-
-_config: config.Config = config.parse_config()
+from pgrubic.core import Formatter, noqa, formatter
 
 
 @printers.node_printer(ast.CreateFunctionStmt, override=True)
@@ -103,14 +101,16 @@ def create_function_stmt(
                     for i, stmt in enumerate(node.sql_body[0]):
                         output.print_node(stmt)
 
-                        if not _config.format.new_line_before_semicolon:
+                        if not output.config.format.new_line_before_semicolon:
                             output.write(noqa.SEMI_COLON)
                         else:  # pragma: no cover
                             output.write(noqa.NEW_LINE + noqa.SEMI_COLON)
 
                         # Add newline until the last statement
                         if i < len(node.sql_body[0]) - 1:
-                            for _ in range(_config.format.lines_between_statements + 1):
+                            for _ in range(
+                                output.config.format.lines_between_statements + 1,
+                            ):
                                 output.newline()
 
             output.newline()
@@ -178,7 +178,7 @@ def create_function_option(  # noqa: PLR0911
             formatted_function_body, _ = Formatter.run(
                 source_code=function_body,
                 source_file="function_body",
-                config=_config,
+                config=output.config,
             )
 
             # indent the non empty lines of the formatted function body by 4 spaces
