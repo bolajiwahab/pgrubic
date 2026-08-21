@@ -338,7 +338,9 @@ def test_cli_lint_missing_config_error(tmp_path: pathlib.Path) -> None:
     with patch("os.getcwd", return_value=str(directory)):
         result = runner.invoke(cli, ["lint", str(file_fail)])
 
-        assert result.output == f"""Missing config key: data-type{noqa.NEW_LINE}"""
+        assert result.output == (
+            f"Missing config key: lint.required-columns.0.data-type{noqa.NEW_LINE}"
+        )
         assert result.exit_code == 1
 
 
@@ -365,7 +367,7 @@ def test_cli_invalid_type_casting_style_error(
 
     assert result.output == (
         'Invalid config value for key "format.type-casting-style": "invalid". '
-        'Expected one of: "native", "standard", "literal"'
+        'Expected one of: "native", "standard", "literal".'
         f"{noqa.NEW_LINE}"
     )
     assert result.exit_code == 1
@@ -703,7 +705,9 @@ def test_cli_format_missing_config_error(tmp_path: pathlib.Path) -> None:
     with patch("os.getcwd", return_value=str(directory)):
         result = runner.invoke(cli, ["format", str(file_fail)])
 
-        assert result.output == f"Missing config key: data-type{noqa.NEW_LINE}"
+        assert result.output == (
+            f"Missing config key: lint.required-columns.0.data-type{noqa.NEW_LINE}"
+        )
 
         assert result.exit_code == 1
 

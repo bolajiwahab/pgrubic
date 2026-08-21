@@ -54,6 +54,7 @@ dependencies = [
   "toml==0.10.2",
   "click==8.4.2",
   "rich==15.0.0",
+  "pydantic==2.13.4",
   "deepmerge==2.1.0",
   "msgpack==1.2.1",
   "GitPython==3.1.58",

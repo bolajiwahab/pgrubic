@@ -4,9 +4,9 @@ import os
 import typing
 import difflib
 import pathlib
-import dataclasses
 
 import toml
+from pydantic import BaseModel, ConfigDict, ValidationError, field_validator
 from deepmerge import merger
 
 from pgrubic import PACKAGE_NAME
@@ -30,8 +30,47 @@ _CONFIG_MERGER: typing.Final[merger.Merger] = merger.Merger(
 )
 
 
-@dataclasses.dataclass(kw_only=True, frozen=True)
-class DisallowedSchema:
+_LIST_APPEND_UNIQUE_MERGER: typing.Final[merger.Merger] = merger.Merger(
+    type_strategies=[(list, ["append_unique"])],
+    fallback_strategies=["override"],
+    type_conflict_strategies=["override"],
+)
+
+
+def _parse_type_casting_style(value: object) -> enums.TypeCastingStyle:
+    """Parse the configured type-casting style."""
+    valid_values = tuple(style.value for style in enums.TypeCastingStyle)
+
+    if isinstance(value, str):
+        try:
+            return enums.TypeCastingStyle(value)
+        except ValueError:
+            suggestion = difflib.get_close_matches(value, valid_values, n=1)
+    else:
+        suggestion = []
+
+    msg = ""
+    if suggestion:
+        msg += f'Did you mean "{suggestion[0]}"? '
+
+    valid_values_str = ", ".join(f'"{v}"' for v in valid_values)
+    msg += f"Expected one of: {valid_values_str}"
+
+    raise ValueError(msg)
+
+
+class BaseConfig(BaseModel):
+    """Base configuration model."""
+
+    model_config = ConfigDict(
+        alias_generator=lambda field_name: field_name.replace("_", "-"),
+        extra="forbid",
+        populate_by_name=True,
+        strict=True,
+    )
+
+
+class DisallowedSchema(BaseConfig):
     """Representation of disallowed schema."""
 
     name: str
@@ -39,8 +78,7 @@ class DisallowedSchema:
     use_instead: str
 
 
-@dataclasses.dataclass(kw_only=True, frozen=True)
-class DisallowedDataType:
+class DisallowedDataType(BaseConfig):
     """Representation of disallowed data type."""
 
     name: str
@@ -48,16 +86,14 @@ class DisallowedDataType:
     use_instead: str
 
 
-@dataclasses.dataclass(kw_only=True, frozen=True)
-class Column:
+class Column(BaseConfig):
     """Representation of column."""
 
     name: str
     data_type: str
 
 
-@dataclasses.dataclass(kw_only=True)
-class Lint:
+class Lint(BaseConfig):
     # fmt: off
     """
 ### **target-postgres-version**
@@ -541,9 +577,19 @@ regex-sequence = r"^[a-z0-9_]+$"
     regex_constraint_exclusion: str
     regex_sequence: str
 
+    @field_validator("additional_non_volatile_functions", mode="before")
+    @classmethod
+    def _parse_additional_non_volatile_functions(
+        cls,
+        value: object,
+    ) -> object:
+        """Store configured functions as an immutable set."""
+        if isinstance(value, list):
+            return frozenset(value)
+        return value
 
-@dataclasses.dataclass(kw_only=True)
-class Format:
+
+class Format(BaseConfig):
     # fmt: off
     """
 ### **include**
@@ -878,9 +924,13 @@ no-cache = true
     check: bool
     no_cache: bool
 
+    _validate_type_casting_style = field_validator(
+        "type_casting_style",
+        mode="before",
+    )(_parse_type_casting_style)
 
-@dataclasses.dataclass(kw_only=True)
-class Config:
+
+class Config(BaseConfig):
     # fmt: off
     """
 ### **cache-dir**
@@ -960,6 +1010,14 @@ respect-gitignore = false
 
     lint: Lint
     format: Format
+
+    @field_validator("cache_dir", mode="before")
+    @classmethod
+    def _parse_cache_dir(cls, value: object) -> object:
+        """Parse a configured cache path."""
+        if isinstance(value, str):
+            return pathlib.Path(value)
+        return value
 
 
 def _load_default_config() -> dict[str, typing.Any]:
@@ -1066,45 +1124,31 @@ def _get_config_file_absolute_path(
     return None  # pragma: no cover
 
 
-def _parse_type_casting_style(value: object) -> enums.TypeCastingStyle:
-    """Parse the configured type-casting style."""
-    valid_values = tuple(style.value for style in enums.TypeCastingStyle)
+def _config_key(location: tuple[str | int, ...]) -> str:
+    """Return a dotted configuration key from a validation location."""
+    return ".".join(str(part) for part in location)
 
-    if isinstance(value, str):
-        try:
-            return enums.TypeCastingStyle(value)
-        except ValueError:
-            suggestion = difflib.get_close_matches(value, valid_values, n=1)
+
+def _raise_config_validation_error(error: ValidationError) -> typing.NoReturn:
+    """Translate a Pydantic validation error to a public configuration error."""
+    detail = error.errors(include_url=False)[0]
+    key = _config_key(detail["loc"])
+
+    if detail["type"] == "missing":
+        msg = f"Missing config key: {key}"
+        raise errors.MissingConfigError(msg) from error
+
+    value = detail.get("input")
+    if detail["type"] == "model_type":
+        message = "Expected a configuration section"
+    elif detail["type"] == "value_error":
+        # Pydantic prefixes custom ValueError messages with "Value error, ";
+        # ctx["error"] holds the original, unprefixed message.
+        message = str(detail["ctx"]["error"])
     else:
-        suggestion = []
-
-    msg = f'Invalid config value for key "format.type-casting-style": "{value}".'
-
-    if suggestion:
-        msg += f' Did you mean "{suggestion[0]}"?'
-
-    valid_values_str = ", ".join(f'"{v}"' for v in valid_values)
-    msg += f" Expected one of: {valid_values_str}"
-
-    raise errors.InvalidConfigValueError(msg) from None
-
-
-def _validate_config_section(
-    *,
-    config: dict[str, typing.Any],
-    key: str,
-) -> dict[str, typing.Any]:
-    """Validate and return a configuration section."""
-    value = config[key]
-
-    if not isinstance(value, dict):
-        msg = (
-            f'Invalid config value for key "{key}": "{value}". '
-            "Expected a configuration section."
-        )
-        raise errors.InvalidConfigValueError(msg)
-
-    return value
+        message = detail["msg"]
+    msg = f'Invalid config value for key "{key}": "{value}". {message}.'
+    raise errors.InvalidConfigValueError(msg) from error
 
 
 def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
@@ -1133,90 +1177,25 @@ def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
     merged_config = _merge_config(overrides=overrides)
 
     try:
-        config_lint = _validate_config_section(config=merged_config, key="lint")
-        config_format = _validate_config_section(config=merged_config, key="format")
+        config = Config.model_validate(merged_config)
+    except ValidationError as error:
+        _raise_config_validation_error(error)
 
-        return Config(
-            cache_dir=pathlib.Path(merged_config["cache-dir"]),
-            include=merged_config["include"],
-            exclude=merged_config["exclude"],
-            respect_gitignore=merged_config["respect-gitignore"],
-            lint=Lint(
-                target_postgres_version=config_lint["target-postgres-version"],
-                additional_non_volatile_functions=frozenset(
-                    config_lint["additional-non-volatile-functions"],
-                ),
-                select=config_lint["select"],
-                ignore=config_lint["ignore"],
-                include=config_lint["include"] + merged_config["include"],
-                exclude=config_lint["exclude"] + merged_config["exclude"],
-                ignore_noqa=config_lint["ignore-noqa"],
-                allowed_extensions=config_lint["allowed-extensions"],
-                allowed_languages=config_lint["allowed-languages"],
-                fix=config_lint["fix"],
-                fixable=config_lint["fixable"],
-                unfixable=config_lint["unfixable"],
-                timestamp_column_suffix=config_lint["timestamp-column-suffix"],
-                date_column_suffix=config_lint["date-column-suffix"],
-                regex_partition=config_lint["regex-partition"],
-                regex_index=config_lint["regex-index"],
-                regex_constraint_primary_key=config_lint["regex-constraint-primary-key"],
-                regex_constraint_unique_key=config_lint["regex-constraint-unique-key"],
-                regex_constraint_foreign_key=config_lint["regex-constraint-foreign-key"],
-                regex_constraint_check=config_lint["regex-constraint-check"],
-                regex_constraint_exclusion=config_lint["regex-constraint-exclusion"],
-                regex_sequence=config_lint["regex-sequence"],
-                required_columns=[
-                    Column(
-                        name=column["name"],
-                        data_type=column["data-type"],
-                    )
-                    for column in config_lint["required-columns"]
-                ],
-                disallowed_data_types=[
-                    DisallowedDataType(
-                        name=data_type["name"],
-                        reason=data_type["reason"],
-                        use_instead=data_type["use-instead"],
-                    )
-                    for data_type in config_lint["disallowed-data-types"]
-                ],
-                disallowed_schemas=[
-                    DisallowedSchema(
-                        name=schema["name"],
-                        reason=schema["reason"],
-                        use_instead=schema["use-instead"],
-                    )
-                    for schema in config_lint["disallowed-schemas"]
-                ],
-            ),
-            format=Format(
-                include=config_format["include"] + merged_config["include"],
-                exclude=config_format["exclude"] + merged_config["exclude"],
-                comma_at_beginning=config_format["comma-at-beginning"],
-                compact_parenthesized_lists_margin=config_format[
-                    "compact-parenthesized-lists-margin"
-                ],
-                uppercase_keywords=config_format["uppercase-keywords"],
-                type_casting_style=_parse_type_casting_style(
-                    config_format["type-casting-style"],
-                ),
-                rewrite_function_calls_as_equivalent_syntax=config_format[
-                    "rewrite-function-calls-as-equivalent-syntax"
-                ],
-                new_line_before_semicolon=config_format["new-line-before-semicolon"],
-                lines_between_statements=config_format["lines-between-statements"],
-                remove_pg_catalog_from_functions=config_format[
-                    "remove-pg-catalog-from-functions"
-                ],
-                remove_default_index_access_method=config_format[
-                    "remove-default-index-access-method"
-                ],
-                diff=config_format["diff"],
-                check=config_format["check"],
-                no_cache=config_format["no-cache"],
-            ),
-        )
-    except KeyError as error:
-        msg = "Missing config key: "
-        raise errors.MissingConfigError(msg + error.args[0]) from error
+    config.lint.include = _LIST_APPEND_UNIQUE_MERGER.merge(
+        config.lint.include,
+        config.include,
+    )
+    config.lint.exclude = _LIST_APPEND_UNIQUE_MERGER.merge(
+        config.lint.exclude,
+        config.exclude,
+    )
+    config.format.include = _LIST_APPEND_UNIQUE_MERGER.merge(
+        config.format.include,
+        config.include,
+    )
+    config.format.exclude = _LIST_APPEND_UNIQUE_MERGER.merge(
+        config.format.exclude,
+        config.exclude,
+    )
+
+    return config
