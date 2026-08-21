@@ -16,7 +16,7 @@ def get_columns_from_table_creation(
         given_columns = [
             config.Column(
                 name=column.colname,
-                data_type=column.typeName.names[-1],
+                data_type=column.typeName.names[-1].sval,
             )
             for column in node.tableElts
             if isinstance(column, ast.ColumnDef)

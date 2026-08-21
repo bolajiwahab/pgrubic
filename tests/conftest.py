@@ -1,11 +1,9 @@
 """Conftest."""
 
-import copy
 import enum
 import typing
 import pathlib
 import contextlib
-import dataclasses
 
 import yaml
 import pytest
@@ -137,8 +135,8 @@ def _update_config(*, config: typing.Any, overrides: dict[str, typing.Any]) -> N
 
 def _restore_config(*, config: typing.Any, previous_config: typing.Any) -> None:
     """Restore a config snapshot while preserving the root object."""
-    for field in dataclasses.fields(config):
-        setattr(config, field.name, getattr(previous_config, field.name))
+    for field_name in type(config).model_fields:
+        setattr(config, field_name, getattr(previous_config, field_name))
 
 
 @contextlib.contextmanager
@@ -148,7 +146,7 @@ def update_config(
     overrides: dict[str, typing.Any],
 ) -> typing.Iterator[None]:
     """Temporarily update a config object with overrides."""
-    previous_config = copy.deepcopy(config)
+    previous_config = config.model_copy(deep=True)
     try:
         _update_config(config=config, overrides=overrides)
         yield

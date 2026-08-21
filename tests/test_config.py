@@ -106,7 +106,9 @@ def test_missing_config_error(tmp_path: pathlib.Path) -> None:
         with pytest.raises(errors.MissingConfigError) as excinfo:
             config.parse_config()
 
-        assert excinfo.value.args[0] == "Missing config key: data-type"
+        assert excinfo.value.args[0] == (
+            "Missing config key: lint.required-columns.0.data-type"
+        )
 
 
 def test_invalid_type_casting_style_error(tmp_path: pathlib.Path) -> None:
@@ -130,7 +132,7 @@ def test_invalid_type_casting_style_error(tmp_path: pathlib.Path) -> None:
         assert (
             excinfo.value.args[0]
             == 'Invalid config value for key "format.type-casting-style": '
-            '"invalid". Expected one of: "native", "standard", "literal"'
+            '"invalid". Expected one of: "native", "standard", "literal".'
         )
 
 
@@ -155,7 +157,7 @@ def test_invalid_type_casting_style_error_suggests_close_match(
     assert (
         excinfo.value.args[0]
         == 'Invalid config value for key "format.type-casting-style": "stand". '
-        'Did you mean "standard"? Expected one of: "native", "standard", "literal"'
+        'Did you mean "standard"? Expected one of: "native", "standard", "literal".'
     )
 
 
@@ -178,7 +180,7 @@ def test_invalid_non_string_type_casting_style_error(tmp_path: pathlib.Path) -> 
     assert (
         excinfo.value.args[0]
         == 'Invalid config value for key "format.type-casting-style": "1". '
-        'Expected one of: "native", "standard", "literal"'
+        'Expected one of: "native", "standard", "literal".'
     )
 
 
@@ -192,6 +194,59 @@ def test_invalid_config_section(section: str) -> None:
         f'Invalid config value for key "{section}": "1". '
         "Expected a configuration section."
     )
+
+
+@pytest.mark.parametrize(
+    ("config_content", "expected_error"),
+    [
+        (
+            '[lint]\nfix = "yes"\n',
+            (
+                'Invalid config value for key "lint.fix": "yes". '
+                "Input should be a valid boolean."
+            ),
+        ),
+        (
+            '[format]\nlines-between-statements = "2"\n',
+            (
+                'Invalid config value for key "format.lines-between-statements": "2". '
+                "Input should be a valid integer."
+            ),
+        ),
+        (
+            "[lint]\nignore = [1]\n",
+            (
+                'Invalid config value for key "lint.ignore.0": "1". '
+                "Input should be a valid string."
+            ),
+        ),
+        (
+            "[format]\nunknown-config = true\n",
+            (
+                'Invalid config value for key "format.unknown-config": "True". '
+                "Extra inputs are not permitted."
+            ),
+        ),
+    ],
+)
+def test_invalid_user_config_value(
+    tmp_path: pathlib.Path,
+    config_content: str,
+    expected_error: str,
+) -> None:
+    """Validate every value loaded from the user configuration."""
+    (tmp_path / config.CONFIG_FILE).write_text(config_content)
+
+    with (
+        patch.dict(
+            "os.environ",
+            {config.CONFIG_PATH_ENVIRONMENT_VARIABLE: str(tmp_path)},
+        ),
+        pytest.raises(errors.InvalidConfigValueError) as excinfo,
+    ):
+        config.parse_config()
+
+    assert excinfo.value.args[0] == expected_error
 
 
 def test_config_file_from_environment_variable_not_found_error() -> None:
@@ -252,6 +307,17 @@ def test_config_user_overrides(tmp_path: pathlib.Path) -> None:
     ):
         parsed_config = config.parse_config(overrides={"lint": {"fix": True}})
         assert parsed_config.lint.fix is True
+
+
+def test_parsed_config_can_be_used_as_overrides() -> None:
+    """Accept already validated configuration values as overrides."""
+    parsed_config = config.parse_config()
+
+    reparsed_config = config.parse_config(
+        overrides=parsed_config.model_dump(by_alias=True),
+    )
+
+    assert reparsed_config == parsed_config
 
 
 def test_user_config_list_replaces_default(tmp_path: pathlib.Path) -> None:
