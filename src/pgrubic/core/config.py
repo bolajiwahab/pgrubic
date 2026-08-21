@@ -24,9 +24,9 @@ CONFIG_PATH_ENVIRONMENT_VARIABLE: typing.Final[str] = (
 )
 
 _CONFIG_MERGER: typing.Final[merger.Merger] = merger.Merger(
-    [(dict, ["merge"]), (list, ["override"])],
-    ["override"],
-    ["override"],
+    type_strategies=[(dict, ["merge"]), (list, ["override"])],
+    fallback_strategies=["override"],
+    type_conflict_strategies=["override"],
 )
 
 
