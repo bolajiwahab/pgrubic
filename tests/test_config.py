@@ -3,6 +3,7 @@
 import pathlib
 from unittest.mock import patch
 
+import toml
 import pytest
 
 from tests import conftest
@@ -239,3 +240,45 @@ def test_config_user_overrides(tmp_path: pathlib.Path) -> None:
     ):
         parsed_config = config.parse_config(overrides={"lint": {"fix": True}})
         assert parsed_config.lint.fix is True
+
+
+def test_user_config_list_replaces_default(tmp_path: pathlib.Path) -> None:
+    """Test user-configured lists replace default lists."""
+    default_config = dict(toml.load(config.DEFAULT_CONFIG))
+    default_config["lint"]["ignore"] = ["TP001"]
+    default_config_file = tmp_path / "default.toml"
+    default_config_file.write_text(toml.dumps(default_config))
+
+    config_directory = tmp_path / "config"
+    config_directory.mkdir()
+    (config_directory / config.CONFIG_FILE).write_text(
+        '[lint]\nignore = ["TP002"]\n',
+    )
+
+    with (
+        patch.object(config, "DEFAULT_CONFIG", default_config_file),
+        patch.dict(
+            "os.environ",
+            {config.CONFIG_PATH_ENVIRONMENT_VARIABLE: str(config_directory)},
+        ),
+    ):
+        parsed_config = config.parse_config()
+
+    assert parsed_config.lint.ignore == ["TP002"]
+
+
+def test_override_list_replaces_user_config(tmp_path: pathlib.Path) -> None:
+    """Test override lists replace user-configured lists."""
+    (tmp_path / config.CONFIG_FILE).write_text(
+        '[lint]\nignore = ["TP001"]\n',
+    )
+
+    with patch.dict(
+        "os.environ",
+        {config.CONFIG_PATH_ENVIRONMENT_VARIABLE: str(tmp_path)},
+    ):
+        parsed_config = config.parse_config(
+            overrides={"lint": {"ignore": ["TP002"]}},
+        )
+
+    assert parsed_config.lint.ignore == ["TP002"]
