@@ -84,9 +84,9 @@ class CheckerMeta(type):
     def __new__(
         cls: type[CheckerMeta],
         name: str,
-        bases: tuple[typing.Any],
-        dct: dict[str, typing.Any],
-    ) -> typing.Any:
+        bases: tuple[type, ...],
+        dct: dict[str, object],
+    ) -> type:
         """Add method decorations."""
         for attr_name, attr_value in dct.items():
             if callable(attr_value) and attr_name.startswith("_fix"):
@@ -99,8 +99,8 @@ class CheckerMeta(type):
 
     @staticmethod
     def _set_locations(
-        func: abc.Callable[..., typing.Any],
-    ) -> abc.Callable[..., typing.Any]:
+        func: abc.Callable[..., object],
+    ) -> abc.Callable[..., object]:
         """Helper method to set locations for node."""
 
         @functools.wraps(func)
@@ -108,7 +108,7 @@ class CheckerMeta(type):
             checker: BaseChecker,
             ancestors: visitors.Ancestor,
             node: ast.Node,
-        ) -> typing.Any:
+        ) -> object:
             """Set locations for node."""
             # some nodes have location attribute which is different from node location
             # for example ast.CreateTablespaceStmt while some nodes do not carry
@@ -158,16 +158,16 @@ class CheckerMeta(type):
 
     @staticmethod
     def _apply_fix(
-        func: abc.Callable[..., typing.Any],
-    ) -> abc.Callable[..., typing.Any]:
+        func: abc.Callable[..., object],
+    ) -> abc.Callable[..., object]:
         """Helper method to apply fix only if it is applicable."""
 
         @functools.wraps(func)
         def wrapper(
             checker: BaseChecker,
-            *args: typing.Any,
-            **kwargs: typing.Any,
-        ) -> typing.Any:
+            *args: object,
+            **kwargs: object,
+        ) -> object:
             """Apply fix only if it is applicable."""
             if not checker.config.lint.fix:
                 return None
@@ -229,7 +229,7 @@ class BaseChecker(visitors.Visitor, metaclass=CheckerMeta):
         self.violations: set[Violation] = set()
         self.config = config
 
-    def __init_subclass__(cls, **kwargs: typing.Any) -> None:
+    def __init_subclass__(cls, **kwargs: object) -> None:
         """Set code, name and category attributes for subclasses."""
         cls.code = cls.__module__.split(".")[-1]
         cls.name = kebabcase(cls.__name__)

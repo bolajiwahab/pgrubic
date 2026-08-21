@@ -66,13 +66,13 @@ class InlineSQLVisitor(visitors.Visitor):
 
     def _extract_sql_statements_from_plpgsql(
         self,
-        node: typing.Any,
+        node: object,
     ) -> list[str]:
         """Extract SQL statements from PLpgSQL tokens using iterative breadth-first walk.
 
         Parameters:
         ----------
-        node: dict[str, typing.Any]
+        node: object
             PLpgSQL tokens.
 
         Returns:

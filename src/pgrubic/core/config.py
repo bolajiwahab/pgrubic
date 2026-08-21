@@ -1020,23 +1020,23 @@ respect-gitignore = false
         return value
 
 
-def _load_default_config() -> dict[str, typing.Any]:
+def _load_default_config() -> dict[str, object]:
     """Load default config.
 
     Returns:
     -------
-    dict[str, typing.Any]
+    dict[str, object]
         The default config.
     """
     return dict(toml.load(DEFAULT_CONFIG))
 
 
-def _load_user_config() -> dict[str, typing.Any]:
+def _load_user_config() -> dict[str, object]:
     """Load config from absolute path config file.
 
     Returns:
     -------
-    dict[str, typing.Any]
+    dict[str, object]
         The config from the absolute path config file.
     """
     config_file_absolute_path = _get_config_file_absolute_path()
@@ -1053,17 +1053,17 @@ def _load_user_config() -> dict[str, typing.Any]:
     return {}  # pragma: no cover
 
 
-def _merge_config(*, overrides: dict[str, typing.Any]) -> dict[str, typing.Any]:
+def _merge_config(*, overrides: dict[str, object]) -> dict[str, object]:
     """Merge default and user config, with overrides.
 
     Parameters:
     ----------
-    overrides: dict[str, typing.Any]
+    overrides: dict[str, object]
         Overrides applied on top of the user config.
 
     Returns:
     -------
-    dict[str, typing.Any]
+    dict[str, object]
         The merged config.
     """
     merged_config = _CONFIG_MERGER.merge(
@@ -1151,12 +1151,12 @@ def _raise_config_validation_error(error: ValidationError) -> typing.NoReturn:
     raise errors.InvalidConfigValueError(msg) from error
 
 
-def parse_config(overrides: dict[str, typing.Any] | None = None) -> Config:
+def parse_config(overrides: dict[str, object] | None = None) -> Config:
     """Parse config.
 
     Parameters:
     ----------
-    overrides: dict[str, typing.Any] | None, optional
+    overrides: dict[str, object] | None, optional
         Overrides applied on top of the user config.
 
     Returns:
