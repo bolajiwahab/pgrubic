@@ -7,6 +7,13 @@ test_fail_non_concurrent_index_reindex_index:
   sql_fix: |
     REINDEX (CONCURRENTLY) INDEX idx;
 
+test_fail_non_concurrent_index_reindex_with_existing_param:
+  sql_fail: |
+    REINDEX (VERBOSE) INDEX idx;
+  sql_fix: |
+    REINDEX (VERBOSE
+           , CONCURRENTLY) INDEX idx;
+
 test_fail_non_concurrent_index_reindex_table:
   sql_fail: |
     REINDEX TABLE tbl;

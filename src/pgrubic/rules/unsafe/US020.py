@@ -1,7 +1,5 @@
 """Non concurrent reindex."""
 
-import typing
-
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
@@ -32,13 +30,11 @@ class NonConcurrentReindex(linter.BaseChecker):
         node: ast.ReindexStmt,
     ) -> None:
         """Visit ReindexStmt."""
-        params: list[typing.Any] = (
-            [param.defname for param in node.params] if node.params else []
-        )
+        param_names = [param.defname for param in node.params] if node.params else []
 
         if (
             node.kind != enums.ReindexObjectType.REINDEX_OBJECT_SYSTEM
-            and "concurrently" not in params
+            and "concurrently" not in param_names
         ):
             self.violations.add(
                 linter.Violation(
@@ -56,10 +52,11 @@ class NonConcurrentReindex(linter.BaseChecker):
                 ),
             )
 
-            self._fix(node, params)
+            self._fix(node)
 
-    def _fix(self, node: ast.ReindexStmt, params: list[typing.Any]) -> None:
+    def _fix(self, node: ast.ReindexStmt) -> None:
         """Fix violation."""
+        params = list(node.params) if node.params else []
         params.append(ast.DefElem(defname="concurrently"))
 
         node.params = params
