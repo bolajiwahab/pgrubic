@@ -42,6 +42,8 @@ Options:
                                  SQL file, causing the entire file to be ignored
                                  by the linter.
   --generate-lint-report         Generate a lint report.
+  -e, --exit-zero                Exit with status code "0", even upon
+                                 detecting lint violations.
   --config <CONFIG_OPTION>       A TOML `<KEY> = <VALUE>` pair overriding a
                                  configuration option. May be repeated. Command-
                                  line overrides always take precedence over

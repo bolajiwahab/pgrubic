@@ -91,6 +91,13 @@ def cli() -> None:
     default=False,
     help="Generate a lint report.",
 )
+@click.option(
+    "-e",
+    "--exit-zero",
+    is_flag=True,
+    default=False,
+    help='Exit with status code "0", even upon detecting lint violations.',
+)
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
 def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
@@ -100,6 +107,7 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
     ignore_noqa: bool,
     add_file_level_general_noqa: bool,
     generate_lint_report: bool,
+    exit_zero: bool,
     config_overrides: tuple[str, ...],
     workers: int,
     verbose: bool,
@@ -118,6 +126,8 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
         Whether to add file-level noqa directives.
     generate_lint_report: bool
         Whether to generate a lint report.
+    exit_zero: bool
+        Whether to exit with status code 0, even upon detecting lint violations.
     config_overrides: tuple[str, ...]
         TOML key-value pairs overriding configuration options.
     workers: int
@@ -251,7 +261,9 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
                 f"{total_errors} error(s) found{noqa.NEW_LINE}",
             )
 
-            if (total_violations - fix_enabled_violations) > 0 or total_errors > 0:
+            if total_errors > 0 or (
+                (total_violations - fix_enabled_violations) > 0 and not exit_zero
+            ):
                 sys.exit(1)
 
         else:
@@ -266,7 +278,8 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
                     f"Use with '--fix' to auto fix the violations{noqa.NEW_LINE}",
                 )
 
-            sys.exit(1)
+            if total_errors > 0 or not exit_zero:
+                sys.exit(1)
     else:
         sys.stdout.write(f"All checks passed!{noqa.NEW_LINE}")
 
