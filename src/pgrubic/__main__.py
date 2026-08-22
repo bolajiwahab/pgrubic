@@ -96,7 +96,7 @@ def cli() -> None:
     "--exit-zero",
     is_flag=True,
     default=False,
-    help='Exit with status code "0", even upon detecting lint violations.',
+    help='Exit with status code "0", even when lint violations are present.',
 )
 @common_options
 @click.argument("sources", nargs=-1, type=click.Path(exists=True, path_type=pathlib.Path))  # type: ignore [type-var]
@@ -127,7 +127,7 @@ def lint(  # noqa: C901, PLR0912, PLR0913, PLR0915
     generate_lint_report: bool
         Whether to generate a lint report.
     exit_zero: bool
-        Whether to exit with status code 0, even upon detecting lint violations.
+        Whether to exit with status code 0, even when lint violations are present.
     config_overrides: tuple[str, ...]
         TOML key-value pairs overriding configuration options.
     workers: int
