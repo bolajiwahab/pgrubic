@@ -36,6 +36,12 @@ jobs:
             TAG_NAME=${GITHUB_REF#refs/tags/}
             NEW_VERSION=$(echo $TAG_NAME | awk -F'-' '{print $1}')
             SUFFIX=$(echo $TAG_NAME | grep -oP '[a-z]+[0-9]+' || echo "")
+            # git's version sort does not know our compact prerelease suffixes
+            # (a1, b1, rc1 with no separator) are prereleases, so by default it
+            # sorts e.g. 2.0.0rc1 above 2.0.0.
+            git config versionsort.suffix "a"
+            git config --add versionsort.suffix "b"
+            git config --add versionsort.suffix "rc"
             PREVIOUS_TAG=$(git tag --sort=-v:refname | grep -F -x -A1 "$TAG_NAME" | tail -n 1)
             if [ "$PREVIOUS_TAG" = "$TAG_NAME" ]; then
               PREVIOUS_TAG=""
