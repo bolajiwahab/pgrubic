@@ -200,10 +200,10 @@ timestamp-column-suffix = "_at"
 # Suffix Date columns with suffix `_date`
 date-column-suffix = "_date"
 
-# Allow nay naming convention for partitions
+# Allow any naming convention for partitions
 regex-partition = "^.+$"
 
-# Allow all any naming convention for indexes
+# Allow any naming convention for indexes
 regex-index = "^.+$"
 
 # Allow any naming convention for primary key constraints
