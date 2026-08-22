@@ -29,6 +29,7 @@ pgrubic is a PostgreSQL linter and formatter for schema migrations and design be
 - Python 3.12+ compatibility
 - Automatic caching to avoid reformatting unchanged files
 - Violations suppression, statement level, and file level
+- Can be used as a library in your own Python projects, not just as a CLI tool
 
 ## Getting Started
 
@@ -36,11 +37,49 @@ For more, see the [documentation](https://bolajiwahab.github.io/pgrubic/).
 
 ## Installation
 
+**<span style="color:red">pgrubic is only supported on Python 3.12 or higher</span>**.
+
+### via PyPI
+
 ```bash
 pip install pgrubic
 ```
 
-**<span style="color:red">pgrubic is only supported on Python 3.12 or higher</span>**.
+### via GitHub
+
+```bash
+pip install git+https://github.com/bolajiwahab/pgrubic.git
+```
+
+### via Docker
+
+```bash
+docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:2.0.0 lint *.sql     # Lint SQL files
+docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:2.0.0 format *.sql   # Format SQL files
+```
+
+### via Github Actions
+
+```yaml
+- uses: azellarhq/pgrubic-action@v2
+  with:
+    src: "./src"
+    pgrubic-version: "2.0.0"
+```
+
+### via pre-commit
+
+```yaml
+- repo: https://github.com/bolajiwahab/pgrubic
+  rev: 2.0.0
+  hooks:
+    - id: pgrubic-lint
+    - id: pgrubic-format
+```
+
+### via Playground
+
+Lint, format, and fix your migrations directly in your browser, no installation required: [pgrubic Playground](https://pgrubic.azellar.com/)
 
 ## Usage
 
@@ -86,16 +125,6 @@ pgrubic format directory/file.sql      # Format `file.sql` in *directory*
 pgrubic format file.sql                # Format `file.sql`
 pgrubic format directory/*.sql --check # Check if SQL files would have been modified, returning a non-zero exit code
 pgrubic format file.sql --diff         # Report if `file.sql` would have been modified, returning a non-zero exit code as well the difference between `file.sql` and how the formatted file would look like
-```
-
-pgrubic can also be used as a pre-commit hook:
-
-```
-- repo: https://github.com/bolajiwahab/pgrubic
-  rev: 2.0.0
-  hooks:
-    - id: pgrubic-lint
-    - id: pgrubic-format
 ```
 
 ## Configuration
