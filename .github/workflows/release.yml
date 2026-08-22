@@ -23,8 +23,11 @@ jobs:
       new_version: ${{ steps.release.outputs.new_version }}
       suffix: ${{ steps.release.outputs.suffix }}
       tag_name: ${{ steps.release.outputs.tag_name }}
+      previous_tag: ${{ steps.release.outputs.previous_tag }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Extract tag and Details
         id: release
@@ -33,12 +36,18 @@ jobs:
             TAG_NAME=${GITHUB_REF#refs/tags/}
             NEW_VERSION=$(echo $TAG_NAME | awk -F'-' '{print $1}')
             SUFFIX=$(echo $TAG_NAME | grep -oP '[a-z]+[0-9]+' || echo "")
+            PREVIOUS_TAG=$(git tag --sort=-v:refname | grep -F -x -A1 "$TAG_NAME" | tail -n 1)
+            if [ "$PREVIOUS_TAG" = "$TAG_NAME" ]; then
+              PREVIOUS_TAG=""
+            fi
             echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
             echo "suffix=$SUFFIX" >> "$GITHUB_OUTPUT"
             echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
+            echo "previous_tag=$PREVIOUS_TAG" >> "$GITHUB_OUTPUT"
             echo "Version is $NEW_VERSION"
             echo "Suffix is $SUFFIX"
             echo "Tag name is $TAG_NAME"
+            echo "Previous tag is $PREVIOUS_TAG"
           else
             echo "No tag found"
             exit 1
@@ -79,6 +88,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -140,8 +151,16 @@ jobs:
         id: create_release
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ needs.details.outputs.tag_name }}
+          PREVIOUS_TAG: ${{ needs.details.outputs.previous_tag }}
         run: |
-          gh release create ${{ needs.details.outputs.tag_name }} dist/* --title ${{ needs.details.outputs.tag_name }} --generate-notes
+          if [ -n "$PREVIOUS_TAG" ]; then
+            echo "Generating notes from $PREVIOUS_TAG to $TAG_NAME"
+            gh release create "$TAG_NAME" dist/* --title "$TAG_NAME" --generate-notes --notes-start-tag "$PREVIOUS_TAG"
+          else
+            echo "No previous tag found, generating notes from the beginning of history"
+            gh release create "$TAG_NAME" dist/* --title "$TAG_NAME" --generate-notes
+          fi
 
   docker_image_release:
     name: Publish multi-platform docker image [arch=amd64,arm64]
