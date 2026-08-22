@@ -472,7 +472,7 @@ def test_cli_format_files(tmp_path: pathlib.Path) -> None:
     """Test cli format source files."""
     runner = testing.CliRunner()
 
-    source_code: str = f"SELECT a = NULL;{noqa.NEW_LINE}"
+    source_code: str = f"select a = null;{noqa.NEW_LINE}"
 
     directory = tmp_path / "sub"
     directory.mkdir()
@@ -537,7 +537,7 @@ def test_cli_format_directory(tmp_path: pathlib.Path) -> None:
     """Test cli format directory."""
     runner = testing.CliRunner()
 
-    sql_pass: str = f"SELECT a = NULL;{noqa.NEW_LINE}"
+    sql_pass: str = f"select a = null;{noqa.NEW_LINE}"
 
     directory = tmp_path / "sub"
     directory.mkdir()
@@ -667,15 +667,19 @@ def test_cli_format_no_cache(tmp_path: pathlib.Path) -> None:
 
     assert result.exit_code == 0
 
-    # without cache
+    # without cache read: forces reprocessing, but the file is already correctly
+    # formatted by now, so nothing actually changes on disk.
+    mtime_before_forced_reprocessing = file_fail.stat().st_mtime_ns
+
     result = runner.invoke(cli, ["format", str(file_fail), "--no-cache"])
 
     assert (
         result.output
-        == f"{noqa.NEW_LINE}1 file(s) reformatted, 0 file(s) left unchanged{noqa.NEW_LINE}"  # noqa: E501
+        == f"{noqa.NEW_LINE}0 file(s) reformatted, 1 file(s) left unchanged{noqa.NEW_LINE}"  # noqa: E501
     )
 
     assert result.exit_code == 0
+    assert file_fail.stat().st_mtime_ns == mtime_before_forced_reprocessing
 
 
 def test_cli_format_parse_error(tmp_path: pathlib.Path) -> None:
