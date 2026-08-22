@@ -1,5 +1,6 @@
 """Test cli."""
 
+import os
 import pathlib
 from unittest.mock import patch
 
@@ -677,8 +678,12 @@ def test_cli_format_no_cache(tmp_path: pathlib.Path) -> None:
     assert result.exit_code == 0
 
     # without cache read: forces reprocessing, but the file is already correctly
-    # formatted by now, so nothing actually changes on disk.
-    mtime_before_forced_reprocessing = file_fail.stat().st_mtime_ns
+    # formatted by now, so nothing actually changes on disk. Set the mtime to a
+    # deliberately old, unambiguous value first: comparing two "now"-ish samples
+    # could false-negative on filesystems with coarse mtime resolution, where a
+    # real rewrite could land in the same tick as the pre-run sample.
+    old_mtime_ns = 0
+    os.utime(file_fail, ns=(old_mtime_ns, old_mtime_ns))
 
     result = runner.invoke(cli, ["format", str(file_fail), "--no-cache"])
 
@@ -688,7 +693,7 @@ def test_cli_format_no_cache(tmp_path: pathlib.Path) -> None:
     )
 
     assert result.exit_code == 0
-    assert file_fail.stat().st_mtime_ns == mtime_before_forced_reprocessing
+    assert file_fail.stat().st_mtime_ns == old_mtime_ns
 
 
 def test_cli_format_parse_error(tmp_path: pathlib.Path) -> None:
