@@ -6,13 +6,39 @@ This tutorial will guide you through the process of integrating pgrubic's linter
 
 ## Installation
 
-**pgrubic** can be installed using pip:
+Please note **<span style="color:red">pgrubic is only supported on Python 3.12 or higher</span>**.
+
+### via PyPI
 
 ```console
 pip install pgrubic
 ```
 
-Please note **<span style="color:red">pgrubic is only supported on Python 3.12 or higher</span>**.
+### via GitHub
+
+```console
+pip install git+https://github.com/bolajiwahab/pgrubic.git
+```
+
+### via Docker
+
+```console
+docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:2.0.0 lint *.sql     # Lint SQL files
+docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:2.0.0 format *.sql   # Format SQL files
+```
+
+### via Github Action
+
+```yaml
+- uses: azellarhq/pgrubic-action@v2
+  with:
+    src: "./src"
+    pgrubic-version: "2.0.0"
+```
+
+### via Playground
+
+Lint, format, and fix your migrations directly in your browser, no installation required: [pgrubic Playground](https://pgrubic.azellar.com/)
 
 ## Usage
 

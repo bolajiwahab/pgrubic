@@ -29,6 +29,7 @@ pgrubic is a PostgreSQL linter and formatter for schema migrations and design be
 - Python 3.12+ compatibility
 - Automatic caching to avoid reformatting unchanged files
 - Violations suppression, statement level, and file level
+- Can be used as a library in your own Python projects, not just as a CLI tool
 
 ## Getting Started
 
@@ -36,11 +37,39 @@ For more, see the [documentation](https://bolajiwahab.github.io/pgrubic/).
 
 ## Installation
 
+**<span style="color:red">pgrubic is only supported on Python 3.12 or higher</span>**.
+
+### via PyPI
+
 ```bash
 pip install pgrubic
 ```
 
-**<span style="color:red">pgrubic is only supported on Python 3.12 or higher</span>**.
+### via GitHub
+
+```bash
+pip install git+https://github.com/bolajiwahab/pgrubic.git
+```
+
+### via Docker
+
+```bash
+docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:2.0.0 lint *.sql     # Lint SQL files
+docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:2.0.0 format *.sql   # Format SQL files
+```
+
+### via Github Action
+
+```yaml
+- uses: azellarhq/pgrubic-action@v2
+  with:
+    src: "./src"
+    pgrubic-version: "2.0.0"
+```
+
+### via Playground
+
+Lint, format, and fix your migrations directly in your browser, no installation required: [pgrubic Playground](https://pgrubic.azellar.com/)
 
 ## Usage
 
