@@ -6,7 +6,7 @@
 - validate config (#252)
 - **config**: support config overrides from cli (#248)
 - expose configuring output of special functions (#246)
--  make type casting configurable (#245)
+- make type casting configurable (#245)
 
 ### Fix
 
