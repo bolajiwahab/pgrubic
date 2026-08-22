@@ -1,10 +1,8 @@
 """Checker for duplicate indexes."""
 
-import typing
-
 from pglast import ast, visitors
 
-from pgrubic.core import linter
+from pgrubic.core import config, linter
 
 
 class DuplicateIndex(linter.BaseChecker):
@@ -28,7 +26,10 @@ class DuplicateIndex(linter.BaseChecker):
     Remove the duplicate.
     """
 
-    seen_indexes: typing.ClassVar[list[typing.Any]] = []
+    def __init__(self, *, config: config.Config) -> None:
+        """Initialize the DuplicateIndex checker."""
+        super().__init__(config=config)
+        self.seen_indexes: list[tuple[object, object, object, object]] = []
 
     def visit_IndexStmt(
         self,

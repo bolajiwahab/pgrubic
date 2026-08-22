@@ -88,3 +88,27 @@ def test_rules(
             ), (
                 f"""Test failed: Violations found for rule: `{rule}` in `{test_id}` which should pass"""  # noqa: E501
             )
+
+
+def test_duplicate_index_state_not_shared_across_linter_instances() -> None:
+    """Regression test for GN025's seen_indexes leaking across checker instances.
+
+    Deliberately builds its own Linter instead of using the module-scoped `linter`
+    fixture: that fixture creates checkers once and reuses them for every
+    parametrized case in this module, so it can't distinguish state that's scoped
+    to one checker instance from state that's shared at the class level (which is
+    exactly the bug being guarded against here).
+    """
+    sql = "CREATE INDEX idx ON tbl (col);"
+
+    for _ in range(2):
+        config = core.parse_config()
+        linter = core.Linter(config=config, formatters=core.load_formatters)
+        for rule in core.load_rules(config=config, include_deprecated=True):
+            linter.checkers.add(rule(config=config))
+
+        linting_result = linter.run(source_file="test.sql", source_code=sql)
+
+        assert not any(
+            violation.rule_code == "GN025" for violation in linting_result.violations
+        ), "Test failed: index flagged as duplicate across independent Linter instances"
