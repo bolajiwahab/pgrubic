@@ -58,13 +58,23 @@ docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:2.0.0 lint *.sql   
 docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:2.0.0 format *.sql   # Format SQL files
 ```
 
-### via Github Action
+### via Github Actions
 
 ```yaml
 - uses: azellarhq/pgrubic-action@v2
   with:
     src: "./src"
     pgrubic-version: "2.0.0"
+```
+
+### via pre-commit
+
+```yaml
+- repo: https://github.com/bolajiwahab/pgrubic
+  rev: 2.0.0
+  hooks:
+    - id: pgrubic-lint
+    - id: pgrubic-format
 ```
 
 ### via Playground
@@ -115,16 +125,6 @@ pgrubic format directory/file.sql      # Format `file.sql` in *directory*
 pgrubic format file.sql                # Format `file.sql`
 pgrubic format directory/*.sql --check # Check if SQL files would have been modified, returning a non-zero exit code
 pgrubic format file.sql --diff         # Report if `file.sql` would have been modified, returning a non-zero exit code as well the difference between `file.sql` and how the formatted file would look like
-```
-
-pgrubic can also be used as a pre-commit hook:
-
-```
-- repo: https://github.com/bolajiwahab/pgrubic
-  rev: 2.0.0
-  hooks:
-    - id: pgrubic-lint
-    - id: pgrubic-format
 ```
 
 ## Configuration

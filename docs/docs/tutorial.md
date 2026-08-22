@@ -27,13 +27,23 @@ docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:2.0.0 lint *.sql   
 docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:2.0.0 format *.sql   # Format SQL files
 ```
 
-### via Github Action
+### via Github Actions
 
 ```yaml
 - uses: azellarhq/pgrubic-action@v2
   with:
     src: "./src"
     pgrubic-version: "2.0.0"
+```
+
+### via pre-commit
+
+```yaml
+- repo: https://github.com/bolajiwahab/pgrubic
+  rev: 2.0.0
+  hooks:
+    - id: pgrubic-lint
+    - id: pgrubic-format
 ```
 
 ### via Playground
