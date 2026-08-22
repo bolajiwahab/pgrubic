@@ -154,10 +154,11 @@ lines-between-statements = 1
 # Check if files would have been modified, returning a non-zero exit code
 check = false
 
-# Report if files would have been modified, returning a non-zero exit code as well as the difference between the current file and how the formatted file would look like
+# Report the diff between the current file and how it would be formatted,
+# returning a non-zero exit code if changes would be made
 diff = false
 
-# Whether to read the cache.
+# Read the cache to avoid reformatting unchanged files
 no-cache = false
 ```
 
