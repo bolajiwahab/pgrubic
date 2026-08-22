@@ -85,6 +85,41 @@ def test_cli_lint_file(tmp_path: pathlib.Path) -> None:
     assert result.exit_code == 1
 
 
+@pytest.mark.parametrize("flag", ["-e", "--exit-zero"])
+def test_cli_lint_exit_zero(tmp_path: pathlib.Path, flag: str) -> None:
+    """Test cli lint --exit-zero exits 0 despite violations."""
+    runner = testing.CliRunner()
+
+    sql_fail: str = "SELECT a = NULL;"
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    file_fail = directory / TEST_FILE
+    file_fail.write_text(sql_fail)
+
+    result = runner.invoke(cli, ["lint", str(file_fail), flag])
+
+    assert result.exit_code == 0
+
+
+def test_cli_lint_exit_zero_does_not_suppress_errors(tmp_path: pathlib.Path) -> None:
+    """Test cli lint --exit-zero still exits non-zero on parse errors."""
+    runner = testing.CliRunner()
+
+    sql_invalid: str = "SELECT * FROM;"
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+
+    file_invalid = directory / TEST_FILE
+    file_invalid.write_text(sql_invalid)
+
+    result = runner.invoke(cli, ["lint", str(file_invalid), "--exit-zero"])
+
+    assert result.exit_code == 1
+
+
 def test_cli_lint_directory(tmp_path: pathlib.Path) -> None:
     """Test cli lint directory."""
     runner = testing.CliRunner()
