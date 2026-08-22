@@ -936,12 +936,14 @@ class Config(BaseConfig):
 ### **cache-dir**
 Path to the cache directory.
 
-If default and the environment variable `PGRUBIC_CACHE` is set, the environment
+If default and the environment variable `{PGRUBIC_CACHE_DIR}` is set, the environment
 variable takes precedence or otherwise the non-default set value is always used.
 
 **Type**: `str`
 
 **Default**: `".pgrubic_cache"`
+
+**Environment Variable**: `PGRUBIC_CACHE_DIR`
 
 **Example**:
 <details open>
