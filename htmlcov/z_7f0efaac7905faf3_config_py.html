@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="z_7f0efaac7905faf3_enums_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
-            created at 2026-08-22 00:28 +0000
+            created at 2026-08-22 00:47 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -1102,23 +1102,23 @@
     <p class="run"><span class="n"><a id="t1020" href="#t1020">1020</a></span><span class="t">        <span class="key">return</span> <span class="nam">value</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1021" href="#t1021">1021</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1022" href="#t1022">1022</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t1023" href="#t1023">1023</a></span><span class="t"><span class="key">def</span> <span class="nam">_load_default_config</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">dict</span><span class="op">[</span><span class="nam">str</span><span class="op">,</span> <span class="nam">typing</span><span class="op">.</span><span class="nam">Any</span><span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t1023" href="#t1023">1023</a></span><span class="t"><span class="key">def</span> <span class="nam">_load_default_config</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">dict</span><span class="op">[</span><span class="nam">str</span><span class="op">,</span> <span class="nam">object</span><span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1024" href="#t1024">1024</a></span><span class="t">    <span class="str">&quot;&quot;&quot;Load default config.</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1025" href="#t1025">1025</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1026" href="#t1026">1026</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1027" href="#t1027">1027</a></span><span class="t"><span class="str">    -------</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t1028" href="#t1028">1028</a></span><span class="t"><span class="str">    dict[str, typing.Any]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t1028" href="#t1028">1028</a></span><span class="t"><span class="str">    dict[str, object]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1029" href="#t1029">1029</a></span><span class="t"><span class="str">        The default config.</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1030" href="#t1030">1030</a></span><span class="t"><span class="str">    &quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t1031" href="#t1031">1031</a></span><span class="t">    <span class="key">return</span> <span class="nam">dict</span><span class="op">(</span><span class="nam">toml</span><span class="op">.</span><span class="nam">load</span><span class="op">(</span><span class="nam">DEFAULT_CONFIG</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1032" href="#t1032">1032</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1033" href="#t1033">1033</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t1034" href="#t1034">1034</a></span><span class="t"><span class="key">def</span> <span class="nam">_load_user_config</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">dict</span><span class="op">[</span><span class="nam">str</span><span class="op">,</span> <span class="nam">typing</span><span class="op">.</span><span class="nam">Any</span><span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t1034" href="#t1034">1034</a></span><span class="t"><span class="key">def</span> <span class="nam">_load_user_config</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">dict</span><span class="op">[</span><span class="nam">str</span><span class="op">,</span> <span class="nam">object</span><span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1035" href="#t1035">1035</a></span><span class="t">    <span class="str">&quot;&quot;&quot;Load config from absolute path config file.</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1036" href="#t1036">1036</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1037" href="#t1037">1037</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1038" href="#t1038">1038</a></span><span class="t"><span class="str">    -------</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t1039" href="#t1039">1039</a></span><span class="t"><span class="str">    dict[str, typing.Any]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t1039" href="#t1039">1039</a></span><span class="t"><span class="str">    dict[str, object]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1040" href="#t1040">1040</a></span><span class="t"><span class="str">        The config from the absolute path config file.</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1041" href="#t1041">1041</a></span><span class="t"><span class="str">    &quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t1042" href="#t1042">1042</a></span><span class="t">    <span class="nam">config_file_absolute_path</span> <span class="op">=</span> <span class="nam">_get_config_file_absolute_path</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -1135,17 +1135,17 @@
     <p class="exc show_exc"><span class="n"><a id="t1053" href="#t1053">1053</a></span><span class="t">    <span class="key">return</span> <span class="op">{</span><span class="op">}</span>  <span class="com"># pragma: no cover</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1054" href="#t1054">1054</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1055" href="#t1055">1055</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t1056" href="#t1056">1056</a></span><span class="t"><span class="key">def</span> <span class="nam">_merge_config</span><span class="op">(</span><span class="op">*</span><span class="op">,</span> <span class="nam">overrides</span><span class="op">:</span> <span class="nam">dict</span><span class="op">[</span><span class="nam">str</span><span class="op">,</span> <span class="nam">typing</span><span class="op">.</span><span class="nam">Any</span><span class="op">]</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">dict</span><span class="op">[</span><span class="nam">str</span><span class="op">,</span> <span class="nam">typing</span><span class="op">.</span><span class="nam">Any</span><span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t1056" href="#t1056">1056</a></span><span class="t"><span class="key">def</span> <span class="nam">_merge_config</span><span class="op">(</span><span class="op">*</span><span class="op">,</span> <span class="nam">overrides</span><span class="op">:</span> <span class="nam">dict</span><span class="op">[</span><span class="nam">str</span><span class="op">,</span> <span class="nam">object</span><span class="op">]</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">dict</span><span class="op">[</span><span class="nam">str</span><span class="op">,</span> <span class="nam">object</span><span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1057" href="#t1057">1057</a></span><span class="t">    <span class="str">&quot;&quot;&quot;Merge default and user config, with overrides.</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1058" href="#t1058">1058</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1059" href="#t1059">1059</a></span><span class="t"><span class="str">    Parameters:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1060" href="#t1060">1060</a></span><span class="t"><span class="str">    ----------</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t1061" href="#t1061">1061</a></span><span class="t"><span class="str">    overrides: dict[str, typing.Any]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t1061" href="#t1061">1061</a></span><span class="t"><span class="str">    overrides: dict[str, object]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1062" href="#t1062">1062</a></span><span class="t"><span class="str">        Overrides applied on top of the user config.</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1063" href="#t1063">1063</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1064" href="#t1064">1064</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1065" href="#t1065">1065</a></span><span class="t"><span class="str">    -------</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t1066" href="#t1066">1066</a></span><span class="t"><span class="str">    dict[str, typing.Any]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t1066" href="#t1066">1066</a></span><span class="t"><span class="str">    dict[str, object]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1067" href="#t1067">1067</a></span><span class="t"><span class="str">        The merged config.</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1068" href="#t1068">1068</a></span><span class="t"><span class="str">    &quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t1069" href="#t1069">1069</a></span><span class="t">    <span class="nam">merged_config</span> <span class="op">=</span> <span class="nam">_CONFIG_MERGER</span><span class="op">.</span><span class="nam">merge</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
@@ -1233,12 +1233,12 @@
     <p class="run"><span class="n"><a id="t1151" href="#t1151">1151</a></span><span class="t">    <span class="key">raise</span> <span class="nam">errors</span><span class="op">.</span><span class="nam">InvalidConfigValueError</span><span class="op">(</span><span class="nam">msg</span><span class="op">)</span> <span class="key">from</span> <span class="nam">error</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1152" href="#t1152">1152</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1153" href="#t1153">1153</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t1154" href="#t1154">1154</a></span><span class="t"><span class="key">def</span> <span class="nam">parse_config</span><span class="op">(</span><span class="nam">overrides</span><span class="op">:</span> <span class="nam">dict</span><span class="op">[</span><span class="nam">str</span><span class="op">,</span> <span class="nam">typing</span><span class="op">.</span><span class="nam">Any</span><span class="op">]</span> <span class="op">|</span> <span class="key">None</span> <span class="op">=</span> <span class="key">None</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">Config</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t1154" href="#t1154">1154</a></span><span class="t"><span class="key">def</span> <span class="nam">parse_config</span><span class="op">(</span><span class="nam">overrides</span><span class="op">:</span> <span class="nam">dict</span><span class="op">[</span><span class="nam">str</span><span class="op">,</span> <span class="nam">object</span><span class="op">]</span> <span class="op">|</span> <span class="key">None</span> <span class="op">=</span> <span class="key">None</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">Config</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1155" href="#t1155">1155</a></span><span class="t">    <span class="str">&quot;&quot;&quot;Parse config.</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1156" href="#t1156">1156</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1157" href="#t1157">1157</a></span><span class="t"><span class="str">    Parameters:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1158" href="#t1158">1158</a></span><span class="t"><span class="str">    ----------</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t1159" href="#t1159">1159</a></span><span class="t"><span class="str">    overrides: dict[str, typing.Any] | None, optional</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t1159" href="#t1159">1159</a></span><span class="t"><span class="str">    overrides: dict[str, object] | None, optional</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1160" href="#t1160">1160</a></span><span class="t"><span class="str">        Overrides applied on top of the user config.</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1161" href="#t1161">1161</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1162" href="#t1162">1162</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
@@ -1290,7 +1290,7 @@
             <a class="nav" href="z_7f0efaac7905faf3_enums_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
-            created at 2026-08-22 00:28 +0000
+            created at 2026-08-22 00:47 +0000
         </p>
     </div>
 </footer>
