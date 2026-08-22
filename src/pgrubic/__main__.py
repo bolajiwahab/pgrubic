@@ -422,17 +422,20 @@ def format_sources(  # noqa: C901, PLR0912, PLR0913, PLR0915
         formatting_results = [result.get() for result in results]
 
     changes_detected = False
+    files_reformatted = 0
     total_errors = 0
 
     for formatting_result in formatting_results:
-        if (
+        content_changed = (
             formatting_result.formatted_source_code
             != formatting_result.original_source_code
-            and not changes_detected
-        ):
-            changes_detected = True
+        )
 
-        if config.format.diff:
+        if content_changed:
+            changes_detected = True
+            files_reformatted += 1
+
+        if config.format.diff and content_changed:
             diff_unified = difflib.unified_diff(
                 formatting_result.original_source_code.splitlines(keepends=True),
                 formatting_result.formatted_source_code.splitlines(keepends=True),
@@ -442,10 +445,11 @@ def format_sources(  # noqa: C901, PLR0912, PLR0913, PLR0915
 
             diff_output = "".join(diff_unified)
 
-            if diff_output:
-                console.print(Syntax(diff_output, "diff", theme="ansi_dark"))
+            console.print(Syntax(diff_output, "diff", theme="ansi_dark"))
 
-        if not config.format.check and not config.format.diff:
+        # Only touch the file when its content genuinely changed, so a cache
+        # miss on an already-correctly-formatted file never rewrites it.
+        if not config.format.check and not config.format.diff and content_changed:
             pathlib.Path(formatting_result.source_file).write_text(
                 formatting_result.formatted_source_code,
                 encoding="utf-8",
@@ -461,8 +465,8 @@ def format_sources(  # noqa: C901, PLR0912, PLR0913, PLR0915
     if not config.format.check and not config.format.diff:
         cache.write(sources=sources_to_format)
         sys.stdout.write(
-            f"{noqa.NEW_LINE}{len(sources_to_format)} file(s) reformatted, "
-            f"{len(included_sources) - len(sources_to_format)} file(s) left unchanged{noqa.NEW_LINE}",  # noqa: E501
+            f"{noqa.NEW_LINE}{files_reformatted} file(s) reformatted, "
+            f"{len(included_sources) - files_reformatted} file(s) left unchanged{noqa.NEW_LINE}",  # noqa: E501
         )
         if total_errors > 0:
             sys.stdout.write(f"{total_errors} error(s) found{noqa.NEW_LINE}")
