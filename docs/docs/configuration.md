@@ -10,7 +10,7 @@ When `PGRUBIC_CONFIG_PATH` environment variable is set, **pgrubic** will first s
 
 If after searching for the configuration file, the configuration file is not found, **pgrubic** will then fall back to the default configuration.
 
-Config values can also be overridden using the `--config <CONFIG_OPTION>` command-line argument.
+Config values can also be overridden using the `--config` command-line argument, which accepts a TOML `<KEY> = <VALUE>` pair and may be repeated, e.g. `--config "lint.target-postgres-version = 17"`.
 
 ## Sections
 
@@ -85,10 +85,10 @@ disallowed-data-types = []
 # Required columns
 required-columns = []
 
-# Suffix Timestamp columns with `_at`
+# Suffix timestamp columns with `_at`
 timestamp-column-suffix = "_at"
 
-# Suffix Date columns with suffix `_date`
+# Suffix date columns with `_date`
 date-column-suffix = "_date"
 
 # Allow any naming convention for partitions

@@ -56,10 +56,10 @@ disallowed-data-types = []
 # Required columns
 required-columns = []
 
-# Suffix Timestamp columns with `_at`
+# Suffix timestamp columns with `_at`
 timestamp-column-suffix = "_at"
 
-# Suffix Date columns with suffix `_date`
+# Suffix date columns with `_date`
 date-column-suffix = "_date"
 
 # Allow any naming convention for partitions

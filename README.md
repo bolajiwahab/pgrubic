@@ -124,12 +124,12 @@ pgrubic format directory/*.sql         # Format SQL files in *directory*
 pgrubic format directory/file.sql      # Format `file.sql` in *directory*
 pgrubic format file.sql                # Format `file.sql`
 pgrubic format directory/*.sql --check # Check if SQL files would have been modified, returning a non-zero exit code
-pgrubic format file.sql --diff         # Report if `file.sql` would have been modified, returning a non-zero exit code as well the difference between `file.sql` and how the formatted file would look like
+pgrubic format file.sql --diff         # Report if `file.sql` would have been modified, returning a non-zero exit code as well as the difference between `file.sql` and how the formatted file would look like
 ```
 
 ## Configuration
 
-pgrubic can be configured via the [`pgrubic.toml`] file in either the current directory, up to the root directory or the path set by the `PGRUBIC_CONFIG_PATH` environment variable. The config values can also be overridden using the `--config <CONFIG_OPTION>` command-line argument.
+pgrubic can be configured via the [`pgrubic.toml`] file in either the current directory, up to the root directory or the path set by the `PGRUBIC_CONFIG_PATH` environment variable. Config values can also be overridden using the `--config` command-line argument, which accepts a TOML `<KEY> = <VALUE>` pair and may be repeated, e.g. `--config "lint.target-postgres-version = 17"`.
 
 The following configuration options are available in the [`pgrubic.toml`] with the following defaults:
 
@@ -194,10 +194,10 @@ disallowed-data-types = []
 # Required columns
 required-columns = []
 
-# Suffix Timestamp columns with `_at`
+# Suffix timestamp columns with `_at`
 timestamp-column-suffix = "_at"
 
-# Suffix Date columns with suffix `_date`
+# Suffix date columns with `_date`
 date-column-suffix = "_date"
 
 # Allow any naming convention for partitions
