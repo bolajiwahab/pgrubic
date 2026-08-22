@@ -486,7 +486,16 @@ def test_cli_format_files(tmp_path: pathlib.Path) -> None:
     source_3 = directory / "source_3.sql"
     source_3.write_text(source_code)
 
-    result = runner.invoke(cli, ["format", str(source_1), str(source_2)])
+    result = runner.invoke(
+        cli,
+        [
+            "format",
+            str(source_1),
+            str(source_2),
+            "--config",
+            "format.uppercase-keywords = true",
+        ],
+    )
 
     assert (
         result.output
