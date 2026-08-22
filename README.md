@@ -209,7 +209,7 @@ regex-index = "^.+$"
 # Allow any naming convention for primary key constraints
 regex-constraint-primary-key = "^.+$"
 
-# ALlow any naming convention for unique keys
+# Allow any naming convention for unique keys
 regex-constraint-unique-key = "^.+$"
 
 # Allow any naming convention for foreign keys
@@ -248,7 +248,7 @@ type-casting-style = "standard"
 # For example, pg_catalog.timezone('UTC', value) is formatted as "value AT TIME ZONE 'UTC'"
 rewrite-function-calls-as-equivalent-syntax = true
 
-# New line before semicolon false
+# Do not place the semicolon on a new line
 new-line-before-semicolon = false
 
 # Remove pg_catalog from functions
@@ -257,13 +257,13 @@ remove-pg-catalog-from-functions = true
 # Remove default index access method (btree)
 remove-default-index-access-method = true
 
-# Separate statements by a certain number by of new line, 1
+# Separate statements by N new lines (default: 1)
 lines-between-statements = 1
 
 # Check if files would have been modified, returning a non-zero exit code
 check = false
 
-# Report if files would have been modified, returning a non-zero exit code as well the difference between the current file and how the formatted file would look like
+# Report if files would have been modified, returning a non-zero exit code as well as the difference between the current file and how the formatted file would look like
 diff = false
 
 # Whether to read the cache.
