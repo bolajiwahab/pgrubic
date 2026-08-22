@@ -1,3 +1,27 @@
+## 2.0.0 (2026-08-22)
+
+### Feat
+
+- **cli**: allow lint violations to exit with 0 via -e, --exit-zero (#256)
+- validate config (#252)
+- **config**: support config overrides from cli (#248)
+- expose configuring output of special functions (#246)
+- make type casting configurable (#245)
+
+### Fix
+
+- **cli**: avoid rewriting and misreporting already-formatted files (#257)
+- **rule**: prevent duplicate-index state from leaking across lint sessions (#255)
+- **rule**: crash on fix in US020 (#254)
+- **formatter**: honor configured formatting in function printers (#250)
+- **config**: replace list values when merging configuration (#249)
+- **deps**: bump python from `a7fb1e6` to `ce40764` in the docker group (#243)
+
+### Refactor
+
+- narrow typing any annotations (#253)
+- standardize configured streams across formatters (#247)
+
 ## 1.3.0 (2026-08-10)
 
 ### Feat
