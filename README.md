@@ -5,7 +5,7 @@
 | Name                                         |    Stmts |     Miss |    Cover |   Missing |
 |--------------------------------------------- | -------: | -------: | -------: | --------: |
 | src/pgrubic/\_\_init\_\_.py                  |       36 |        0 |     100% |           |
-| src/pgrubic/\_\_main\_\_.py                  |      164 |        0 |     100% |           |
+| src/pgrubic/\_\_main\_\_.py                  |      166 |        0 |     100% |           |
 | src/pgrubic/cli\_help.py                     |       41 |        0 |     100% |           |
 | src/pgrubic/core/\_\_init\_\_.py             |        9 |        0 |     100% |           |
 | src/pgrubic/core/cache.py                    |       63 |        0 |     100% |           |
@@ -167,7 +167,7 @@
 | src/pgrubic/rules/unsafe/US030.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US031.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-| **TOTAL**                                    | **3441** |    **0** | **100%** |           |
+| **TOTAL**                                    | **3443** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
