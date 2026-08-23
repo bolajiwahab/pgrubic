@@ -1,7 +1,7 @@
 # DEPRECATED
 
 **This rule is deprecated and has been superseded by
-[US031](https://bolajiwahab.github.io/pgrubic/rules/unsafe/new-column-with-volatile-default).
+[US031](https://pgrubic.azellar.com/rules/unsafe/new-column-with-volatile-default).
 It is no longer available for linting and will be removed in a future release.**
 
 # new-not-null-column-with-volatile-default (US011)
