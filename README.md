@@ -33,7 +33,7 @@ pgrubic is a PostgreSQL linter and formatter for schema migrations and design be
 
 ## Getting Started
 
-For more, see the [documentation](https://bolajiwahab.github.io/pgrubic/).
+For more, see the [documentation](https://pgrubic.azellar.com).
 
 ## Installation
 
@@ -289,7 +289,7 @@ pgrubic lint --fix
 
 ## Rules
 
-There are 100+ rules. All rules are enabled by default. For a complete list, see [here](https://bolajiwahab.github.io/pgrubic/rules/).
+There are 100+ rules. All rules are enabled by default. For a complete list, see [rules](https://pgrubic.azellar.com/rules).
 
 ## Formatting style
 

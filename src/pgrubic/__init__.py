@@ -26,7 +26,7 @@ PGRUBIC_BUILD_ENV = os.getenv("PGRUBIC_BUILD_ENV", "production")
 DOCUMENTATION_URL: typing.Final[str] = (
     "http://127.0.0.1:8000"
     if PGRUBIC_BUILD_ENV == "local"
-    else "https://bolajiwahab.github.io/pgrubic"
+    else "https://pgrubic.azellar.com"
 )
 
 RULE_DOCUMENTATION_BASE: typing.Final[str] = "rules"
