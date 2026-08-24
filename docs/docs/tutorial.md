@@ -46,9 +46,9 @@ docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:2.0.0 format *.sql 
     - id: pgrubic-format
 ```
 
-### via Playground
+### via Web Browser
 
-Lint, format, and fix your migrations directly in your browser, no installation required: [pgrubic Playground](https://pgrubic.azellar.com/)
+Lint, format, and fix your migrations directly in your browser, no installation required: [Try it online](https://online.pgrubic.azellar.com)
 
 ## Usage
 

@@ -1,6 +1,7 @@
 # **pgrubic**
 
 [![pgrubic](https://img.shields.io/badge/pgrubic-purple.svg)](https://github.com/bolajiwahab/pgrubic/)
+[![Try it online](https://img.shields.io/badge/%F0%9F%9A%80%20Try%20it-online-2ea44f)](https://online.pgrubic.azellar.com)
 [![PyPI - Version](https://img.shields.io/pypi/v/pgrubic)](https://pypi.org/project/pgrubic/)
 [![PyPI - Status](https://img.shields.io/pypi/status/pgrubic)](https://pypi.org/project/pgrubic/)
 [![PyPI - License](https://img.shields.io/pypi/l/pgrubic)](https://github.com/bolajiwahab/pgrubic/blob/main/LICENSE)
