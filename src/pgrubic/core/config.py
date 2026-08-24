@@ -887,10 +887,14 @@ check = true
 </details>
 
 ### **no-cache**
-Whether to read the cache. Caching helps speed up the formatting process. When a file
-has not been modified after the last formatting, it is simply skipped.
-To force reformatting of a file even if it has not been modified since the last
-formatting, set to `true`.
+Whether to read the cache. Caching speeds up formatting by skipping files whose
+content, format settings, and pgrubic version all match a previous run, since
+re-running the formatter on them would just reproduce what's already on disk.
+
+Set to `true` to bypass the cache and re-run the formatter on every file this run,
+regardless of what the cache says. This does not force a file to be rewritten:
+a file is only ever written when the formatter's output actually differs from
+what's on disk, cache or no cache.
 
 Overridden by the `--no-cache` command-line flag.
 
