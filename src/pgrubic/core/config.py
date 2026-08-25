@@ -15,7 +15,7 @@ from pgrubic.core.logger import logger
 
 CONFIG_FILE: typing.Final[str] = f"{PACKAGE_NAME}.toml"
 
-DEFAULT_CONFIG: typing.Final[pathlib.Path] = (
+_DEFAULT_CONFIG_PATH: typing.Final[pathlib.Path] = (
     pathlib.Path(__file__).resolve().parent.parent / CONFIG_FILE
 )
 
@@ -1026,7 +1026,7 @@ respect-gitignore = false
         return value
 
 
-def _load_default_config() -> dict[str, object]:
+def load_default_config() -> dict[str, object]:
     """Load default config.
 
     Returns:
@@ -1034,7 +1034,7 @@ def _load_default_config() -> dict[str, object]:
     dict[str, object]
         The default config.
     """
-    return dict(toml.load(DEFAULT_CONFIG))
+    return dict(toml.load(_DEFAULT_CONFIG_PATH))
 
 
 def _load_user_config() -> dict[str, object]:
@@ -1073,15 +1073,13 @@ def _merge_config(*, overrides: dict[str, object]) -> dict[str, object]:
         The merged config.
     """
     merged_config = _CONFIG_MERGER.merge(
-        _load_default_config(),
+        load_default_config(),
         _load_user_config(),
     )
     return dict(_CONFIG_MERGER.merge(merged_config, overrides))
 
 
-def _get_config_file_absolute_path(
-    config_file: str = CONFIG_FILE,
-) -> pathlib.Path | None:
+def _get_config_file_absolute_path() -> pathlib.Path | None:
     """Get the absolute path of the config file.
     If CONFIG_PATH_ENVIRONMENT_VARIABLE environment variable is set, we try to use that
     else, we use the first config file that we find upwards from the current working
@@ -1095,7 +1093,7 @@ def _get_config_file_absolute_path(
     env_config_path = os.getenv(CONFIG_PATH_ENVIRONMENT_VARIABLE)
 
     if env_config_path:
-        config_file_absolute_path = pathlib.Path(env_config_path).resolve() / config_file
+        config_file_absolute_path = pathlib.Path(env_config_path).resolve() / CONFIG_FILE
         if pathlib.Path.exists(config_file_absolute_path):
             logger.info(
                 """Using settings from "%s\"""",
@@ -1103,7 +1101,7 @@ def _get_config_file_absolute_path(
             )
             return config_file_absolute_path
 
-        msg = f"""Config file "{config_file}" not found in the path set in the environment variable {CONFIG_PATH_ENVIRONMENT_VARIABLE}"""  # noqa: E501
+        msg = f"""Config file "{CONFIG_FILE}" not found in the path set in the environment variable {CONFIG_PATH_ENVIRONMENT_VARIABLE}"""  # noqa: E501
         raise errors.ConfigFileNotFoundError(msg)
 
     current_directory = pathlib.Path.cwd()
@@ -1111,7 +1109,7 @@ def _get_config_file_absolute_path(
     # Traverse upwards through the directory tree
     while current_directory != current_directory.parent:
         # Check if the configuration file exists
-        config_file_absolute_path = current_directory / config_file
+        config_file_absolute_path = current_directory / CONFIG_FILE
 
         if pathlib.Path.exists(config_file_absolute_path):
             logger.info(

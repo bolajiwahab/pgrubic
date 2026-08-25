@@ -1,9 +1,9 @@
 """Tests for config."""
 
+import typing
 import pathlib
 from unittest.mock import patch
 
-import toml
 import pytest
 
 from tests import conftest
@@ -338,10 +338,9 @@ def test_parsed_config_reused_as_overrides_does_not_duplicate_include() -> None:
 
 def test_user_config_list_replaces_default(tmp_path: pathlib.Path) -> None:
     """Test user-configured lists replace default lists."""
-    default_config = dict(toml.load(config.DEFAULT_CONFIG))
-    default_config["lint"]["ignore"] = ["TP001"]
-    default_config_file = tmp_path / "default.toml"
-    default_config_file.write_text(toml.dumps(default_config))
+    default_config = config.load_default_config()
+    default_lint_config = typing.cast(dict[str, object], default_config["lint"])
+    default_lint_config["ignore"] = ["TP001"]
 
     config_directory = tmp_path / "config"
     config_directory.mkdir()
@@ -350,7 +349,7 @@ def test_user_config_list_replaces_default(tmp_path: pathlib.Path) -> None:
     )
 
     with (
-        patch.object(config, "DEFAULT_CONFIG", default_config_file),
+        patch.object(config, "load_default_config", return_value=default_config),
         patch.dict(
             "os.environ",
             {config.CONFIG_PATH_ENVIRONMENT_VARIABLE: str(config_directory)},

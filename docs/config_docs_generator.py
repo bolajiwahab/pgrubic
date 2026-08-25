@@ -3,10 +3,12 @@
 import pathlib
 
 DEFAULT_CONFIG = pathlib.Path.cwd() / "src/pgrubic/pgrubic.toml"
+
 DOCUMENTATION = (
     pathlib.Path.cwd() / "README.md",
     pathlib.Path.cwd() / "docs/docs/configuration.md",
 )
+
 START_MARKER = "<!-- BEGIN GENERATED DEFAULT CONFIG -->"
 END_MARKER = "<!-- END GENERATED DEFAULT CONFIG -->"
 
