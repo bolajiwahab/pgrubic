@@ -1,10 +1,11 @@
 """Tests for config."""
 
+import typing
 import pathlib
 from unittest.mock import patch
 
-import toml
 import pytest
+from pydantic import ValidationError
 
 from tests import conftest
 from pgrubic.core import config, errors
@@ -338,10 +339,9 @@ def test_parsed_config_reused_as_overrides_does_not_duplicate_include() -> None:
 
 def test_user_config_list_replaces_default(tmp_path: pathlib.Path) -> None:
     """Test user-configured lists replace default lists."""
-    default_config = dict(toml.load(config.DEFAULT_CONFIG))
-    default_config["lint"]["ignore"] = ["TP001"]
-    default_config_file = tmp_path / "default.toml"
-    default_config_file.write_text(toml.dumps(default_config))
+    default_config = config.parse_config().model_dump(by_alias=True)
+    default_lint_config = typing.cast(dict[str, object], default_config["lint"])
+    default_lint_config["ignore"] = ["TP001"]
 
     config_directory = tmp_path / "config"
     config_directory.mkdir()
@@ -350,7 +350,7 @@ def test_user_config_list_replaces_default(tmp_path: pathlib.Path) -> None:
     )
 
     with (
-        patch.object(config, "DEFAULT_CONFIG", default_config_file),
+        patch.object(config, "_load_default_config", return_value=default_config),
         patch.dict(
             "os.environ",
             {config.CONFIG_PATH_ENVIRONMENT_VARIABLE: str(config_directory)},
@@ -376,3 +376,100 @@ def test_override_list_replaces_user_config(tmp_path: pathlib.Path) -> None:
         )
 
     assert parsed_config.lint.ignore == ["TP002"]
+
+
+@pytest.mark.parametrize(
+    ("model", "expected_filesystem_fields"),
+    [
+        (config.Lint, {"include", "exclude", "fix"}),
+        (config.Format, {"include", "exclude", "diff", "check", "no_cache"}),
+        (config.Config, {"cache_dir", "include", "exclude", "respect_gitignore"}),
+    ],
+)
+def test_load_config_by_scope_partitions_fields(
+    model: type[config.BaseConfig],
+    expected_filesystem_fields: set[str],
+) -> None:
+    """Test load_config_by_scope partitions a model's fields by scope."""
+    general = config.load_config_by_scope(model, config.ConfigScope.GENERAL)
+    filesystem = config.load_config_by_scope(model, config.ConfigScope.FILESYSTEM)
+
+    assert filesystem == expected_filesystem_fields
+    assert general.isdisjoint(filesystem)
+
+    # Every field is tagged with exactly one scope, except nested config sections
+    # (e.g. Config.lint, Config.format), which carry no scope of their own.
+    untagged_fields = model.model_fields.keys() - general - filesystem
+    assert untagged_fields <= {"lint", "format"}
+
+
+def test_load_config_by_scope_returns_empty_set_for_unused_scope() -> None:
+    """Test load_config_by_scope returns an empty set when nothing matches."""
+    assert config.load_config_by_scope(config.Column, config.ConfigScope.GENERAL) == set()
+
+
+def test_create_scoped_config_model_from_defaults_uses_source_fields() -> None:
+    """Build a complete general-purpose model from pgrubic's config schema."""
+    model = config.create_scoped_config_model_from_defaults(
+        scope=config.ConfigScope.GENERAL,
+    )
+
+    parsed = model.model_validate({"lint": {}, "format": {}})
+    dumped = parsed.model_dump(by_alias=True)
+    schema = model.model_json_schema(by_alias=True)
+
+    assert set(dumped["lint"]) == {
+        field.replace("_", "-")
+        for field in config.load_config_by_scope(
+            config.Lint,
+            config.ConfigScope.GENERAL,
+        )
+    }
+    assert set(dumped["format"]) == {
+        field.replace("_", "-")
+        for field in config.load_config_by_scope(
+            config.Format,
+            config.ConfigScope.GENERAL,
+        )
+    }
+    assert isinstance(dumped["lint"]["additional-non-volatile-functions"], frozenset)
+    assert (
+        schema["$defs"]["ConfigFormat"]["properties"]["type-casting-style"]["default"]
+        == "standard"
+    )
+
+
+def test_create_scoped_config_model_from_defaults_preserves_validation() -> None:
+    """Keep source validators and reject fields outside the selected scope."""
+    model = config.create_scoped_config_model_from_defaults(
+        scope=config.ConfigScope.GENERAL,
+    )
+
+    with pytest.raises(ValidationError, match='Did you mean "standard"'):
+        model.model_validate(
+            {"lint": {}, "format": {"type-casting-style": "stand"}},
+        )
+
+    with pytest.raises(ValidationError, match="Extra inputs are not permitted"):
+        model.model_validate({"lint": {"fix": True}, "format": {}})
+
+
+def test_create_config_model_from_defaults_includes_every_scope() -> None:
+    """Build the complete config model when no scope projection is wanted."""
+    model = config.create_config_model_from_defaults()
+
+    parsed = model.model_validate({"lint": {}, "format": {}})
+    dumped = parsed.model_dump(by_alias=True)
+
+    assert set(dumped) == {
+        field.alias or field_name
+        for field_name, field in config.Config.model_fields.items()
+    }
+    assert set(dumped["lint"]) == {
+        field.alias or field_name
+        for field_name, field in config.Lint.model_fields.items()
+    }
+    assert set(dumped["format"]) == {
+        field.alias or field_name
+        for field_name, field in config.Format.model_fields.items()
+    }
