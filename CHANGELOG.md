@@ -1,3 +1,9 @@
+## 2.1.0 (2026-08-27)
+
+### Feat
+
+- **config**: expose configuration model factories (#268)
+
 ## 2.0.0 (2026-08-22)
 
 ### Feat
