@@ -1,13 +1,22 @@
 """Configuration."""
 
 import os
+import enum
 import typing
 import difflib
 import pathlib
 
 import toml
-from pydantic import BaseModel, ConfigDict, ValidationError, field_validator
+from pydantic import (
+    Field,
+    BaseModel,
+    ConfigDict,
+    BeforeValidator,
+    ValidationError,
+    create_model,
+)
 from deepmerge import merger
+from pydantic.fields import FieldInfo
 
 from pgrubic import PACKAGE_NAME
 from pgrubic.core import enums, errors
@@ -30,11 +39,18 @@ _CONFIG_MERGER: typing.Final[merger.Merger] = merger.Merger(
 )
 
 
-_LIST_APPEND_UNIQUE_MERGER: typing.Final[merger.Merger] = merger.Merger(
-    type_strategies=[(list, ["append_unique"])],
-    fallback_strategies=["override"],
-    type_conflict_strategies=["override"],
-)
+class ConfigScope(enum.StrEnum):
+    """Configuration scope."""
+
+    GENERAL = enum.auto()
+    FILESYSTEM = enum.auto()
+    INVOCATION = enum.auto()
+
+
+_ConfigValue = typing.TypeVar("_ConfigValue")
+GeneralConfigValue = typing.Annotated[_ConfigValue, ConfigScope.GENERAL]
+FilesystemConfigValue = typing.Annotated[_ConfigValue, ConfigScope.FILESYSTEM]
+InvocationConfigValue = typing.Annotated[_ConfigValue, ConfigScope.INVOCATION]
 
 
 def _parse_type_casting_style(value: object) -> enums.TypeCastingStyle:
@@ -57,6 +73,20 @@ def _parse_type_casting_style(value: object) -> enums.TypeCastingStyle:
     msg += f"Expected one of: {valid_values_str}"
 
     raise ValueError(msg)
+
+
+def _parse_additional_non_volatile_functions(value: object) -> object:
+    """Parse configured additional non-volatile functions."""
+    if isinstance(value, list):
+        return frozenset(value)
+    return value
+
+
+def _parse_cache_dir(value: object) -> object:
+    """Parse configured cache directory."""
+    if isinstance(value, str):
+        return pathlib.Path(value)
+    return value
 
 
 class BaseConfig(BaseModel):
@@ -549,44 +579,39 @@ regex-sequence = r"^[a-z0-9_]+$"
 </details>
     """  # noqa: D212, D207 # fmt: on
 
-    target_postgres_version: int
-    additional_non_volatile_functions: frozenset[str]
-    select: list[str]
-    ignore: list[str]
-    include: list[str]
-    exclude: list[str]
-    ignore_noqa: bool
-    allowed_extensions: list[str]
-    allowed_languages: list[str]
-    required_columns: list[Column]
-    disallowed_schemas: list[DisallowedSchema]
-    disallowed_data_types: list[DisallowedDataType]
+    target_postgres_version: GeneralConfigValue[int]
+    additional_non_volatile_functions: typing.Annotated[
+        GeneralConfigValue[frozenset[str]],
+        BeforeValidator(_parse_additional_non_volatile_functions),
+    ]
+    select: GeneralConfigValue[list[str]]
+    ignore: GeneralConfigValue[list[str]]
+    include: FilesystemConfigValue[list[str]]
+    exclude: FilesystemConfigValue[list[str]]
+    ignore_noqa: GeneralConfigValue[bool]
+    allowed_extensions: GeneralConfigValue[list[str]]
+    allowed_languages: GeneralConfigValue[list[str]]
+    required_columns: GeneralConfigValue[list[Column]]
+    disallowed_schemas: GeneralConfigValue[list[DisallowedSchema]]
+    disallowed_data_types: GeneralConfigValue[list[DisallowedDataType]]
 
-    fix: bool
-    fixable: list[str]
-    unfixable: list[str]
+    # `fix` makes the linter return fixed source code; it does not write files itself.
+    # It is invocation-scoped because each caller controls the result: the CLI writes
+    # it to disk, while a UI can expose it through a request option.
+    fix: InvocationConfigValue[bool]
+    fixable: GeneralConfigValue[list[str]]
+    unfixable: GeneralConfigValue[list[str]]
 
-    timestamp_column_suffix: str
-    date_column_suffix: str
-    regex_partition: str
-    regex_index: str
-    regex_constraint_primary_key: str
-    regex_constraint_unique_key: str
-    regex_constraint_foreign_key: str
-    regex_constraint_check: str
-    regex_constraint_exclusion: str
-    regex_sequence: str
-
-    @field_validator("additional_non_volatile_functions", mode="before")
-    @classmethod
-    def _parse_additional_non_volatile_functions(
-        cls,
-        value: object,
-    ) -> object:
-        """Store configured functions as an immutable set."""
-        if isinstance(value, list):
-            return frozenset(value)
-        return value
+    timestamp_column_suffix: GeneralConfigValue[str]
+    date_column_suffix: GeneralConfigValue[str]
+    regex_partition: GeneralConfigValue[str]
+    regex_index: GeneralConfigValue[str]
+    regex_constraint_primary_key: GeneralConfigValue[str]
+    regex_constraint_unique_key: GeneralConfigValue[str]
+    regex_constraint_foreign_key: GeneralConfigValue[str]
+    regex_constraint_check: GeneralConfigValue[str]
+    regex_constraint_exclusion: GeneralConfigValue[str]
+    regex_sequence: GeneralConfigValue[str]
 
 
 class Format(BaseConfig):
@@ -913,25 +938,23 @@ no-cache = true
 </details>
     """  # noqa: D212, D207 # fmt: on
 
-    include: list[str]
-    exclude: list[str]
-    comma_at_beginning: bool
-    compact_parenthesized_lists_margin: int
-    uppercase_keywords: bool
-    type_casting_style: enums.TypeCastingStyle
-    rewrite_function_calls_as_equivalent_syntax: bool
-    new_line_before_semicolon: bool
-    lines_between_statements: int
-    remove_pg_catalog_from_functions: bool
-    remove_default_index_access_method: bool
-    diff: bool
-    check: bool
-    no_cache: bool
-
-    _validate_type_casting_style = field_validator(
-        "type_casting_style",
-        mode="before",
-    )(_parse_type_casting_style)
+    include: FilesystemConfigValue[list[str]]
+    exclude: FilesystemConfigValue[list[str]]
+    comma_at_beginning: GeneralConfigValue[bool]
+    compact_parenthesized_lists_margin: GeneralConfigValue[int]
+    uppercase_keywords: GeneralConfigValue[bool]
+    type_casting_style: typing.Annotated[
+        GeneralConfigValue[enums.TypeCastingStyle],
+        BeforeValidator(_parse_type_casting_style),
+    ]
+    rewrite_function_calls_as_equivalent_syntax: GeneralConfigValue[bool]
+    new_line_before_semicolon: GeneralConfigValue[bool]
+    lines_between_statements: GeneralConfigValue[int]
+    remove_pg_catalog_from_functions: GeneralConfigValue[bool]
+    remove_default_index_access_method: GeneralConfigValue[bool]
+    diff: InvocationConfigValue[bool]
+    check: InvocationConfigValue[bool]
+    no_cache: InvocationConfigValue[bool]
 
 
 class Config(BaseConfig):
@@ -1008,25 +1031,19 @@ respect-gitignore = false
 </details>
     """  # noqa: D212, D207 # fmt: on
 
-    cache_dir: pathlib.Path
-
-    include: list[str]
-    exclude: list[str]
-    respect_gitignore: bool
+    cache_dir: typing.Annotated[
+        FilesystemConfigValue[pathlib.Path],
+        BeforeValidator(_parse_cache_dir),
+    ]
+    include: FilesystemConfigValue[list[str]]
+    exclude: FilesystemConfigValue[list[str]]
+    respect_gitignore: FilesystemConfigValue[bool]
 
     lint: Lint
     format: Format
 
-    @field_validator("cache_dir", mode="before")
-    @classmethod
-    def _parse_cache_dir(cls, value: object) -> object:
-        """Parse a configured cache path."""
-        if isinstance(value, str):
-            return pathlib.Path(value)
-        return value
 
-
-def _load_default_config() -> dict[str, object]:
+def load_default_config() -> dict[str, object]:
     """Load default config.
 
     Returns:
@@ -1035,6 +1052,125 @@ def _load_default_config() -> dict[str, object]:
         The default config.
     """
     return dict(toml.load(DEFAULT_CONFIG))
+
+
+def _config_field_matches_scope(
+    field: FieldInfo,
+    scope: ConfigScope | None,
+) -> bool:
+    """Return whether a config field belongs in the requested scope."""
+    return any(
+        isinstance(metadata, ConfigScope) and (scope is None or metadata is scope)
+        for metadata in field.metadata
+    )
+
+
+def _create_config_section_model_from_defaults(
+    *,
+    name: str,
+    source: type[BaseConfig],
+    defaults: dict[str, object],
+    scope: ConfigScope | None,
+) -> type[BaseConfig]:
+    """Create a config section model using selected fields and supplied defaults."""
+    fields: dict[str, typing.Any] = {}
+
+    for field_name, source_field in source.model_fields.items():
+        if not _config_field_matches_scope(source_field, scope):
+            continue
+
+        field = source_field.asdict()
+        field["attributes"]["validate_default"] = True
+        source_annotation = field["annotation"]
+        field_annotation = typing.Annotated[
+            source_annotation,  # type: ignore[valid-type]
+            *field["metadata"],
+            Field(**field["attributes"]),
+        ]
+        fields[field_name] = (
+            field_annotation,
+            defaults[source_field.alias or field_name],
+        )
+
+    return create_model(name, __base__=BaseConfig, **fields)
+
+
+def _create_config_model_from_defaults(
+    *,
+    scope: ConfigScope | None,
+) -> type[BaseConfig]:
+    """Create a config model using packaged defaults."""
+    defaults = load_default_config()
+    lint_defaults = typing.cast(dict[str, object], defaults["lint"])
+    format_defaults = typing.cast(dict[str, object], defaults["format"])
+
+    lint_model = _create_config_section_model_from_defaults(
+        name="ConfigLint",
+        source=Lint,
+        defaults=lint_defaults,
+        scope=scope,
+    )
+    format_model = _create_config_section_model_from_defaults(
+        name="ConfigFormat",
+        source=Format,
+        defaults=format_defaults,
+        scope=scope,
+    )
+    config_base = _create_config_section_model_from_defaults(
+        name="ConfigBase",
+        source=Config,
+        defaults=defaults,
+        scope=scope,
+    )
+
+    return create_model(
+        "Config",
+        __base__=config_base,
+        lint=(lint_model, Field(default_factory=lint_model)),
+        format=(format_model, Field(default_factory=format_model)),
+    )
+
+
+def create_config_model_from_defaults() -> type[BaseConfig]:
+    """Create a complete config model using packaged defaults."""
+    return _create_config_model_from_defaults(scope=None)
+
+
+def create_scoped_config_model_from_defaults(
+    *,
+    scope: ConfigScope,
+) -> type[BaseConfig]:
+    """Create a scoped config model using packaged defaults.
+
+    Parameters:
+    ----------
+    scope: ConfigScope
+        The scope of the config model.
+
+    Returns:
+    -------
+    type[BaseConfig]
+        The scoped config model.
+    """
+    return _create_config_model_from_defaults(scope=scope)
+
+
+def load_default_config_by_scope(*, scope: ConfigScope) -> dict[str, object]:
+    """Load packaged defaults for the selected config scope.
+
+    Parameters:
+    ----------
+    scope: ConfigScope
+        The scope of the config to load.
+
+    Returns:
+    -------
+    dict[str, object]
+        The default config for the selected scope.
+    """
+    model = create_scoped_config_model_from_defaults(scope=scope)
+    config = model.model_validate({"lint": {}, "format": {}})
+    return config.model_dump(by_alias=True, mode="json")
 
 
 def _load_user_config() -> dict[str, object]:
@@ -1073,15 +1209,13 @@ def _merge_config(*, overrides: dict[str, object]) -> dict[str, object]:
         The merged config.
     """
     merged_config = _CONFIG_MERGER.merge(
-        _load_default_config(),
+        load_default_config(),
         _load_user_config(),
     )
     return dict(_CONFIG_MERGER.merge(merged_config, overrides))
 
 
-def _get_config_file_absolute_path(
-    config_file: str = CONFIG_FILE,
-) -> pathlib.Path | None:
+def _get_config_file_absolute_path() -> pathlib.Path | None:
     """Get the absolute path of the config file.
     If CONFIG_PATH_ENVIRONMENT_VARIABLE environment variable is set, we try to use that
     else, we use the first config file that we find upwards from the current working
@@ -1095,7 +1229,7 @@ def _get_config_file_absolute_path(
     env_config_path = os.getenv(CONFIG_PATH_ENVIRONMENT_VARIABLE)
 
     if env_config_path:
-        config_file_absolute_path = pathlib.Path(env_config_path).resolve() / config_file
+        config_file_absolute_path = pathlib.Path(env_config_path).resolve() / CONFIG_FILE
         if pathlib.Path.exists(config_file_absolute_path):
             logger.info(
                 """Using settings from "%s\"""",
@@ -1103,7 +1237,7 @@ def _get_config_file_absolute_path(
             )
             return config_file_absolute_path
 
-        msg = f"""Config file "{config_file}" not found in the path set in the environment variable {CONFIG_PATH_ENVIRONMENT_VARIABLE}"""  # noqa: E501
+        msg = f"""Config file "{CONFIG_FILE}" not found in the path set in the environment variable {CONFIG_PATH_ENVIRONMENT_VARIABLE}"""  # noqa: E501
         raise errors.ConfigFileNotFoundError(msg)
 
     current_directory = pathlib.Path.cwd()
@@ -1111,7 +1245,7 @@ def _get_config_file_absolute_path(
     # Traverse upwards through the directory tree
     while current_directory != current_directory.parent:
         # Check if the configuration file exists
-        config_file_absolute_path = current_directory / config_file
+        config_file_absolute_path = current_directory / CONFIG_FILE
 
         if pathlib.Path.exists(config_file_absolute_path):
             logger.info(
@@ -1133,6 +1267,14 @@ def _get_config_file_absolute_path(
 def _config_key(location: tuple[str | int, ...]) -> str:
     """Return a dotted configuration key from a validation location."""
     return ".".join(str(part) for part in location)
+
+
+def _inherit_file_patterns(
+    values: list[str],
+    inherited: list[str],
+) -> list[str]:
+    """Append inherited file patterns without changing order or adding duplicates."""
+    return list(dict.fromkeys((*values, *inherited)))
 
 
 def _raise_config_validation_error(error: ValidationError) -> typing.NoReturn:
@@ -1187,21 +1329,8 @@ def parse_config(overrides: dict[str, object] | None = None) -> Config:
     except ValidationError as error:
         _raise_config_validation_error(error)
 
-    config.lint.include = _LIST_APPEND_UNIQUE_MERGER.merge(
-        config.lint.include,
-        config.include,
-    )
-    config.lint.exclude = _LIST_APPEND_UNIQUE_MERGER.merge(
-        config.lint.exclude,
-        config.exclude,
-    )
-    config.format.include = _LIST_APPEND_UNIQUE_MERGER.merge(
-        config.format.include,
-        config.include,
-    )
-    config.format.exclude = _LIST_APPEND_UNIQUE_MERGER.merge(
-        config.format.exclude,
-        config.exclude,
-    )
+    for section in (config.lint, config.format):
+        section.include = _inherit_file_patterns(section.include, config.include)
+        section.exclude = _inherit_file_patterns(section.exclude, config.exclude)
 
     return config
