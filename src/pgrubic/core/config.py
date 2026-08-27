@@ -16,6 +16,7 @@ from pydantic import (
     create_model,
 )
 from deepmerge import merger
+from pydantic.fields import FieldInfo
 
 from pgrubic import PACKAGE_NAME
 from pgrubic.core import enums, errors
@@ -94,18 +95,6 @@ class BaseConfig(BaseModel):
         extra="forbid",
         populate_by_name=True,
         strict=True,
-    )
-
-
-def load_config_by_scope(
-    model: type[BaseConfig],
-    scope: ConfigScope,
-) -> frozenset[str]:
-    """Load config by scope."""
-    return frozenset(
-        field_name
-        for field_name, field_info in model.model_fields.items()
-        if scope in field_info.metadata
     )
 
 
@@ -1049,7 +1038,7 @@ respect-gitignore = false
     format: Format
 
 
-def _load_default_config() -> dict[str, object]:
+def load_default_config() -> dict[str, object]:
     """Load default config.
 
     Returns:
@@ -1058,6 +1047,17 @@ def _load_default_config() -> dict[str, object]:
         The default config.
     """
     return dict(toml.load(_DEFAULT_CONFIG_PATH))
+
+
+def _config_field_matches_scope(
+    field: FieldInfo,
+    scope: ConfigScope | None,
+) -> bool:
+    """Return whether a config field belongs in the requested scope."""
+    return any(
+        isinstance(metadata, ConfigScope) and (scope is None or metadata is scope)
+        for metadata in field.metadata
+    )
 
 
 def _create_config_section_model_from_defaults(
@@ -1071,11 +1071,7 @@ def _create_config_section_model_from_defaults(
     fields: dict[str, typing.Any] = {}
 
     for field_name, source_field in source.model_fields.items():
-        if scope is not None and scope not in source_field.metadata:
-            continue
-        if not any(
-            isinstance(metadata, ConfigScope) for metadata in source_field.metadata
-        ):
+        if not _config_field_matches_scope(source_field, scope):
             continue
 
         field = source_field.asdict()
@@ -1098,8 +1094,8 @@ def _create_config_model_from_defaults(
     *,
     scope: ConfigScope | None,
 ) -> type[BaseConfig]:
-    """Create a config model using pgrubic's packaged defaults."""
-    defaults = _load_default_config()
+    """Create a config model using packaged defaults."""
+    defaults = load_default_config()
     lint_defaults = typing.cast(dict[str, object], defaults["lint"])
     format_defaults = typing.cast(dict[str, object], defaults["format"])
 
@@ -1125,13 +1121,13 @@ def _create_config_model_from_defaults(
     return create_model(
         "Config",
         __base__=config_base,
-        lint=(lint_model, Field()),
-        format=(format_model, Field()),
+        lint=(lint_model, Field(default_factory=lint_model)),
+        format=(format_model, Field(default_factory=format_model)),
     )
 
 
 def create_config_model_from_defaults() -> type[BaseConfig]:
-    """Create a complete config model using pgrubic's packaged defaults."""
+    """Create a complete config model using packaged defaults."""
     return _create_config_model_from_defaults(scope=None)
 
 
@@ -1139,7 +1135,7 @@ def create_scoped_config_model_from_defaults(
     *,
     scope: ConfigScope,
 ) -> type[BaseConfig]:
-    """Create a scoped config model using pgrubic's packaged defaults.
+    """Create a scoped config model using packaged defaults.
 
     Parameters:
     ----------
@@ -1152,6 +1148,24 @@ def create_scoped_config_model_from_defaults(
         The scoped config model.
     """
     return _create_config_model_from_defaults(scope=scope)
+
+
+def load_default_config_by_scope(*, scope: ConfigScope) -> dict[str, object]:
+    """Load packaged defaults for the selected config scope.
+
+    Parameters:
+    ----------
+    scope: ConfigScope
+        The scope of the config to load.
+
+    Returns:
+    -------
+    dict[str, object]
+        The default config for the selected scope.
+    """
+    model = create_scoped_config_model_from_defaults(scope=scope)
+    config = model.model_validate({"lint": {}, "format": {}})
+    return config.model_dump(by_alias=True, mode="json")
 
 
 def _load_user_config() -> dict[str, object]:
@@ -1190,7 +1204,7 @@ def _merge_config(*, overrides: dict[str, object]) -> dict[str, object]:
         The merged config.
     """
     merged_config = _CONFIG_MERGER.merge(
-        _load_default_config(),
+        load_default_config(),
         _load_user_config(),
     )
     return dict(_CONFIG_MERGER.merge(merged_config, overrides))
