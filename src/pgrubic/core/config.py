@@ -28,6 +28,9 @@ _DEFAULT_CONFIG_PATH: typing.Final[pathlib.Path] = (
     pathlib.Path(__file__).resolve().parent.parent / CONFIG_FILE
 )
 
+# Maintain for backward compatibility. To be deprecated
+DEFAULT_CONFIG: typing.Final[pathlib.Path] = _DEFAULT_CONFIG_PATH
+
 CONFIG_PATH_ENVIRONMENT_VARIABLE: typing.Final[str] = (
     f"{PACKAGE_NAME.upper()}_CONFIG_PATH"
 )
@@ -44,11 +47,13 @@ class ConfigScope(enum.StrEnum):
 
     GENERAL = enum.auto()
     FILESYSTEM = enum.auto()
+    INVOCATION = enum.auto()
 
 
 _ConfigValue = typing.TypeVar("_ConfigValue")
 GeneralConfigValue = typing.Annotated[_ConfigValue, ConfigScope.GENERAL]
 FilesystemConfigValue = typing.Annotated[_ConfigValue, ConfigScope.FILESYSTEM]
+InvocationConfigValue = typing.Annotated[_ConfigValue, ConfigScope.INVOCATION]
 
 
 def _parse_type_casting_style(value: object) -> enums.TypeCastingStyle:
@@ -593,7 +598,10 @@ regex-sequence = r"^[a-z0-9_]+$"
     disallowed_schemas: GeneralConfigValue[list[DisallowedSchema]]
     disallowed_data_types: GeneralConfigValue[list[DisallowedDataType]]
 
-    fix: FilesystemConfigValue[bool]
+    # `fix` makes the linter return fixed source code; it does not write files itself.
+    # It is invocation-scoped because each caller controls the result: the CLI writes
+    # it to disk, while a UI can expose it through a request option.
+    fix: InvocationConfigValue[bool]
     fixable: GeneralConfigValue[list[str]]
     unfixable: GeneralConfigValue[list[str]]
 
@@ -947,9 +955,9 @@ no-cache = true
     lines_between_statements: GeneralConfigValue[int]
     remove_pg_catalog_from_functions: GeneralConfigValue[bool]
     remove_default_index_access_method: GeneralConfigValue[bool]
-    diff: FilesystemConfigValue[bool]
-    check: FilesystemConfigValue[bool]
-    no_cache: FilesystemConfigValue[bool]
+    diff: InvocationConfigValue[bool]
+    check: InvocationConfigValue[bool]
+    no_cache: InvocationConfigValue[bool]
 
 
 class Config(BaseConfig):

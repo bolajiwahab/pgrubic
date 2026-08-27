@@ -379,14 +379,18 @@ def test_override_list_replaces_user_config(tmp_path: pathlib.Path) -> None:
 
 
 @pytest.mark.parametrize(
-    ("scope", "included", "excluded"),
+    ("scope", "section", "included", "excluded"),
     [
-        (config.ConfigScope.GENERAL, "select", "fix"),
-        (config.ConfigScope.FILESYSTEM, "fix", "select"),
+        (config.ConfigScope.GENERAL, "lint", "select", "fix"),
+        (config.ConfigScope.FILESYSTEM, "lint", "include", "fix"),
+        (config.ConfigScope.INVOCATION, "lint", "fix", "include"),
+        (config.ConfigScope.FILESYSTEM, "format", "include", "diff"),
+        (config.ConfigScope.INVOCATION, "format", "diff", "include"),
     ],
 )
 def test_load_default_config_by_scope(
     scope: config.ConfigScope,
+    section: str,
     included: str,
     excluded: str,
 ) -> None:
@@ -394,11 +398,11 @@ def test_load_default_config_by_scope(
     defaults = config.load_default_config_by_scope(
         scope=scope,
     )
-    lint_defaults = defaults["lint"]
+    section_defaults = defaults[section]
 
-    assert isinstance(lint_defaults, dict)
-    assert included in lint_defaults
-    assert excluded not in lint_defaults
+    assert isinstance(section_defaults, dict)
+    assert included in section_defaults
+    assert excluded not in section_defaults
 
 
 def test_create_scoped_config_model_from_defaults_preserves_validation() -> None:
