@@ -405,6 +405,37 @@ def test_load_default_config_by_scope(
     assert excluded not in section_defaults
 
 
+@pytest.mark.parametrize(
+    ("model", "filesystem_fields", "invocation_fields"),
+    [
+        (config.Config, {"cache_dir", "include", "exclude", "respect_gitignore"}, set()),
+        (config.Lint, {"include", "exclude"}, {"fix"}),
+        (config.Format, {"include", "exclude"}, {"diff", "check", "no_cache"}),
+    ],
+)
+def test_config_fields_have_expected_scope(
+    model: type[config.BaseConfig],
+    filesystem_fields: set[str],
+    invocation_fields: set[str],
+) -> None:
+    """Assign every config field to exactly one expected scope."""
+    for field_name, field in model.model_fields.items():
+        scopes = [
+            metadata
+            for metadata in field.metadata
+            if isinstance(metadata, config.ConfigScope)
+        ]
+
+        if field_name in {"lint", "format"}:
+            assert not scopes
+        elif field_name in filesystem_fields:
+            assert scopes == [config.ConfigScope.FILESYSTEM]
+        elif field_name in invocation_fields:
+            assert scopes == [config.ConfigScope.INVOCATION]
+        else:
+            assert scopes == [config.ConfigScope.GENERAL]
+
+
 def test_create_scoped_config_model_from_defaults_preserves_validation() -> None:
     """Keep source validators and reject fields outside the selected scope."""
     model = config.create_scoped_config_model_from_defaults(

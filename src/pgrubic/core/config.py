@@ -24,12 +24,9 @@ from pgrubic.core.logger import logger
 
 CONFIG_FILE: typing.Final[str] = f"{PACKAGE_NAME}.toml"
 
-_DEFAULT_CONFIG_PATH: typing.Final[pathlib.Path] = (
+DEFAULT_CONFIG: typing.Final[pathlib.Path] = (
     pathlib.Path(__file__).resolve().parent.parent / CONFIG_FILE
 )
-
-# Maintain for backward compatibility. To be deprecated
-DEFAULT_CONFIG: typing.Final[pathlib.Path] = _DEFAULT_CONFIG_PATH
 
 CONFIG_PATH_ENVIRONMENT_VARIABLE: typing.Final[str] = (
     f"{PACKAGE_NAME.upper()}_CONFIG_PATH"
@@ -1054,7 +1051,7 @@ def load_default_config() -> dict[str, object]:
     dict[str, object]
         The default config.
     """
-    return dict(toml.load(_DEFAULT_CONFIG_PATH))
+    return dict(toml.load(DEFAULT_CONFIG))
 
 
 def _config_field_matches_scope(
