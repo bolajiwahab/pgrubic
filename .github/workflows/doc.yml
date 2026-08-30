@@ -27,22 +27,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Configure Pages
-        uses: actions/configure-pages@v6
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d  # v6
       - name: Checkout repository
-        uses: actions/checkout@v7
-      - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+        with:
+          fetch-depth: 0
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9  # v9.0.0
         with:
           python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
-      - name: Install dependencies
-        run: pip install --no-cache-dir --upgrade pip ".[doc]"
+          version: 0.12.5
+      - name: Install tox
+        run: uv tool install tox==4.56.1 --with tox-uv-bare==1.36.0
       - name: Build site
-        working-directory: ./docs
-        run: zensical build --clean
+        run: tox -e docsite
       - name: Upload site artifact
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5
         with:
           path: docs/site
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128  # v5
         id: deployment

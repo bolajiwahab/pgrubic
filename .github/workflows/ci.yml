@@ -37,6 +37,7 @@ jobs:
       matrix:
         job:
           - lint
+          - lock
           - docstrings-coverage
           - isort
           - format
@@ -48,13 +49,19 @@ jobs:
           - pre-commit
     name: ${{ matrix.job }}
     steps:
-      - uses: actions/checkout@v7
-      - name: Set up Python
-        uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9  # v9.0.0
         with:
           python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
-      - name: Install dependencies
-        run: pip install --no-cache-dir --upgrade pip tox
+          version: 0.12.5
+
+      - name: Install tox
+        run: uv tool install tox==4.56.1 --with tox-uv-bare==1.36.0
+
       - name: Run ${{ matrix.job }}
         run: tox -e ${{ matrix.job }}
 
@@ -65,13 +72,19 @@ jobs:
     strategy: *python-matrix
     name: tests-windows-python-${{ matrix.python-version }}
     steps:
-      - uses: actions/checkout@v7
-      - name: Set up Python
-        uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9  # v9.0.0
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: python -m pip install --no-cache-dir --upgrade pip tox
+          version: 0.12.5
+
+      - name: Install tox
+        run: uv tool install tox==4.56.1 --with tox-uv-bare==1.36.0
+
       - name: Run tests
         run: tox -e tests-windows
 
@@ -82,13 +95,16 @@ jobs:
     strategy: *python-matrix
     name: tests-linux-python-${{ matrix.python-version }}
     steps:
-      - uses: actions/checkout@v7
-      - name: Set up Python
-        uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+        with:
+          fetch-depth: 0
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9  # v9.0.0
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: pip install --no-cache-dir --upgrade pip tox
+          version: 0.12.5
+      - name: Install tox
+        run: uv tool install tox==4.56.1 --with tox-uv-bare==1.36.0
       - name: Run tests
         run: tox -e tests-linux
 
@@ -99,13 +115,16 @@ jobs:
     strategy: *python-matrix
     name: tests-macos-python-${{ matrix.python-version }}
     steps:
-      - uses: actions/checkout@v7
-      - name: Set up Python
-        uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+        with:
+          fetch-depth: 0
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9  # v9.0.0
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: pip install --no-cache-dir --upgrade pip tox
+          version: 0.12.5
+      - name: Install tox
+        run: uv tool install tox==4.56.1 --with tox-uv-bare==1.36.0
       - name: Run tests
         run: tox -e tests-macos
 
@@ -118,18 +137,18 @@ jobs:
       contents: read
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
         with:
           fetch-depth: 0
 
       - name: Set up QEMU for ARM
-        uses: docker/setup-qemu-action@v4
+        uses: docker/setup-qemu-action@96fe6ef7f33517b61c61be40b68a1882f3264fb8  # v4
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e  # v4
 
       - name: Build Docker Image
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a  # v7
         with:
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha
@@ -149,28 +168,31 @@ jobs:
       # comments (to avoid publishing multiple comments in the same PR)
       contents: write
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+        with:
+          fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v7
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9  # v9.0.0
         with:
           python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
+          version: 0.12.5
 
-      - name: Install dependencies
-        run: pip install --no-cache-dir --upgrade pip tox
+      - name: Install tox
+        run: uv tool install tox==4.56.1 --with tox-uv-bare==1.36.0
 
       - name: Run coverage
         run: tox -e coverage
 
       - name: Coverage comment
         id: coverage_comment
-        uses: py-cov-action/python-coverage-comment-action@v3
+        uses: py-cov-action/python-coverage-comment-action@50d15ff8768f6d897b04e5a0805bd1a98f7096c4  # v3
         with:
           GITHUB_TOKEN: ${{ github.token }}
           MAX_FILES_IN_COMMENT: 120
 
       - name: Store Pull Request comment to be posted
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7
         if: steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'
         with:
           name: python-coverage-comment-action
