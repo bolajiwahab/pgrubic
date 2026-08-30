@@ -7,22 +7,22 @@ For significant changes, such as new rules, please consider creating an [issue](
 
 ## Development
 
-To set up a development environment, you will need **tox**, **pre-commit**, and **python 3.12 or higher**.
+To set up a development environment, install [**uv 0.12.5**](https://docs.astral.sh/uv/getting-started/installation/).
 
-1. Install **tox** and **pre-commit**:
+1. Install tox:
 
     ```console
-    python3.12 -m pip install --upgrade tox pre-commit
+    uv tool install "tox>=4.56.1,<5" --with "tox-uv-bare>=1,<2"
     ```
 
-2. Create and activate a virtual environment:
+2. Create and activate the development environment:
 
     ```console
     tox -e dev --devenv .venv
     source .venv/bin/activate
     ```
 
-3. Set up the git hook scripts
+3. Set up the git hook scripts:
 
     ```console
     pre-commit install
