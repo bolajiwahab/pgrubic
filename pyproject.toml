@@ -56,29 +56,29 @@ dependencies = [
   "case-converter==1.2.0",
   "colorama==0.4.6",
   "toml==0.10.2",
-  "click==8.4.2",
+  "click==8.5.0",
   "rich==15.0.0",
-  "pydantic==2.13.4",
-  "deepmerge==2.1.0",
-  "msgpack==1.2.1",
-  "GitPython==3.1.58",
+  "pydantic==2.13.5",
+  "deepmerge==3.0",
+  "msgpack==1.2.2",
+  "GitPython==3.1.61",
 ]
 
 [project.optional-dependencies]
 dev = [
-  "ruff==0.15.20",
-  "mypy==2.1.0",
-  "isort==8.0.1",
+  "ruff==0.16.5",
+  "mypy==2.3.1",
+  "isort==9.0.1",
   "bandit==1.9.4",
   "add-trailing-comma==4.0.0",
   "interrogate==1.7.0",
-  "pre-commit==4.6.0",
+  "pre-commit==4.6.2",
   "pre-commit-hooks==6.0.0",
   "yamllint==1.38.0",
   "conventional-pre-commit==4.4.0",
   "pytest==9.1.1",
-  "coverage==7.15.0",
-  "types-PyYAML==6.0.12.20260518",
+  "coverage==7.16.0",
+  "types-PyYAML==6.0.12.20260815",
   "types-toml==0.10.8.20260518",
   "types-colorama==0.4.15.20260508",
   "types-click==7.1.8",
@@ -86,12 +86,12 @@ dev = [
 ]
 
 doc = [
-  "zensical==0.0.47",
-  "mkdocstrings[python]==1.0.4",
+  "zensical==0.0.57",
+  "mkdocstrings[python]==1.0.6",
 ]
 
 release = [
-  "commitizen==4.16.4",
+  "commitizen==4.18.0",
 ]
 
 [project.urls]
