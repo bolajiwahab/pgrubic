@@ -2589,8 +2589,7 @@ def is_non_volatile_function(
         True if function is non volatile, False otherwise.
 
     """
-    function_name = function.funcname
-    function_name = typing.cast(tuple[ast.String, ...], function_name)
+    function_name = typing.cast(tuple[ast.String, ...], function.funcname)
 
     # Use pg_catalog if function is not schema qualified.
     if len(function_name) < SCHEMA_QUALIFIED_LENGTH:

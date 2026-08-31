@@ -37,6 +37,7 @@ class InvalidSequenceName(linter.BaseChecker):
         """Visit CreateSeqStmt."""
         sequence = typing.cast(ast.RangeVar, node.sequence)
         sequence_name = typing.cast(str, sequence.relname)
+
         if not re.match(self.config.lint.regex_sequence, sequence_name):
             self.violations.add(
                 linter.Violation(
@@ -62,6 +63,7 @@ class InvalidSequenceName(linter.BaseChecker):
     ) -> None:
         """Visit RenameStmt."""
         new_name = typing.cast(str, node.newname)
+
         if node.renameType == enums.ObjectType.OBJECT_SEQUENCE and not re.match(
             self.config.lint.regex_sequence,
             new_name,

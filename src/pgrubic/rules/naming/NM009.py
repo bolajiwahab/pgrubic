@@ -37,6 +37,7 @@ class InvalidPartitionName(linter.BaseChecker):
         """Visit CreateStmt."""
         relation = typing.cast(ast.RangeVar, node.relation)
         relation_name = typing.cast(str, relation.relname)
+
         if node.partbound is not None and not re.match(
             self.config.lint.regex_partition,
             relation_name,

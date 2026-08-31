@@ -63,6 +63,7 @@ class DropCascade(linter.BaseChecker):
     ) -> None:
         """Visit DropStmt."""
         objects = typing.cast(tuple[ast.Node, ...], node.objects)
+
         for obj in objects:
             object_names = getattr(obj, "names", getattr(obj, "objname", obj))
             object_names = typing.cast(tuple[ast.String, ...], object_names)

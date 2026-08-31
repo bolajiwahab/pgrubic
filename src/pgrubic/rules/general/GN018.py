@@ -6,6 +6,8 @@ from pglast import ast, visitors
 
 from pgrubic.core import linter
 
+MAX_PARTITION_COLUMNS = 1
+
 
 class MultiColumnPartitioning(linter.BaseChecker):
     """## **What it does**
@@ -36,7 +38,7 @@ class MultiColumnPartitioning(linter.BaseChecker):
             tuple[ast.PartitionElem, ...],
             node.partParams,
         )
-        if len(partition_parameters) > 1:
+        if len(partition_parameters) > MAX_PARTITION_COLUMNS:
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,

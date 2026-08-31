@@ -36,6 +36,7 @@ class InlineSqlFunctionBodyWrongLanguage(linter.BaseChecker):
         """Visit CreateFunctionStmt."""
         options = typing.cast(tuple[ast.DefElem, ...], node.options)
         language: str | None = None
+
         for option in options:
             defname = typing.cast(str, option.defname)
             if defname.upper() == "LANGUAGE":
@@ -65,6 +66,7 @@ class InlineSqlFunctionBodyWrongLanguage(linter.BaseChecker):
     def _fix(self, node: ast.CreateFunctionStmt) -> None:
         """Fix violation."""
         options = typing.cast(tuple[ast.DefElem, ...], node.options)
+
         for option in options:
             defname = typing.cast(str, option.defname)
             argument = typing.cast(ast.String, option.arg)

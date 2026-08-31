@@ -80,6 +80,7 @@ class TableColumnConflict(linter.BaseChecker):
         relation_name = typing.cast(str, relation.relname)
         commands = typing.cast(tuple[ast.AlterTableCmd, ...], node.cmds)
         given_columns: list[str] = []
+
         for cmd in commands:
             if cmd.subtype == enums.AlterTableType.AT_AddColumn:
                 column_definition = typing.cast(ast.ColumnDef, cmd.def_)

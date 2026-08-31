@@ -34,6 +34,7 @@ class DisallowedDataType(linter.BaseChecker):
     ) -> None:
         """Visit TypeName."""
         names = typing.cast(tuple[ast.String, ...], node.names)
+
         for data_type in self.config.lint.disallowed_data_types:
             if names[-1].sval == data_type.name:
                 self.violations.add(

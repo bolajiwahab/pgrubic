@@ -35,6 +35,8 @@ def on_conflict_clause(
 ) -> None:
     """Printer for OnConflictClause."""
     on_conflict_action = enums.OnConflictAction
+    target_list = typing.cast(tuple[ast.ResTarget, ...], node.targetList)
+
     if node.infer:
         output.print_node(node.infer)
 
@@ -47,7 +49,6 @@ def on_conflict_clause(
         with output.push_indent(4):
             output.write("DO UPDATE SET")
             output.space()
-            target_list = typing.cast(tuple[ast.ResTarget, ...], node.targetList)
             output.print_list(target_list)
             if node.whereClause:
                 output.newline()

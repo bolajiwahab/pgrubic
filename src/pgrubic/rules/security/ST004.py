@@ -63,6 +63,7 @@ class SecurityDefinerFunctionTempSchemaOrder(linter.BaseChecker):
 
                 if option.arg.args:
                     value = option.arg.args[-1]
+
                     if isinstance(value, ast.A_Const) and isinstance(
                         value.val,
                         ast.String,

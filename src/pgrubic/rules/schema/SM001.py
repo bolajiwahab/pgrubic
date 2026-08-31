@@ -32,6 +32,7 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
     ) -> None:
         """Check enum for schema."""
         type_name = typing.cast(tuple[ast.String, ...], node.typeName)
+
         if len(type_name) < SCHEMA_QUALIFIED_LENGTH:
             self.violations.add(
                 linter.Violation(

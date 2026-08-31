@@ -11,6 +11,7 @@ from pgrubic.core import formatter
 def view_stmt(node: ast.ViewStmt, output: formatter.PrinterOutput) -> None:
     """Printer for ViewStmt."""
     view = typing.cast(ast.RangeVar, node.view)
+
     output.write("CREATE")
     output.space()
     if node.replace:

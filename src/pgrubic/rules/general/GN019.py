@@ -39,6 +39,7 @@ class UnloggedTable(linter.BaseChecker):
     ) -> None:
         """Visit CreateStmt."""
         relation = typing.cast(ast.RangeVar, node.relation)
+
         if relation.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
             self.violations.add(
                 linter.Violation(

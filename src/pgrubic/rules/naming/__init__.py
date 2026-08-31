@@ -51,6 +51,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         """Visit ColumnDef."""
         if node.colname is None:
             return
+
         self._check_identifier(
             identifier=node.colname,
             line_number=self.line_number,
@@ -67,6 +68,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         """Visit ViewStmt."""
         view = typing.cast(ast.RangeVar, node.view)
         view_name = typing.cast(str, view.relname)
+
         self._check_identifier(
             identifier=view_name,
             line_number=self.line_number,
@@ -98,6 +100,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         """Visit CreateSeqStmt."""
         sequence = typing.cast(ast.RangeVar, node.sequence)
         sequence_name = typing.cast(str, sequence.relname)
+
         self._check_identifier(
             identifier=sequence_name,
             line_number=self.line_number,
@@ -218,6 +221,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
     ) -> None:
         """Visit CreateEnumStmt."""
         type_name = typing.cast(tuple[ast.String, ...], node.typeName)
+
         self._check_identifier(
             identifier=typing.cast(str, type_name[-1].sval),
             line_number=self.line_number,
@@ -262,11 +266,11 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         ancestors: visitors.Ancestor,
         node: ast.CompositeTypeStmt,
     ) -> None:
-        """Visit IntoClause."""
-        type_var = typing.cast(ast.RangeVar, node.typevar)
-        type_name = typing.cast(str, type_var.relname)
+        """Visit CompositeTypeStmt."""
+        relation = typing.cast(ast.RangeVar, node.typevar)
+        relation_name = typing.cast(str, relation.relname)
         self._check_identifier(
-            identifier=type_name,
+            identifier=relation_name,
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,
@@ -280,6 +284,7 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
     ) -> None:
         """Visit RenameStmt."""
         new_name = typing.cast(str, node.newname)
+
         self._check_identifier(
             identifier=new_name,
             line_number=self.line_number,

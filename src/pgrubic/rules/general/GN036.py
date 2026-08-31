@@ -44,6 +44,7 @@ class SelfAssigningColumn(linter.BaseChecker):
         expression: ast.ColumnRef,
     ) -> bool:
         """Check if the assignment is a self-assignment."""
+        relation = typing.cast(ast.RangeVar, node.relation)
         fields = [
             field.sval for field in typing.cast(tuple[ast.String, ...], expression.fields)
         ]
@@ -59,11 +60,11 @@ class SelfAssigningColumn(linter.BaseChecker):
 
         # alias.column/table.column
         if len(fields) == table_qualified_column_length:
-            relation, column = fields
+            relation_name, column = fields
 
             return bool(
                 column == target_column
-                and relation
+                and relation_name
                 == self._target_alias(
                     node,
                 ),
@@ -72,25 +73,20 @@ class SelfAssigningColumn(linter.BaseChecker):
         # schema.table.column
         if len(fields) == schema_table_qualified_column_length:
             schema, table, column = fields
-            range_var = typing.cast(ast.RangeVar, node.relation)
-
             return bool(
                 column == target_column
-                and schema == range_var.schemaname
-                and table == range_var.relname,
+                and schema == relation.schemaname
+                and table == relation.relname,
             )
 
         # catalog.schema.table.column
         if len(fields) == catalog_schema_table_qualified_column_length:
             catalog, schema, table, column = fields
-
-            range_var = typing.cast(ast.RangeVar, node.relation)
-
             return bool(
                 column == target_column
-                and (not range_var.catalogname or catalog == range_var.catalogname)
-                and schema == range_var.schemaname
-                and table == range_var.relname,
+                and (not relation.catalogname or catalog == relation.catalogname)
+                and schema == relation.schemaname
+                and table == relation.relname,
             )
 
         return False  # pragma: no cover

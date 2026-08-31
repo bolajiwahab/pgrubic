@@ -108,6 +108,7 @@ def create_foreign_table_stmt(
 ) -> None:
     """Printer for CreateForeignTableStmt."""
     base = typing.cast(ast.CreateStmt, node.base)
+
     output.print_node(base)
     output.newline()
 
@@ -165,6 +166,7 @@ def create_stmt(
 
     if node.partbound:
         inherited_relations = typing.cast(tuple[ast.RangeVar, ...], node.inhRelations)
+
         output.newline()
         output.space(4)
         output.write("PARTITION OF")
@@ -251,6 +253,7 @@ def alter_table_stmt(
 ) -> None:
     """Printer for AlterTableStmt."""
     commands = typing.cast(tuple[ast.AlterTableCmd, ...], node.cmds)
+
     output.write("ALTER")
     output.space()
     output.writes(printers.ddl.OBJECT_NAMES[node.objtype])

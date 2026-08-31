@@ -29,6 +29,7 @@ class TableMovementToTablespace(linter.BaseChecker):
     ) -> None:
         """Visit AlterTableCmd."""
         alter_table_stmt = ancestors.find_nearest(ast.AlterTableStmt)
+
         if (
             node.subtype == enums.AlterTableType.AT_SetTableSpace
             and alter_table_stmt is not None

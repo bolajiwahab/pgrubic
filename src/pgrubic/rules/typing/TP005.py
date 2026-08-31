@@ -59,6 +59,7 @@ class Varchar(linter.BaseChecker):
         """Visit ColumnDef."""
         type_name = typing.cast(ast.TypeName, node.typeName)
         type_names = typing.cast(tuple[ast.String, ...], type_name.names)
+
         if type_names[-1].sval == "varchar":
             self.violations.add(
                 linter.Violation(

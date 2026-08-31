@@ -18,6 +18,7 @@ def get_columns_from_table_creation(
         column_definitions = [
             column for column in node.tableElts if isinstance(column, ast.ColumnDef)
         ]
+
         for column in column_definitions:
             column_name = typing.cast(str, column.colname)
             type_name = typing.cast(ast.TypeName, column.typeName)

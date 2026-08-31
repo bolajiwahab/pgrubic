@@ -35,6 +35,7 @@ class NullableBooleanField(linter.BaseChecker):
         """Visit ColumnDef."""
         type_name = typing.cast(ast.TypeName, node.typeName)
         type_names = typing.cast(tuple[ast.String, ...], type_name.names)
+
         if type_names[-1].sval == "bool":
             is_not_null = bool(
                 (

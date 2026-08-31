@@ -33,10 +33,12 @@ class ConstantGeneratedColumn(linter.BaseChecker):
             ast.A_Const,
         ):
             column_definition = ancestors.find_nearest(ast.ColumnDef)
+
             column_definition = typing.cast(
                 visitors.Ancestor,
                 column_definition,
             )
+
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,

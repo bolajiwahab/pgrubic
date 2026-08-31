@@ -33,8 +33,10 @@ class IdColumn(linter.BaseChecker):
         """Visit ColumnDef."""
         alter_table_cmd = ancestors.find_nearest(ast.AlterTableCmd)
         create_stmt = ancestors.find_nearest(ast.CreateStmt)
+
         if node.colname is None:
             return
+
         if (
             (
                 alter_table_cmd
@@ -64,13 +66,17 @@ class IdColumn(linter.BaseChecker):
     def _fix(self, ancestors: visitors.Ancestor, node: ast.ColumnDef) -> None:
         """Fix violation."""
         table_statement = ancestors.find_nearest(ast.CreateStmt)
+
         if table_statement is None:
             table_statement = ancestors.find_nearest(ast.AlterTableStmt)
+
         table_statement = typing.cast(visitors.Ancestor, table_statement)
+
         relation = typing.cast(
             ast.RangeVar,
             table_statement.node.relation,
         )
+
         table = typing.cast(str, relation.relname)
         column_name = typing.cast(str, node.colname)
 

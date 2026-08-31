@@ -10,6 +10,8 @@ from pgrubic.core import formatter
 @printers.node_printer(ast.UpdateStmt, override=True)
 def update_stmt(node: ast.UpdateStmt, output: formatter.PrinterOutput) -> None:
     """Printer for UpdateStmt."""
+    target_list = typing.cast(tuple[ast.ResTarget, ...], node.targetList)
+
     with output.push_indent():
         if node.withClause:
             output.write("WITH")
@@ -24,7 +26,6 @@ def update_stmt(node: ast.UpdateStmt, output: formatter.PrinterOutput) -> None:
         output.space(3)
         output.write("SET")
         output.space()
-        target_list = typing.cast(tuple[ast.ResTarget, ...], node.targetList)
         output.print_list(target_list, standalone_items=False)
 
         if node.fromClause:

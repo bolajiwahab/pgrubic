@@ -44,6 +44,7 @@ class YodaCondition(linter.BaseChecker):
     ) -> None:
         """Visit A_Expr."""
         name = typing.cast(tuple[ast.String, ...], node.name)
+
         if (
             node.kind == enums.A_Expr_Kind.AEXPR_OP
             and isinstance(

@@ -37,6 +37,7 @@ class WronglyTypedRequiredColumn(linter.BaseChecker):
         """Visit ColumnDef."""
         type_name = typing.cast(ast.TypeName, node.typeName)
         type_names = typing.cast(tuple[ast.String], type_name.names)
+
         for column in self.config.lint.required_columns:
             if column.name == node.colname:
                 fully_qualified_type_name = get_fully_qualified_name(
