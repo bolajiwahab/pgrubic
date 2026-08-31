@@ -1,8 +1,12 @@
 """Checker for multi-column partitioning."""
 
+import typing
+
 from pglast import ast, visitors
 
 from pgrubic.core import linter
+
+MAX_PARTITION_COLUMNS = 1
 
 
 class MultiColumnPartitioning(linter.BaseChecker):
@@ -30,7 +34,11 @@ class MultiColumnPartitioning(linter.BaseChecker):
         node: ast.PartitionSpec,
     ) -> None:
         """Visit PartitionSpec."""
-        if len(node.partParams) > 1:
+        partition_parameters = typing.cast(
+            tuple[ast.PartitionElem, ...],
+            node.partParams,
+        )
+        if len(partition_parameters) > MAX_PARTITION_COLUMNS:
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,

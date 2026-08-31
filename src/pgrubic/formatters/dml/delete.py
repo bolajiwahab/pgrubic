@@ -33,11 +33,11 @@ def delete_stmt(node: ast.DeleteStmt, output: formatter.PrinterOutput) -> None:
             output.space()
             output.print_node(node.whereClause)
 
-        if node.returningList:
+        if node.returningClause and node.returningClause.exprs:
             output.newline()
             output.write("RETURNING")
             output.space()
-            output.print_list(node.returningList, standalone_items=False)
+            output.print_list(node.returningClause.exprs, standalone_items=False)
 
         if node.withClause:
             output.dedent()

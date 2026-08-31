@@ -1,5 +1,7 @@
 """Formatter for CTEs."""
 
+import typing
+
 from pglast import ast, printers
 
 from pgrubic.core import formatter
@@ -8,12 +10,13 @@ from pgrubic.core import formatter
 @printers.node_printer(ast.WithClause, override=True)
 def with_clause(node: ast.WithClause, output: formatter.PrinterOutput) -> None:
     """Printer for WithClause."""
+    ctes = typing.cast(tuple[ast.CommonTableExpr, ...], node.ctes)
     relative_indent = -2
 
     if node.recursive:
         relative_indent -= output.write("RECURSIVE ")
 
-    output.print_list(node.ctes, relative_indent=relative_indent, standalone_items=False)
+    output.print_list(ctes, relative_indent=relative_indent, standalone_items=False)
 
 
 @printers.node_printer(ast.CommonTableExpr, override=True)

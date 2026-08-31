@@ -1,5 +1,7 @@
 """Checker for missing required columns."""
 
+import typing
+
 from pglast import ast, enums, visitors
 
 from pgrubic.core import config, linter
@@ -60,8 +62,9 @@ class MissingRequiredColumn(linter.BaseChecker):
 
     def _fix(self, node: ast.CreateStmt, column: config.Column) -> None:
         """Fix violation."""
+        table_elements = typing.cast(tuple[ast.Node, ...], node.tableElts)
         node.tableElts = (
-            *node.tableElts,
+            *table_elements,
             ast.ColumnDef(
                 colname=column.name,
                 typeName=ast.TypeName(

@@ -1,5 +1,7 @@
 """Printer for AlterOwnerStmt."""
 
+import typing
+
 from pglast import ast, enums, printers
 
 from pgrubic.core import formatter
@@ -19,7 +21,8 @@ def alter_owner_stmt(
         enums.ObjectType.OBJECT_OPFAMILY,
         enums.ObjectType.OBJECT_OPCLASS,
     ):
-        method, *name = node.object
+        object_name = typing.cast(tuple[ast.Node, ...], node.object)
+        method, *name = object_name
         output.print_name(name)
         output.swrites("USING")
         output.print_symbol(method)

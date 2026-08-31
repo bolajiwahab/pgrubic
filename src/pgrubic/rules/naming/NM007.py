@@ -1,6 +1,7 @@
 """Checker for invalid sequence name according to naming convention."""
 
 import re
+import typing
 
 from pglast import ast, enums, visitors
 
@@ -34,7 +35,10 @@ class InvalidSequenceName(linter.BaseChecker):
         node: ast.CreateSeqStmt,
     ) -> None:
         """Visit CreateSeqStmt."""
-        if not re.match(self.config.lint.regex_sequence, node.sequence.relname):
+        sequence = typing.cast(ast.RangeVar, node.sequence)
+        sequence_name = typing.cast(str, sequence.relname)
+
+        if not re.match(self.config.lint.regex_sequence, sequence_name):
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,
@@ -44,7 +48,7 @@ class InvalidSequenceName(linter.BaseChecker):
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
-                    description=f"Sequence `{node.sequence.relname}` does not follow"
+                    description=f"Sequence `{sequence_name}` does not follow"
                     f" naming convention `{self.config.lint.regex_sequence}`",
                     is_auto_fixable=self.is_auto_fixable,
                     is_fix_enabled=self.is_fix_enabled,
@@ -58,9 +62,11 @@ class InvalidSequenceName(linter.BaseChecker):
         node: ast.RenameStmt,
     ) -> None:
         """Visit RenameStmt."""
+        new_name = typing.cast(str, node.newname)
+
         if node.renameType == enums.ObjectType.OBJECT_SEQUENCE and not re.match(
             self.config.lint.regex_sequence,
-            node.newname,
+            new_name,
         ):
             self.violations.add(
                 linter.Violation(
@@ -71,7 +77,7 @@ class InvalidSequenceName(linter.BaseChecker):
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
-                    description=f"Sequence `{node.newname}` does not follow"
+                    description=f"Sequence `{new_name}` does not follow"
                     f" naming convention `{self.config.lint.regex_sequence}`",
                     is_auto_fixable=self.is_auto_fixable,
                     is_fix_enabled=self.is_fix_enabled,

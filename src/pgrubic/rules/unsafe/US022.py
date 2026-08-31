@@ -34,6 +34,7 @@ class RenameTable(linter.BaseChecker):
         """Visit RenameStmt."""
         if (
             node.renameType == enums.ObjectType.OBJECT_TABLE
+            and node.relation is not None
             and node.newname != node.relation.relname
         ):
             self.violations.add(

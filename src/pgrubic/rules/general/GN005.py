@@ -1,5 +1,7 @@
 """Checker for index elements."""
 
+import typing
+
 from pglast import ast, visitors
 
 from pgrubic.core import linter
@@ -32,9 +34,10 @@ class IndexElementsMoreThanThree(linter.BaseChecker):
         node: ast.IndexStmt,
     ) -> None:
         """Visit IndexStmt."""
+        index_params = typing.cast(tuple[ast.IndexElem, ...], node.indexParams)
         max_index_elements = 3
 
-        if len(node.indexParams) > max_index_elements:
+        if len(index_params) > max_index_elements:
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,

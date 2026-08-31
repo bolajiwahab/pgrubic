@@ -59,4 +59,4 @@ class NonConcurrentReindex(linter.BaseChecker):
         params = list(node.params) if node.params else []
         params.append(ast.DefElem(defname="concurrently"))
 
-        node.params = params
+        node.params = tuple(params)

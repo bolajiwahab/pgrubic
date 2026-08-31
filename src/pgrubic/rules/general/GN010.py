@@ -1,5 +1,7 @@
 """Checker for table column conflict."""
 
+import typing
+
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
@@ -55,11 +57,13 @@ class TableColumnConflict(linter.BaseChecker):
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""
+        relation = typing.cast(ast.RangeVar, node.relation)
+        relation_name = typing.cast(str, relation.relname)
         given_columns, _ = get_columns_from_table_creation(node)
 
-        if any(column.name == node.relation.relname for column in given_columns):
+        if any(column.name == relation_name for column in given_columns):
             self._register_violation(
-                table_name=node.relation.relname,
+                table_name=relation_name,
                 line_number=self.line_number,
                 column_offset=self.column_offset,
                 line=self.line,
@@ -72,15 +76,19 @@ class TableColumnConflict(linter.BaseChecker):
         node: ast.AlterTableStmt,
     ) -> None:
         """Visit AlterTableStmt."""
-        given_columns: list[str] = [
-            cmd.def_.colname
-            for cmd in node.cmds
-            if cmd.subtype == enums.AlterTableType.AT_AddColumn
-        ]
+        relation = typing.cast(ast.RangeVar, node.relation)
+        relation_name = typing.cast(str, relation.relname)
+        commands = typing.cast(tuple[ast.AlterTableCmd, ...], node.cmds)
+        given_columns: list[str] = []
 
-        if node.relation.relname in given_columns:
+        for cmd in commands:
+            if cmd.subtype == enums.AlterTableType.AT_AddColumn:
+                column_definition = typing.cast(ast.ColumnDef, cmd.def_)
+                given_columns.append(typing.cast(str, column_definition.colname))
+
+        if relation_name in given_columns:
             self._register_violation(
-                table_name=node.relation.relname,
+                table_name=relation_name,
                 line_number=self.line_number,
                 column_offset=self.column_offset,
                 line=self.line,

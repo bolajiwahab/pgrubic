@@ -1,5 +1,7 @@
 """Formatter for type casting."""
 
+import typing
+
 from pglast import ast, printers
 
 from pgrubic import get_fully_qualified_name
@@ -14,8 +16,10 @@ def native_cast_argument_needs_parentheses(
 ) -> bool:
     """Check whether a native cast argument needs parentheses."""
     if isinstance(node, ast.FuncCall):
-        function_name = get_fully_qualified_name(node.funcname)
-        return output.get_printer_for_function(function_name, node) is not None
+        function_name = get_fully_qualified_name(
+            typing.cast(tuple[ast.String, ...], node.funcname),
+        )
+        return output.get_printer_for_function(function_name) is not None
 
     return not isinstance(
         node,
@@ -37,6 +41,7 @@ def is_char_type(node: ast.Node) -> bool:
     """Check whether a node is PostgreSQL's internal char type."""
     return (
         isinstance(node, ast.TypeName)
+        and node.names is not None
         and get_fully_qualified_name(node.names) == "pg_catalog.bpchar"
     )
 
@@ -74,46 +79,48 @@ def type_cast(
     output: formatter.PrinterOutput,
 ) -> None:
     """Printer for TypeCast."""
-    # An unmodified CHAR typed literal is not interchangeable with an implicit
+    argument = typing.cast(ast.Expr, node.arg)
+    type_name = typing.cast(ast.TypeName, node.typeName)
+    # A CHAR typed literal is not interchangeable with an implicit
     # char cast: CHAR 'xyz' retains all three characters, while both
     # CAST('xyz' AS char) and 'xyz'::char mean char(1). PostgreSQL represents
-    # the typed literal with typmods=None, so preserve that form and only
+    # the typed literal with typmods=None, so we preserve that form and only
     # convert other char casts to literal syntax when they have a safe,
     # explicit non-default length.
     if (
-        is_string_constant(node.arg)
-        and is_char_type(node.typeName)
-        and node.typeName.typmods is None
+        is_string_constant(argument)
+        and is_char_type(type_name)
+        and type_name.typmods is None
     ):
         output.write("char")
         output.space()
-        output.print_node(node.arg)
+        output.print_node(argument)
         return
 
     if output.config.format.type_casting_style == enums.TypeCastingStyle.NATIVE:
         with output.expression(
-            need_parens=native_cast_argument_needs_parentheses(node.arg, output),
+            need_parens=native_cast_argument_needs_parentheses(argument, output),
         ):
-            output.print_node(node.arg)
+            output.print_node(argument)
 
         output.write(NATIVE_CAST_OPERATOR)
-        output.print_node(node.typeName)
+        output.print_node(type_name)
         return
 
     if (
         output.config.format.type_casting_style == enums.TypeCastingStyle.LITERAL
-        and is_string_constant(node.arg)
+        and is_string_constant(argument)
         and (
-            not is_char_type(node.typeName)
+            not is_char_type(type_name)
             or (
-                node.typeName.typmods is not None
-                and not char_has_default_length(node.typeName.typmods)
+                type_name.typmods is not None
+                and not char_has_default_length(type_name.typmods)
             )
         )
     ):
-        output.print_node(node.typeName)
+        output.print_node(type_name)
         output.space()
-        output.print_node(node.arg)
+        output.print_node(argument)
         return
 
     if (
@@ -121,17 +128,18 @@ def type_cast(
         and is_native_cast(node, output)
     ):
         with output.expression(
-            need_parens=native_cast_argument_needs_parentheses(node.arg, output),
+            need_parens=native_cast_argument_needs_parentheses(argument, output),
         ):
-            output.print_node(node.arg)
+            output.print_node(argument)
+
         output.write(NATIVE_CAST_OPERATOR)
-        output.print_node(node.typeName)
+        output.print_node(type_name)
         return
 
     output.write("CAST")
     with output.expression(need_parens=True):
-        output.print_node(node.arg)
+        output.print_node(argument)
         output.space()
         output.write("AS")
         output.space()
-        output.print_node(node.typeName)
+        output.print_node(type_name)

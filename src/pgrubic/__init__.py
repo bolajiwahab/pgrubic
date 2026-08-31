@@ -54,12 +54,14 @@ RULES_BASE_MODULE: typing.Final[str] = f"{PACKAGE_NAME}/rules/"
 FORMATTERS_BASE_MODULE: typing.Final[str] = f"{PACKAGE_NAME}/formatters/"
 
 
-def get_fully_qualified_name(node: tuple[ast.String] | ast.String | ast.RangeVar) -> str:
+def get_fully_qualified_name(
+    node: tuple[ast.String, ...] | ast.String | ast.RangeVar,
+) -> str:
     """Get fully qualified name.
 
     Parameters:
     ----------
-    node: tuple[ast.String] | ast.String | ast.RangeVar
+    node: tuple[ast.String, ...] | ast.String | ast.RangeVar
         Node to get fully qualified name for.
 
     Returns:

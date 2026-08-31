@@ -1,5 +1,7 @@
 """Checker for disallowed data types."""
 
+import typing
+
 from pglast import ast, visitors
 
 from pgrubic.core import config, linter
@@ -31,8 +33,10 @@ class DisallowedDataType(linter.BaseChecker):
         node: ast.TypeName,
     ) -> None:
         """Visit TypeName."""
+        names = typing.cast(tuple[ast.String, ...], node.names)
+
         for data_type in self.config.lint.disallowed_data_types:
-            if node.names[-1].sval == data_type.name:
+            if names[-1].sval == data_type.name:
                 self.violations.add(
                     linter.Violation(
                         rule_code=self.code,
@@ -42,7 +46,7 @@ class DisallowedDataType(linter.BaseChecker):
                         column_offset=self.column_offset,
                         line=self.line,
                         statement_location=self.statement_location,
-                        description=f"Data type '{node.names[-1].sval}' is disallowed"
+                        description=f"Data type '{names[-1].sval}' is disallowed"
                         f" in config with reason: '{data_type.reason}', use"
                         f" '{data_type.use_instead}' instead",
                         is_auto_fixable=self.is_auto_fixable,

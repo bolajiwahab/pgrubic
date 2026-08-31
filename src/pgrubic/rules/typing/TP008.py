@@ -1,5 +1,7 @@
 """Checker for json."""
 
+import typing
+
 from pglast import ast, visitors
 
 from pgrubic.core import linter
@@ -36,7 +38,10 @@ class Json(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval == "json":
+        type_name = typing.cast(ast.TypeName, node.typeName)
+        type_names = typing.cast(tuple[ast.String, ...], type_name.names)
+
+        if type_names[-1].sval == "json":
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,

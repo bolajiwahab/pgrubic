@@ -1,6 +1,7 @@
 """Rules for naming."""
 
 import abc
+import typing
 
 from pglast import ast, visitors
 
@@ -32,8 +33,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""
+        relation = typing.cast(ast.RangeVar, node.relation)
+        relation_name = typing.cast(str, relation.relname)
         self._check_identifier(
-            identifier=node.relation.relname,
+            identifier=relation_name,
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,
@@ -46,6 +49,9 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
+        if node.colname is None:
+            return
+
         self._check_identifier(
             identifier=node.colname,
             line_number=self.line_number,
@@ -60,8 +66,11 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         node: ast.ViewStmt,
     ) -> None:
         """Visit ViewStmt."""
+        view = typing.cast(ast.RangeVar, node.view)
+        view_name = typing.cast(str, view.relname)
+
         self._check_identifier(
-            identifier=node.view.relname,
+            identifier=view_name,
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,
@@ -74,8 +83,9 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         node: ast.IndexStmt,
     ) -> None:
         """Visit IndexStmt."""
+        index_name = typing.cast(str, node.idxname)
         self._check_identifier(
-            identifier=node.idxname,
+            identifier=index_name,
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,
@@ -88,8 +98,11 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         node: ast.CreateSeqStmt,
     ) -> None:
         """Visit CreateSeqStmt."""
+        sequence = typing.cast(ast.RangeVar, node.sequence)
+        sequence_name = typing.cast(str, sequence.relname)
+
         self._check_identifier(
-            identifier=node.sequence.relname,
+            identifier=sequence_name,
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,
@@ -102,8 +115,9 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         node: ast.CreateSchemaStmt,
     ) -> None:
         """Visit CreateSchemaStmt."""
+        schema_name = typing.cast(str, node.schemaname)
         self._check_identifier(
-            identifier=node.schemaname,
+            identifier=schema_name,
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,
@@ -116,8 +130,9 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""
+        function_name = typing.cast(tuple[ast.String, ...], node.funcname)
         self._check_identifier(
-            identifier=node.funcname[-1].sval,
+            identifier=typing.cast(str, function_name[-1].sval),
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,
@@ -145,8 +160,9 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         node: ast.CreatedbStmt,
     ) -> None:
         """Visit CreatedbStmt."""
+        database_name = typing.cast(str, node.dbname)
         self._check_identifier(
-            identifier=node.dbname,
+            identifier=database_name,
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,
@@ -159,8 +175,9 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         node: ast.CreateRoleStmt,
     ) -> None:
         """Visit CreateRoleStmt."""
+        role_name = typing.cast(str, node.role)
         self._check_identifier(
-            identifier=node.role,
+            identifier=role_name,
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,
@@ -173,8 +190,9 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         node: ast.CreateTableSpaceStmt,
     ) -> None:
         """Visit CreateTableSpaceStmt."""
+        tablespace_name = typing.cast(str, node.tablespacename)
         self._check_identifier(
-            identifier=node.tablespacename,
+            identifier=tablespace_name,
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,
@@ -187,8 +205,9 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         node: ast.CreateTrigStmt,
     ) -> None:
         """Visit CreateTrigStmt."""
+        trigger_name = typing.cast(str, node.trigname)
         self._check_identifier(
-            identifier=node.trigname,
+            identifier=trigger_name,
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,
@@ -201,8 +220,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         node: ast.CreateEnumStmt,
     ) -> None:
         """Visit CreateEnumStmt."""
+        type_name = typing.cast(tuple[ast.String, ...], node.typeName)
+
         self._check_identifier(
-            identifier=node.typeName[-1].sval,
+            identifier=typing.cast(str, type_name[-1].sval),
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,
@@ -215,8 +236,9 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         node: ast.RuleStmt,
     ) -> None:
         """Visit RuleStmt."""
+        rule_name = typing.cast(str, node.rulename)
         self._check_identifier(
-            identifier=node.rulename,
+            identifier=rule_name,
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,
@@ -229,8 +251,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         node: ast.IntoClause,
     ) -> None:
         """Visit IntoClause."""
+        relation = typing.cast(ast.RangeVar, node.rel)
+        relation_name = typing.cast(str, relation.relname)
         self._check_identifier(
-            identifier=node.rel.relname,
+            identifier=relation_name,
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,
@@ -242,9 +266,11 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         ancestors: visitors.Ancestor,
         node: ast.CompositeTypeStmt,
     ) -> None:
-        """Visit IntoClause."""
+        """Visit CompositeTypeStmt."""
+        relation = typing.cast(ast.RangeVar, node.typevar)
+        relation_name = typing.cast(str, relation.relname)
         self._check_identifier(
-            identifier=node.typevar.relname,
+            identifier=relation_name,
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,
@@ -257,8 +283,10 @@ class CheckIdentifier(abc.ABC, linter.BaseChecker, metaclass=ABCBaseCheckerMeta)
         node: ast.RenameStmt,
     ) -> None:
         """Visit RenameStmt."""
+        new_name = typing.cast(str, node.newname)
+
         self._check_identifier(
-            identifier=node.newname,
+            identifier=new_name,
             line_number=self.line_number,
             column_offset=self.column_offset,
             line=self.line,

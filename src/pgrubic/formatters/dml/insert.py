@@ -1,5 +1,7 @@
 """Formatter for insert."""
 
+import typing
+
 from pglast import ast, enums, printers
 
 from pgrubic.core import formatter
@@ -33,6 +35,8 @@ def on_conflict_clause(
 ) -> None:
     """Printer for OnConflictClause."""
     on_conflict_action = enums.OnConflictAction
+    target_list = typing.cast(tuple[ast.ResTarget, ...], node.targetList)
+
     if node.infer:
         output.print_node(node.infer)
 
@@ -45,7 +49,7 @@ def on_conflict_clause(
         with output.push_indent(4):
             output.write("DO UPDATE SET")
             output.space()
-            output.print_list(node.targetList)
+            output.print_list(target_list)
             if node.whereClause:
                 output.newline()
                 output.space(4)
@@ -96,11 +100,11 @@ def insert_stmt(node: ast.InsertStmt, output: formatter.PrinterOutput) -> None:
             output.space() if node.onConflictClause.infer else output.write("")
             output.print_node(node.onConflictClause)
 
-        if node.returningList:
+        if node.returningClause and node.returningClause.exprs:
             output.newline()
             output.write("RETURNING")
             output.space()
-            output.print_name(node.returningList, ",")
+            output.print_name(node.returningClause.exprs, ",")
 
         if node.withClause:
             output.dedent()

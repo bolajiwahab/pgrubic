@@ -1,5 +1,7 @@
 """Checker for date columns without defined suffix, by default `_date`."""
 
+import typing
+
 from pglast import ast, visitors
 
 from pgrubic.core import linter
@@ -38,8 +40,11 @@ class DateColumnWithoutSuffix(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
+        type_name = typing.cast(ast.TypeName, node.typeName)
+        type_names = typing.cast(tuple[ast.String, ...], type_name.names)
+
         if (
-            node.typeName.names[-1].sval == "date"
+            type_names[-1].sval == "date"
             and node.colname
             and not node.colname.endswith(self.config.lint.date_column_suffix)
         ):
@@ -64,4 +69,5 @@ class DateColumnWithoutSuffix(linter.BaseChecker):
 
     def _fix(self, node: ast.ColumnDef) -> None:
         """Fix violation."""
-        node.colname += self.config.lint.date_column_suffix
+        column_name = typing.cast(str, node.colname)
+        node.colname = column_name + self.config.lint.date_column_suffix

@@ -49,6 +49,15 @@ create_recursive_view:
          , b
       FROM card;
 
+create_view_with_options:
+  sql: |
+    CREATE VIEW test.card WITH (security_barrier = true) AS SELECT * FROM public.account;
+  expected: |
+    CREATE VIEW test.card WITH (security_barrier = true)
+      AS
+    SELECT *
+      FROM public.account;
+
 drop_view:
   sql: |
     DROP VIEW test.card;

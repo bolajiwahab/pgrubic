@@ -5,7 +5,7 @@ import typing
 import pathlib
 import dataclasses
 
-from pglast import parser
+from pglast import Comment, parser
 from colorama import Fore, Style
 
 from pgrubic import PACKAGE_NAME
@@ -364,15 +364,6 @@ def check_statement_format_skip(
     return check_file_format_skip(
         source_code=source_code,
     ) or _check_statement_format_skip(statement=statement)
-
-
-class Comment(typing.NamedTuple):
-    """Representation of an SQL comment."""
-
-    location: int
-    text: str
-    at_start_of_line: bool
-    continue_previous: bool
 
 
 def extract_comments(*, statement: Statement) -> list[Comment]:

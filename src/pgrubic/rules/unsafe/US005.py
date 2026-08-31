@@ -45,7 +45,7 @@ class AddingAutoIncrementIdentityColumn(linter.BaseChecker):
         node: ast.Constraint,
     ) -> None:
         """Visit Constraint."""
-        alter_table_cmd: visitors.Ancestor = ancestors.find_nearest(ast.AlterTableCmd)
+        alter_table_cmd = ancestors.find_nearest(ast.AlterTableCmd)
 
         if (
             alter_table_cmd

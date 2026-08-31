@@ -1,5 +1,7 @@
 """Checker for SQL_ASCII encoding."""
 
+import typing
+
 from pglast import ast, visitors
 
 from pgrubic.core import linter
@@ -35,7 +37,12 @@ class SqlAsciiEncoding(linter.BaseChecker):
         node: ast.DefElem,
     ) -> None:
         """Visit DefElem."""
-        if node.defname == "encoding" and node.arg.sval.lower() == "sql_ascii":
+        if (
+            node.defname == "encoding"
+            and isinstance(node.arg, ast.String)
+            and node.arg.sval is not None
+            and node.arg.sval.lower() == "sql_ascii"
+        ):
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,
@@ -56,4 +63,5 @@ class SqlAsciiEncoding(linter.BaseChecker):
 
     def _fix(self, node: ast.DefElem) -> None:
         """Fix violation."""
-        node.arg.sval = "utf8"
+        argument = typing.cast(ast.String, node.arg)
+        argument.sval = "utf8"

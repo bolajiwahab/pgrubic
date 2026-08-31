@@ -1,5 +1,7 @@
 """Formatter for UPDATE statements."""
 
+import typing
+
 from pglast import ast, printers
 
 from pgrubic.core import formatter
@@ -8,6 +10,8 @@ from pgrubic.core import formatter
 @printers.node_printer(ast.UpdateStmt, override=True)
 def update_stmt(node: ast.UpdateStmt, output: formatter.PrinterOutput) -> None:
     """Printer for UpdateStmt."""
+    target_list = typing.cast(tuple[ast.ResTarget, ...], node.targetList)
+
     with output.push_indent():
         if node.withClause:
             output.write("WITH")
@@ -22,7 +26,7 @@ def update_stmt(node: ast.UpdateStmt, output: formatter.PrinterOutput) -> None:
         output.space(3)
         output.write("SET")
         output.space()
-        output.print_list(node.targetList, standalone_items=False)
+        output.print_list(target_list, standalone_items=False)
 
         if node.fromClause:
             output.newline()
@@ -38,11 +42,11 @@ def update_stmt(node: ast.UpdateStmt, output: formatter.PrinterOutput) -> None:
             output.space()
             output.print_node(node.whereClause)
 
-            if node.returningList:
-                output.newline()
-                output.write("RETURNING")
-                output.space()
-                output.print_list(node.returningList)
+        if node.returningClause and node.returningClause.exprs:
+            output.newline()
+            output.write("RETURNING")
+            output.space()
+            output.print_list(node.returningClause.exprs)
 
         if node.withClause:
             output.dedent()

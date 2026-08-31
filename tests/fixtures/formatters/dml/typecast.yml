@@ -109,6 +109,7 @@ typecast_native_function_with_equivalent_syntax_to_standard:
   config:
     format:
       type_casting_style: standard
+      rewrite_function_calls_as_equivalent_syntax: true
 
 typecast_native_to_native:
   sql: |
@@ -199,6 +200,7 @@ typecast_standard_function_with_equivalent_syntax_to_native:
   config:
     format:
       type_casting_style: native
+      rewrite_function_calls_as_equivalent_syntax: true
 
 typecast_native_to_literal:
   sql: |

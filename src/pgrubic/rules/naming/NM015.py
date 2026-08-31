@@ -1,5 +1,7 @@
 """Checker for timestamp columns without defined suffix, by default `_at`."""
 
+import typing
+
 from pglast import ast, visitors
 
 from pgrubic.core import linter
@@ -38,8 +40,11 @@ class TimestampColumnWithoutSuffix(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
+        type_name = typing.cast(ast.TypeName, node.typeName)
+        type_names = typing.cast(tuple[ast.String, ...], type_name.names)
+
         if (
-            node.typeName.names[-1].sval
+            type_names[-1].sval
             in [
                 "timestamptz",
                 "timestamp",
@@ -70,4 +75,5 @@ class TimestampColumnWithoutSuffix(linter.BaseChecker):
 
     def _fix(self, node: ast.ColumnDef) -> None:
         """Fix violation."""
-        node.colname += self.config.lint.timestamp_column_suffix
+        column_name = typing.cast(str, node.colname)
+        node.colname = column_name + self.config.lint.timestamp_column_suffix

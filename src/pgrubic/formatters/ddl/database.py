@@ -1,5 +1,7 @@
 """Formatter for database."""
 
+import typing
+
 from pglast import ast, printers
 
 from pgrubic import Operators
@@ -12,23 +14,23 @@ def create_db_stmt_def_elem(
     output: formatter.PrinterOutput,
 ) -> None:
     """Printer for CreatedbStmt defelem."""
-    option = node.defname
+    option = typing.cast(str, node.defname)
     if option == "connection_limit":
         output.write("CONNECTION LIMIT")
     else:
-        output.write(node.defname.upper())
+        output.write(option.upper())
     if node.arg is not None:
         output.space()
         output.write(Operators.EQ)
         output.space()
-        if isinstance(node.arg, tuple) or option in ("allow_connections", "is_template"):
-            output.write(node.arg.sval)
-        elif isinstance(node.arg, ast.String):
-            if option.lower() in ("encoding", "locale", "strategy"):
-                if node.arg.sval:
-                    output.write_quoted_string(node.arg.sval.upper())
+        if isinstance(node.arg, ast.String):
+            value = typing.cast(str, node.arg.sval)
+            if option in ("allow_connections", "is_template"):
+                output.write(value)
+            elif option.lower() in ("encoding", "locale", "strategy"):
+                output.write_quoted_string(value.upper())
             else:
-                output.write_quoted_string(node.arg.sval)
+                output.write_quoted_string(value)
         else:
             output.print_node(node.arg)
 
@@ -56,4 +58,5 @@ def drop_db_stmt(node: ast.DropdbStmt, output: formatter.PrinterOutput) -> None:
 @printers.node_printer(ast.DropdbStmt, ast.DefElem, override=True)
 def drop_db_stmt_def_elem(node: ast.DefElem, output: formatter.PrinterOutput) -> None:
     """Printer for DropdbStmt defelem."""
-    output.write(node.defname.upper())
+    option = typing.cast(str, node.defname)
+    output.write(option.upper())

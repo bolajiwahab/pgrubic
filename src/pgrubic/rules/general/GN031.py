@@ -1,5 +1,7 @@
 """Checker for stringified NULL."""
 
+import typing
+
 from pglast import ast, enums, visitors
 
 from pgrubic import Operators
@@ -98,10 +100,11 @@ class StringifiedNull(linter.BaseChecker):
 
             return self._fix_expression(node=node)
 
-        return None  # pragma: no cover
+        return None
 
     def _fix_expression(self, node: ast.A_Expr) -> ast.NullTest:
         """Fix expression violation."""
+        name = typing.cast(tuple[ast.String, ...], node.name)
         if not isinstance(node.rexpr, ast.A_Const) or (
             isinstance(node.rexpr, ast.A_Const)
             and isinstance(node.rexpr.val, ast.String)
@@ -114,8 +117,11 @@ class StringifiedNull(linter.BaseChecker):
 
         null_type = (
             enums.NullTestType.IS_NULL
-            if node.name[-1].sval == Operators.EQ
+            if name[-1].sval == Operators.EQ
             else enums.NullTestType.IS_NOT_NULL
         )
 
-        return ast.NullTest(arg=lexpr, nulltesttype=null_type)
+        return ast.NullTest(
+            arg=typing.cast(ast.Expr, lexpr),
+            nulltesttype=null_type,
+        )

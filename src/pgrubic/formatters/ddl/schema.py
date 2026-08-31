@@ -1,5 +1,7 @@
 """Printers for SchemaStmt."""
 
+import typing
+
 from pglast import ast, enums, printers
 
 from pgrubic.core import formatter
@@ -55,7 +57,8 @@ def alter_object_schema_stmt(
     }:
         output.print_name(node.relation)
     elif objtype in (enums.ObjectType.OBJECT_OPCLASS, enums.ObjectType.OBJECT_OPFAMILY):
-        method, *name = node.object
+        object_name = typing.cast(tuple[ast.Node, ...], node.object)
+        method, *name = object_name
         output.print_name(name)
         output.swrites("USING")
         output.print_symbol(method)

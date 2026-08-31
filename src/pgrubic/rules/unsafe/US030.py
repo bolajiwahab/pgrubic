@@ -1,5 +1,7 @@
 """Checker for mismatch column in data type change."""
 
+import typing
+
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
@@ -28,12 +30,13 @@ class MismatchColumnInDataTypeChange(linter.BaseChecker):
         node: ast.ColumnRef,
     ) -> None:
         """Visit ColumnRef."""
-        alter_table_cmd: visitors.Ancestor = ancestors.find_nearest(ast.AlterTableCmd)
+        alter_table_cmd = ancestors.find_nearest(ast.AlterTableCmd)
+        fields = typing.cast(tuple[ast.String, ...], node.fields)
 
         if (
             alter_table_cmd
             and alter_table_cmd.node.subtype == enums.AlterTableType.AT_AlterColumnType
-            and alter_table_cmd.node.name != node.fields[-1].sval
+            and alter_table_cmd.node.name != fields[-1].sval
         ):
             self.violations.add(
                 linter.Violation(
@@ -45,7 +48,7 @@ class MismatchColumnInDataTypeChange(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description=f"Column `{alter_table_cmd.node.name}` in data type"
-                    f" change does not match column `{node.fields[-1].sval}`"
+                    f" change does not match column `{fields[-1].sval}`"
                     " in USING clause",
                     is_auto_fixable=self.is_auto_fixable,
                     is_fix_enabled=self.is_fix_enabled,

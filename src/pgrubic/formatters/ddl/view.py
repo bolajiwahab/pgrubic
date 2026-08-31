@@ -1,5 +1,7 @@
 """Formatter for view."""
 
+import typing
+
 from pglast import ast, enums, printers
 
 from pgrubic.core import formatter
@@ -8,22 +10,24 @@ from pgrubic.core import formatter
 @printers.node_printer(ast.ViewStmt, override=True)
 def view_stmt(node: ast.ViewStmt, output: formatter.PrinterOutput) -> None:
     """Printer for ViewStmt."""
+    view = typing.cast(ast.RangeVar, node.view)
+
     output.write("CREATE")
     output.space()
     if node.replace:
         output.write("OR REPLACE")
         output.space()
 
-    if node.view.relpersistence == enums.RELPERSISTENCE_TEMP:
+    if view.relpersistence == enums.RELPERSISTENCE_TEMP:
         output.write("TEMPORARY")
         output.space()
-    elif node.view.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
+    elif view.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
         output.write("UNLOGGED")
         output.space()
 
     output.write("VIEW")
     output.space()
-    output.print_node(node.view)
+    output.print_node(view)
 
     if node.aliases:
         output.space()
@@ -31,7 +35,7 @@ def view_stmt(node: ast.ViewStmt, output: formatter.PrinterOutput) -> None:
             output.print_list(node.aliases, are_names=True)
     output.space()
 
-    if node.options:  # pragma: no cover
+    if node.options:
         output.write("WITH")
         output.space()
         with output.expression(need_parens=True):

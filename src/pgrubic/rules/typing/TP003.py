@@ -1,5 +1,7 @@
 """Checker for timestamp with time zone with precision."""
 
+import typing
+
 from pglast import ast, visitors
 
 from pgrubic.core import linter
@@ -29,7 +31,10 @@ class TimestampWithTimezoneWithPrecision(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval == "timestamptz" and node.typeName.typmods:
+        type_name = typing.cast(ast.TypeName, node.typeName)
+        type_names = typing.cast(tuple[ast.String, ...], type_name.names)
+
+        if type_names[-1].sval == "timestamptz" and type_name.typmods:
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,

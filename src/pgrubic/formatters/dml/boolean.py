@@ -1,11 +1,13 @@
 """Formatter for boolean expressions."""
 
+import typing
+
 from pglast import ast, enums, printers
 
 from pgrubic.core import formatter
 
 
-def bool_expr_needs_to_be_wrapped_in_parens(node: ast.BoolExpr) -> bool:
+def bool_expr_needs_to_be_wrapped_in_parens(node: ast.Node) -> bool:
     """Check if the node needs to be wrapped in parens."""
     return isinstance(node, ast.BoolExpr) and node.boolop in (
         enums.BoolExprType.AND_EXPR,
@@ -16,8 +18,9 @@ def bool_expr_needs_to_be_wrapped_in_parens(node: ast.BoolExpr) -> bool:
 @printers.node_printer(ast.BoolExpr, override=True)
 def bool_expr(node: ast.BoolExpr, output: formatter.PrinterOutput) -> None:
     """Printer for BoolExpr."""
-    in_target_list = isinstance(node.ancestors[0], ast.ResTarget)  # type: ignore[attr-defined]
-    bool_expr_in_ancestors = ast.BoolExpr in node.ancestors  # type: ignore[attr-defined]
+    in_target_list = isinstance(node.ancestors[0], ast.ResTarget)
+    bool_expr_in_ancestors = ast.BoolExpr in node.ancestors
+    args = typing.cast(tuple[ast.Node, ...], node.args)
 
     if node.boolop == enums.BoolExprType.AND_EXPR:
         indent_value = -4 if not in_target_list else None
@@ -25,7 +28,7 @@ def bool_expr(node: ast.BoolExpr, output: formatter.PrinterOutput) -> None:
             -5 if bool_expr_in_ancestors and not in_target_list else indent_value
         )
         output.print_list(
-            node.args,
+            args,
             "AND",
             relative_indent=relative_indent,
             item_needs_parens=bool_expr_needs_to_be_wrapped_in_parens,
@@ -33,7 +36,7 @@ def bool_expr(node: ast.BoolExpr, output: formatter.PrinterOutput) -> None:
     elif node.boolop == enums.BoolExprType.OR_EXPR:
         relative_indent = -3 if not in_target_list else None
         output.print_list(
-            node.args,
+            args,
             "OR",
             relative_indent=relative_indent,
             item_needs_parens=bool_expr_needs_to_be_wrapped_in_parens,
@@ -42,7 +45,7 @@ def bool_expr(node: ast.BoolExpr, output: formatter.PrinterOutput) -> None:
         output.writes("NOT")
         with output.expression(
             bool_expr_needs_to_be_wrapped_in_parens(
-                node.args[0],
+                args[0],
             ),
         ):
-            output.print_node(node.args[0])
+            output.print_node(args[0])

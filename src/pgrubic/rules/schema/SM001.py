@@ -1,5 +1,7 @@
 """Checker for objects that are schema-qualifiable but are not schema qualified."""
 
+import typing
+
 from pglast import ast, visitors
 
 from pgrubic import SCHEMA_QUALIFIED_LENGTH
@@ -29,7 +31,9 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         node: ast.CreateEnumStmt | ast.AlterEnumStmt,
     ) -> None:
         """Check enum for schema."""
-        if len(node.typeName) < SCHEMA_QUALIFIED_LENGTH:
+        type_name = typing.cast(tuple[ast.String, ...], node.typeName)
+
+        if len(type_name) < SCHEMA_QUALIFIED_LENGTH:
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,
@@ -39,7 +43,7 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
-                    description=f"Database object `{node.typeName[0].sval}`"
+                    description=f"Database object `{type_name[0].sval}`"
                     " should be schema qualified",
                     is_auto_fixable=self.is_auto_fixable,
                     is_fix_enabled=self.is_fix_enabled,
@@ -80,43 +84,38 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         ctenames = []
 
         # we exclude referenced CTE names in CTEs
-        if ancestors.find_nearest(ast.WithClause):
-            ctenames = [
-                cte.ctename for cte in ancestors.find_nearest(ast.WithClause).node.ctes
-            ]
+        with_clause = ancestors.find_nearest(ast.WithClause)
+        if with_clause:
+            ctes = typing.cast(
+                tuple[ast.CommonTableExpr, ...],
+                with_clause.node.ctes,
+            )
+            ctenames = [cte.ctename for cte in ctes]
 
         # we exclude referenced CTE names in outer queries
-        if (
-            ancestors.find_nearest(
+        statement = ancestors.find_nearest(
+            typing.cast(
+                type[ast.Node],
                 ast.SelectStmt
                 | ast.UpdateStmt
                 | ast.DeleteStmt
                 | ast.InsertStmt
                 | ast.MergeStmt,
+            ),
+        )
+        if statement and statement.node.withClause:
+            statement.node.withClause.ctes = typing.cast(
+                tuple[ast.CommonTableExpr, ...],
+                statement.node.withClause.ctes,
             )
-            and ancestors.find_nearest(
-                ast.SelectStmt
-                | ast.UpdateStmt
-                | ast.DeleteStmt
-                | ast.InsertStmt
-                | ast.MergeStmt,
-            ).node.withClause
-        ):
-            ctenames = [
-                cte.ctename
-                for cte in ancestors.find_nearest(
-                    ast.SelectStmt
-                    | ast.UpdateStmt
-                    | ast.DeleteStmt
-                    | ast.InsertStmt
-                    | ast.MergeStmt,
-                ).node.withClause.ctes
-            ]
+            ctenames = [cte.ctename for cte in statement.node.withClause.ctes]
 
         if (
             # there is no simple way to figure out if a subquery is referencing a CTE name
             # hence we are excluding all subqueries
-            not (ancestors.find_nearest(ast.RangeSubselect | ast.SubLink))
+            not ancestors.find_nearest(
+                typing.cast(type[ast.Node], ast.RangeSubselect | ast.SubLink),
+            )
             and node.relname not in ctenames
             and not node.schemaname
         ):
@@ -143,7 +142,8 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         node: ast.DropStmt,
     ) -> None:
         """Visit DropStmt."""
-        for obj in node.objects:
+        objects = typing.cast(tuple[ast.Node, ...], node.objects)
+        for obj in objects:
             object_names = getattr(obj, "names", getattr(obj, "objname", obj))
 
             if (
@@ -189,7 +189,8 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""
-        self._check_function_for_schema(node.funcname)
+        function_name = typing.cast(tuple[ast.String, ...], node.funcname)
+        self._check_function_for_schema(function_name)
 
     def visit_AlterFunctionStmt(
         self,
@@ -197,7 +198,9 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         node: ast.AlterFunctionStmt,
     ) -> None:
         """Visit AlterFunctionStmt."""
-        self._check_function_for_schema(node.func.objname)
+        function = typing.cast(ast.ObjectWithArgs, node.func)
+        function_name = typing.cast(tuple[ast.String, ...], function.objname)
+        self._check_function_for_schema(function_name)
 
     def visit_ObjectWithArgs(
         self,
@@ -205,7 +208,8 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
         node: ast.ObjectWithArgs,
     ) -> None:
         """Visit ObjectWithArgs."""
-        if len(node.objname) < SCHEMA_QUALIFIED_LENGTH:
+        object_name = typing.cast(tuple[ast.String, ...], node.objname)
+        if len(object_name) < SCHEMA_QUALIFIED_LENGTH:
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,
@@ -215,7 +219,7 @@ class SchemaUnqualifiedObject(linter.BaseChecker):
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
-                    description=f"Database object `{node.objname[0].sval}`"
+                    description=f"Database object `{object_name[0].sval}`"
                     " should be schema qualified",
                     is_auto_fixable=self.is_auto_fixable,
                     is_fix_enabled=self.is_fix_enabled,

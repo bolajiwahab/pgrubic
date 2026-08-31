@@ -1,5 +1,7 @@
 """Formatter for table."""
 
+import typing
+
 from pglast import ast, enums, printers
 
 from pgrubic.core import formatter
@@ -53,16 +55,18 @@ def into_clause(node: ast.IntoClause, output: formatter.PrinterOutput) -> None:
 @printers.node_printer(ast.PartitionSpec, override=True)
 def partition_spec(node: ast.PartitionSpec, output: formatter.PrinterOutput) -> None:
     """Printer for PartitionSpec."""
+    strategy_type = typing.cast(enums.PartitionStrategy, node.strategy)
+    part_params = typing.cast(tuple[ast.PartitionElem, ...], node.partParams)
     strategy = {
         enums.PartitionStrategy.PARTITION_STRATEGY_LIST: "LIST",
         enums.PartitionStrategy.PARTITION_STRATEGY_RANGE: "RANGE",
         enums.PartitionStrategy.PARTITION_STRATEGY_HASH: "HASH",
-    }[node.strategy]
+    }[strategy_type]
 
     output.print_symbol(strategy)
     output.space()
     with output.expression(need_parens=True):
-        output.print_list(nodes=node.partParams, standalone_items=False)
+        output.print_list(nodes=part_params, standalone_items=False)
 
 
 @printers.node_printer(ast.CreateTableAsStmt, override=True)
@@ -71,12 +75,14 @@ def create_table_as_stmt(
     output: formatter.PrinterOutput,
 ) -> None:
     """Printer for CreateTableAsStmt."""
+    into = typing.cast(ast.IntoClause, node.into)
+    relation = typing.cast(ast.RangeVar, into.rel)
     output.writes("CREATE")
     output.space()
 
-    if node.into.rel.relpersistence == enums.RELPERSISTENCE_TEMP:
+    if relation.relpersistence == enums.RELPERSISTENCE_TEMP:
         output.writes("TEMPORARY")
-    elif node.into.rel.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
+    elif relation.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
         output.writes("UNLOGGED")
 
     output.writes(printers.ddl.OBJECT_NAMES[node.objtype])
@@ -84,12 +90,12 @@ def create_table_as_stmt(
     if node.if_not_exists:
         output.writes(IF_NOT_EXISTS)
 
-    output.print_node(node.into)
+    output.print_node(into)
     output.swrite("AS")
     output.newline()
     output.print_node(node.query)
 
-    if node.into.skipData:
+    if into.skipData:
         output.newline()
         output.space(2)
         output.write("WITH NO DATA")
@@ -101,10 +107,12 @@ def create_foreign_table_stmt(
     output: formatter.PrinterOutput,
 ) -> None:
     """Printer for CreateForeignTableStmt."""
-    output.print_node(node.base)
+    base = typing.cast(ast.CreateStmt, node.base)
+
+    output.print_node(base)
     output.newline()
 
-    if node.base.partbound:
+    if base.partbound:
         output.space(4)
 
     output.write("SERVER")
@@ -113,7 +121,7 @@ def create_foreign_table_stmt(
 
     if node.options:
         output.newline()
-        if node.base.partbound:
+        if base.partbound:
             output.space(4)
         with output.push_indent():
             output.write("OPTIONS")
@@ -131,15 +139,16 @@ def create_stmt(
     output: formatter.PrinterOutput,
 ) -> None:
     """Printer for CreateStmt."""
+    relation = typing.cast(ast.RangeVar, node.relation)
     clause_indent = 4 if node.partbound else 0
 
     output.writes("CREATE")
 
-    if isinstance(node.ancestors[0], ast.CreateForeignTableStmt):  # type: ignore[attr-defined]
+    if isinstance(node.ancestors[0], ast.CreateForeignTableStmt):
         output.writes("FOREIGN")
-    elif node.relation.relpersistence == enums.RELPERSISTENCE_TEMP:
+    elif relation.relpersistence == enums.RELPERSISTENCE_TEMP:
         output.writes("TEMPORARY")
-    elif node.relation.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
+    elif relation.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
         output.writes("UNLOGGED")
 
     output.writes("TABLE")
@@ -147,7 +156,7 @@ def create_stmt(
     if node.if_not_exists:
         output.writes(IF_NOT_EXISTS)
 
-    output.print_node(node.relation)
+    output.print_node(relation)
 
     if node.ofTypename:
         output.space()
@@ -156,11 +165,13 @@ def create_stmt(
         output.print_name(node.ofTypename)
 
     if node.partbound:
+        inherited_relations = typing.cast(tuple[ast.RangeVar, ...], node.inhRelations)
+
         output.newline()
         output.space(4)
         output.write("PARTITION OF")
         output.space()
-        output.print_list(node.inhRelations)
+        output.print_list(inherited_relations)
 
     if node.tableElts:
         # move table constraints to the end
@@ -241,6 +252,8 @@ def alter_table_stmt(
     output: formatter.PrinterOutput,
 ) -> None:
     """Printer for AlterTableStmt."""
+    commands = typing.cast(tuple[ast.AlterTableCmd, ...], node.cmds)
+
     output.write("ALTER")
     output.space()
     output.writes(printers.ddl.OBJECT_NAMES[node.objtype])
@@ -252,4 +265,4 @@ def alter_table_stmt(
     output.print_node(node.relation)
     output.newline()
     output.space(4)
-    output.print_list(nodes=node.cmds, standalone_items=True)
+    output.print_list(nodes=commands, standalone_items=True)

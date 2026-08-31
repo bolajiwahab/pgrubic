@@ -1,5 +1,7 @@
 """Checker for duplicate index column."""
 
+import typing
+
 from pglast import ast, visitors
 
 from pgrubic.core import linter
@@ -30,7 +32,8 @@ class DuplicateIndexColumn(linter.BaseChecker):
         node: ast.IndexStmt,
     ) -> None:
         """Visit IndexStmt."""
-        columns: list[str] = [column.name for column in node.indexParams if column.name]
+        index_params = typing.cast(tuple[ast.IndexElem, ...], node.indexParams)
+        columns: list[str] = [column.name for column in index_params if column.name]
         duplicate_columns = {column for column in columns if columns.count(column) > 1}
 
         for column in duplicate_columns:
@@ -54,10 +57,14 @@ class DuplicateIndexColumn(linter.BaseChecker):
 
     def _fix(self, node: ast.IndexStmt) -> None:
         """Fix violation."""
+        existing_index_params = typing.cast(
+            tuple[ast.IndexElem, ...],
+            node.indexParams,
+        )
         index_params: list[ast.IndexElem] = []
 
-        for param in node.indexParams:
+        for param in existing_index_params:
             if param.name not in [column.name for column in index_params]:
                 index_params.append(param)
 
-        node.indexParams = index_params
+        node.indexParams = tuple(index_params)
