@@ -81,10 +81,10 @@ def type_cast(
     """Printer for TypeCast."""
     argument = typing.cast(ast.Expr, node.arg)
     type_name = typing.cast(ast.TypeName, node.typeName)
-    # An unmodified CHAR typed literal is not interchangeable with an implicit
+    # A CHAR typed literal is not interchangeable with an implicit
     # char cast: CHAR 'xyz' retains all three characters, while both
     # CAST('xyz' AS char) and 'xyz'::char mean char(1). PostgreSQL represents
-    # the typed literal with typmods=None, so preserve that form and only
+    # the typed literal with typmods=None, so we preserve that form and only
     # convert other char casts to literal syntax when they have a safe,
     # explicit non-default length.
     if (
@@ -131,6 +131,7 @@ def type_cast(
             need_parens=native_cast_argument_needs_parentheses(argument, output),
         ):
             output.print_node(argument)
+
         output.write(NATIVE_CAST_OPERATOR)
         output.print_node(type_name)
         return
