@@ -2590,6 +2590,7 @@ def is_non_volatile_function(
 
     """
     function_name = function.funcname
+    function_name = typing.cast(tuple[ast.String, ...], function_name)
 
     # Use pg_catalog if function is not schema qualified.
     if len(function_name) < SCHEMA_QUALIFIED_LENGTH:

@@ -1,5 +1,7 @@
 """Checker for missing primary key."""
 
+import typing
+
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
@@ -31,11 +33,12 @@ class MissingPrimaryKey(linter.BaseChecker):
         node: ast.CreateStmt,
     ) -> bool:
         """Check for table level primary key."""
+        table_elements = typing.cast(tuple[ast.Node, ...], node.tableElts)
         return bool(
             (
                 [
                     definition
-                    for definition in node.tableElts
+                    for definition in table_elements
                     if isinstance(definition, ast.Constraint)
                     and definition.contype == enums.ConstrType.CONSTR_PRIMARY
                 ]
@@ -47,11 +50,12 @@ class MissingPrimaryKey(linter.BaseChecker):
         node: ast.CreateStmt,
     ) -> bool:
         """Check for column level primary key."""
+        table_elements = typing.cast(tuple[ast.Node, ...], node.tableElts)
         return bool(
             (
                 [
                     definition
-                    for definition in node.tableElts
+                    for definition in table_elements
                     if isinstance(definition, ast.ColumnDef) and definition.constraints
                     for constraint in definition.constraints
                     if constraint.contype == enums.ConstrType.CONSTR_PRIMARY
@@ -65,6 +69,8 @@ class MissingPrimaryKey(linter.BaseChecker):
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""
+        relation = typing.cast(ast.RangeVar, node.relation)
+        relation_name = typing.cast(str, relation.relname)
         if (
             node.tableElts
             and not self._check_for_column_level_primary_key(node)
@@ -79,7 +85,7 @@ class MissingPrimaryKey(linter.BaseChecker):
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
-                    description=f"Table `{node.relation.relname}` missing a primary key",
+                    description=f"Table `{relation_name}` missing a primary key",
                     is_auto_fixable=self.is_auto_fixable,
                     is_fix_enabled=self.is_fix_enabled,
                     help="Define a primary key",

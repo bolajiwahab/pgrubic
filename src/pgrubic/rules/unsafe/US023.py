@@ -28,10 +28,11 @@ class TableMovementToTablespace(linter.BaseChecker):
         node: ast.AlterTableCmd,
     ) -> None:
         """Visit AlterTableCmd."""
+        alter_table_stmt = ancestors.find_nearest(ast.AlterTableStmt)
         if (
             node.subtype == enums.AlterTableType.AT_SetTableSpace
-            and ancestors.find_nearest(ast.AlterTableStmt).node.objtype
-            == enums.ObjectType.OBJECT_TABLE
+            and alter_table_stmt is not None
+            and alter_table_stmt.node.objtype == enums.ObjectType.OBJECT_TABLE
         ):
             self.violations.add(
                 linter.Violation(

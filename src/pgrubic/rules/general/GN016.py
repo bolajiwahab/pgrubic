@@ -1,5 +1,7 @@
 """Checker for constant generated columns."""
 
+import typing
+
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
@@ -30,6 +32,11 @@ class ConstantGeneratedColumn(linter.BaseChecker):
             node.raw_expr,
             ast.A_Const,
         ):
+            column_definition = ancestors.find_nearest(ast.ColumnDef)
+            column_definition = typing.cast(
+                visitors.Ancestor,
+                column_definition,
+            )
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,
@@ -40,7 +47,7 @@ class ConstantGeneratedColumn(linter.BaseChecker):
                     line=self.line,
                     statement_location=self.statement_location,
                     description=f"Generated column"
-                    f" `{ancestors.find_nearest(ast.ColumnDef).node.colname}`"
+                    f" `{column_definition.node.colname}`"
                     " should not be a constant",
                     is_auto_fixable=self.is_auto_fixable,
                     is_fix_enabled=self.is_fix_enabled,

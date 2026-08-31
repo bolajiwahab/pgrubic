@@ -1,5 +1,7 @@
 """Checker for inline sql function body with wrong language."""
 
+import typing
+
 from pglast import ast, visitors
 
 from pgrubic.core import linter
@@ -32,14 +34,14 @@ class InlineSqlFunctionBodyWrongLanguage(linter.BaseChecker):
         node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""
-        language: str | None = next(
-            (
-                option.arg.sval
-                for option in node.options
-                if option.defname.upper() == "LANGUAGE"
-            ),
-            None,
-        )
+        options = typing.cast(tuple[ast.DefElem, ...], node.options)
+        language: str | None = None
+        for option in options:
+            defname = typing.cast(str, option.defname)
+            if defname.upper() == "LANGUAGE":
+                argument = typing.cast(ast.String, option.arg)
+                language = typing.cast(str, argument.sval)
+                break
 
         if node.sql_body and language and language.upper() != "SQL":
             self.violations.add(
@@ -62,6 +64,9 @@ class InlineSqlFunctionBodyWrongLanguage(linter.BaseChecker):
 
     def _fix(self, node: ast.CreateFunctionStmt) -> None:
         """Fix violation."""
-        for option in node.options:
-            if option.defname.upper() == "LANGUAGE":
-                option.arg.sval = "SQL"
+        options = typing.cast(tuple[ast.DefElem, ...], node.options)
+        for option in options:
+            defname = typing.cast(str, option.defname)
+            argument = typing.cast(ast.String, option.arg)
+            if defname.upper() == "LANGUAGE":
+                argument.sval = "SQL"

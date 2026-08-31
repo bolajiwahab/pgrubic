@@ -1,5 +1,7 @@
 """Checker for duplicate column in primary key constraint."""
 
+import typing
+
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
@@ -58,10 +60,11 @@ class DuplicatePrimaryKeyColumn(linter.BaseChecker):
 
     def _fix(self, node: ast.Constraint) -> None:
         """Fix violation."""
+        constraint_keys = typing.cast(tuple[ast.String, ...], node.keys)
         keys: list[ast.String] = []
 
-        for key in node.keys:
+        for key in constraint_keys:
             if key.sval not in [column.sval for column in keys]:
                 keys.append(key)
 
-        node.keys = keys
+        node.keys = tuple(keys)

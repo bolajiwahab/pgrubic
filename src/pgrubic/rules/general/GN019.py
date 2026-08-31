@@ -1,5 +1,7 @@
 """Checker for unlogged table."""
 
+import typing
+
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
@@ -36,7 +38,8 @@ class UnloggedTable(linter.BaseChecker):
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""
-        if node.relation.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
+        relation = typing.cast(ast.RangeVar, node.relation)
+        if relation.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,
@@ -57,7 +60,8 @@ class UnloggedTable(linter.BaseChecker):
 
     def _fix_create_unlogged_table(self, node: ast.CreateStmt) -> None:
         """Fix violation."""
-        node.relation.relpersistence = enums.RELPERSISTENCE_PERMANENT
+        relation = typing.cast(ast.RangeVar, node.relation)
+        relation.relpersistence = enums.RELPERSISTENCE_PERMANENT
 
     def visit_AlterTableCmd(
         self,

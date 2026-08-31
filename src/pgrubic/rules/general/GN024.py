@@ -1,5 +1,7 @@
 """Checker for comparison with NULL."""
 
+import typing
+
 from pglast import ast, enums, visitors
 
 from pgrubic import Operators
@@ -36,9 +38,10 @@ class NullComparison(linter.BaseChecker):
         node: ast.A_Expr,
     ) -> ast.NullTest | None:
         """Visit A_Expr."""
+        name = typing.cast(tuple[ast.String, ...], node.name)
         if (
             node.kind == enums.A_Expr_Kind.AEXPR_OP
-            and node.name[-1].sval in (Operators.EQ, Operators.NOT_EQ)
+            and name[-1].sval in (Operators.EQ, Operators.NOT_EQ)
             and any(
                 isinstance(expr, ast.A_Const) and expr.isnull
                 for expr in (node.rexpr, node.lexpr)
@@ -62,10 +65,11 @@ class NullComparison(linter.BaseChecker):
 
             return self._fix(node)
 
-        return None  # pragma: no cover
+        return None
 
     def _fix(self, node: ast.A_Expr) -> ast.NullTest:
         """Fix violation."""
+        name = typing.cast(tuple[ast.String, ...], node.name)
         lexpr = (
             node.rexpr
             if not (isinstance(node.rexpr, ast.A_Const) and node.rexpr.isnull)
@@ -74,8 +78,11 @@ class NullComparison(linter.BaseChecker):
 
         null_type = (
             enums.NullTestType.IS_NULL
-            if node.name[-1].sval == Operators.EQ
+            if name[-1].sval == Operators.EQ
             else enums.NullTestType.IS_NOT_NULL
         )
 
-        return ast.NullTest(arg=lexpr, nulltesttype=null_type)
+        return ast.NullTest(
+            arg=typing.cast(ast.Expr, lexpr),
+            nulltesttype=null_type,
+        )

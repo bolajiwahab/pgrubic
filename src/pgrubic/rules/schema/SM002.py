@@ -1,5 +1,7 @@
 """Checker for usage of disallowed schemas."""
 
+import typing
+
 from pglast import ast, visitors
 
 from pgrubic.core import config, linter
@@ -32,9 +34,10 @@ class DisallowedSchema(linter.BaseChecker):
         node: ast.RangeVar,
     ) -> None:
         """Visit RangeVar."""
+        root = abs(ancestors)
         # We are only interested in object creation
-        if isinstance(
-            abs(ancestors).node,
+        if root is not None and isinstance(
+            root.node,
             ast.CreateStmt
             | ast.ViewStmt
             | ast.CompositeTypeStmt
@@ -77,9 +80,8 @@ class DisallowedSchema(linter.BaseChecker):
         node: ast.CreateEnumStmt,
     ) -> None:
         """Visit CreateEnumStmt."""
-        schema_name: str | None = (
-            node.typeName[0].sval if len(node.typeName) > 1 else None
-        )
+        type_name = typing.cast(tuple[ast.String, ...], node.typeName)
+        schema_name: str | None = type_name[0].sval if len(type_name) > 1 else None
 
         for schema in self.config.lint.disallowed_schemas:
             if schema_name == schema.name:
@@ -109,7 +111,8 @@ class DisallowedSchema(linter.BaseChecker):
         schema: config.DisallowedSchema,
     ) -> None:
         """Fix violation."""
-        node.typeName[0].sval = schema.use_instead
+        type_name = typing.cast(tuple[ast.String, ...], node.typeName)
+        type_name[0].sval = schema.use_instead
 
     def visit_CreateFunctionStmt(
         self,
@@ -117,8 +120,9 @@ class DisallowedSchema(linter.BaseChecker):
         node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""
+        function_name = typing.cast(tuple[ast.String, ...], node.funcname)
         schema_name: str | None = (
-            node.funcname[0].sval if len(node.funcname) > 1 else None
+            function_name[0].sval if len(function_name) > 1 else None
         )
 
         for schema in self.config.lint.disallowed_schemas:
@@ -149,4 +153,5 @@ class DisallowedSchema(linter.BaseChecker):
         schema: config.DisallowedSchema,
     ) -> None:
         """Fix violation."""
-        node.funcname[0].sval = schema.use_instead
+        function_name = typing.cast(tuple[ast.String, ...], node.funcname)
+        function_name[0].sval = schema.use_instead

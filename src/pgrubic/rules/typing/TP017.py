@@ -1,5 +1,7 @@
 """Checker for nullable boolean field."""
 
+import typing
+
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
@@ -31,7 +33,9 @@ class NullableBooleanField(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
-        if node.typeName.names[-1].sval == "bool":
+        type_name = typing.cast(ast.TypeName, node.typeName)
+        type_names = typing.cast(tuple[ast.String, ...], type_name.names)
+        if type_names[-1].sval == "bool":
             is_not_null = bool(
                 (
                     [

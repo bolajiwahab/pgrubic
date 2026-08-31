@@ -1,5 +1,7 @@
 """Formatter for enum."""
 
+import typing
+
 from pglast import ast, printers
 
 from pgrubic.core import formatter
@@ -12,6 +14,7 @@ def create_enum_stmt(
     output: formatter.PrinterOutput,
 ) -> None:
     """Printer for CreateEnumStmt."""
+    vals = typing.cast(tuple[ast.String, ...], node.vals)
     output.write("CREATE TYPE")
     output.space()
     output.print_name(node.typeName)
@@ -20,7 +23,7 @@ def create_enum_stmt(
     with output.expression(need_parens=True):
         output.newline()
         output.space(4)
-        output.print_list(node.vals, standalone_items=True)
+        output.print_list(vals, standalone_items=True)
         output.newline()
 
 

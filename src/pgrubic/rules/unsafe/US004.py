@@ -1,5 +1,7 @@
 """Checker for adding of auto increment column."""
 
+import typing
+
 from pglast import ast, visitors
 
 from pgrubic.core import linter
@@ -40,8 +42,10 @@ class AddingAutoIncrementColumn(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
+        type_name = typing.cast(ast.TypeName, node.typeName)
+        type_names = typing.cast(tuple[ast.String, ...], type_name.names)
         if ancestors.find_nearest(ast.AlterTableCmd) and (
-            node.typeName.names[-1].sval in ["smallserial", "serial", "bigserial"]
+            type_names[-1].sval in ["smallserial", "serial", "bigserial"]
         ):
             self.violations.add(
                 linter.Violation(

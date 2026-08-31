@@ -1,5 +1,7 @@
 """Checker for self-assigning column."""
 
+import typing
+
 from pglast import ast, visitors
 
 from pgrubic.core import linter
@@ -27,7 +29,7 @@ class SelfAssigningColumn(linter.BaseChecker):
 
     def _target_alias(self, update_statement: ast.UpdateStmt) -> str:
         """Get the target alias of the update statement."""
-        relation = update_statement.relation
+        relation = typing.cast(ast.RangeVar, update_statement.relation)
 
         if relation.alias is not None:
             return str(relation.alias.aliasname)
@@ -42,7 +44,9 @@ class SelfAssigningColumn(linter.BaseChecker):
         expression: ast.ColumnRef,
     ) -> bool:
         """Check if the assignment is a self-assignment."""
-        fields = [field.sval for field in expression.fields]
+        fields = [
+            field.sval for field in typing.cast(tuple[ast.String, ...], expression.fields)
+        ]
 
         unqualified_column_length = 1
         table_qualified_column_length = 2
@@ -68,25 +72,25 @@ class SelfAssigningColumn(linter.BaseChecker):
         # schema.table.column
         if len(fields) == schema_table_qualified_column_length:
             schema, table, column = fields
-            relation = node.relation
+            range_var = typing.cast(ast.RangeVar, node.relation)
 
             return bool(
                 column == target_column
-                and schema == relation.schemaname
-                and table == relation.relname,
+                and schema == range_var.schemaname
+                and table == range_var.relname,
             )
 
         # catalog.schema.table.column
         if len(fields) == catalog_schema_table_qualified_column_length:
             catalog, schema, table, column = fields
 
-            relation = node.relation
+            range_var = typing.cast(ast.RangeVar, node.relation)
 
             return bool(
                 column == target_column
-                and (not relation.catalogname or catalog == relation.catalogname)
-                and schema == relation.schemaname
-                and table == relation.relname,
+                and (not range_var.catalogname or catalog == range_var.catalogname)
+                and schema == range_var.schemaname
+                and table == range_var.relname,
             )
 
         return False  # pragma: no cover

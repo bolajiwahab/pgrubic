@@ -43,6 +43,7 @@ class YodaCondition(linter.BaseChecker):
         node: ast.A_Expr,
     ) -> None:
         """Visit A_Expr."""
+        name = typing.cast(tuple[ast.String, ...], node.name)
         if (
             node.kind == enums.A_Expr_Kind.AEXPR_OP
             and isinstance(
@@ -50,7 +51,7 @@ class YodaCondition(linter.BaseChecker):
                 ast.A_Const,
             )
             and isinstance(node.rexpr, ast.ColumnRef)
-            and node.name[-1].sval in self.yoda_operators_with_replacements
+            and name[-1].sval in self.yoda_operators_with_replacements
         ):
             self.violations.add(
                 linter.Violation(
@@ -72,6 +73,8 @@ class YodaCondition(linter.BaseChecker):
 
     def _fix(self, node: ast.A_Expr) -> None:
         """Fix violation."""
+        name = typing.cast(tuple[ast.String, ...], node.name)
+        operator = typing.cast(str, name[-1].sval)
         lexpr = node.lexpr
         rexpr = node.rexpr
 
@@ -79,4 +82,4 @@ class YodaCondition(linter.BaseChecker):
         node.rexpr = lexpr
 
         # Adjust the operator accordingly
-        node.name[-1].sval = self.yoda_operators_with_replacements[node.name[-1].sval]
+        name[-1].sval = self.yoda_operators_with_replacements[operator]

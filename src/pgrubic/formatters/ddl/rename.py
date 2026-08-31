@@ -1,5 +1,7 @@
 """Formatter for rename."""
 
+import typing
+
 from pglast import ast, enums, printers
 from pglast.printers.ddl import OBJECT_NAMES
 
@@ -58,7 +60,8 @@ def rename_stmt(node: ast.RenameStmt, output: formatter.PrinterOutput) -> None:
         enums.ObjectType.OBJECT_OPFAMILY,
         enums.ObjectType.OBJECT_OPCLASS,
     ):  # pragma: no cover
-        method, *name = node.object
+        object_name = typing.cast(tuple[ast.Node, ...], node.object)
+        method, *name = object_name
         output.print_name(name)
         output.space()
         output.write("USING")

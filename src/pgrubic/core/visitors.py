@@ -20,7 +20,7 @@ class InlineSQLVisitor(visitors.Visitor):
 
     def _render_raw(self, source: str | ast.Node) -> str:
         """Render SQL with a fresh configured raw stream."""
-        return typing.cast(str, self.raw_stream_factory()(source))
+        return self.raw_stream_factory()(source)
 
     def visit_CreateFunctionStmt(
         self,

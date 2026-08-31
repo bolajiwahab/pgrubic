@@ -14,6 +14,7 @@ DEFAULT_GUTTER: typing.Final[int] = 6
 @printers.node_printer(ast.IndexStmt, override=True)
 def index_stmt(node: ast.IndexStmt, output: formatter.PrinterOutput) -> None:
     """Printer for IndexStmt."""
+    index_params = typing.cast(tuple[ast.IndexElem, ...], node.indexParams)
     output.write("CREATE")
     output.space()
 
@@ -57,7 +58,7 @@ def index_stmt(node: ast.IndexStmt, output: formatter.PrinterOutput) -> None:
 
     output.space()
     output.print_parenthesized_list(
-        node.indexParams,
+        index_params,
         closing_indent=gutter - len("ON"),
     )
 

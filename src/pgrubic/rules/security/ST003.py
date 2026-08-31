@@ -39,7 +39,11 @@ class SecurityDefinerFunctionNoExplicitSearchPath(linter.BaseChecker):
         for option in typing.cast(tuple[ast.DefElem], node.options):
             name = option.defname
 
-            if name == enums.FunctionOption.SECURITY and option.arg.boolval:
+            if (
+                name == enums.FunctionOption.SECURITY
+                and isinstance(option.arg, ast.Boolean)
+                and option.arg.boolval
+            ):
                 is_security_definer = True
 
             if (

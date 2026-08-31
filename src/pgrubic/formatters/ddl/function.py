@@ -1,6 +1,8 @@
 # mypy: disable-error-code="union-attr"
 """Formatter for function/procedure."""
 
+import typing
+
 from pglast import ast, enums, printers
 
 from pgrubic.core import Formatter, noqa, formatter
@@ -29,7 +31,7 @@ def create_function_stmt(
     output.space()
 
     if node.parameters:
-        actual_parameters = node.parameters
+        actual_parameters = list(node.parameters)
         # When returning table, the column definitions are mixed with
         # the usual parameters, so we need to extract the column definitions
         table_definition = []
@@ -92,22 +94,23 @@ def create_function_stmt(
 
     if node.sql_body:
         if node.is_procedure:
+            sql_body = typing.cast(tuple[tuple[ast.Node, ...]], node.sql_body)
             output.newline()
             output.write("BEGIN ATOMIC")
             output.newline()
-            if node.sql_body:
+            if sql_body:
                 output.space(4)
                 with output.push_indent():
-                    for i, stmt in enumerate(node.sql_body[0]):
+                    for i, stmt in enumerate(sql_body[0]):
                         output.print_node(stmt)
 
                         if not output.config.format.new_line_before_semicolon:
                             output.write(noqa.SEMI_COLON)
-                        else:  # pragma: no cover
+                        else:
                             output.write(noqa.NEW_LINE + noqa.SEMI_COLON)
 
                         # Add newline until the last statement
-                        if i < len(node.sql_body[0]) - 1:
+                        if i < len(sql_body[0]) - 1:
                             for _ in range(
                                 output.config.format.lines_between_statements + 1,
                             ):
@@ -260,6 +263,7 @@ def alter_function_stmt(
     output: formatter.PrinterOutput,
 ) -> None:
     """Printer for AlterFunctionStmt."""
+    actions = typing.cast(tuple[ast.DefElem, ...], node.actions)
     output.write("ALTER")
     output.space()
     if node.objtype == enums.ObjectType.OBJECT_PROCEDURE:
@@ -272,4 +276,4 @@ def alter_function_stmt(
     with output.push_indent(relative=False):
         output.newline()
         output.space(4)
-        output.print_list(node.actions, noqa.SPACE, standalone_items=True)
+        output.print_list(actions, noqa.SPACE, standalone_items=True)

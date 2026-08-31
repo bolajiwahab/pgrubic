@@ -1,5 +1,7 @@
 """Checker for drop cascade."""
 
+import typing
+
 from pglast import ast, enums, visitors
 
 from pgrubic import get_fully_qualified_name
@@ -60,8 +62,10 @@ class DropCascade(linter.BaseChecker):
         node: ast.DropStmt,
     ) -> None:
         """Visit DropStmt."""
-        for obj in node.objects:
+        objects = typing.cast(tuple[ast.Node, ...], node.objects)
+        for obj in objects:
             object_names = getattr(obj, "names", getattr(obj, "objname", obj))
+            object_names = typing.cast(tuple[ast.String, ...], object_names)
 
             if node.behavior == enums.DropBehavior.DROP_CASCADE:
                 self._register_violation(
@@ -92,8 +96,9 @@ class DropCascade(linter.BaseChecker):
             )
             and node.behavior == enums.DropBehavior.DROP_CASCADE
         ):
+            name = typing.cast(str, node.name)
             self._register_violation(
-                object_name=node.name,
+                object_name=name,
                 line_number=self.line_number,
                 column_offset=self.column_offset,
                 line=self.line,

@@ -1,5 +1,7 @@
 """Checker for wrongly typed required columns."""
 
+import typing
+
 from pglast import ast, visitors
 from pglast.printers import dml
 
@@ -33,10 +35,12 @@ class WronglyTypedRequiredColumn(linter.BaseChecker):
         node: ast.ColumnDef,
     ) -> None:
         """Visit ColumnDef."""
+        type_name = typing.cast(ast.TypeName, node.typeName)
+        type_names = typing.cast(tuple[ast.String], type_name.names)
         for column in self.config.lint.required_columns:
             if column.name == node.colname:
                 fully_qualified_type_name = get_fully_qualified_name(
-                    node.typeName.names,
+                    type_names,
                 )
 
                 prettified_type = fully_qualified_type_name

@@ -1,5 +1,7 @@
 """Formatter for SELECT statements."""
 
+import typing
+
 from pglast import ast, enums, printers
 
 from pgrubic.core import formatter
@@ -14,7 +16,8 @@ def sub_link(node: ast.SubLink, output: formatter.PrinterOutput) -> None:
     elif node.subLinkType == enums.SubLinkType.ALL_SUBLINK:
         output.print_node(node.testexpr)
         output.space()
-        output.write(printers.get_string_value(node.operName))
+        operator_name = typing.cast(tuple[ast.String, ...], node.operName)
+        output.write(printers.get_string_value(operator_name))
         output.space()
         output.write("ALL")
         output.space()
@@ -43,8 +46,8 @@ def sub_link(node: ast.SubLink, output: formatter.PrinterOutput) -> None:
         raise NotImplementedError(msg)
 
     with output.expression(need_parens=False):
-        bool_in_ancestors = ast.BoolExpr in node.ancestors  # type: ignore[attr-defined]
-        nearest_node: ast.Node = abs(node.ancestors).node  # type: ignore[attr-defined]
+        bool_in_ancestors = ast.BoolExpr in node.ancestors
+        nearest_node: ast.Node = abs(node.ancestors).node
 
         if (
             isinstance(nearest_node, ast.SelectStmt | ast.UpdateStmt | ast.DeleteStmt)
@@ -113,7 +116,8 @@ def select_stmt(node: ast.SelectStmt, output: formatter.PrinterOutput) -> None:
 
                 if node.op == enums.SetOperation.SETOP_UNION:
                     output.space()
-                    if not subexpression_needs_parentheses(node.larg):
+                    left_argument = typing.cast(ast.SelectStmt, node.larg)
+                    if not subexpression_needs_parentheses(left_argument):
                         output.write("UNION")
                     else:
                         output.space()
@@ -157,15 +161,16 @@ def select_stmt(node: ast.SelectStmt, output: formatter.PrinterOutput) -> None:
                 output.print_list(node.targetList)
 
             if node.intoClause:
+                relation = typing.cast(ast.RangeVar, node.intoClause.rel)
                 output.newline()
                 output.space(2)
                 output.write("INTO")
                 output.space()
 
-                if node.intoClause.rel.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
+                if relation.relpersistence == enums.RELPERSISTENCE_UNLOGGED:
                     output.write("UNLOGGED")
                     output.space()
-                elif node.intoClause.rel.relpersistence == enums.RELPERSISTENCE_TEMP:
+                elif relation.relpersistence == enums.RELPERSISTENCE_TEMP:
                     output.write("TEMPORARY")
                     output.space()
 

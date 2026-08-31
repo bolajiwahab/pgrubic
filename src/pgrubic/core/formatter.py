@@ -2,7 +2,7 @@
 
 import typing
 
-from pglast import ast, parser, stream
+from pglast import Comment, ast, parser, stream
 
 from pgrubic import ISSUES_URL
 from pgrubic.core import noqa, config, errors
@@ -24,7 +24,7 @@ class RawStream(stream.RawStream):
         self,
         config: config.Config,
         source_code: str | None = None,
-        **options: object,
+        **options: typing.Any,
     ) -> None:
         """Extend RawStream with config."""
         super().__init__(**options)
@@ -57,7 +57,7 @@ class IndentedStream(stream.IndentedStream):
         self,
         config: config.Config,
         source_code: str | None = None,
-        **options: object,
+        **options: typing.Any,
     ) -> None:
         """Initialize IndentedStream with config."""
         super().__init__(**options)
@@ -314,7 +314,7 @@ class Formatter:
         *,
         source_ast: tuple[ast.RawStmt, ...],
         source_code: str | None = None,
-        comments: list[noqa.Comment],
+        comments: list[Comment],
     ) -> str:
         """Format source code from AST.
 

@@ -1,5 +1,7 @@
 """Checker for usage of NOT IN."""
 
+import typing
+
 from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
@@ -55,7 +57,8 @@ class NotIn(linter.BaseChecker):
         node: ast.A_Expr,
     ) -> None:
         """Visit A_Expr."""
-        if node.kind == enums.A_Expr_Kind.AEXPR_IN and node.name[-1].sval == "<>":
+        name = typing.cast(tuple[ast.String, ...], node.name)
+        if node.kind == enums.A_Expr_Kind.AEXPR_IN and name[-1].sval == "<>":
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,

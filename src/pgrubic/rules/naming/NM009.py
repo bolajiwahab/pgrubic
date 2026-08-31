@@ -1,6 +1,7 @@
 """Checker for invalid partition name according to naming convention."""
 
 import re
+import typing
 
 from pglast import ast, visitors
 
@@ -34,9 +35,11 @@ class InvalidPartitionName(linter.BaseChecker):
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""
+        relation = typing.cast(ast.RangeVar, node.relation)
+        relation_name = typing.cast(str, relation.relname)
         if node.partbound is not None and not re.match(
             self.config.lint.regex_partition,
-            node.relation.relname,
+            relation_name,
         ):
             self.violations.add(
                 linter.Violation(
@@ -47,7 +50,7 @@ class InvalidPartitionName(linter.BaseChecker):
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
-                    description=f"Partition `{node.relation.relname}` does not follow"
+                    description=f"Partition `{relation_name}` does not follow"
                     f" naming convention `{self.config.lint.regex_partition}`",
                     is_auto_fixable=self.is_auto_fixable,
                     is_fix_enabled=self.is_fix_enabled,

@@ -1,5 +1,7 @@
 """General rules."""
 
+import typing
+
 from pglast import ast
 
 from pgrubic.core import config
@@ -13,14 +15,23 @@ def get_columns_from_table_creation(
     duplicate_columns: set[str] = set()
 
     if node.tableElts:
-        given_columns = [
-            config.Column(
-                name=column.colname,
-                data_type=column.typeName.names[-1].sval,
-            )
-            for column in node.tableElts
-            if isinstance(column, ast.ColumnDef)
+        column_definitions = [
+            column for column in node.tableElts if isinstance(column, ast.ColumnDef)
         ]
+        for column in column_definitions:
+            column_name = typing.cast(str, column.colname)
+            type_name = typing.cast(ast.TypeName, column.typeName)
+            type_names = typing.cast(
+                tuple[ast.String, ...],
+                type_name.names,
+            )
+            data_type = typing.cast(str, type_names[-1].sval)
+            given_columns.append(
+                config.Column(
+                    name=column_name,
+                    data_type=data_type,
+                ),
+            )
 
         columns: list[str] = [column.name for column in given_columns]
 

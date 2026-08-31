@@ -44,7 +44,11 @@ class SecurityDefinerFunctionNonTempSchema(linter.BaseChecker):
         for option in typing.cast(tuple[ast.DefElem], node.options):
             name = option.defname
 
-            if name == enums.FunctionOption.SECURITY and option.arg.boolval:
+            if (
+                name == enums.FunctionOption.SECURITY
+                and isinstance(option.arg, ast.Boolean)
+                and option.arg.boolval
+            ):
                 is_security_definer = True
 
             if (
@@ -56,7 +60,7 @@ class SecurityDefinerFunctionNonTempSchema(linter.BaseChecker):
                 has_explicit_search_path = True
 
                 if option.arg.args and any(
-                    schema.val.sval != "pg_temp"
+                    isinstance(schema.val, ast.String) and schema.val.sval != "pg_temp"
                     for schema in typing.cast(tuple[ast.A_Const], option.arg.args)
                 ):
                     has_non_temp_schema = True

@@ -1,5 +1,7 @@
 """Checker for duplicate columns."""
 
+import typing
+
 from pglast import ast, visitors
 
 from pgrubic.core import linter
@@ -28,6 +30,8 @@ class DuplicateColumn(linter.BaseChecker):
         node: ast.CreateStmt,
     ) -> None:
         """Visit CreateStmt."""
+        relation = typing.cast(ast.RangeVar, node.relation)
+        relation_name = typing.cast(str, relation.relname)
         _, duplicate_columns = get_columns_from_table_creation(node)
 
         for column in duplicate_columns:
@@ -40,9 +44,9 @@ class DuplicateColumn(linter.BaseChecker):
                     column_offset=self.column_offset,
                     line=self.line,
                     statement_location=self.statement_location,
-                    description=f"Column `{column}` specified more than once in table {node.relation.relname}",  # noqa: E501
+                    description=f"Column `{column}` specified more than once in table {relation_name}",  # noqa: E501
                     is_auto_fixable=self.is_auto_fixable,
                     is_fix_enabled=self.is_fix_enabled,
-                    help=f"Remove duplicate column from table {node.relation.relname}",
+                    help=f"Remove duplicate column from table {relation_name}",
                 ),
             )
