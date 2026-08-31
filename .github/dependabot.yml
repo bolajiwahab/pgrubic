@@ -20,15 +20,6 @@ updates:
         patterns:
           - "*"
 
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    groups:
-      python-packages:
-        patterns:
-          - "*"
-
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
