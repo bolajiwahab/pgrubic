@@ -25,6 +25,7 @@ pgrubic is a PostgreSQL linter and formatter for schema migrations and design be
 
 - Over 100+ rules
 - Automatic violation correction (e.g., automatically add `concurrently` to index create statements)
+- Linting of migrations embedded in PL/pgSQL functions and DO blocks
 - River style code formatting for DML statements
 - Almost identical styling with **pg_dump** for DDL statements
 - Python 3.12+ compatibility
