@@ -1,3 +1,15 @@
+## 3.0.0 (2026-09-01)
+
+### Feat
+
+- upgrade pglast to v8 (#276)
+
+### Fix
+
+- **deps**: bump the python-packages group with 2 updates (#283)
+- **deps**: bump astral-sh/setup-uv from 9.0.0 to 10.0.1 in the github-actions group (#274)
+- **deps**: bump the python-packages group across 1 directory with 12 updates (#279)
+
 ## 2.1.0 (2026-08-27)
 
 ### Feat
