@@ -81,14 +81,6 @@ add_check_constraint:
     ALTER TABLE orders
         ADD CONSTRAINT check_orders_total CHECK (total > 0);
 
-alter_constraint_not_enforced:
-  sql: |
-    ALTER TABLE orders
-    ALTER CONSTRAINT orders_customer_id_fkey NOT ENFORCED;
-  expected: |
-    ALTER TABLE orders
-        ALTER CONSTRAINT orders_customer_id_fkey NOT ENFORCED;
-
 add_not_null_constraint:
   sql: |
     ALTER TABLE orders
@@ -143,4 +135,21 @@ add_check_not_enforced:
     CHECK (total > 0) NOT ENFORCED;
   expected: |
     ALTER TABLE orders
-        ADD CONSTRAINT check_orders_total CHECK (total > 0) NOT ENFORCED NOT VALID;
+        ADD CONSTRAINT check_orders_total CHECK (total > 0) NOT VALID NOT ENFORCED;
+
+alter_constraint_not_enforced:
+  sql: |
+    ALTER TABLE orders
+    ALTER CONSTRAINT orders_customer_id_fkey NOT ENFORCED;
+  expected: |
+    ALTER TABLE orders
+        ALTER CONSTRAINT orders_customer_id_fkey NOT ENFORCED;
+
+add_check_no_inherit:
+  sql: |
+    ALTER TABLE orders
+    ADD CONSTRAINT check_orders_total
+    CHECK (total > 0) NO INHERIT;
+  expected: |
+    ALTER TABLE orders
+        ADD CONSTRAINT check_orders_total CHECK (total > 0) NO INHERIT;

@@ -142,6 +142,21 @@ def test_raw_stream_supports_custom_printers(formatter: core.Formatter) -> None:
     )
 
 
+def test_check_constraint_rejects_raw_and_cooked_expressions(
+    formatter: core.Formatter,
+) -> None:
+    """Test a CHECK constraint cannot contain both expression forms."""
+    statement = parser.parse_sql("CREATE TABLE tbl (value integer CHECK (value > 0))")
+    constraint = statement[0].stmt.tableElts[0].constraints[0]  # type: ignore[attr-defined]
+    constraint.cooked_expr = "cooked expression"
+
+    with pytest.raises(
+        ValueError,
+        match="CHECK constraint cannot have both raw and cooked expressions",
+    ):
+        formatter.create_raw_stream()(constraint)
+
+
 def test_concatenate_nodes_with_type_cast(formatter: core.Formatter) -> None:
     """Test raw node concatenation uses the configured type-casting style."""
     with conftest.update_config(
