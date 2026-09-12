@@ -61,7 +61,10 @@ def constraint(node: ast.Constraint, output: formatter.PrinterOutput) -> None:
     if node.skip_validation:
         output.swrite("NOT VALID")
 
-    if node.contype == enums.ConstrType.CONSTR_FOREIGN and not node.is_enforced:
+    if (
+        node.contype in (enums.ConstrType.CONSTR_FOREIGN, enums.ConstrType.CONSTR_CHECK)
+        and not node.is_enforced
+    ):
         output.swrite("NOT ENFORCED")
 
 
