@@ -351,6 +351,18 @@ create_table_with_storage_parameters:
     )
     WITH (fillfactor = 10, parallel_workers = 4);
 
+create_temporary_table_with_access_method_storage_and_on_commit:
+  sql: |
+    CREATE TEMPORARY TABLE mood (a text)
+    USING heap WITH (fillfactor = 70) ON COMMIT DROP;
+  expected: |
+    CREATE TEMPORARY TABLE mood (
+        a text
+    )
+    USING heap
+    WITH (fillfactor = 70)
+    ON COMMIT DROP;
+
 create_table_with_tablespace:
   sql: |
     CREATE TABLE mood (a text, b text) TABLESPACE pg_default;

@@ -15,24 +15,23 @@ def create_db_stmt_def_elem(
 ) -> None:
     """Printer for CreatedbStmt defelem."""
     option = typing.cast(str, node.defname)
-    if option == "connection_limit":
-        output.write("CONNECTION LIMIT")
-    else:
-        output.write(option.upper())
-    if node.arg is not None:
-        output.space()
-        output.write(Operators.EQ)
-        output.space()
-        if isinstance(node.arg, ast.String):
-            value = typing.cast(str, node.arg.sval)
-            if option in ("allow_connections", "is_template"):
-                output.write(value)
-            elif option.lower() in ("encoding", "locale", "strategy"):
-                output.write_quoted_string(value.upper())
-            else:
-                output.write_quoted_string(value)
+    label = "CONNECTION LIMIT" if option == "connection_limit" else option
+    output.write_keyword(label)
+    output.space()
+    output.write(Operators.EQ)
+    output.space()
+
+    if node.arg is None:
+        output.write("DEFAULT")
+    elif isinstance(node.arg, ast.String):
+        value = typing.cast(str, node.arg.sval)
+
+        if option in ("allow_connections", "is_template"):
+            output.write(value)
         else:
-            output.print_node(node.arg)
+            output.write_quoted_string(value)
+    else:
+        output.print_node(node.arg)
 
 
 @printers.node_printer(ast.DropdbStmt, override=True)
@@ -59,4 +58,4 @@ def drop_db_stmt(node: ast.DropdbStmt, output: formatter.PrinterOutput) -> None:
 def drop_db_stmt_def_elem(node: ast.DefElem, output: formatter.PrinterOutput) -> None:
     """Printer for DropdbStmt defelem."""
     option = typing.cast(str, node.defname)
-    output.write(option.upper())
+    output.write_keyword(option)

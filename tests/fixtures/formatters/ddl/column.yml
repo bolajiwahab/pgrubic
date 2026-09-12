@@ -4,10 +4,21 @@ formatter: COLUMN
 
 create_table_with_column:
   sql: |
+    CREATE TABLE orders (
+      order_id bigint,
+      order_date date
+    );
+  expected: |
+    CREATE TABLE orders (
+        order_id bigint
+      , order_date date
+    );
+
+create_foreign_table_with_column:
+  sql: |
     CREATE FOREIGN TABLE orders (
       id text STORAGE EXTERNAL COMPRESSION LZ4 OPTIONS (column_name 'id') COLLATE "default",
-      CONSTRAINT pk_orders PRIMARY KEY(id),
-      name text UNIQUE NOT NULL DEFAULT 'a'
+      name text
     )
     SERVER mood_server
     OPTIONS (
@@ -17,8 +28,7 @@ create_table_with_column:
   expected: |
     CREATE FOREIGN TABLE orders (
         id text STORAGE external COMPRESSION lz4 OPTIONS (column_name 'id') COLLATE "default"
-      , name text UNIQUE DEFAULT 'a' NOT NULL
-      , CONSTRAINT pk_orders PRIMARY KEY (id)
+      , name text
     )
     SERVER mood_server
     OPTIONS (
@@ -26,16 +36,14 @@ create_table_with_column:
       , table_name 'some_table'
     );
 
-create_table_of_type:
+create_table_of_type_with_column:
   sql: |
     CREATE TABLE employees OF employee_type (
-        PRIMARY KEY (name),
         salary WITH OPTIONS DEFAULT 1000
     );
   expected: |
     CREATE TABLE employees OF employee_type (
         salary WITH OPTIONS DEFAULT 1000
-      , PRIMARY KEY (name)
     );
 
 add_column:

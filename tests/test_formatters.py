@@ -10,6 +10,19 @@ from tests import TEST_FILE, conftest
 from pgrubic import core
 from pgrubic.core import noqa, formatter as formatter_module
 
+DDL_FORMATTERS = {
+    "COLUMN",
+    "CONSTRAINT",
+    "DATABASE",
+    "ENUM",
+    "FUNCTION",
+    "INDEX",
+    "OWNER",
+    "SCHEMA",
+    "TABLE",
+    "VIEW",
+}
+
 
 @pytest.mark.parametrize(
     ("test_formatter", "test_id", "test_case"),
@@ -40,6 +53,30 @@ def test_formatters(
             f"Test failed for formatter: `{test_formatter}` in `{test_id}`"
         )
 
+        idempotent_result = formatter.format(
+            source_file=TEST_FILE,
+            source_code=result.formatted_source_code,
+        )
+        assert idempotent_result.formatted_source_code == result.formatted_source_code, (
+            f"Formatter is not idempotent: `{test_formatter}` in `{test_id}`"
+        )
+
+        skip_semantic_check = test_case.get("skip_semantic_check")
+        if skip_semantic_check is not None:
+            assert isinstance(skip_semantic_check, str), (
+                "skip_semantic_check must specify a reason: "
+                f"`{test_formatter}` in `{test_id}`"
+            )
+            assert skip_semantic_check.strip(), (
+                "skip_semantic_check must specify a non-empty reason: "
+                f"`{test_formatter}` in `{test_id}`"
+            )
+
+        if test_formatter in DDL_FORMATTERS and skip_semantic_check is None:
+            assert parser.parse_sql(result.original_source_code) == parser.parse_sql(
+                result.formatted_source_code,
+            ), f"Formatter changed SQL AST: `{test_formatter}` in `{test_id}`"
+
         # Check that the formatted source code is valid
         try:
             parser.parse_sql(result.formatted_source_code)
@@ -57,6 +94,22 @@ def test_configured_streams(formatter: core.Formatter) -> None:
     assert raw_stream.config is formatter.config
     assert isinstance(indented_stream, pglast_stream.IndentedStream)
     assert indented_stream.config is formatter.config
+
+
+def test_configured_streams_write_keyword(formatter: core.Formatter) -> None:
+    """Test contextual SQL syntax follows configured keyword casing."""
+    for stream_type in (formatter_module.RawStream, formatter_module.IndentedStream):
+        output = stream_type(config=formatter.config)
+        output.write_keyword("LOCALE_PROVIDER")
+        assert output.getvalue() == "LOCALE_PROVIDER"
+
+        with conftest.update_config(
+            config=formatter.config,
+            overrides={"format": {"uppercase_keywords": False}},
+        ):
+            output = stream_type(config=formatter.config)
+            output.write_keyword("LOCALE_PROVIDER")
+            assert output.getvalue() == "locale_provider"
 
 
 def test_create_raw_stream_factory(formatter: core.Formatter) -> None:

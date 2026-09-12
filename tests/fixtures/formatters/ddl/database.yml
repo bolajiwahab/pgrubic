@@ -3,12 +3,12 @@ formatter: DATABASE
 
 create_database:
   sql: |
-    CREATE DATABASE music strategy wal_log ENCODING UTF8 LOCALE_PROVIDER libc
-    LOCALE C TEMPLATE template0 is_template true
+    CREATE DATABASE music strategy wal_log ENCODING 'UTF8' LOCALE_PROVIDER libc
+    LOCALE 'C' TEMPLATE template0 is_template true
     allow_connections true connection limit 10;
   expected: |
     CREATE DATABASE music
-      WITH STRATEGY = 'WAL_LOG'
+      WITH STRATEGY = 'wal_log'
            ENCODING = 'UTF8'
            LOCALE_PROVIDER = 'libc'
            LOCALE = 'C'
@@ -32,3 +32,44 @@ rename_database:
   expected: |
     ALTER DATABASE music
         RENAME TO music2;
+
+create_database_preserves_locale_case:
+  sql: |
+    CREATE DATABASE music LOCALE 'en_US.UTF-8' TEMPLATE template0;
+  expected: |
+    CREATE DATABASE music
+      WITH LOCALE = 'en_US.UTF-8'
+           TEMPLATE = 'template0';
+
+create_database_lowercases_unquoted_values:
+  sql: |
+    CREATE DATABASE music STRATEGY WAL_LOG ENCODING UTF8 LOCALE_PROVIDER LIBC LOCALE C;
+  expected: |
+    CREATE DATABASE music
+      WITH STRATEGY = 'wal_log'
+           ENCODING = 'utf8'
+           LOCALE_PROVIDER = 'libc'
+           LOCALE = 'c';
+
+create_database_with_default_values:
+  sql: |
+    CREATE DATABASE music OWNER DEFAULT TEMPLATE DEFAULT
+    ENCODING DEFAULT TABLESPACE DEFAULT;
+  expected: |
+    CREATE DATABASE music
+      WITH OWNER = DEFAULT
+           TEMPLATE = DEFAULT
+           ENCODING = DEFAULT
+           TABLESPACE = DEFAULT;
+
+create_database_with_lowercase_keywords:
+  sql: |
+    CREATE DATABASE music STRATEGY WAL_LOG ENCODING 'UTF8' LOCALE_PROVIDER LIBC;
+  config:
+    format:
+      uppercase_keywords: false
+  expected: |
+    create database music
+      with strategy = 'wal_log'
+           encoding = 'UTF8'
+           locale_provider = 'libc';

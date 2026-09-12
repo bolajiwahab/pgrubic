@@ -30,6 +30,8 @@ def constraint(node: ast.Constraint, output: formatter.PrinterOutput) -> None:
         output.space()
         with output.expression(need_parens=True):
             output.print_name(node.keys, ",")
+            if node.without_overlaps:
+                output.write(" WITHOUT OVERLAPS")
 
     if node.including:
         output.space()
@@ -58,6 +60,9 @@ def constraint(node: ast.Constraint, output: formatter.PrinterOutput) -> None:
 
     if node.skip_validation:
         output.swrite("NOT VALID")
+
+    if node.contype == enums.ConstrType.CONSTR_FOREIGN and not node.is_enforced:
+        output.swrite("NOT ENFORCED")
 
 
 @printers.node_printer(ast.Constraint, ast.DefElem, override=True)
