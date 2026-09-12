@@ -16,7 +16,7 @@ def create_db_stmt_def_elem(
     """Printer for CreatedbStmt defelem."""
     option = typing.cast(str, node.defname)
     label = "CONNECTION LIMIT" if option == "connection_limit" else option
-    output.write_keyword(label)
+    output.write_as_keyword(label)
     output.space()
     output.write(Operators.EQ)
     output.space()
@@ -58,4 +58,4 @@ def drop_db_stmt(node: ast.DropdbStmt, output: formatter.PrinterOutput) -> None:
 def drop_db_stmt_def_elem(node: ast.DefElem, output: formatter.PrinterOutput) -> None:
     """Printer for DropdbStmt defelem."""
     option = typing.cast(str, node.defname)
-    output.write_keyword(option)
+    output.write_as_keyword(option)

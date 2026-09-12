@@ -96,11 +96,11 @@ def test_configured_streams(formatter: core.Formatter) -> None:
     assert indented_stream.config is formatter.config
 
 
-def test_configured_streams_write_keyword(formatter: core.Formatter) -> None:
+def test_configured_streams_write_as_keyword(formatter: core.Formatter) -> None:
     """Test contextual SQL syntax follows configured keyword casing."""
     for stream_type in (formatter_module.RawStream, formatter_module.IndentedStream):
         output = stream_type(config=formatter.config)
-        output.write_keyword("LOCALE_PROVIDER")
+        output.write_as_keyword("LOCALE_PROVIDER")
         assert output.getvalue() == "LOCALE_PROVIDER"
 
         with conftest.update_config(
@@ -108,7 +108,7 @@ def test_configured_streams_write_keyword(formatter: core.Formatter) -> None:
             overrides={"format": {"uppercase_keywords": False}},
         ):
             output = stream_type(config=formatter.config)
-            output.write_keyword("LOCALE_PROVIDER")
+            output.write_as_keyword("LOCALE_PROVIDER")
             assert output.getvalue() == "locale_provider"
 
 

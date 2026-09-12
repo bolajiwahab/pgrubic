@@ -35,8 +35,8 @@ class RawStream(stream.RawStream):
         """Write an empty string (no-op)."""
         self.write("")
 
-    def write_keyword(self, keyword: str) -> None:
-        """Write keyword using the configured keyword casing."""
+    def write_as_keyword(self, keyword: str) -> None:
+        """Write text as a keyword using the configured casing."""
         self.write(
             keyword.upper() if self.config.format.uppercase_keywords else keyword.lower(),
         )
@@ -123,8 +123,8 @@ class IndentedStream(stream.IndentedStream):
         """Write an empty string (no-op)."""
         self.write("")
 
-    def write_keyword(self, keyword: str) -> None:
-        """Write keyword using the configured keyword casing."""
+    def write_as_keyword(self, keyword: str) -> None:
+        """Write text as a keyword using the configured casing."""
         self.write(
             keyword.upper() if self.config.format.uppercase_keywords else keyword.lower(),
         )
