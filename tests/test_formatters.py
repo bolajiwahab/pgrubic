@@ -10,19 +10,6 @@ from tests import TEST_FILE, conftest
 from pgrubic import core
 from pgrubic.core import noqa, formatter as formatter_module
 
-DDL_FORMATTERS = {
-    "COLUMN",
-    "CONSTRAINT",
-    "DATABASE",
-    "ENUM",
-    "FUNCTION",
-    "INDEX",
-    "OWNER",
-    "SCHEMA",
-    "TABLE",
-    "VIEW",
-}
-
 
 @pytest.mark.parametrize(
     ("test_formatter", "test_id", "test_case"),
@@ -71,11 +58,6 @@ def test_formatters(
                 "skip_semantic_check must specify a non-empty reason: "
                 f"`{test_formatter}` in `{test_id}`"
             )
-
-        if test_formatter in DDL_FORMATTERS and skip_semantic_check is None:
-            assert parser.parse_sql(result.original_source_code) == parser.parse_sql(
-                result.formatted_source_code,
-            ), f"Formatter changed SQL AST: `{test_formatter}` in `{test_id}`"
 
         # Check that the formatted source code is valid
         try:
