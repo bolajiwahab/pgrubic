@@ -15,8 +15,8 @@ def create_db_stmt_def_elem(
 ) -> None:
     """Printer for CreatedbStmt defelem."""
     option = typing.cast(str, node.defname)
-    label = "CONNECTION LIMIT" if option == "connection_limit" else option
-    output.write_as_keyword(label)
+    option = "CONNECTION LIMIT" if option == "connection_limit" else option
+    output.write_as_keyword(option)
     output.space()
     output.write(Operators.EQ)
     output.space()
