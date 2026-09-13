@@ -35,10 +35,10 @@ class RawStream(stream.RawStream):
         """Write an empty string (no-op)."""
         self.write("")
 
-    def write_as_keyword(self, keyword: str) -> None:
-        """Write text as a keyword using the configured casing."""
+    def write_as_keyword(self, text: str) -> None:
+        """Write text as a keyword using the configured keyword casing."""
         self.write(
-            keyword.upper() if self.config.format.uppercase_keywords else keyword.lower(),
+            text.upper() if self.config.format.uppercase_keywords else text.lower(),
         )
 
     def print_parenthesized_list(
@@ -123,10 +123,10 @@ class IndentedStream(stream.IndentedStream):
         """Write an empty string (no-op)."""
         self.write("")
 
-    def write_as_keyword(self, keyword: str) -> None:
-        """Write text as a keyword using the configured casing."""
+    def write_as_keyword(self, text: str) -> None:
+        """Write text as a keyword using the configured keyword casing."""
         self.write(
-            keyword.upper() if self.config.format.uppercase_keywords else keyword.lower(),
+            text.upper() if self.config.format.uppercase_keywords else text.lower(),
         )
 
     def print_parenthesized_list(
