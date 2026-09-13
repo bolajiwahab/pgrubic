@@ -13,7 +13,7 @@
 | src/pgrubic/core/enums.py                    |        9 |        0 |     100% |           |
 | src/pgrubic/core/errors.py                   |       16 |        0 |     100% |           |
 | src/pgrubic/core/filters.py                  |       26 |        0 |     100% |           |
-| src/pgrubic/core/formatter.py                |       89 |        0 |     100% |           |
+| src/pgrubic/core/formatter.py                |       93 |        0 |     100% |           |
 | src/pgrubic/core/linter.py                   |      240 |        0 |     100% |           |
 | src/pgrubic/core/loader.py                   |       25 |        0 |     100% |           |
 | src/pgrubic/core/logger.py                   |        5 |        0 |     100% |           |
@@ -22,15 +22,15 @@
 | src/pgrubic/formatters/\_\_init\_\_.py       |        0 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/\_\_init\_\_.py   |        2 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/column.py         |       32 |        0 |     100% |           |
-| src/pgrubic/formatters/ddl/constraint.py     |       49 |        0 |     100% |           |
-| src/pgrubic/formatters/ddl/database.py       |       43 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/constraint.py     |       67 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/database.py       |       41 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/enum.py           |       47 |        0 |     100% |           |
-| src/pgrubic/formatters/ddl/function.py       |      162 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/function.py       |      170 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/index.py          |       71 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/owner.py          |       19 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/rename.py         |       36 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/schema.py         |       41 |        0 |     100% |           |
-| src/pgrubic/formatters/ddl/table.py          |      184 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/table.py          |      185 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/view.py           |       40 |        0 |     100% |           |
 | src/pgrubic/formatters/dml/\_\_init\_\_.py   |        0 |        0 |     100% |           |
 | src/pgrubic/formatters/dml/boolean.py        |       20 |        0 |     100% |           |
@@ -167,7 +167,7 @@
 | src/pgrubic/rules/unsafe/US030.py            |        9 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US031.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-| **TOTAL**                                    | **3722** |    **0** | **100%** |           |
+| **TOTAL**                                    | **3751** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
