@@ -3,6 +3,7 @@
 formatter: CONSTRAINT
 
 create_table_with_constraints:
+  skip_semantic_check: Table and column constraints are intentionally reordered.
   sql: |
     CREATE TABLE orders (
       id bigint,
@@ -14,6 +15,19 @@ create_table_with_constraints:
         id bigint
       , name text UNIQUE DEFAULT 'a' NOT NULL
       , CONSTRAINT pk_orders PRIMARY KEY (id)
+    );
+
+constraints_ordering:
+  skip_semantic_check: Column constraints are intentionally reordered.
+  sql: |
+    CREATE TABLE orders (
+      order_id bigint,
+      order_date date NOT NULL DEFAULT CURRENT_DATE
+    );
+  expected: |
+    CREATE TABLE orders (
+        order_id bigint
+      , order_date date DEFAULT CURRENT_DATE NOT NULL
     );
 
 add_primary_key:
@@ -90,3 +104,52 @@ rename_constraint:
   expected: |
     ALTER TABLE orders
         RENAME CONSTRAINT pk_my_table TO pk_new_table;
+
+create_primary_key_without_overlaps:
+  sql: |
+    CREATE TABLE bookings (
+        id bigint,
+        valid_at daterange,
+        PRIMARY KEY (id, valid_at WITHOUT OVERLAPS)
+    );
+  expected: |
+    CREATE TABLE bookings (
+        id bigint
+      , valid_at daterange
+      , PRIMARY KEY (id, valid_at WITHOUT OVERLAPS)
+    );
+
+add_foreign_key_not_enforced:
+  sql: |
+    ALTER TABLE orders
+    ADD CONSTRAINT fk_orders_customers
+    FOREIGN KEY (customer_id) REFERENCES customers (id) NOT ENFORCED;
+  expected: |
+    ALTER TABLE orders
+        ADD CONSTRAINT fk_orders_customers FOREIGN KEY (customer_id) REFERENCES customers (id) NOT VALID NOT ENFORCED;
+
+add_check_not_enforced:
+  sql: |
+    ALTER TABLE orders
+    ADD CONSTRAINT check_orders_total
+    CHECK (total > 0) NOT ENFORCED;
+  expected: |
+    ALTER TABLE orders
+        ADD CONSTRAINT check_orders_total CHECK (total > 0) NOT VALID NOT ENFORCED;
+
+alter_constraint_not_enforced:
+  sql: |
+    ALTER TABLE orders
+    ALTER CONSTRAINT orders_customer_id_fkey NOT ENFORCED;
+  expected: |
+    ALTER TABLE orders
+        ALTER CONSTRAINT orders_customer_id_fkey NOT ENFORCED;
+
+add_check_no_inherit:
+  sql: |
+    ALTER TABLE orders
+    ADD CONSTRAINT check_orders_total
+    CHECK (total > 0) NO INHERIT;
+  expected: |
+    ALTER TABLE orders
+        ADD CONSTRAINT check_orders_total CHECK (total > 0) NO INHERIT;

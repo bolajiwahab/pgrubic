@@ -167,13 +167,14 @@ def create_function_option(  # noqa: PLR0911
             node.arg[0].sval if isinstance(node.arg, tuple) else node.arg.sval
         )
 
-        function_body = (
-            function_body + noqa.SEMI_COLON
-            if not function_body.strip().endswith(noqa.SEMI_COLON)
-            else function_body
-        )
+        delimiter = "BODY"
+        suffix = 1
+        while f"${delimiter}$" in function_body:
+            delimiter = f"BODY_{suffix}"
+            suffix += 1
+        dollar_quote = f"${delimiter}$"
 
-        output.write("$BODY$")
+        output.write(dollar_quote)
 
         if is_sql_function:
             # No error tracking is needed here because the SQL function body has already
@@ -197,7 +198,7 @@ def create_function_option(  # noqa: PLR0911
             output.write(function_body.strip(noqa.NEW_LINE))
             output.newline()
 
-        output.write("$BODY$")
+        output.write(dollar_quote)
         return
 
     if option.upper() == "SECURITY":
@@ -268,6 +269,9 @@ def alter_function_stmt(
     output.space()
     if node.objtype == enums.ObjectType.OBJECT_PROCEDURE:
         output.write("PROCEDURE")
+        output.space()
+    elif node.objtype == enums.ObjectType.OBJECT_ROUTINE:
+        output.write("ROUTINE")
         output.space()
     else:
         output.write("FUNCTION")

@@ -40,6 +40,25 @@ def test_formatters(
             f"Test failed for formatter: `{test_formatter}` in `{test_id}`"
         )
 
+        idempotent_result = formatter.format(
+            source_file=TEST_FILE,
+            source_code=result.formatted_source_code,
+        )
+        assert idempotent_result.formatted_source_code == result.formatted_source_code, (
+            f"Formatter is not idempotent: `{test_formatter}` in `{test_id}`"
+        )
+
+        skip_semantic_check = test_case.get("skip_semantic_check")
+        if skip_semantic_check is not None:
+            assert isinstance(skip_semantic_check, str), (
+                "skip_semantic_check must specify a reason: "
+                f"`{test_formatter}` in `{test_id}`"
+            )
+            assert skip_semantic_check.strip(), (
+                "skip_semantic_check must specify a non-empty reason: "
+                f"`{test_formatter}` in `{test_id}`"
+            )
+
         # Check that the formatted source code is valid
         try:
             parser.parse_sql(result.formatted_source_code)
@@ -57,6 +76,22 @@ def test_configured_streams(formatter: core.Formatter) -> None:
     assert raw_stream.config is formatter.config
     assert isinstance(indented_stream, pglast_stream.IndentedStream)
     assert indented_stream.config is formatter.config
+
+
+def test_configured_streams_write_as_keyword(formatter: core.Formatter) -> None:
+    """Test contextual SQL syntax follows configured keyword casing."""
+    for stream_type in (formatter_module.RawStream, formatter_module.IndentedStream):
+        output = stream_type(config=formatter.config)
+        output.write_as_keyword("LOCALE_PROVIDER")
+        assert output.getvalue() == "LOCALE_PROVIDER"
+
+        with conftest.update_config(
+            config=formatter.config,
+            overrides={"format": {"uppercase_keywords": False}},
+        ):
+            output = stream_type(config=formatter.config)
+            output.write_as_keyword("LOCALE_PROVIDER")
+            assert output.getvalue() == "locale_provider"
 
 
 def test_create_raw_stream_factory(formatter: core.Formatter) -> None:
@@ -87,6 +122,21 @@ def test_raw_stream_supports_custom_printers(formatter: core.Formatter) -> None:
         )
         == "CREATE TABLE tbl (value integer) WITH (fillfactor = 90)"
     )
+
+
+def test_check_constraint_rejects_raw_and_cooked_expressions(
+    formatter: core.Formatter,
+) -> None:
+    """Test a CHECK constraint cannot contain both expression forms."""
+    statement = parser.parse_sql("CREATE TABLE tbl (value integer CHECK (value > 0))")
+    constraint = statement[0].stmt.tableElts[0].constraints[0]  # type: ignore[attr-defined]
+    constraint.cooked_expr = "cooked expression"
+
+    with pytest.raises(
+        ValueError,
+        match="CHECK constraint cannot have both raw and cooked expressions",
+    ):
+        formatter.create_raw_stream()(constraint)
 
 
 def test_concatenate_nodes_with_type_cast(formatter: core.Formatter) -> None:

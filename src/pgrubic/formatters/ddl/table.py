@@ -209,17 +209,6 @@ def create_stmt(
         output.writes("PARTITION BY")
         output.print_node(node=node.partspec)
 
-    if node.oncommit != enums.OnCommitAction.ONCOMMIT_NOOP:
-        output.newline()
-        output.write("ON COMMIT")
-        output.space()
-        if node.oncommit == enums.OnCommitAction.ONCOMMIT_PRESERVE_ROWS:
-            output.write("PRESERVE ROWS")
-        elif node.oncommit == enums.OnCommitAction.ONCOMMIT_DELETE_ROWS:
-            output.write("DELETE ROWS")
-        elif node.oncommit == enums.OnCommitAction.ONCOMMIT_DROP:
-            output.write("DROP")
-
     if node.accessMethod:
         output.newline()
         output.space(clause_indent)
@@ -237,6 +226,18 @@ def create_stmt(
             closing_indent=clause_indent,
             continuation_indent=clause_indent + 4,
         )
+
+    if node.oncommit != enums.OnCommitAction.ONCOMMIT_NOOP:
+        output.newline()
+        output.space(clause_indent)
+        output.write("ON COMMIT")
+        output.space()
+        if node.oncommit == enums.OnCommitAction.ONCOMMIT_PRESERVE_ROWS:
+            output.write("PRESERVE ROWS")
+        elif node.oncommit == enums.OnCommitAction.ONCOMMIT_DELETE_ROWS:
+            output.write("DELETE ROWS")
+        elif node.oncommit == enums.OnCommitAction.ONCOMMIT_DROP:
+            output.write("DROP")
 
     if node.tablespacename:
         output.newline()

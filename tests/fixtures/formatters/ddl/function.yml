@@ -31,6 +31,7 @@ create_sql_conforming_style_function:
     RETURN a + b;
 
 create_sql_function_with_as:
+  skip_semantic_check: Function options are reordered and the SQL body is formatted.
   sql: |
     CREATE FUNCTION add(integer, integer) RETURNS integer
     AS 'select $1 + $2, $1 - $2, $1 * $2 from tbl'
@@ -56,6 +57,7 @@ create_sql_function_with_as:
     $BODY$;
 
 create_sql_function_body_with_config:
+  skip_semantic_check: Function options are reordered and the SQL body is formatted.
   sql: |
     CREATE FUNCTION add(integer, integer) RETURNS integer
     AS 'SELECT $1 + $2'
@@ -94,6 +96,7 @@ create_plpgsql_conforming_style_function:
 
 # we do not format non-sql function bodies
 create_plpgsql_function_with_as:
+  skip_semantic_check: Function options are reordered and the quoted body is rewritten.
   sql: |
     CREATE OR REPLACE FUNCTION increment(i integer) RETURNS integer AS $$
         BEGIN
@@ -114,6 +117,7 @@ create_plpgsql_function_with_as:
 
 # we do not format non-sql function bodies
 create_plpgsql_function_return_table:
+  skip_semantic_check: Function options are reordered and the quoted body is rewritten.
   sql: |
     create or replace function get_demo_data(p_id varchar,p_start_date timestamp,p_end_date timestamp)
     returns table(record_id bigint,record_date timestamp,amount numeric,code text)
@@ -145,6 +149,7 @@ create_plpgsql_function_return_table:
     $BODY$;
 
 create_function_plpgsql_returns_set_of:
+  skip_semantic_check: Function options are reordered and the quoted body is rewritten.
   sql: |
     create or replace function find_film_by_id(
       p_id int
@@ -172,6 +177,7 @@ create_function_plpgsql_returns_set_of:
     $BODY$;
 
 create_function_no_parameters:
+  skip_semantic_check: Function options are reordered and the quoted body is rewritten.
   sql: |
     create or replace function find_film_by_id()
     returns setof film
@@ -243,6 +249,7 @@ create_sql_procedure_body_with_config:
     ;
 
 create_sql_non_conforming_style_procedure:
+  skip_semantic_check: Procedure options are reordered and the SQL body is formatted.
   sql: |
     CREATE PROCEDURE insert_data(a integer, b integer)
     LANGUAGE SQL
@@ -265,6 +272,7 @@ create_sql_non_conforming_style_procedure:
     $BODY$;
 
 create_c_function:
+  skip_semantic_check: Function options are intentionally reordered.
   sql: |
     CREATE FUNCTION pg_stat_statements(IN showtext boolean,
         OUT userid oid
@@ -300,3 +308,23 @@ alter_procedure:
         SET search_path TO 'admin', 'pg_temp'
         RESET ALL
         SET search_path TO 'admin', 'pg_temp';
+
+create_function_with_body_delimiter_in_body:
+  skip_semantic_check: Function options are reordered and the SQL body is formatted.
+  sql: |
+    CREATE FUNCTION body_text() RETURNS text LANGUAGE sql
+    AS $function$ SELECT '$BODY$' $function$;
+  expected: |
+    CREATE FUNCTION body_text ()
+    RETURNS text
+    LANGUAGE SQL
+    AS $BODY_1$
+        SELECT '$BODY$';
+    $BODY_1$;
+
+alter_routine:
+  sql: |
+    ALTER ROUTINE insert_data(integer, integer) SET search_path = admin;
+  expected: |
+    ALTER ROUTINE insert_data (integer, integer)
+        SET search_path TO 'admin';
