@@ -3,12 +3,12 @@ formatter: DATABASE
 
 create_database:
   sql: |
-    CREATE DATABASE music strategy wal_log ENCODING 'UTF8' LOCALE_PROVIDER libc
+    CREATE DATABASE music strategy 'WAL_LOG' ENCODING 'UTF8' LOCALE_PROVIDER libc
     LOCALE 'C' TEMPLATE template0 is_template true
     allow_connections true connection limit 10;
   expected: |
     CREATE DATABASE music
-      WITH STRATEGY = 'wal_log'
+      WITH STRATEGY = 'WAL_LOG'
            ENCODING = 'UTF8'
            LOCALE_PROVIDER = 'libc'
            LOCALE = 'C'
