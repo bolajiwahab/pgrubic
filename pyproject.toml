@@ -61,12 +61,12 @@ dependencies = [
   "pydantic==2.13.5",
   "deepmerge==3.0.1",
   "msgpack==1.2.2",
-  "gitpython==3.1.61",
+  "gitpython==3.1.62",
 ]
 
 [project.optional-dependencies]
 dev = [
-  "ruff==0.16.5",
+  "ruff==0.16.7",
   "mypy==2.3.1",
   "isort==9.0.1",
   "bandit==1.9.4",
@@ -78,7 +78,7 @@ dev = [
   "conventional-pre-commit==4.4.0",
   "pytest==9.1.1",
   "coverage==7.16.0",
-  "types-pyyaml==6.0.12.20260815",
+  "types-pyyaml==6.0.12.20260906",
   "types-toml==0.10.8.20260518",
   "types-colorama==0.4.15.20260508",
   "types-click==7.1.8",
@@ -86,7 +86,7 @@ dev = [
 ]
 
 doc = [
-  "zensical==0.0.58",
+  "zensical==0.0.60",
   "mkdocstrings[python]==1.0.6",
 ]
 
