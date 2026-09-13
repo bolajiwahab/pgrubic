@@ -7,14 +7,14 @@ from pgrubic.core import formatter
 
 
 class ConstrTypePrinter(printers.ddl.ConstrTypePrinter):
-    """Constraint type formatting."""
+    """Constraint printer."""
 
     def CONSTR_CHECK(  # type: ignore[override]
         self,
         node: ast.Constraint,
         output: formatter.PrinterOutput,
     ) -> None:
-        """Print CHECK without the enforcement attribute handled by its parent."""
+        """Print check constraint overriding the enforcement."""
         output.swrite("CHECK")
         output.space()
         with output.expression(need_parens=True):
