@@ -122,7 +122,7 @@ def test_lint_missing_function_body(linter: core.Linter) -> None:
     )
 
     assert {error.message for error in result.errors} == {
-        "no routine body specified",
+        "No routine body specified",
     }
 
 
@@ -134,7 +134,7 @@ def test_lint_missing_do_body(linter: core.Linter) -> None:
     )
 
     assert {error.message for error in result.errors} == {
-        "no routine body specified",
+        "No routine body specified",
     }
 
 

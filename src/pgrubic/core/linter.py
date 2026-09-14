@@ -574,7 +574,7 @@ class Linter:
                             statement_start_location=statement.start_location + 1,
                             statement_end_location=statement.end_location,
                             statement=statement.text,
-                            message="no routine body specified",
+                            message="No routine body specified",
                             hint="Specify the routine body using AS or a SQL body",
                         ),
                     )

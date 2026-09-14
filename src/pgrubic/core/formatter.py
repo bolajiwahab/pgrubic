@@ -239,6 +239,7 @@ class Formatter:
                 try:
                     parse_tree = parser.parse_sql(statement.text)
                     parsed_statement = parse_tree[0].stmt
+
                     if isinstance(
                         parsed_statement,
                         (ast.CreateFunctionStmt, ast.DoStmt),
@@ -250,7 +251,7 @@ class Formatter:
                                 statement_start_location=statement.start_location + 1,
                                 statement_end_location=statement.end_location,
                                 statement=statement.text,
-                                message="no routine body specified",
+                                message="No routine body specified",
                                 hint="Specify the routine body using AS or a SQL body",
                             ),
                         )

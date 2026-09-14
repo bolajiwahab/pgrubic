@@ -172,7 +172,7 @@ def test_format_missing_function_body(formatter: core.Formatter) -> None:
 
     assert result.formatted_source_code == source_code + noqa.NEW_LINE
     assert {error.message for error in result.errors} == {
-        "no routine body specified",
+        "No routine body specified",
     }
 
 
@@ -184,7 +184,7 @@ def test_format_missing_do_body(formatter: core.Formatter) -> None:
 
     assert result.formatted_source_code == source_code + noqa.NEW_LINE
     assert {error.message for error in result.errors} == {
-        "no routine body specified",
+        "No routine body specified",
     }
 
 
