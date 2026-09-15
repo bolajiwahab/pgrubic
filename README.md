@@ -13,8 +13,8 @@
 | src/pgrubic/core/enums.py                    |        9 |        0 |     100% |           |
 | src/pgrubic/core/errors.py                   |       16 |        0 |     100% |           |
 | src/pgrubic/core/filters.py                  |       26 |        0 |     100% |           |
-| src/pgrubic/core/formatter.py                |       93 |        0 |     100% |           |
-| src/pgrubic/core/linter.py                   |      240 |        0 |     100% |           |
+| src/pgrubic/core/formatter.py                |       99 |        0 |     100% |           |
+| src/pgrubic/core/linter.py                   |      245 |        0 |     100% |           |
 | src/pgrubic/core/loader.py                   |       25 |        0 |     100% |           |
 | src/pgrubic/core/logger.py                   |        5 |        0 |     100% |           |
 | src/pgrubic/core/noqa.py                     |      123 |        0 |     100% |           |
@@ -42,7 +42,7 @@
 | src/pgrubic/formatters/dml/typecast.py       |       54 |        0 |     100% |           |
 | src/pgrubic/formatters/dml/update.py         |       39 |        0 |     100% |           |
 | src/pgrubic/postgres/\_\_init\_\_.py         |        0 |        0 |     100% |           |
-| src/pgrubic/postgres/functions.py            |       10 |        0 |     100% |           |
+| src/pgrubic/postgres/functions.py            |       15 |        0 |     100% |           |
 | src/pgrubic/rules/\_\_init\_\_.py            |        0 |        0 |     100% |           |
 | src/pgrubic/rules/constraint/CT001.py        |       12 |        0 |     100% |           |
 | src/pgrubic/rules/constraint/CT002.py        |       10 |        0 |     100% |           |
@@ -167,7 +167,7 @@
 | src/pgrubic/rules/unsafe/US030.py            |        9 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US031.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-| **TOTAL**                                    | **3751** |    **0** | **100%** |           |
+| **TOTAL**                                    | **3767** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge

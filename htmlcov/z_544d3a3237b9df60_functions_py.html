@@ -54,8 +54,8 @@
             </div>
         </aside>
         <h2>
-            <span class="text">10 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">10<span class="text"> run</span></button>
+            <span class="text">15 statements &nbsp;</span>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">15<span class="text"> run</span></button>
             <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">0<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">0<span class="text"> excluded</span></button>
         </h2>
@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="z_2984982153baaf66_CT001_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
-            created at 2026-09-13 19:42 +0000
+            created at 2026-09-15 18:20 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -2649,40 +2649,49 @@
     <p class="run run2"><span class="n"><a id="t2567" href="#t2567">2567</a></span><span class="t"><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t2568" href="#t2568">2568</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t2569" href="#t2569">2569</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t2570" href="#t2570">2570</a></span><span class="t"><span class="key">def</span> <span class="nam">is_non_volatile_function</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t2571" href="#t2571">2571</a></span><span class="t">    <span class="op">*</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t2572" href="#t2572">2572</a></span><span class="t">    <span class="nam">function</span><span class="op">:</span> <span class="nam">ast</span><span class="op">.</span><span class="nam">FuncCall</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t2573" href="#t2573">2573</a></span><span class="t">    <span class="nam">additional_non_volatile_functions</span><span class="op">:</span> <span class="nam">frozenset</span><span class="op">[</span><span class="nam">str</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t2574" href="#t2574">2574</a></span><span class="t"><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">bool</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2575" href="#t2575">2575</a></span><span class="t">    <span class="str">&quot;&quot;&quot;Check if function is non volatile against PostgreSQL built-in functions</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2576" href="#t2576">2576</a></span><span class="t"><span class="str">    and user defined functions.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t2570" href="#t2570">2570</a></span><span class="t"><span class="key">def</span> <span class="nam">has_body</span><span class="op">(</span><span class="nam">node</span><span class="op">:</span> <span class="nam">ast</span><span class="op">.</span><span class="nam">CreateFunctionStmt</span> <span class="op">|</span> <span class="nam">ast</span><span class="op">.</span><span class="nam">DoStmt</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">bool</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2571" href="#t2571">2571</a></span><span class="t">    <span class="str">&quot;&quot;&quot;Return whether a function, procedure, or DO statement has a body.&quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t2572" href="#t2572">2572</a></span><span class="t">    <span class="key">if</span> <span class="nam">isinstance</span><span class="op">(</span><span class="nam">node</span><span class="op">,</span> <span class="nam">ast</span><span class="op">.</span><span class="nam">CreateFunctionStmt</span><span class="op">)</span> <span class="key">and</span> <span class="nam">node</span><span class="op">.</span><span class="nam">sql_body</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t2573" href="#t2573">2573</a></span><span class="t">        <span class="key">return</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2574" href="#t2574">2574</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t2575" href="#t2575">2575</a></span><span class="t">    <span class="nam">options</span> <span class="op">=</span> <span class="nam">node</span><span class="op">.</span><span class="nam">options</span> <span class="key">if</span> <span class="nam">isinstance</span><span class="op">(</span><span class="nam">node</span><span class="op">,</span> <span class="nam">ast</span><span class="op">.</span><span class="nam">CreateFunctionStmt</span><span class="op">)</span> <span class="key">else</span> <span class="nam">node</span><span class="op">.</span><span class="nam">args</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t2576" href="#t2576">2576</a></span><span class="t">    <span class="key">return</span> <span class="nam">any</span><span class="op">(</span><span class="nam">option</span><span class="op">.</span><span class="nam">defname</span> <span class="op">==</span> <span class="str">&quot;as&quot;</span> <span class="key">for</span> <span class="nam">option</span> <span class="key">in</span> <span class="nam">options</span> <span class="key">or</span> <span class="op">(</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t2577" href="#t2577">2577</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2578" href="#t2578">2578</a></span><span class="t"><span class="str">    Parameters:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2579" href="#t2579">2579</a></span><span class="t"><span class="str">    ----------</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2580" href="#t2580">2580</a></span><span class="t"><span class="str">    function: ast.Node</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2581" href="#t2581">2581</a></span><span class="t"><span class="str">        Function to check.</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2582" href="#t2582">2582</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2583" href="#t2583">2583</a></span><span class="t"><span class="str">    additional_non_volatile_functions: frozenset[str]</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2584" href="#t2584">2584</a></span><span class="t"><span class="str">        Additional non volatile functions to check against.</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2585" href="#t2585">2585</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2586" href="#t2586">2586</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2587" href="#t2587">2587</a></span><span class="t"><span class="str">    -------</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2588" href="#t2588">2588</a></span><span class="t"><span class="str">    bool</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2589" href="#t2589">2589</a></span><span class="t"><span class="str">        True if function is non volatile, False otherwise.</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2590" href="#t2590">2590</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2591" href="#t2591">2591</a></span><span class="t"><span class="str">    &quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t2592" href="#t2592">2592</a></span><span class="t">    <span class="nam">function_name</span> <span class="op">=</span> <span class="nam">typing</span><span class="op">.</span><span class="nam">cast</span><span class="op">(</span><span class="nam">tuple</span><span class="op">[</span><span class="nam">ast</span><span class="op">.</span><span class="nam">String</span><span class="op">,</span> <span class="op">...</span><span class="op">]</span><span class="op">,</span> <span class="nam">function</span><span class="op">.</span><span class="nam">funcname</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2593" href="#t2593">2593</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2594" href="#t2594">2594</a></span><span class="t">    <span class="com"># Use pg_catalog if function is not schema qualified.</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t2595" href="#t2595">2595</a></span><span class="t">    <span class="key">if</span> <span class="nam">len</span><span class="op">(</span><span class="nam">function_name</span><span class="op">)</span> <span class="op">&lt;</span> <span class="nam">SCHEMA_QUALIFIED_LENGTH</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t2596" href="#t2596">2596</a></span><span class="t">        <span class="nam">function_name</span> <span class="op">=</span> <span class="op">(</span><span class="nam">ast</span><span class="op">.</span><span class="nam">String</span><span class="op">(</span><span class="nam">sval</span><span class="op">=</span><span class="str">&quot;pg_catalog&quot;</span><span class="op">)</span><span class="op">,</span> <span class="op">*</span><span class="nam">function_name</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t2597" href="#t2597">2597</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t2598" href="#t2598">2598</a></span><span class="t">    <span class="nam">function_fully_qualified_name</span> <span class="op">=</span> <span class="nam">get_fully_qualified_name</span><span class="op">(</span><span class="nam">function_name</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2578" href="#t2578">2578</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t2579" href="#t2579">2579</a></span><span class="t"><span class="key">def</span> <span class="nam">is_non_volatile_function</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t2580" href="#t2580">2580</a></span><span class="t">    <span class="op">*</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t2581" href="#t2581">2581</a></span><span class="t">    <span class="nam">function</span><span class="op">:</span> <span class="nam">ast</span><span class="op">.</span><span class="nam">FuncCall</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t2582" href="#t2582">2582</a></span><span class="t">    <span class="nam">additional_non_volatile_functions</span><span class="op">:</span> <span class="nam">frozenset</span><span class="op">[</span><span class="nam">str</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t2583" href="#t2583">2583</a></span><span class="t"><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">bool</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2584" href="#t2584">2584</a></span><span class="t">    <span class="str">&quot;&quot;&quot;Check if function is non volatile against PostgreSQL built-in functions</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2585" href="#t2585">2585</a></span><span class="t"><span class="str">    and user defined functions.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2586" href="#t2586">2586</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2587" href="#t2587">2587</a></span><span class="t"><span class="str">    Parameters:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2588" href="#t2588">2588</a></span><span class="t"><span class="str">    ----------</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2589" href="#t2589">2589</a></span><span class="t"><span class="str">    function: ast.Node</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2590" href="#t2590">2590</a></span><span class="t"><span class="str">        Function to check.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2591" href="#t2591">2591</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2592" href="#t2592">2592</a></span><span class="t"><span class="str">    additional_non_volatile_functions: frozenset[str]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2593" href="#t2593">2593</a></span><span class="t"><span class="str">        Additional non volatile functions to check against.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2594" href="#t2594">2594</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2595" href="#t2595">2595</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2596" href="#t2596">2596</a></span><span class="t"><span class="str">    -------</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2597" href="#t2597">2597</a></span><span class="t"><span class="str">    bool</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2598" href="#t2598">2598</a></span><span class="t"><span class="str">        True if function is non volatile, False otherwise.</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t2599" href="#t2599">2599</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t2600" href="#t2600">2600</a></span><span class="t">    <span class="key">return</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t2601" href="#t2601">2601</a></span><span class="t">        <span class="nam">function_fully_qualified_name</span> <span class="key">in</span> <span class="nam">BUILTIN_NON_VOLATILE_FUNCTIONS</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t2602" href="#t2602">2602</a></span><span class="t">        <span class="key">or</span> <span class="nam">function_fully_qualified_name</span> <span class="key">in</span> <span class="nam">additional_non_volatile_functions</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t2603" href="#t2603">2603</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2600" href="#t2600">2600</a></span><span class="t"><span class="str">    &quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t2601" href="#t2601">2601</a></span><span class="t">    <span class="nam">function_name</span> <span class="op">=</span> <span class="nam">typing</span><span class="op">.</span><span class="nam">cast</span><span class="op">(</span><span class="nam">tuple</span><span class="op">[</span><span class="nam">ast</span><span class="op">.</span><span class="nam">String</span><span class="op">,</span> <span class="op">...</span><span class="op">]</span><span class="op">,</span> <span class="nam">function</span><span class="op">.</span><span class="nam">funcname</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2602" href="#t2602">2602</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2603" href="#t2603">2603</a></span><span class="t">    <span class="com"># Use pg_catalog if function is not schema qualified.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t2604" href="#t2604">2604</a></span><span class="t">    <span class="key">if</span> <span class="nam">len</span><span class="op">(</span><span class="nam">function_name</span><span class="op">)</span> <span class="op">&lt;</span> <span class="nam">SCHEMA_QUALIFIED_LENGTH</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t2605" href="#t2605">2605</a></span><span class="t">        <span class="nam">function_name</span> <span class="op">=</span> <span class="op">(</span><span class="nam">ast</span><span class="op">.</span><span class="nam">String</span><span class="op">(</span><span class="nam">sval</span><span class="op">=</span><span class="str">&quot;pg_catalog&quot;</span><span class="op">)</span><span class="op">,</span> <span class="op">*</span><span class="nam">function_name</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2606" href="#t2606">2606</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t2607" href="#t2607">2607</a></span><span class="t">    <span class="nam">function_fully_qualified_name</span> <span class="op">=</span> <span class="nam">get_fully_qualified_name</span><span class="op">(</span><span class="nam">function_name</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t2608" href="#t2608">2608</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t2609" href="#t2609">2609</a></span><span class="t">    <span class="key">return</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t2610" href="#t2610">2610</a></span><span class="t">        <span class="nam">function_fully_qualified_name</span> <span class="key">in</span> <span class="nam">BUILTIN_NON_VOLATILE_FUNCTIONS</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t2611" href="#t2611">2611</a></span><span class="t">        <span class="key">or</span> <span class="nam">function_fully_qualified_name</span> <span class="key">in</span> <span class="nam">additional_non_volatile_functions</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t2612" href="#t2612">2612</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
     <div class="content">
@@ -2692,7 +2701,7 @@
             <a class="nav" href="z_2984982153baaf66_CT001_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
-            created at 2026-09-13 19:42 +0000
+            created at 2026-09-15 18:20 +0000
         </p>
     </div>
 </footer>
