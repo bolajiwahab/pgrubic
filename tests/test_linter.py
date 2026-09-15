@@ -114,6 +114,30 @@ def test_lint_parse_error(linter: core.Linter) -> None:
     assert len(linting_result.errors) == 1
 
 
+def test_lint_missing_function_body(linter: core.Linter) -> None:
+    """Test missing function body."""
+    result = linter.run(
+        source_file=SOURCE_FILE,
+        source_code="CREATE FUNCTION f() RETURNS integer LANGUAGE sql;",
+    )
+
+    assert {error.message for error in result.errors} == {
+        "No routine body specified",
+    }
+
+
+def test_lint_missing_do_body(linter: core.Linter) -> None:
+    """Test missing DO body."""
+    result = linter.run(
+        source_file=SOURCE_FILE,
+        source_code="DO LANGUAGE plpgsql;",
+    )
+
+    assert {error.message for error in result.errors} == {
+        "No routine body specified",
+    }
+
+
 def test_new_line_before_semicolon(
     linter: core.Linter,
 ) -> None:

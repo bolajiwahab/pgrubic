@@ -2567,6 +2567,15 @@ BUILTIN_NON_VOLATILE_FUNCTIONS: typing.Final[frozenset[str]] = frozenset(
 )
 
 
+def has_body(node: ast.CreateFunctionStmt | ast.DoStmt) -> bool:
+    """Return whether a function, procedure, or DO statement has a body."""
+    if isinstance(node, ast.CreateFunctionStmt) and node.sql_body is not None:
+        return True
+
+    options = node.options if isinstance(node, ast.CreateFunctionStmt) else node.args
+    return any(option.defname == "as" for option in options or ())
+
+
 def is_non_volatile_function(
     *,
     function: ast.FuncCall,

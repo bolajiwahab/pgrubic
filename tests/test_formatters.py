@@ -164,6 +164,30 @@ def test_format_parse_error(formatter: core.Formatter) -> None:
     assert len(formatting_result.errors) == 1
 
 
+def test_format_missing_function_body(formatter: core.Formatter) -> None:
+    """Test missing function body."""
+    source_code = "CREATE FUNCTION f() RETURNS integer LANGUAGE sql;"
+
+    result = formatter.format(source_file=TEST_FILE, source_code=source_code)
+
+    assert result.formatted_source_code == source_code + noqa.NEW_LINE
+    assert {error.message for error in result.errors} == {
+        "No routine body specified",
+    }
+
+
+def test_format_missing_do_body(formatter: core.Formatter) -> None:
+    """Test missing DO body."""
+    source_code = "DO LANGUAGE plpgsql;"
+
+    result = formatter.format(source_file=TEST_FILE, source_code=source_code)
+
+    assert result.formatted_source_code == source_code + noqa.NEW_LINE
+    assert {error.message for error in result.errors} == {
+        "No routine body specified",
+    }
+
+
 def test_new_line_before_semicolon(formatter: core.Formatter) -> None:
     """Test new line before semicolon."""
     source_code = "select 1;"

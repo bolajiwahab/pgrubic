@@ -6,6 +6,7 @@ from pglast import Comment, ast, parser, stream
 
 from pgrubic import ISSUES_URL
 from pgrubic.core import noqa, config, errors
+from pgrubic.postgres import functions as postgres_functions
 
 
 class FormatResult(typing.NamedTuple):
@@ -236,7 +237,28 @@ class Formatter:
                 )
 
                 try:
-                    parser.parse_sql(statement.text)
+                    parse_tree = parser.parse_sql(statement.text)
+                    parsed_statement = parse_tree[0].stmt
+
+                    if isinstance(
+                        parsed_statement,
+                        (ast.CreateFunctionStmt, ast.DoStmt),
+                    ) and not postgres_functions.has_body(parsed_statement):
+                        _errors.add(
+                            errors.Error(
+                                source_file=str(source_file),
+                                source_code=statement.text,
+                                statement_start_location=statement.start_location + 1,
+                                statement_end_location=statement.end_location,
+                                statement=statement.text,
+                                message="No routine body specified",
+                                hint="Specify the routine body using AS or a SQL body",
+                            ),
+                        )
+                        formatted_statements.append(
+                            statement.text.strip(noqa.NEW_LINE),
+                        )
+                        continue
 
                     output = IndentedStream(
                         config=config,

@@ -561,6 +561,25 @@ class Linter:
 
             try:
                 parse_tree: tuple[ast.RawStmt, ...] = parser.parse_sql(statement.text)
+                parsed_statement = parse_tree[0].stmt
+
+                if isinstance(
+                    parsed_statement,
+                    (ast.CreateFunctionStmt, ast.DoStmt),
+                ) and not postgres_functions.has_body(parsed_statement):
+                    _errors.add(
+                        errors.Error(
+                            source_file=str(source_file),
+                            source_code=source_code,
+                            statement_start_location=statement.start_location + 1,
+                            statement_end_location=statement.end_location,
+                            statement=statement.text,
+                            message="No routine body specified",
+                            hint="Specify the routine body using AS or a SQL body",
+                        ),
+                    )
+                    fixed_statements.append(statement.text.strip(noqa.NEW_LINE))
+                    continue
 
                 comments = noqa.extract_comments(
                     statement=statement,
