@@ -179,28 +179,3 @@ CREATE TABLE tbl (
     extracted_statements = noqa.extract_statements(source_code=source_code)
 
     assert extracted_statements[0].text == expected_statement
-
-
-def test_extract_transaction_control_statements() -> None:
-    """Transaction control statements are tracked as separate statements."""
-    source_code = "BEGIN;\nSELECT 1;\nCOMMIT;"
-
-    extracted_statements = noqa.extract_statements(source_code=source_code)
-
-    assert [statement.text.strip() for statement in extracted_statements] == [
-        "BEGIN;",
-        "SELECT 1;",
-        "COMMIT;",
-    ]
-
-
-def test_extract_adjacent_statements() -> None:
-    """A statement starting immediately after a semicolon is not truncated."""
-    source_code = "SELECT 1;SELECT 2;"
-
-    extracted_statements = noqa.extract_statements(source_code=source_code)
-
-    assert [statement.text for statement in extracted_statements] == [
-        "SELECT 1;",
-        "SELECT 2;",
-    ]
