@@ -11,13 +11,8 @@ from colorama import Fore, Style
 from pgrubic import PACKAGE_NAME
 
 A_STAR: typing.Final[str] = "*"
-ASCII_SEMI_COLON: typing.Final[str] = "ASCII_59"
-ASCII_OPEN_PARENTHESIS: typing.Final[str] = "ASCII_40"
-ASCII_CLOSE_PARENTHESIS: typing.Final[str] = "ASCII_41"
 SQL_COMMENT: typing.Final[str] = "SQL_COMMENT"
 C_COMMENT: typing.Final[str] = "C_COMMENT"
-BEGIN_BLOCK: typing.Final[str] = "BEGIN_P"
-END_BLOCK: typing.Final[str] = "END_P"
 
 LINT_IGNORE_DIRECTIVE: typing.Final[str] = "noqa"
 FORMAT_IGNORE_DIRECTIVE: typing.Final[str] = "fmt"
@@ -51,46 +46,35 @@ def extract_statements(
         List of statements.
     """
     statements: list[Statement] = []
-
     statement_start_location = 0
 
-    tokens: list[parser.Token] = parser.scan(source_code)
+    try:
+        statement_slices = parser.split(source_code, only_slices=True)
+        parser_backed = True
+    except parser.ParseError:
+        statement_slices = parser.split(
+            source_code,
+            with_parser=False,
+            only_slices=True,
+        )
+        parser_backed = False
 
-    inside_block = False  # Tracks if we are inside BEGIN ... END block
+    for statement_slice in statement_slices:
+        if not parser_backed:
+            statement_start_location = statement_slice.start
+        statement_end_location = statement_slice.stop
+        if source_code[statement_end_location : statement_end_location + 1] == SEMI_COLON:
+            statement_end_location += 1
 
-    inside_parenthesis = False  # Tracks if we are inside parentheses (...)
+        statements.append(
+            Statement(
+                start_location=statement_start_location,
+                end_location=statement_end_location,
+                text=source_code[statement_start_location:statement_end_location],
+            ),
+        )
+        statement_start_location = statement_end_location
 
-    for token in tokens:
-        if token.name == BEGIN_BLOCK:
-            inside_block = True
-
-        if inside_block and token.name == END_BLOCK:
-            inside_block = False  # Function block ends
-
-        if token.name == ASCII_OPEN_PARENTHESIS:
-            inside_parenthesis = True
-
-        if token.name == ASCII_CLOSE_PARENTHESIS:
-            inside_parenthesis = False  # Parenthesis ends
-
-        # Check if we have reached a semi-colon or the end of the source code
-        if token.name == ASCII_SEMI_COLON or token is tokens[-1]:
-            if not (inside_block or inside_parenthesis):
-                # In order to include the last character, we need to increase the end
-                # location by 1
-                actual_end_location = token.end + 1
-
-                statements.append(
-                    Statement(
-                        start_location=statement_start_location,
-                        end_location=actual_end_location,
-                        text=(source_code[statement_start_location:actual_end_location]),
-                    ),
-                )
-                # Move to the next statement
-                statement_start_location = actual_end_location + 1
-            else:
-                continue
     return statements
 
 
