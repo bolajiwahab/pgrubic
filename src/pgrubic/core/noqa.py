@@ -49,8 +49,9 @@ def extract_statements(
     statement_start_location = 0
 
     try:
-        statement_slices = parser.split(source_code, only_slices=True)
+        statement_slices = parser.split(source_code, with_parser=True, only_slices=True)
         parser_backed = True
+
     except parser.ParseError:
         statement_slices = parser.split(
             source_code,
@@ -62,7 +63,10 @@ def extract_statements(
     for statement_slice in statement_slices:
         if not parser_backed:
             statement_start_location = statement_slice.start
+
         statement_end_location = statement_slice.stop
+
+        # pglast excludes the statement's terminating semicolon from the slice.
         if source_code[statement_end_location : statement_end_location + 1] == SEMI_COLON:
             statement_end_location += 1
 
