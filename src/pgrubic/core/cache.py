@@ -6,7 +6,7 @@ import hashlib
 import pathlib
 import tempfile
 
-import msgpack
+import msgspec
 
 import pgrubic
 from pgrubic import PACKAGE_NAME
@@ -56,12 +56,19 @@ class Cache:
         if not self.cache_file.exists():
             return {}
 
-        with self.cache_file.open("rb") as f:
-            cache: dict[str, tuple[int, float, str]] = msgpack.unpack(f)
-            return {
-                k: FileData(size=v[0], last_modified_time=v[1], hashed_content=v[2])
-                for k, v in cache.items()
-            }
+        cache = msgspec.msgpack.decode(
+            self.cache_file.read_bytes(),
+            type=dict[str, tuple[int, float, str]],
+        )
+
+        return {
+            k: FileData(
+                size=v[0],
+                last_modified_time=v[1],
+                hashed_content=v[2],
+            )
+            for k, v in cache.items()
+        }
 
     def _hash_digest(self, source: pathlib.Path) -> str:
         """Return hash digest of the content of source and config.
@@ -78,7 +85,7 @@ class Cache:
         """
         hasher = hashlib.sha256()
         hasher.update(source.read_bytes())
-        hasher.update(msgpack.packb(self.config.format.__repr__()))
+        hasher.update(msgspec.msgpack.encode(self.config.format.__repr__()))
         return hasher.hexdigest()
 
     def _get_file_data(self, source: pathlib.Path) -> FileData:
@@ -182,6 +189,6 @@ class Cache:
                 k: (v.size, v.last_modified_time, v.hashed_content)
                 for k, v in file_data.items()
             }
-            msgpack.pack(data, tf)
+            tf.write(msgspec.msgpack.encode(data))
 
         pathlib.Path.replace(pathlib.Path(tf.name), self.cache_file)
