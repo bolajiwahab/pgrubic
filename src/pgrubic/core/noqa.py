@@ -19,6 +19,7 @@ FORMAT_IGNORE_DIRECTIVE: typing.Final[str] = "fmt"
 SEMI_COLON: typing.Final[str] = ";"
 NEW_LINE: typing.Final[str] = "\n"
 SPACE: typing.Final[str] = " "
+INCLUSIVE_END_OFFSET: typing.Final[int] = 1
 
 
 class Statement(typing.NamedTuple):
@@ -50,7 +51,6 @@ def extract_statements(
 
     try:
         statement_slices = parser.split(source_code, with_parser=True, only_slices=True)
-        parser_backed = True
 
     except parser.ParseError:
         statement_slices = parser.split(
@@ -58,17 +58,16 @@ def extract_statements(
             with_parser=False,
             only_slices=True,
         )
-        parser_backed = False
 
     for statement_slice in statement_slices:
-        if not parser_backed:
-            statement_start_location = statement_slice.start
-
         statement_end_location = statement_slice.stop
 
         # pglast excludes the statement's terminating semicolon from the slice.
-        if source_code[statement_end_location : statement_end_location + 1] == SEMI_COLON:
-            statement_end_location += 1
+        if (
+            source_code[statement_end_location : statement_end_location + len(SEMI_COLON)]
+            == SEMI_COLON
+        ):
+            statement_end_location += len(SEMI_COLON)
 
         statements.append(
             Statement(
@@ -77,6 +76,7 @@ def extract_statements(
                 text=source_code[statement_start_location:statement_end_location],
             ),
         )
+
         statement_start_location = statement_end_location
 
     return statements
@@ -162,14 +162,16 @@ def extract_statement_lint_ignores(
         if token.name == SQL_COMMENT:
             actual_start_location = statement.start_location + token.start
 
-            line_number = source_code[:actual_start_location].count(NEW_LINE) + 1
+            line_number = source_code[:actual_start_location].count(NEW_LINE) + len(
+                NEW_LINE,
+            )
 
             # Here, we extract last comment because we can have a comment followed
             # by another comment e.g -- new table -- noqa: US005
             comment = (
-                # In order to include the last character, we need to increase the end
-                # location by 1
-                statement.text[token.start : (token.end + 1)].split("--")[-1].strip()
+                statement.text[token.start : (token.end + INCLUSIVE_END_OFFSET)]
+                .split("--")[-1]
+                .strip()
             )
 
             if comment.startswith(LINT_IGNORE_DIRECTIVE):
@@ -221,9 +223,7 @@ def extract_file_lint_ignores(
 
     for token in parser.scan(source_code):
         if token.start == 0 and token.name == SQL_COMMENT:
-            # In order to include the last character, we need to increase the end
-            # location by one
-            actual_end_location = token.end + 1
+            actual_end_location = token.end + INCLUSIVE_END_OFFSET
 
             comment = (
                 source_code[token.start : actual_end_location]
@@ -272,9 +272,7 @@ def check_file_format_skip(
     """
     for token in parser.scan(source_code):
         if token.start == 0 and token.name == SQL_COMMENT:
-            # In order to include the last character, we need to increase the end
-            # location by one
-            actual_end_location = token.end + 1
+            actual_end_location = token.end + INCLUSIVE_END_OFFSET
 
             comment = (
                 source_code[token.start : actual_end_location]
@@ -311,9 +309,7 @@ def _check_statement_format_skip(
     """
     for token in parser.scan(statement.text):
         if token.name == SQL_COMMENT:
-            # In order to include the last character, we need to increase the end
-            # location by one
-            actual_end_location = token.end + 1
+            actual_end_location = token.end + INCLUSIVE_END_OFFSET
 
             comment = (
                 statement.text[token.start : actual_end_location].split("--")[-1].strip()
@@ -435,9 +431,7 @@ def add_file_level_general_lint_ignore(sources: set[pathlib.Path]) -> int:
 
         for token in parser.scan(source_code):
             if token.start == 0 and token.name == SQL_COMMENT:
-                # In order to include the last character, we need to increase the end
-                # location by one
-                actual_end_location = token.end + 1
+                actual_end_location = token.end + INCLUSIVE_END_OFFSET
 
                 comment = (
                     source_code[token.start : actual_end_location].split("--")[-1].strip()
