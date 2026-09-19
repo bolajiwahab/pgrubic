@@ -1,0 +1,29 @@
+---
+formatter: TRANSACTION
+
+test_transaction_block:
+  sql: |
+    begin;
+    create table public.account_type
+     (
+      account_id serial primary key,
+      name text not null
+    );
+
+    insert into public.account_type (name)
+        values ('smart'), ('metal'), ('platinum');
+    commit;
+  expected: |
+    BEGIN;
+
+    CREATE TABLE public.account_type (
+        account_id serial PRIMARY KEY
+      , name text NOT NULL
+    );
+
+    INSERT INTO public.account_type (name)
+    VALUES ('smart')
+         , ('metal')
+         , ('platinum');
+
+    COMMIT;

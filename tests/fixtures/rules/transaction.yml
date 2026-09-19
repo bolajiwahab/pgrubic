@@ -1,0 +1,29 @@
+---
+rule: TP007
+
+test_fail_transaction_block:
+  sql_fail: |
+    begin;
+
+    create table public.account_type
+     (
+      account_id serial primary key,
+      name text not null
+    );
+
+    insert into public.account_type (name)
+        values ('smart'), ('metal'), ('platinum');
+
+    commit;
+  sql_fix: |
+    begin;
+
+    CREATE TABLE public.account_type (
+        account_id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY
+      , name text NOT NULL
+    );
+
+    insert into public.account_type (name)
+        values ('smart'), ('metal'), ('platinum');
+
+    commit;
