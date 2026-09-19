@@ -17,7 +17,7 @@
 | src/pgrubic/core/linter.py                   |      245 |        0 |     100% |           |
 | src/pgrubic/core/loader.py                   |       25 |        0 |     100% |           |
 | src/pgrubic/core/logger.py                   |        5 |        0 |     100% |           |
-| src/pgrubic/core/noqa.py                     |      123 |        0 |     100% |           |
+| src/pgrubic/core/noqa.py                     |      111 |        0 |     100% |           |
 | src/pgrubic/core/visitors.py                 |       58 |        0 |     100% |           |
 | src/pgrubic/formatters/\_\_init\_\_.py       |        0 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/\_\_init\_\_.py   |        2 |        0 |     100% |           |
@@ -167,7 +167,7 @@
 | src/pgrubic/rules/unsafe/US030.py            |        9 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US031.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-| **TOTAL**                                    | **3767** |    **0** | **100%** |           |
+| **TOTAL**                                    | **3755** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
