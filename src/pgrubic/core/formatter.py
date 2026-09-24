@@ -71,6 +71,11 @@ class IndentedStream(stream.IndentedStream):
         self.config = config
         self.source_code = source_code
 
+    def print_comment(self, comment: Comment) -> None:
+        """Print block comments on their own line."""
+        self.write(comment.text)
+        self.newline()
+
     def apply_keyword_case(self, *, text: str) -> str:
         """Apply the configured casing to keywords in the given text.
 

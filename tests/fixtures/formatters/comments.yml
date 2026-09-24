@@ -1,0 +1,51 @@
+---
+formatter: COMMENTS
+
+statement_noqa_moves_to_statement_top:
+  sql: |
+    SELECT a FROM tbl -- noqa: NM001
+    WHERE b = NULL;
+  expected: |
+    -- noqa: NM001
+    SELECT a
+      FROM tbl
+     WHERE b = NULL;
+
+inline_comment_moves_to_statement_top:
+  sql: |
+    SELECT a FROM tbl -- here is a comment
+    WHERE b = NULL;
+  expected: |
+    -- here is a comment
+    SELECT a
+      FROM tbl
+     WHERE b = NULL;
+
+inline_block_comment_moves_to_statement_top:
+  sql: |
+    SELECT a /* comparison */ = NULL;
+  expected: |
+    /* comparison */
+    SELECT a = NULL;
+
+multiline_block_comment_moves_to_statement_top:
+  sql: |
+    SELECT a /* first
+                second */ FROM tbl;
+  expected: |
+    /* first
+                second */
+    SELECT a
+      FROM tbl;
+
+group_comments_move_to_statement_top_with_order:
+  sql: |
+    SELECT a FROM tbl -- here is an inline comment
+    /* here is a block comment */
+    WHERE b = NULL;
+  expected: |
+    -- here is an inline comment
+    /* here is a block comment */
+    SELECT a
+      FROM tbl
+     WHERE b = NULL;
