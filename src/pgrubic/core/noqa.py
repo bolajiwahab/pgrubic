@@ -351,7 +351,11 @@ def check_statement_format_skip(
 
 
 def extract_comments(*, statement: Statement) -> list[Comment]:
-    """Extract comments from SQL statement.
+    """Extract comments using the formatter's top-of-statement policy.
+
+    AST locations are incomplete and may change when lint fixes rewrite
+    nodes. Assigning every comment to location zero keeps formatting predictable
+    while preserving comment order and text.
 
     Parameters:
     ----------
@@ -364,8 +368,6 @@ def extract_comments(*, statement: Statement) -> list[Comment]:
         List of comments.
     """
     comments: list[Comment] = []
-    # We have consciously decided to always have comments at the top of the
-    # respective statement
     continue_previous = True
 
     for token in parser.scan(statement.text):
