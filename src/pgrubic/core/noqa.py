@@ -372,7 +372,7 @@ def extract_comments(*, statement: Statement) -> list[Comment]:
 
     for token in parser.scan(statement.text):
         if token.name in (C_COMMENT, SQL_COMMENT):
-            comment = statement.text[token.start : (token.end + 1)]
+            comment = statement.text[token.start : (token.end + INCLUSIVE_END_OFFSET)]
             comments.append(
                 Comment(
                     location=0,
