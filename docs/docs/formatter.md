@@ -2,6 +2,8 @@
 
 The core principle of the pgrubic formatter is to make SQL statements easy to read, easy to maintain, less prone to error and beautiful to see. The formatter is opinionated with few configuration options.
 
+**<span style="color:green">Comments are preserved in their original order but moved to the top of their respective statements</span>**.
+
 ## Components
 
 There are two components of the formatter:
@@ -9,7 +11,7 @@ There are two components of the formatter:
 - **DDL**: Designed to be almost identical with **pg_dump** styling, with differences on subcommands.
 - **DML**: Designed to produce **river** style.
 
-## Runing the formatter
+## Running the formatter
 
 While the formatter can used as a library, it is primarily intended to be used as a command-line tool. The linter can be run from the command line using the **`pgrubic format`** command:
 
