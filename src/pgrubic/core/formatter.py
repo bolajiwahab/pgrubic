@@ -72,7 +72,7 @@ class IndentedStream(stream.IndentedStream):
         self.source_code = source_code
 
     def print_comment(self, comment: Comment) -> None:
-        """Print block comments on their own line."""
+        """Print comments on their own line."""
         self.write(comment.text)
         self.newline()
 
