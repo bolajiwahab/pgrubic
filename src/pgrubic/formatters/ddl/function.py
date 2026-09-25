@@ -289,6 +289,7 @@ def do_stmt(node: ast.DoStmt, output: formatter.PrinterOutput) -> None:
     output.write("DO")
 
     if node.args:
+        # the parser treats the body as "AS" option
         # Move "AS" to the end
         options = [x for x in node.args if x.defname.upper() != "AS"] + [
             x for x in node.args if x.defname.upper() == "AS"
