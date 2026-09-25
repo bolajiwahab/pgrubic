@@ -295,6 +295,6 @@ def do_stmt(node: ast.DoStmt, output: formatter.PrinterOutput) -> None:
             x for x in node.args if x.defname.upper() == "AS"
         ]
 
-    for _, option in enumerate(options):
-        output.space()
-        output.print_node(option)
+        for _, option in enumerate(options):
+            output.space()
+            output.print_node(option)
