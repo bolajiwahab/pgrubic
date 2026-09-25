@@ -25,7 +25,7 @@
 | src/pgrubic/formatters/ddl/constraint.py     |       67 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/database.py       |       41 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/enum.py           |       47 |        0 |     100% |           |
-| src/pgrubic/formatters/ddl/function.py       |      170 |        0 |     100% |           |
+| src/pgrubic/formatters/ddl/function.py       |      177 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/index.py          |       71 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/owner.py          |       19 |        0 |     100% |           |
 | src/pgrubic/formatters/ddl/rename.py         |       36 |        0 |     100% |           |
@@ -167,7 +167,7 @@
 | src/pgrubic/rules/unsafe/US030.py            |        9 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US031.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-| **TOTAL**                                    | **3757** |    **0** | **100%** |           |
+| **TOTAL**                                    | **3764** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
