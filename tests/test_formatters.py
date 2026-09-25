@@ -59,9 +59,16 @@ def test_formatters(
                 f"`{test_formatter}` in `{test_id}`"
             )
 
-        # Check that the formatted source code is valid
+        # reformat the formatted source code to ensure it is valid and idempotent
         try:
-            parser.parse_sql(result.formatted_source_code)
+            reformat_result = formatter.format(
+                source_file=TEST_FILE,
+                source_code=result.formatted_source_code,
+            )
+
+            assert (
+                reformat_result.formatted_source_code == result.formatted_source_code
+            ), f"Formatter is not idempotent: `{test_formatter}` in `{test_id}`"
         except parser.ParseError as error:
             msg = f"Formatted code is not a valid syntax: {error!s}"
             raise ValueError(msg) from error
