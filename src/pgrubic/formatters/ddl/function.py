@@ -92,35 +92,37 @@ def create_function_stmt(
             if i < len(options) - 1:
                 output.newline()
 
-    if node.sql_body:
-        if node.is_procedure:
-            sql_body = typing.cast(tuple[tuple[ast.Node, ...]], node.sql_body)
-            output.newline()
-            output.write("BEGIN ATOMIC")
-            output.newline()
-            if sql_body:
-                output.space(4)
-                with output.push_indent():
-                    for i, stmt in enumerate(sql_body[0]):
-                        output.print_node(stmt)
+    sql_body = node.sql_body
 
-                        if not output.config.format.new_line_before_semicolon:
-                            output.write(noqa.SEMI_COLON)
-                        else:
-                            output.write(noqa.NEW_LINE + noqa.SEMI_COLON)
+    if isinstance(sql_body, tuple) and sql_body:
+        statements = typing.cast(tuple[ast.Node, ...] | None, sql_body[0])
+        output.newline()
+        output.write("BEGIN ATOMIC")
+        output.newline()
 
-                        # Add newline until the last statement
-                        if i < len(sql_body[0]) - 1:
-                            for _ in range(
-                                output.config.format.lines_between_statements + 1,
-                            ):
-                                output.newline()
+        if statements:
+            output.space(4)
+            with output.push_indent():
+                for i, stmt in enumerate(statements):
+                    output.print_node(stmt)
 
-            output.newline()
-            output.write("END")
-        else:
-            output.newline()
-            output.print_node(node.sql_body)
+                    if not output.config.format.new_line_before_semicolon:
+                        output.write(noqa.SEMI_COLON)
+                    else:
+                        output.write(noqa.NEW_LINE + noqa.SEMI_COLON)
+
+                    # Add newline until the last statement
+                    if i < len(statements) - 1:
+                        for _ in range(
+                            output.config.format.lines_between_statements + 1,
+                        ):
+                            output.newline()
+
+        output.newline()
+        output.write("END")
+    elif isinstance(sql_body, ast.Node):
+        output.newline()
+        output.print_node(sql_body)
 
 
 @printers.node_printer(
@@ -175,6 +177,7 @@ def create_function_option(  # noqa: PLR0911
         dollar_quote = f"${delimiter}$"
 
         output.write(dollar_quote)
+        output.newline()
 
         if is_sql_function:
             # No error tracking is needed here because the SQL function body has already
@@ -190,14 +193,11 @@ def create_function_option(  # noqa: PLR0911
                 (noqa.SPACE * 4 + line if line.strip() else "")
                 for line in formatted_function_body.splitlines()
             )
-            output.newline()
             output.write(formatted_function_body)
-            output.newline()
         else:
-            output.newline()
             output.write(function_body.strip(noqa.NEW_LINE))
-            output.newline()
 
+        output.newline()
         output.write(dollar_quote)
         return
 
@@ -281,3 +281,19 @@ def alter_function_stmt(
         output.newline()
         output.space(4)
         output.print_list(actions, noqa.SPACE, standalone_items=True)
+
+
+@printers.node_printer(ast.DoStmt, override=True)
+def do_stmt(node: ast.DoStmt, output: formatter.PrinterOutput) -> None:
+    """Printer for DoStmt."""
+    output.write("DO")
+
+    if node.args:
+        # Move "AS" to the end
+        options = [x for x in node.args if x.defname.upper() != "AS"] + [
+            x for x in node.args if x.defname.upper() == "AS"
+        ]
+
+    for _, option in enumerate(options):
+        output.space()
+        output.print_node(option)

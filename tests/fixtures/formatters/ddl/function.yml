@@ -30,6 +30,61 @@ create_sql_conforming_style_function:
     SET search_path TO 'admin', 'pg_temp'
     RETURN a + b;
 
+create_sql_conforming_style_function_block_body:
+  sql: |
+    CREATE FUNCTION insert_data(a integer, b integer) RETURNS void
+    LANGUAGE SQL
+    BEGIN ATOMIC
+      INSERT INTO tbl VALUES (a);
+      INSERT INTO tbl VALUES (b);
+    END;
+  expected: |
+    CREATE FUNCTION insert_data (
+        a integer
+      , b integer
+    )
+    RETURNS void
+    LANGUAGE SQL
+    BEGIN ATOMIC
+        INSERT INTO tbl
+        VALUES (a);
+
+        INSERT INTO tbl
+        VALUES (b);
+    END;
+
+create_plpgsql_do_block:
+  sql: |
+    DO $$
+        BEGIN
+            -- body comment
+            PERFORM 1;
+        END
+    $$;
+  expected: |
+    DO $BODY$
+        BEGIN
+            -- body comment
+            PERFORM 1;
+        END
+    $BODY$;
+
+create_plpgsql_do_block_with_language:
+  sql: |
+    DO $$
+        BEGIN
+            -- body comment
+            PERFORM 1;
+        END
+    $$ LANGUAGE plpgsql;
+  expected: |
+    DO LANGUAGE plpgsql $BODY$
+        BEGIN
+            -- body comment
+            PERFORM 1;
+        END
+    $BODY$;
+
 create_sql_function_with_as:
   skip_semantic_check: Function options are reordered and the SQL body is formatted.
   sql: |
@@ -198,7 +253,7 @@ create_function_no_parameters:
     end;
     $BODY$;
 
-create_sql_conforming_style_procedure:
+create_sql_conforming_style_procedure_block_body:
   sql: |
     CREATE PROCEDURE insert_data(a integer, b integer)
     LANGUAGE SQL
