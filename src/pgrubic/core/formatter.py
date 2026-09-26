@@ -27,10 +27,11 @@ class RawStream(stream.RawStream):
         source_code: str | None = None,
         **options: typing.Any,
     ) -> None:
-        """Extend RawStream with config."""
-        super().__init__(**options)
+        """Extend RawStream with config and source code."""
         self.config = config
         self.source_code = source_code
+
+        super().__init__(**options)
 
     def write_empty_string(self) -> None:
         """Write an empty string (no-op)."""
@@ -66,32 +67,31 @@ class IndentedStream(stream.IndentedStream):
         source_code: str | None = None,
         **options: typing.Any,
     ) -> None:
-        """Initialize IndentedStream with config."""
-        super().__init__(**options)
+        """Initialize IndentedStream with config and source code."""
         self.config = config
         self.source_code = source_code
+
+        super().__init__(**options)
 
     def print_comment(self, comment: Comment) -> None:
         """Print comments on their own line."""
         self.write(comment.text)
         self.newline()
 
-    def apply_keyword_case(self, *, text: str) -> str:
-        """Apply the configured casing to keywords in the given text.
+    @staticmethod
+    def lowercase_keywords(*, text: str) -> str:
+        """Lowercase keywords in the given text.
 
         Parameters:
         ----------
         text: str
-            Text to apply keyword casing to.
+            Text containing keywords to lowercase.
 
         Returns:
         -------
         str
-            Formatted output with keyword casing applied.
+            Text with lowercase keywords.
         """
-        if self.config.format.uppercase_keywords:
-            return text
-
         output = list(text)
         for token in parser.scan(text):
             if token.kind != "NO_KEYWORD":
@@ -265,17 +265,11 @@ class Formatter:
                         )
                         continue
 
-                    output = IndentedStream(
-                        config=config,
+                    formatted_statement = Formatter._render_ast(
+                        source_ast=parse_tree,
                         source_code=statement.text,
                         comments=comments,
-                        semicolon_after_last_statement=False,
-                        remove_pg_catalog_from_functions=config.format.remove_pg_catalog_from_functions,
-                        comma_at_eoln=not (config.format.comma_at_beginning),
-                        special_functions=config.format.rewrite_function_calls_as_equivalent_syntax,
-                    )
-                    formatted_statement = output.apply_keyword_case(
-                        text=output(statement.text),
+                        config=config,
                     )
 
                     if config.format.new_line_before_semicolon:
@@ -371,14 +365,38 @@ class Formatter:
         str
             Formatted source code.
         """
-        output = IndentedStream(
+        return self._render_ast(
+            source_ast=source_ast,
+            source_code=source_code,
+            comments=comments,
             config=self.config,
+        )
+
+    @staticmethod
+    def _render_ast(
+        *,
+        source_ast: tuple[ast.RawStmt, ...],
+        source_code: str | None,
+        comments: list[Comment],
+        config: config.Config,
+    ) -> str:
+        """Render source code from AST."""
+        output = IndentedStream(
+            config=config,
             source_code=source_code,
             comments=comments,
             semicolon_after_last_statement=False,
-            separate_statements=self.config.format.lines_between_statements,
-            remove_pg_catalog_from_functions=self.config.format.remove_pg_catalog_from_functions,
-            comma_at_eoln=not (self.config.format.comma_at_beginning),
-            special_functions=self.config.format.rewrite_function_calls_as_equivalent_syntax,
+            separate_statements=config.format.lines_between_statements,
+            remove_pg_catalog_from_functions=(
+                config.format.remove_pg_catalog_from_functions
+            ),
+            comma_at_eoln=not config.format.comma_at_beginning,
+            special_functions=(config.format.rewrite_function_calls_as_equivalent_syntax),
         )
-        return output.apply_keyword_case(text=output(source_ast))
+
+        formatted_source = output(source_ast)
+
+        if config.format.uppercase_keywords:
+            return formatted_source
+
+        return IndentedStream.lowercase_keywords(text=formatted_source)
