@@ -31,6 +31,31 @@ fix_source_code:
     lint:
       fix: true
 
+partial_fix_source_code:
+  sql: |
+    SELECT a = NULL; SELECT 1;
+  expected_violation_count: 1
+  expected_fixed_source_code: |
+    SELECT a IS NULL;
+
+    SELECT 1;
+  config:
+    lint:
+      fix: true
+
+partial_fix_with_parse_error:
+  sql: |
+    SELECT a = NULL; SELECT * FROM;
+  expected_violation_count: 1
+  expected_error_count: 1
+  expected_fixed_source_code: |
+    SELECT a IS NULL;
+
+    SELECT * FROM;
+  config:
+    lint:
+      fix: true
+
 do_not_fix_source_code:
   sql: |
     SELECT a = NULL;
