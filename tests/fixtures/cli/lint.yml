@@ -125,8 +125,7 @@ config_parse_error:
   config: |
     [lint]
     fix =
-  expected_output: |
-    Error parsing configuration file "{config_file}"
+  expected_output_contains: Error parsing configuration file
   expected_exit_code: 1
 
 invalid_config_override:

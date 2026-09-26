@@ -59,7 +59,7 @@ def load_test_cases(
     *,
     test_case_type: TestCaseType,
     path: pathlib.Path,
-) -> list[tuple[str, ...]]:
+) -> list[object]:
     """Load test cases from a fixture file or directory.
 
     Parameters
@@ -72,22 +72,24 @@ def load_test_cases(
 
     Returns:
     -------
-    list[tuple[str, ...]]
+    list[object]
 
     """
-    test_cases: list[tuple[str, ...]] = []
+    test_cases: list[object] = []
     fixture_files = [path] if path.is_file() else path.rglob("*.yml")
 
-    for file in sorted(fixture_files, key=lambda x: x.name):
+    for file in sorted(fixture_files):
         with file.open() as f:
-            content: dict[str, typing.Any] = yaml.safe_load(f)
+            content: dict[str, object] = yaml.safe_load(f)
 
         fixture_group = content.pop(test_case_type)
 
-        test_cases.extend(
-            (fixture_group, (fixture_group + "_" + key), value)
-            for key, value in content.items()
-        )
+        for key, value in content.items():
+            test_id = f"{fixture_group}_{key}"
+            test_cases.append(
+                pytest.param(fixture_group, test_id, value, id=test_id),
+            )
+
     return test_cases
 
 

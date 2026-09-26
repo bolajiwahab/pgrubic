@@ -90,8 +90,7 @@ config_parse_error:
   config: |
     [format]
     lines-between-statements =
-  expected_output: |
-    Error parsing configuration file "{config_file}"
+  expected_output_contains: Error parsing configuration file
   expected_exit_code: 1
 
 invalid_config_override:

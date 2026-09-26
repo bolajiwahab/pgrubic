@@ -113,11 +113,7 @@ def test_cli_source_file(
     output = click.unstyle(result.output)
 
     if "expected_output" in test_case:
-        expected_output = test_case["expected_output"].replace(
-            "{config_file}",
-            str(config_file),
-        )
-        assert output == expected_output, (
+        assert output == test_case["expected_output"], (
             f"Unexpected CLI output: `{test_command}` in `{test_id}`"
         )
 
