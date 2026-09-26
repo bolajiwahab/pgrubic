@@ -431,3 +431,13 @@ typecast_literal_array_to_literal:
   config:
     format:
       type_casting_style: literal
+
+typecast_in_concatenated_index_expression:
+  sql: |
+    CREATE INDEX idx ON tbl ((CAST(value AS text)));
+  expected: |
+    CREATE INDEX idx
+        ON tbl ((value::text));
+  config:
+    format:
+      type_casting_style: native
