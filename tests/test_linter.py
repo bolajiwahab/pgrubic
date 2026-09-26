@@ -39,14 +39,17 @@ def test_linter(
     assert len(result.violations) == test_case["expected_violation_count"], (
         f"Unexpected violations: `{test_linter}` in `{test_id}`"
     )
+
     expected_errors = set(test_case.get("expected_errors", []))
     expected_error_count = test_case.get(
         "expected_error_count",
         len(expected_errors),
     )
+
     assert len(result.errors) == expected_error_count, (
         f"Unexpected error count: `{test_linter}` in `{test_id}`"
     )
+
     if expected_errors:
         assert {error.message for error in result.errors} == expected_errors, (
             f"Unexpected errors: `{test_linter}` in `{test_id}`"

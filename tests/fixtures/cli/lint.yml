@@ -1,34 +1,35 @@
 ---
+# yamllint disable rule:line-length
 cli: LINT
 
 violations:
-  sql: |-
+  sql: |
     SELECT a = NULL;
   expected_exit_code: 1
 
 exit_zero_short_option:
-  sql: |-
+  sql: |
     SELECT a = NULL;
   args:
     - -e
   expected_exit_code: 0
 
 exit_zero_long_option:
-  sql: |-
+  sql: |
     SELECT a = NULL;
   args:
     - --exit-zero
   expected_exit_code: 0
 
 exit_zero_does_not_suppress_errors:
-  sql: |-
+  sql: |
     SELECT * FROM;
   args:
     - --exit-zero
   expected_exit_code: 1
 
 complete_fix:
-  sql: |-
+  sql: |
     SELECT a = NULL;
   args:
     - --fix
@@ -37,7 +38,7 @@ complete_fix:
   expected_exit_code: 0
 
 add_file_level_general_noqa:
-  sql: |-
+  sql: |
     SELECT a = NULL;
   args:
     - --add-file-level-general-noqa
@@ -46,22 +47,26 @@ add_file_level_general_noqa:
   expected_exit_code: 0
 
 no_violations:
-  sql: |-
+  sql: |
     SELECT a;
   expected_output: |
     All checks passed!
   expected_exit_code: 0
 
 verbose:
-  sql: |-
+  sql: |
     SELECT a = NULL;
   args:
     - --verbose
   expected_exit_code: 1
 
 partial_fix:
-  sql: |-
-    SELECT a = NULL; SELECT * FROM example;
+  sql: |
+    SELECT a = NULL;SELECT * FROM example;
+  expected_source_code: |
+    SELECT a IS NULL;
+
+    SELECT * FROM example;
   args:
     - --fix
   expected_exit_code: 1
@@ -75,6 +80,71 @@ ignore_noqa:
   expected_exit_code: 1
 
 parse_error:
-  sql: |-
+  sql: |
     CREATE TABLE tbl (activated);
+  expected_exit_code: 1
+
+config_override:
+  sql: |
+    SELECT a = NULL;
+  config: |
+    [lint]
+    fix = false
+  args:
+    - --config
+    - lint.fix = true
+  expected_source_code: |
+    SELECT a IS NULL;
+  expected_exit_code: 0
+
+missing_config_key:
+  sql: |
+    CREATE TABLE tbl (activated);
+  config: |
+    [lint]
+    required-columns = [
+      { name = "foo", type = "text" }
+    ]
+  expected_output: |
+    Missing config key: lint.required-columns.0.data-type
+  expected_exit_code: 1
+
+invalid_type_casting_style:
+  sql: |
+    SELECT 1;
+  config: |
+    [format]
+    type-casting-style = "invalid"
+  expected_output: |
+    Invalid config value for key "format.type-casting-style": "invalid". Expected one of: "native", "standard", "literal".
+  expected_exit_code: 1
+
+config_parse_error:
+  sql: |
+    CREATE TABLE tbl (activated);
+  config: |
+    [lint]
+    fix =
+  expected_output: |
+    Error parsing configuration file "{config_file}"
+  expected_exit_code: 1
+
+invalid_config_override:
+  sql: |
+    SELECT 1;
+  args:
+    - --config
+    - format.uppercase-keywords
+  expected_output: |
+    Error parsing configuration override "format.uppercase-keywords"
+  expected_exit_code: 1
+
+invalid_config_override_section:
+  sql: |
+    SELECT 1;
+  args:
+    - --config
+    - format = 1
+  expected_output: |
+    Invalid config value for key "format": "1". Expected a configuration section.
   expected_exit_code: 1

@@ -2,7 +2,7 @@
 core: LINTER
 
 multiple_violations:
-  sql: |-
+  sql: |
     SELECT a = NULL, 10 = b;
   expected_violation_count: 2
 
@@ -50,27 +50,27 @@ do_not_fix_suppressed_violation:
       fix: true
 
 parse_error:
-  sql: |-
+  sql: |
     CREATE TABLE tbl (activated);
   expected_violation_count: 0
   expected_error_count: 1
 
 missing_function_body:
-  sql: |-
+  sql: |
     CREATE FUNCTION f() RETURNS integer LANGUAGE sql;
   expected_violation_count: 0
   expected_errors:
     - No routine body specified
 
 missing_do_body:
-  sql: |-
+  sql: |
     DO LANGUAGE plpgsql;
   expected_violation_count: 0
   expected_errors:
     - No routine body specified
 
 new_line_before_semicolon:
-  sql: |-
+  sql: |
     SELECT a = NULL;
   expected_violation_count: 1
   expected_fixed_source_code: |
@@ -83,7 +83,7 @@ new_line_before_semicolon:
       new_line_before_semicolon: true
 
 fix_enablement:
-  sql: |-
+  sql: |
     SELECT a = NULL;
   expected_violation_count: 1
   expected_fixed_source_code: |
