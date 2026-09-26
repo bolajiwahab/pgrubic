@@ -700,7 +700,11 @@ def test_cli_format_parse_error(tmp_path: pathlib.Path) -> None:
     """Test cli format parse error."""
     runner = testing.CliRunner()
 
-    sql: str = "SELECT * FROM;"
+    sql: str = """SELECT 1;
+SELECT 2;
+
+SELECT *
+FROM;"""
 
     directory = tmp_path / "sub"
     directory.mkdir()
@@ -710,6 +714,10 @@ def test_cli_format_parse_error(tmp_path: pathlib.Path) -> None:
 
     result = runner.invoke(cli, ["format", str(file_fail)])
 
+    output = click.unstyle(result.output)
+
+    assert f"4 | SELECT *{noqa.NEW_LINE}" in output
+    assert f"5 | FROM;{noqa.NEW_LINE}" in output
     assert result.exit_code == 1
 
 

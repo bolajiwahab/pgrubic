@@ -252,7 +252,7 @@ class Formatter:
                         _errors.add(
                             errors.Error(
                                 source_file=str(source_file),
-                                source_code=statement.text,
+                                source_code=source_code,
                                 statement_start_location=statement.start_location + 1,
                                 statement_end_location=statement.end_location,
                                 statement=statement.text,
@@ -283,7 +283,7 @@ class Formatter:
                     _errors.add(
                         errors.Error(
                             source_file=str(source_file),
-                            source_code=statement.text,
+                            source_code=source_code,
                             statement_start_location=statement.start_location + 1,
                             statement_end_location=statement.end_location,
                             statement=statement.text,
@@ -297,7 +297,7 @@ class Formatter:
                     _errors.add(
                         errors.Error(
                             source_file=str(source_file),
-                            source_code=statement.text,
+                            source_code=source_code,
                             statement_start_location=statement.start_location + 1,
                             statement_end_location=statement.end_location,
                             statement=statement.text,
