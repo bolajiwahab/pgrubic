@@ -578,7 +578,7 @@ class Linter:
                             hint="Specify the routine body using AS or a SQL body",
                         ),
                     )
-                    fixed_statements.append(statement.text.strip(noqa.NEW_LINE))
+                    fixed_statements.append(statement.text)
                     continue
 
                 comments = noqa.extract_comments(
@@ -604,7 +604,7 @@ class Linter:
                         hint=f"Make sure the statement is valid PostgreSQL statement. If it is, please report this issue at {ISSUES_URL}",  # noqa: E501
                     ),
                 )
-                fixed_statements.append(statement.text.strip(noqa.NEW_LINE))
+                fixed_statements.append(statement.text)
                 continue
 
             BaseChecker.root_statement = statement.text
@@ -681,20 +681,23 @@ class Linter:
                             hint="Maximum format depth exceeded, reduce deeply nested queries",  # noqa: E501
                         ),
                     )
-                    fixed_statements.append(statement.text.strip(noqa.NEW_LINE))
+                    fixed_statements.append(statement.text)
 
             else:
-                fixed_statements.append(statement.text.strip(noqa.NEW_LINE))
+                fixed_statements.append(statement.text)
 
         fixed_source_code = None
 
         if BaseChecker.file_fixes.counter > 0:
+            statement_separator = noqa.NEW_LINE + (
+                noqa.NEW_LINE * self.config.format.lines_between_statements
+            )
             fixed_source_code = (
-                noqa.NEW_LINE
-                + (noqa.NEW_LINE * self.config.format.lines_between_statements)
-            ).join(
-                fixed_statements,
-            ) + noqa.NEW_LINE  # final new line
+                statement_separator.join(
+                    statement.strip() for statement in fixed_statements
+                )
+                + noqa.NEW_LINE
+            )
 
         noqa.report_unused_lint_ignores(
             source_file=source_file,
