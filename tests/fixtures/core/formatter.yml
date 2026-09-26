@@ -1,0 +1,51 @@
+---
+core: FORMATTER
+
+parse_error:
+  sql: |-
+    SELECT * FROM;
+  expected: |
+    SELECT * FROM;
+  expected_errors:
+    - syntax error at or near ";", at index 13
+
+missing_function_body:
+  sql: |-
+    CREATE FUNCTION f() RETURNS integer LANGUAGE sql;
+  expected: |
+    CREATE FUNCTION f() RETURNS integer LANGUAGE sql;
+  expected_errors:
+    - No routine body specified
+
+missing_do_body:
+  sql: |-
+    DO LANGUAGE plpgsql;
+  expected: |
+    DO LANGUAGE plpgsql;
+  expected_errors:
+    - No routine body specified
+
+new_line_before_semicolon:
+  sql: |-
+    select 1;
+  expected: |
+    SELECT 1
+    ;
+  config:
+    format:
+      new_line_before_semicolon: true
+
+lowercase_keywords_preserve_other_tokens:
+  sql: |
+    SELECT Foo AS "FROM", 'WHERE' FROM Café -- JOIN
+    WHERE Foo::TEXT IS NOT NULL and name ILIKE '%postgres%';
+  expected: |
+    -- JOIN
+    select foo as "FROM"
+         , 'WHERE'
+      from "café"
+     where cast(foo as text) is not null
+       and name ilike '%postgres%';
+  config:
+    format:
+      uppercase_keywords: false

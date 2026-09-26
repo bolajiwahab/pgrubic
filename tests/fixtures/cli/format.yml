@@ -1,0 +1,46 @@
+---
+cli: FORMAT
+
+verbose:
+  sql: |
+    SELECT a = NULL;
+  args:
+    - --verbose
+  expected_output_contains: Using default settings
+  expected_exit_code: 0
+
+check:
+  sql: |-
+    SELECT a = NULL; SELECT * FROM example;
+  args:
+    - --check
+  expected_output: ""
+  expected_exit_code: 1
+
+check_parse_error:
+  sql: |-
+    SELECT a =;
+  args:
+    - --check
+  expected_output_contains: |
+    1 error(s) found
+  expected_exit_code: 1
+
+diff:
+  sql: |-
+    SELECT a = NULL; SELECT * FROM example;
+  args:
+    - --diff
+  expected_exit_code: 1
+
+parse_error_location:
+  sql: |-
+    SELECT 1;
+    SELECT 2;
+
+    SELECT *
+    FROM;
+  expected_output_contains: |
+    4 | SELECT *
+    5 | FROM;
+  expected_exit_code: 1

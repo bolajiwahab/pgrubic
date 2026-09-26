@@ -1,0 +1,95 @@
+---
+core: LINTER
+
+multiple_violations:
+  sql: |-
+    SELECT a = NULL, 10 = b;
+  expected_violation_count: 2
+
+suppress_all_violations:
+  sql: |
+    -- noqa
+    SELECT a = NULL, 10 = b;
+  expected_violation_count: 0
+
+suppress_specific_violation:
+  sql: |
+    -- noqa: GN024
+    SELECT a = NULL, 10 = b;
+  expected_violation_count: 1
+
+fix_source_code:
+  sql: |
+    SELECT a = NULL;
+    SELECT b IS NULL;
+  expected_violation_count: 1
+  expected_fixed_source_code: |
+    SELECT a IS NULL;
+
+    SELECT b IS NULL;
+  config:
+    lint:
+      fix: true
+
+do_not_fix_source_code:
+  sql: |
+    SELECT a = NULL;
+
+    SELECT b = NULL;
+  expected_violation_count: 2
+  expected_fixed_source_code: null
+
+do_not_fix_suppressed_violation:
+  sql: |
+    -- noqa: GN024
+    SELECT a = NULL;
+  expected_violation_count: 0
+  expected_fixed_source_code: null
+  config:
+    lint:
+      fix: true
+
+parse_error:
+  sql: |-
+    CREATE TABLE tbl (activated);
+  expected_violation_count: 0
+  expected_error_count: 1
+
+missing_function_body:
+  sql: |-
+    CREATE FUNCTION f() RETURNS integer LANGUAGE sql;
+  expected_violation_count: 0
+  expected_errors:
+    - No routine body specified
+
+missing_do_body:
+  sql: |-
+    DO LANGUAGE plpgsql;
+  expected_violation_count: 0
+  expected_errors:
+    - No routine body specified
+
+new_line_before_semicolon:
+  sql: |-
+    SELECT a = NULL;
+  expected_violation_count: 1
+  expected_fixed_source_code: |
+    SELECT a IS NULL
+    ;
+  config:
+    lint:
+      fix: true
+    format:
+      new_line_before_semicolon: true
+
+fix_enablement:
+  sql: |-
+    SELECT a = NULL;
+  expected_violation_count: 1
+  expected_fixed_source_code: |
+    SELECT a IS NULL;
+  config:
+    lint:
+      fix: true
+      fixable:
+        - GN024

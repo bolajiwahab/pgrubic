@@ -1,0 +1,80 @@
+---
+cli: LINT
+
+violations:
+  sql: |-
+    SELECT a = NULL;
+  expected_exit_code: 1
+
+exit_zero_short_option:
+  sql: |-
+    SELECT a = NULL;
+  args:
+    - -e
+  expected_exit_code: 0
+
+exit_zero_long_option:
+  sql: |-
+    SELECT a = NULL;
+  args:
+    - --exit-zero
+  expected_exit_code: 0
+
+exit_zero_does_not_suppress_errors:
+  sql: |-
+    SELECT * FROM;
+  args:
+    - --exit-zero
+  expected_exit_code: 1
+
+complete_fix:
+  sql: |-
+    SELECT a = NULL;
+  args:
+    - --fix
+  expected_source_code: |
+    SELECT a IS NULL;
+  expected_exit_code: 0
+
+add_file_level_general_noqa:
+  sql: |-
+    SELECT a = NULL;
+  args:
+    - --add-file-level-general-noqa
+  expected_output: |
+    File-level general noqa directive added to 1 file(s)
+  expected_exit_code: 0
+
+no_violations:
+  sql: |-
+    SELECT a;
+  expected_output: |
+    All checks passed!
+  expected_exit_code: 0
+
+verbose:
+  sql: |-
+    SELECT a = NULL;
+  args:
+    - --verbose
+  expected_exit_code: 1
+
+partial_fix:
+  sql: |-
+    SELECT a = NULL; SELECT * FROM example;
+  args:
+    - --fix
+  expected_exit_code: 1
+
+ignore_noqa:
+  sql: |
+    -- noqa: GN024
+    SELECT a = NULL;
+  args:
+    - --ignore-noqa
+  expected_exit_code: 1
+
+parse_error:
+  sql: |-
+    CREATE TABLE tbl (activated);
+  expected_exit_code: 1
