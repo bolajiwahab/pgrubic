@@ -1,3 +1,19 @@
+## 3.1.0 (2026-09-26)
+
+### Feat
+
+- **core**: replace msgpack with msgspec (#296)
+
+### Fix
+
+- **formatter**: print actual function bodies in sql conforming functions, make DO block bodies idempotent (#300)
+- **formatter**: place comments on their own line (#299)
+- preserve statements in transaction blocks (#293)
+- handle missing body in functions, procedures and do blocks (#291)
+- **deps**: bump gitpython to 3.1.62 (#290)
+- **formatter**: preserve DDL syntax during formatting (#289)
+- **deps**: bump the python-packages group with 2 updates (#288)
+
 ## 3.0.0 (2026-09-01)
 
 ### Feat
