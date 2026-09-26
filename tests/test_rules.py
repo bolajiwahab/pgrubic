@@ -23,7 +23,7 @@ class RuleTestCase(typing.NamedTuple):
     ("rule", "test_id", "test_case"),
     conftest.load_test_cases(
         test_case_type=conftest.TestCaseType.RULE,
-        directory=pathlib.Path("tests/fixtures/rules"),
+        path=pathlib.Path("tests/fixtures/rules"),
     ),
 )
 def test_rules(

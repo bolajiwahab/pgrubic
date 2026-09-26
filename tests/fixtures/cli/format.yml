@@ -1,0 +1,114 @@
+---
+# yamllint disable rule:line-length
+cli: FORMAT
+
+verbose:
+  sql: |
+    SELECT a = NULL;
+  args:
+    - --verbose
+  expected_output_contains: Using default settings
+  expected_exit_code: 0
+
+check:
+  sql: |
+    SELECT a = NULL; SELECT * FROM example;
+  args:
+    - --check
+  expected_output: ""
+  expected_exit_code: 1
+
+check_parse_error:
+  sql: |
+    SELECT a =;
+  args:
+    - --check
+  expected_output_contains: |
+    1 error(s) found
+  expected_exit_code: 1
+
+diff:
+  sql: |
+    SELECT a = NULL; SELECT * FROM example;
+  args:
+    - --diff
+  expected_exit_code: 1
+
+parse_error_location:
+  sql: |
+    SELECT 1;
+    SELECT 2;
+
+    SELECT *
+    FROM;
+  expected_output_contains: |
+    4 | SELECT *
+    5 | FROM;
+  expected_exit_code: 1
+
+config_overrides:
+  sql: |
+    SELECT CAST(value AS text);
+  config: |
+    [format]
+    uppercase-keywords = true
+    type-casting-style = "literal"
+  args:
+    - --config
+    - format.uppercase-keywords = false
+    - --config
+    - format.type-casting-style = "native"
+  expected_source_code: |
+    select value::text;
+  expected_exit_code: 0
+
+missing_config_key:
+  sql: |
+    CREATE TABLE tbl (activated);
+  config: |
+    [lint]
+    required-columns = [
+      { name = "foo", type = "text" }
+    ]
+  expected_output: |
+    Missing config key: lint.required-columns.0.data-type
+  expected_exit_code: 1
+
+invalid_type_casting_style:
+  sql: |
+    SELECT 1;
+  config: |
+    [format]
+    type-casting-style = "invalid"
+  expected_output: |
+    Invalid config value for key "format.type-casting-style": "invalid". Expected one of: "native", "standard", "literal".
+  expected_exit_code: 1
+
+config_parse_error:
+  sql: |
+    CREATE TABLE tbl (activated);
+  config: |
+    [format]
+    lines-between-statements =
+  expected_output_contains: Error parsing configuration file
+  expected_exit_code: 1
+
+invalid_config_override:
+  sql: |
+    SELECT 1;
+  args:
+    - --config
+    - format.uppercase-keywords
+  expected_output: |
+    Error parsing configuration override "format.uppercase-keywords"
+  expected_exit_code: 1
+
+invalid_config_override_section:
+  sql: |
+    SELECT 1;
+  args:
+    - --config
+    - format = 1
+  expected_output: |
+    Invalid config value for key "format": "1". Expected a configuration section.
+  expected_exit_code: 1

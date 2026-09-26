@@ -1,6 +1,7 @@
 """Test cli."""
 
 import os
+import typing
 import pathlib
 from unittest.mock import patch
 
@@ -8,12 +9,8 @@ import click
 import pytest
 from click import testing
 
-from tests import TEST_FILE
-from pgrubic import (
-    DOCUMENTATION_URL,
-    RULE_DOCUMENTATION_BASE,
-    WORKERS_ENVIRONMENT_VARIABLE,
-)
+from tests import TEST_FILE, conftest
+from pgrubic import WORKERS_ENVIRONMENT_VARIABLE
 from pgrubic.core import noqa, config, linter
 from pgrubic.__main__ import cli
 
@@ -60,65 +57,77 @@ def test_cli_help_colors(
         assert "\nExamples:\n" in plain_result.output
 
 
-@pytest.mark.parametrize("args", [["-v"], ["lint", "-v"]])
-def test_cli_short_version_option(args: list[str]) -> None:
-    """Test the short version option on the root and subcommands."""
+@pytest.mark.parametrize(
+    "args",
+    [
+        pytest.param(["-v"], id="root-short"),
+        pytest.param(["--version"], id="root-long"),
+        pytest.param(["lint", "-v"], id="lint-short"),
+        pytest.param(["lint", "--version"], id="lint-long"),
+        pytest.param(["format", "-v"], id="format-short"),
+        pytest.param(["format", "--version"], id="format-long"),
+    ],
+)
+def test_cli_version_option(args: list[str]) -> None:
+    """Test version options on the root command and subcommands."""
     result = testing.CliRunner().invoke(cli, args)
 
     assert result.exit_code == 0
     assert " version " in result.output
 
 
-def test_cli_lint_file(tmp_path: pathlib.Path) -> None:
-    """Test cli lint file."""
+@pytest.mark.parametrize(
+    ("test_command", "test_id", "test_case"),
+    conftest.load_test_cases(
+        test_case_type=conftest.TestCaseType.CLI,
+        path=pathlib.Path("tests/fixtures/cli"),
+    ),
+)
+def test_cli_source_file(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    test_command: str,
+    test_id: str,
+    test_case: dict[str, typing.Any],
+) -> None:
+    """Test data-driven CLI behavior."""
     runner = testing.CliRunner()
-
-    sql_fail: str = "SELECT a = NULL;"
 
     directory = tmp_path / "sub"
     directory.mkdir()
+    monkeypatch.chdir(directory)
 
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql_fail)
+    config_file = directory / config.CONFIG_FILE
 
-    result = runner.invoke(cli, ["lint", str(file_fail)])
+    if "config" in test_case:
+        config_file.write_text(test_case["config"])
 
-    assert result.exit_code == 1
+    source_file = directory / TEST_FILE
+    source_file.write_text(test_case["sql"])
 
+    result = runner.invoke(
+        cli,
+        [test_command.lower(), str(source_file), *test_case.get("args", [])],
+    )
 
-@pytest.mark.parametrize("flag", ["-e", "--exit-zero"])
-def test_cli_lint_exit_zero(tmp_path: pathlib.Path, flag: str) -> None:
-    """Test cli lint --exit-zero exits 0 despite violations."""
-    runner = testing.CliRunner()
+    output = click.unstyle(result.output)
 
-    sql_fail: str = "SELECT a = NULL;"
+    if "expected_output" in test_case:
+        assert output == test_case["expected_output"], (
+            f"Unexpected CLI output: `{test_command}` in `{test_id}`"
+        )
 
-    directory = tmp_path / "sub"
-    directory.mkdir()
+    if "expected_output_contains" in test_case:
+        assert test_case["expected_output_contains"] in output, (
+            f"Missing CLI output: `{test_command}` in `{test_id}`"
+        )
 
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql_fail)
+    if "expected_source_code" in test_case:
+        assert source_file.read_text() == test_case["expected_source_code"], (
+            f"Unexpected source code: `{test_command}` in `{test_id}`"
+        )
 
-    result = runner.invoke(cli, ["lint", str(file_fail), flag])
-
-    assert result.exit_code == 0
-
-
-def test_cli_lint_exit_zero_does_not_suppress_errors(tmp_path: pathlib.Path) -> None:
-    """Test cli lint --exit-zero still exits non-zero on parse errors."""
-    runner = testing.CliRunner()
-
-    sql_invalid: str = "SELECT * FROM;"
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    file_invalid = directory / TEST_FILE
-    file_invalid.write_text(sql_invalid)
-
-    result = runner.invoke(cli, ["lint", str(file_invalid), "--exit-zero"])
-
-    assert result.exit_code == 1
+    assert result.exit_code == test_case["expected_exit_code"]
 
 
 def test_cli_lint_directory(tmp_path: pathlib.Path) -> None:
@@ -159,254 +168,27 @@ def test_cli_lint_current_directory(
     assert result.exit_code == 1
 
 
-def test_cli_lint_complete_fix(tmp_path: pathlib.Path) -> None:
-    """Test cli lint complete fix."""
-    runner = testing.CliRunner()
-
-    sql_fail: str = "SELECT a = NULL;"
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql_fail)
-
-    result = runner.invoke(cli, ["lint", str(file_fail), "--fix"])
-
-    assert result.exit_code == 0
-
-
-def test_cli_lint_config_override(
+def test_cli_lint_with_generate_lint_report(
     tmp_path: pathlib.Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Test overriding lint configuration from the CLI."""
+    """Test the CLI generates a lint report."""
     runner = testing.CliRunner()
-    monkeypatch.chdir(tmp_path)
-    (tmp_path / config.CONFIG_FILE).write_text(
-        """
-[lint]
-fix = false
-""",
-    )
-    source_file = tmp_path / TEST_FILE
+
+    directory = tmp_path / "sub"
+    directory.mkdir()
+    monkeypatch.chdir(directory)
+
+    source_file = directory / TEST_FILE
     source_file.write_text("SELECT a = NULL;")
 
     result = runner.invoke(
         cli,
-        ["lint", "--config", "lint.fix = true", str(source_file)],
+        ["lint", str(source_file), "--generate-lint-report"],
     )
 
-    assert result.exit_code == 0
-    assert source_file.read_text() == f"SELECT a IS NULL;{noqa.NEW_LINE}"
-
-
-def test_cli_lint_with_add_file_level_general_noqa(tmp_path: pathlib.Path) -> None:
-    """Test cli lint with add_file_level_general_noqa."""
-    runner = testing.CliRunner()
-
-    sql_fail: str = "SELECT a = NULL;"
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql_fail)
-
-    result = runner.invoke(cli, ["lint", str(file_fail), "--add-file-level-general-noqa"])
-
-    assert (
-        result.output
-        == f"File-level general noqa directive added to 1 file(s){noqa.NEW_LINE}"
-    )
-
-    assert result.exit_code == 0
-
-
-def test_cli_lint_with_generate_lint_report(tmp_path: pathlib.Path) -> None:
-    """Test cli lint with generate_lint_report."""
-    runner = testing.CliRunner()
-
-    sql_fail: str = "SELECT a = NULL;"
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-    report_file = linter.DEFAULT_LINT_REPORT_FILE
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql_fail)
-
-    runner.invoke(cli, ["lint", str(file_fail), "--generate-lint-report"])
-
-    expected_lint_report = f"""## Pgrubic Lint Report
-
-Total violations: **1**
-
-Total errors: **0**
-
-<details>
-<summary>Violations (1)</summary>
-
-| File | Line | Col | Rule | Description | Help |
-|------|------|-----|------|-------------|------|
-| test.sql | 1 | 10 | [GN024]({DOCUMENTATION_URL}/{RULE_DOCUMENTATION_BASE}/general/null-comparison) | Comparison with NULL should be [IS | IS NOT] NULL | Use [IS | IS NOT] NULL |
-</details>
-"""  # noqa: E501
-
-    assert pathlib.Path(report_file).read_text() == expected_lint_report
-
-    runner.invoke(cli, ["lint", str(file_fail), "--generate-lint-report"])
-
-    assert pathlib.Path(report_file).read_text() == expected_lint_report
-
-
-def test_cli_lint_no_violations(tmp_path: pathlib.Path) -> None:
-    """Test cli lint with add_file_level_general_noqa."""
-    runner = testing.CliRunner()
-
-    sql_fail: str = "SELECT a;"
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql_fail)
-
-    result = runner.invoke(cli, ["lint", str(file_fail)])
-
-    assert result.output == f"All checks passed!{noqa.NEW_LINE}"
-
-    assert result.exit_code == 0
-
-
-def test_cli_lint_verbose(tmp_path: pathlib.Path) -> None:
-    """Test cli lint verbose."""
-    runner = testing.CliRunner()
-
-    sql_fail: str = "SELECT a = NULL;"
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql_fail)
-
-    result = runner.invoke(cli, ["lint", str(file_fail), "--verbose"])
-
     assert result.exit_code == 1
-
-
-def test_cli_lint_partial_fix(tmp_path: pathlib.Path) -> None:
-    """Test cli lint partial fix."""
-    runner = testing.CliRunner()
-
-    sql_fail: str = "SELECT a = NULL; SELECT * FROM example;"
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql_fail)
-
-    result = runner.invoke(cli, ["lint", str(file_fail), "--fix"])
-
-    assert result.exit_code == 1
-
-
-def test_cli_lint_ignore_noqa(tmp_path: pathlib.Path) -> None:
-    """Test cli lint ignore noqa."""
-    runner = testing.CliRunner()
-
-    sql_fail: str = """
-    -- noqa: GN024
-    SELECT a = NULL;
-    """
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql_fail)
-
-    result = runner.invoke(cli, ["lint", str(file_fail), "--ignore-noqa"])
-
-    assert result.exit_code == 1
-
-
-def test_cli_lint_parse_error(tmp_path: pathlib.Path) -> None:
-    """Test cli lint parse error."""
-    runner = testing.CliRunner()
-
-    sql: str = "CREATE TABLE tbl (activated);"
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql)
-
-    result = runner.invoke(cli, ["lint", str(file_fail)])
-
-    assert result.exit_code == 1
-
-
-def test_cli_lint_missing_config_error(tmp_path: pathlib.Path) -> None:
-    """Test cli lint missing config error."""
-    config_content = """
-    [lint]
-    required-columns = [
-        { name = "foo", type = "text" }
-    ]
-    """
-    runner = testing.CliRunner()
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    config_file = directory / config.CONFIG_FILE
-    config_file.write_text(config_content)
-
-    sql: str = "CREATE TABLE tbl (activated);"
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql)
-
-    with patch("os.getcwd", return_value=str(directory)):
-        result = runner.invoke(cli, ["lint", str(file_fail)])
-
-        assert result.output == (
-            f"Missing config key: lint.required-columns.0.data-type{noqa.NEW_LINE}"
-        )
-        assert result.exit_code == 1
-
-
-@pytest.mark.parametrize("command", ["lint", "format"])
-def test_cli_invalid_type_casting_style_error(
-    command: str,
-    tmp_path: pathlib.Path,
-) -> None:
-    """Test CLI invalid config value errors."""
-    config_content = """
-    [format]
-    type-casting-style = "invalid"
-    """
-    directory = tmp_path / "sub"
-    directory.mkdir()
-    (directory / config.CONFIG_FILE).write_text(config_content)
-
-    source_file = directory / TEST_FILE
-    source_file.write_text("SELECT 1;")
-
-    runner = testing.CliRunner()
-    with patch("os.getcwd", return_value=str(directory)):
-        result = runner.invoke(cli, [command, str(source_file)])
-
-    assert result.output == (
-        'Invalid config value for key "format.type-casting-style": "invalid". '
-        'Expected one of: "native", "standard", "literal".'
-        f"{noqa.NEW_LINE}"
-    )
-    assert result.exit_code == 1
+    assert (directory / linter.DEFAULT_LINT_REPORT_FILE).is_file()
 
 
 def test_cli_lint_config_file_from_environment_variable_not_found_error(
@@ -432,38 +214,6 @@ def test_cli_lint_config_file_from_environment_variable_not_found_error(
         assert (
             result.output
             == f"""Config file "pgrubic.toml" not found in the path set in the environment variable PGRUBIC_CONFIG_PATH{noqa.NEW_LINE}"""  # noqa: E501
-        )
-
-        assert result.exit_code == 1
-
-
-def test_cli_lint_config_parse_error(
-    tmp_path: pathlib.Path,
-) -> None:
-    """Test cli lint config parse error."""
-    config_content = """
-    [lint]
-    fix =
-    """
-    runner = testing.CliRunner()
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    config_file = directory / config.CONFIG_FILE
-    config_file.write_text(config_content)
-
-    sql: str = "CREATE TABLE tbl (activated);"
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql)
-
-    with patch("os.getcwd", return_value=str(directory)):
-        result = runner.invoke(cli, ["lint", str(file_fail)])
-
-        assert (
-            result.output
-            == f"""Error parsing configuration file "{config_file}"{noqa.NEW_LINE}"""
         )
 
         assert result.exit_code == 1
@@ -524,25 +274,6 @@ def test_cli_format_files(tmp_path: pathlib.Path) -> None:
     assert result.exit_code == 0
 
 
-def test_cli_format_file_verbose(tmp_path: pathlib.Path) -> None:
-    """Test cli format file."""
-    runner = testing.CliRunner()
-
-    sql_pass: str = f"SELECT a = NULL;{noqa.NEW_LINE}"
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    file_pass = directory / TEST_FILE
-    file_pass.write_text(sql_pass)
-
-    result = runner.invoke(cli, ["format", str(file_pass), "--verbose"])
-
-    assert "Using default settings" in result.output
-
-    assert result.exit_code == 0
-
-
 def test_cli_format_directory(tmp_path: pathlib.Path) -> None:
     """Test cli format directory."""
     runner = testing.CliRunner()
@@ -589,61 +320,6 @@ def test_cli_format_current_directory(
     )
 
     assert result.exit_code == 0
-
-
-def test_cli_format_check(tmp_path: pathlib.Path) -> None:
-    """Test cli format check."""
-    runner = testing.CliRunner()
-
-    sql_fail: str = "SELECT a = NULL; SELECT * FROM example;"
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql_fail)
-
-    result = runner.invoke(cli, ["format", str(file_fail), "--check"])
-
-    assert result.output == ""
-
-    assert result.exit_code == 1
-
-
-def test_cli_format_check_parse_error(tmp_path: pathlib.Path) -> None:
-    """Test cli format check parse error."""
-    runner = testing.CliRunner()
-
-    sql_fail: str = "SELECT a =;"
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql_fail)
-
-    result = runner.invoke(cli, ["format", str(file_fail), "--check"])
-
-    assert f"1 error(s) found{noqa.NEW_LINE}" in result.output
-
-    assert result.exit_code == 1
-
-
-def test_cli_format_diff(tmp_path: pathlib.Path) -> None:
-    """Test cli format check."""
-    runner = testing.CliRunner()
-
-    sql: str = "SELECT a = NULL; SELECT * FROM example;"
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql)
-
-    result = runner.invoke(cli, ["format", str(file_fail), "--diff"])
-
-    assert result.exit_code == 1
 
 
 def test_cli_format_no_cache(tmp_path: pathlib.Path) -> None:
@@ -696,31 +372,6 @@ def test_cli_format_no_cache(tmp_path: pathlib.Path) -> None:
     assert file_fail.stat().st_mtime_ns == old_mtime_ns
 
 
-def test_cli_format_parse_error(tmp_path: pathlib.Path) -> None:
-    """Test cli format parse error."""
-    runner = testing.CliRunner()
-
-    sql: str = """SELECT 1;
-SELECT 2;
-
-SELECT *
-FROM;"""
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql)
-
-    result = runner.invoke(cli, ["format", str(file_fail)])
-
-    output = click.unstyle(result.output)
-
-    assert f"4 | SELECT *{noqa.NEW_LINE}" in output
-    assert f"5 | FROM;{noqa.NEW_LINE}" in output
-    assert result.exit_code == 1
-
-
 def test_max_workers_from_environment_variable(tmp_path: pathlib.Path) -> None:
     """Test max workers from environment variable."""
     with patch.dict(
@@ -740,113 +391,6 @@ def test_max_workers_from_environment_variable(tmp_path: pathlib.Path) -> None:
         result = runner.invoke(cli, ["format", str(file_fail)])
 
         assert result.exit_code == 0
-
-
-def test_cli_format_missing_config_error(tmp_path: pathlib.Path) -> None:
-    """Test cli format missing config error."""
-    config_content = """
-    [lint]
-    required-columns = [
-        { name = "foo", type = "text" }
-    ]
-    """
-    runner = testing.CliRunner()
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    config_file = directory / config.CONFIG_FILE
-    config_file.write_text(config_content)
-
-    sql: str = "CREATE TABLE tbl (activated);"
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql)
-
-    with patch("os.getcwd", return_value=str(directory)):
-        result = runner.invoke(cli, ["format", str(file_fail)])
-
-        assert result.output == (
-            f"Missing config key: lint.required-columns.0.data-type{noqa.NEW_LINE}"
-        )
-
-        assert result.exit_code == 1
-
-
-def test_cli_format_config_overrides(
-    tmp_path: pathlib.Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """Test overriding multiple format options from the CLI."""
-    runner = testing.CliRunner()
-    monkeypatch.chdir(tmp_path)
-    (tmp_path / config.CONFIG_FILE).write_text(
-        """
-[format]
-uppercase-keywords = true
-type-casting-style = "literal"
-""",
-    )
-    source_file = tmp_path / TEST_FILE
-    source_file.write_text("SELECT CAST(value AS text);")
-
-    result = runner.invoke(
-        cli,
-        [
-            "format",
-            "--config",
-            "format.uppercase-keywords = false",
-            "--config",
-            'format.type-casting-style = "native"',
-            str(source_file),
-        ],
-    )
-
-    assert result.exit_code == 0
-    assert source_file.read_text() == f"select value::text;{noqa.NEW_LINE}"
-
-
-@pytest.mark.parametrize("command", ["lint", "format"])
-def test_cli_invalid_config_override(
-    command: str,
-    tmp_path: pathlib.Path,
-) -> None:
-    """Test invalid CLI configuration overrides."""
-    runner = testing.CliRunner()
-    source_file = tmp_path / TEST_FILE
-    source_file.write_text("SELECT 1;")
-
-    result = runner.invoke(
-        cli,
-        [command, "--config", "format.uppercase-keywords", str(source_file)],
-    )
-
-    assert result.exit_code == 1
-    assert result.output == (
-        f'Error parsing configuration override "format.uppercase-keywords"{noqa.NEW_LINE}'
-    )
-
-
-@pytest.mark.parametrize("command", ["lint", "format"])
-def test_cli_invalid_config_override_section(
-    command: str,
-    tmp_path: pathlib.Path,
-) -> None:
-    """Test structurally invalid CLI configuration overrides."""
-    source_file = tmp_path / TEST_FILE
-    source_file.write_text("SELECT 1;")
-
-    result = testing.CliRunner().invoke(
-        cli,
-        [command, "--config", "format = 1", str(source_file)],
-    )
-
-    assert result.exit_code == 1
-    assert result.output == (
-        'Invalid config value for key "format": "1". '
-        "Expected a configuration section."
-        f"{noqa.NEW_LINE}"
-    )
 
 
 def test_cli_format_config_file_from_environment_variable_not_found_error(
@@ -872,38 +416,6 @@ def test_cli_format_config_file_from_environment_variable_not_found_error(
         assert (
             result.output
             == f"""Config file "pgrubic.toml" not found in the path set in the environment variable PGRUBIC_CONFIG_PATH{noqa.NEW_LINE}"""  # noqa: E501
-        )
-
-        assert result.exit_code == 1
-
-
-def test_cli_format_config_parse_error(
-    tmp_path: pathlib.Path,
-) -> None:
-    """Test cli format config parse error."""
-    config_content = """
-    [format]
-    lines-between-statements =
-    """
-    runner = testing.CliRunner()
-
-    directory = tmp_path / "sub"
-    directory.mkdir()
-
-    config_file = directory / config.CONFIG_FILE
-    config_file.write_text(config_content)
-
-    sql: str = "CREATE TABLE tbl (activated);"
-
-    file_fail = directory / TEST_FILE
-    file_fail.write_text(sql)
-
-    with patch("os.getcwd", return_value=str(directory)):
-        result = runner.invoke(cli, ["format", str(file_fail)])
-
-        assert (
-            result.output
-            == f"""Error parsing configuration file "{config_file}"{noqa.NEW_LINE}"""
         )
 
         assert result.exit_code == 1

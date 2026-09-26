@@ -51,36 +51,45 @@ class TestCaseType(enum.StrEnum):
 
     RULE = enum.auto()
     FORMATTER = enum.auto()
+    CORE = enum.auto()
+    CLI = enum.auto()
 
 
 def load_test_cases(
     *,
     test_case_type: TestCaseType,
-    directory: pathlib.Path,
-) -> list[tuple[str, ...]]:
-    """Load test cases from directory..
+    path: pathlib.Path,
+) -> list[object]:
+    """Load test cases from a fixture file or directory.
 
     Parameters
     ----------
     test_case_type: TestCaseType
         Type of test case.
 
-    directory: pathlib.Path
-        Directory to load test cases from.
+    path: pathlib.Path
+        Fixture file or directory to load test cases from.
 
     Returns:
     -------
-    list[tuple[str, ...]]
+    list[object]
 
     """
-    test_cases: list[tuple[str, ...]] = []
+    test_cases: list[object] = []
+    fixture_files = [path] if path.is_file() else path.rglob("*.yml")
 
-    for file in sorted(directory.rglob("*.yml"), key=lambda x: x.name):
+    for file in sorted(fixture_files):
         with file.open() as f:
-            content: dict[str, typing.Any] = yaml.safe_load(f)
+            content: dict[str, object] = yaml.safe_load(f)
 
-        parent = content.pop(test_case_type)
-        test_cases.extend((parent, (parent + "_" + k), v) for k, v in content.items())
+        fixture_group = content.pop(test_case_type)
+
+        for key, value in content.items():
+            test_id = f"{fixture_group}_{key}"
+            test_cases.append(
+                pytest.param(fixture_group, test_id, value, id=test_id),
+            )
+
     return test_cases
 
 
