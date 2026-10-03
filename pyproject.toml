@@ -60,15 +60,15 @@ dependencies = [
   "rich==15.0.0",
   "pydantic==2.13.5",
   "deepmerge==3.0.1",
-  "gitpython==3.1.62",
-  "msgspec==0.21.1",
+  "gitpython==3.2.0",
+  "msgspec==0.22.0",
 ]
 
 [project.optional-dependencies]
 dev = [
-  "ruff==0.16.8",
+  "ruff==0.16.9",
   "mypy==2.3.1",
-  "isort==9.0.1",
+  "isort==9.0.2",
   "bandit==1.9.4",
   "add-trailing-comma==4.0.0",
   "interrogate==1.7.0",
@@ -77,7 +77,7 @@ dev = [
   "yamllint==1.38.0",
   "conventional-pre-commit==4.4.0",
   "pytest==9.1.1",
-  "coverage==7.16.1",
+  "coverage==7.16.2",
   "types-pyyaml==6.0.12.20260906",
   "types-toml==0.10.8.20260518",
   "types-colorama==0.4.15.20260508",
@@ -85,7 +85,7 @@ dev = [
 ]
 
 doc = [
-  "zensical==0.0.64",
+  "zensical==0.0.67",
   "mkdocstrings[python]==1.0.6",
 ]
 
