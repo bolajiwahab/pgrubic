@@ -12,7 +12,7 @@ SOURCE_FILE = "linter.sql"
 
 
 @pytest.mark.parametrize(
-    ("test_linter", "test_id", "test_case"),
+    ("fixture_group", "test_id", "test_case"),
     conftest.load_test_cases(
         test_case_type=conftest.TestCaseType.CORE,
         path=pathlib.Path("tests/fixtures/core/linter.yml"),
@@ -20,8 +20,8 @@ SOURCE_FILE = "linter.sql"
 )
 def test_linter(
     linter: core.Linter,
-    test_linter: str,
-    test_id: str,
+    fixture_group: str,  # noqa: ARG001
+    test_id: str,  # noqa: ARG001
     test_case: dict[str, typing.Any],
 ) -> None:
     """Test linter behavior."""
@@ -36,28 +36,25 @@ def test_linter(
             source_code=test_case["sql"],
         )
 
-    assert len(result.violations) == test_case["expected_violation_count"], (
-        f"Unexpected violations: `{test_linter}` in `{test_id}`"
-    )
-
-    expected_errors = set(test_case.get("expected_errors", []))
-    expected_error_count = test_case.get(
-        "expected_error_count",
-        len(expected_errors),
-    )
-
-    assert len(result.errors) == expected_error_count, (
-        f"Unexpected error count: `{test_linter}` in `{test_id}`"
-    )
-
-    if expected_errors:
-        assert {error.message for error in result.errors} == expected_errors, (
-            f"Unexpected errors: `{test_linter}` in `{test_id}`"
+    expected_violations = set(test_case.get("violations", []))
+    actual_violations = {violation.rule_code for violation in result.violations}
+    if expected_violations:
+        assert actual_violations == expected_violations, (
+            f"Expected {expected_violations} violations, got {actual_violations}"
         )
 
-    if "expected_fixed_source_code" in test_case:
-        assert result.fixed_source_code == test_case["expected_fixed_source_code"], (
-            f"Unexpected fixed source: `{test_linter}` in `{test_id}`"
+    expected_errors = set(test_case.get("errors", []))
+    actual_errors = {error.message for error in result.errors}
+    if expected_errors:
+        assert actual_errors == expected_errors, (
+            f"Expected {expected_errors} errors, got {actual_errors}"
+        )
+
+    expected_fixes = test_case.get("fixes")
+    actual_fixes = result.fixed_source_code
+    if expected_fixes:
+        assert expected_fixes == actual_fixes, (
+            f"Expected {expected_fixes}, got {actual_fixes}"
         )
 
 

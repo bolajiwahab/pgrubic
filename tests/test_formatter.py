@@ -12,7 +12,7 @@ from pgrubic.core import formatter as formatter_module
 
 
 @pytest.mark.parametrize(
-    ("test_formatter", "test_id", "test_case"),
+    ("fixture_group", "test_id", "test_case"),
     conftest.load_test_cases(
         test_case_type=conftest.TestCaseType.CORE,
         path=pathlib.Path("tests/fixtures/core/formatter.yml"),
@@ -20,8 +20,8 @@ from pgrubic.core import formatter as formatter_module
 )
 def test_formatter(
     formatter: core.Formatter,
-    test_formatter: str,
-    test_id: str,
+    fixture_group: str,  # noqa: ARG001
+    test_id: str,  # noqa: ARG001
     test_case: dict[str, typing.Any],
 ) -> None:
     """Test the formatter entry point."""
@@ -36,13 +36,19 @@ def test_formatter(
             source_code=test_case["sql"],
         )
 
-    assert {error.message for error in result.errors} == set(
-        test_case.get("expected_errors", []),
-    ), f"Unexpected formatter errors: `{test_formatter}` in `{test_id}`"
+    expected_errors = set(test_case.get("errors", []))
+    actual_errors = {error.message for error in result.errors}
+    if expected_errors:
+        assert actual_errors == expected_errors, (
+            f"Expected {expected_errors} errors, got {actual_errors}"
+        )
 
-    assert result.formatted_source_code == test_case["expected"], (
-        f"Unexpected formatted source: `{test_formatter}` in `{test_id}`"
-    )
+    expected_formatting = test_case.get("formatted")
+    actual_formatting = result.formatted_source_code
+    if expected_formatting:
+        assert expected_formatting == actual_formatting, (
+            f"Expected {expected_formatting}, got {actual_formatting}"
+        )
 
 
 def test_configured_streams(formatter: core.Formatter) -> None:
