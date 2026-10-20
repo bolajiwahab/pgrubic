@@ -29,13 +29,11 @@ class InlineSQLVisitor(visitors.Visitor):
         node: ast.CreateFunctionStmt,
     ) -> None:
         """Visit CreateFunctionStmt."""
-        if node.sql_body:
-            return
-
-        if not functions.has_language(node=node):
-            return
-
-        if not functions.has_body(node=node):
+        if (
+            node.sql_body is not None
+            or not functions.has_language(node=node)
+            or not functions.has_body(node=node)
+        ):
             return
 
         _sql_statements = self._extract_sql_statements_from_plpgsql(
