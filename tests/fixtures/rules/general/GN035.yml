@@ -5,6 +5,22 @@ test_pass_function_without_options:
   sql_pass: |
     CREATE FUNCTION f() RETURNS void;
 
+test_pass_function_duplicate_bodies_deferred_to_gn039:
+  config:
+    lint:
+      fix: true
+  sql_pass: |
+    CREATE OR REPLACE FUNCTION public.func() RETURNS integer
+    AS $$ BEGIN RETURN 1; END; $$ LANGUAGE plpgsql RETURN 1;
+
+test_pass_procedure_duplicate_bodies_deferred_to_gn039:
+  config:
+    lint:
+      fix: true
+  sql_pass: |
+    CREATE PROCEDURE p() LANGUAGE plpgsql
+    AS $$ BEGIN NULL; END; $$ BEGIN ATOMIC SELECT 1; END;
+
 test_fail_inline_sql_function_body_wrong_language:
   sql_fail: |
     CREATE OR REPLACE FUNCTION public.add1 (integer, integer) RETURNS integer

@@ -10,6 +10,7 @@ from pgrubic.core import linter
 class InlineSqlFunctionBodyWrongLanguage(linter.BaseChecker):
     """## **What it does**
     Checks for inline sql function bodies which are not defined with LANGUAGE SQL.
+    Declarations with duplicate bodies are handled by GN039.
 
     ## **Why not?**
     Inline SQL function bodies are only valid for language SQL.
@@ -35,6 +36,12 @@ class InlineSqlFunctionBodyWrongLanguage(linter.BaseChecker):
     ) -> None:
         """Visit CreateFunctionStmt."""
         options = typing.cast(tuple[ast.DefElem, ...], node.options)
+        # GN039 reports duplicate bodies; choosing which body to keep requires intent.
+        if node.sql_body is not None and any(
+            option.defname == "as" for option in options or ()
+        ):
+            return
+
         language: str | None = None
 
         for option in options or ():
