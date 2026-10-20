@@ -1,0 +1,67 @@
+---
+rule: GN037
+
+test_pass_function_sql_single_statement_body:
+  sql_pass: |
+    CREATE FUNCTION f() RETURNS int LANGUAGE sql RETURN 1;
+
+test_pass_function_sql_block_body:
+  sql_pass: |
+    CREATE FUNCTION f() RETURNS int LANGUAGE sql BEGIN ATOMIC SELECT 1; END;
+
+test_pass_function_sql_string_constant_body:
+  sql_pass: |
+    CREATE FUNCTION dup(in int, out f1 int, out f2 text)
+        AS $$ SELECT $1, CAST($1 AS text) || ' is text' $$
+        LANGUAGE SQL;
+
+test_pass_function_string_constant_body:
+  sql_pass: |
+    CREATE FUNCTION f() RETURNS integer LANGUAGE plpgsql AS $$
+        BEGIN
+            RETURN 1 + 1;
+        END;
+    $$;
+
+test_pass_function_obj_file_link_symbol:
+  sql_pass: |
+    CREATE FUNCTION f()
+      RETURNS void
+      LANGUAGE C
+      AS 'MODULE_PATHNAME', 'func';
+
+test_pass_function_empty_body:
+  sql_pass: |
+    CREATE FUNCTION f() RETURNS void LANGUAGE sql AS '';
+
+test_pass_internal_function_empty_body:
+  sql_pass: |
+    CREATE FUNCTION public.int4abs(integer) RETURNS integer LANGUAGE internal AS '';
+
+test_fail_function_with_no_body:
+  sql_fail:
+    CREATE FUNCTION f() RETURNS void LANGUAGE anylanguage;
+
+test_pass_procedure_with_body:
+  sql_pass: |
+    CREATE PROCEDURE p() LANGUAGE sql BEGIN ATOMIC SELECT 1; END;
+
+test_pass_procedure_string_constant_body:
+  sql_pass: |
+    CREATE PROCEDURE p() LANGUAGE sql AS 'SELECT 1;';
+
+test_pass_procedure_empty_body:
+  sql_pass: |
+    CREATE PROCEDURE p() LANGUAGE sql AS '';
+
+test_fail_procedure_with_no_body:
+  sql_fail: |
+    CREATE PROCEDURE p() LANGUAGE anylanguage;
+
+test_pass_do_with_body:
+  sql_pass: |
+    DO $$ BEGIN NULL; END; $$;
+
+test_fail_do_with_no_body:
+  sql_fail: |
+    DO LANGUAGE plpgsql;
