@@ -1,0 +1,38 @@
+---
+rule: GN038
+
+test_fail_function_without_options:
+  sql_fail: |
+    CREATE FUNCTION f() RETURNS void;
+
+test_fail_function_string_body_without_language:
+  sql_fail: |
+    CREATE FUNCTION f() RETURNS integer AS 'SELECT 1;';
+
+test_fail_procedure_string_body_without_language:
+  sql_fail: |
+    CREATE PROCEDURE p() AS $$ BEGIN NULL; END; $$;
+
+test_pass_function_explicit_language:
+  sql_pass: |
+    CREATE FUNCTION f() RETURNS integer LANGUAGE sql AS 'SELECT 1;';
+
+test_pass_procedure_explicit_language:
+  sql_pass: |
+    CREATE PROCEDURE p() LANGUAGE plpgsql AS $$ BEGIN NULL; END; $$;
+
+test_pass_function_implicit_sql_language_return:
+  sql_pass: |
+    CREATE FUNCTION f() RETURNS integer RETURN 1;
+
+test_pass_function_implicit_sql_language_block:
+  sql_pass: |
+    CREATE FUNCTION f() RETURNS integer BEGIN ATOMIC SELECT 1; END;
+
+test_pass_procedure_implicit_sql_language:
+  sql_pass: |
+    CREATE PROCEDURE p() BEGIN ATOMIC END;
+
+test_pass_do_default_language:
+  sql_pass: |
+    DO $$ BEGIN NULL; END; $$;

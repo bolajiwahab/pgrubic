@@ -32,6 +32,9 @@ class InlineSQLVisitor(visitors.Visitor):
         if node.sql_body:
             return
 
+        if not functions.has_language(node=node):
+            return
+
         if not functions.has_body(node=node):
             return
 
