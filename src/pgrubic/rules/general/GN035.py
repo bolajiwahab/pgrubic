@@ -37,7 +37,7 @@ class InlineSqlFunctionBodyWrongLanguage(linter.BaseChecker):
         options = typing.cast(tuple[ast.DefElem, ...], node.options)
         language: str | None = None
 
-        for option in options:
+        for option in options or ():
             defname = typing.cast(str, option.defname)
             if defname.upper() == "LANGUAGE":
                 argument = typing.cast(ast.String, option.arg)

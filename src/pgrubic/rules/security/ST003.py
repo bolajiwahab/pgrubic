@@ -36,7 +36,7 @@ class SecurityDefinerFunctionNoExplicitSearchPath(linter.BaseChecker):
         is_security_definer = False
         has_explicit_search_path = False
 
-        for option in typing.cast(tuple[ast.DefElem], node.options):
+        for option in typing.cast(tuple[ast.DefElem, ...], node.options or ()):
             name = option.defname
 
             if (
