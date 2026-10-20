@@ -36,6 +36,10 @@ test_pass_c_function_library_and_symbol:
   sql_pass: |
     CREATE FUNCTION f() RETURNS void LANGUAGE c AS 'MODULE_PATHNAME', 'func';
 
+test_fail_c_function_library_symbol_and_return_body:
+  sql_fail: |
+    CREATE FUNCTION f() RETURNS void LANGUAGE c AS 'MODULE_PATHNAME', 'func' RETURN 1;
+
 test_pass_function_without_body:
   sql_pass: |
     CREATE FUNCTION f() RETURNS void;

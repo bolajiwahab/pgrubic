@@ -11,8 +11,8 @@ class DuplicateBody(linter.BaseChecker):
     SQL-standard body.
 
     ## **Why not?**
-    PostgreSQL rejects declarations with both body forms, regardless of their contents.
-    The two strings in a C-language AS clause specify one body and are allowed.
+    PostgreSQL rejects declarations with both body forms, regardless of their language
+    or contents.
 
     ## **When should you?**
     Never.

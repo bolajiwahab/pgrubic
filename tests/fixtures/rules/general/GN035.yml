@@ -6,17 +6,11 @@ test_pass_function_without_options:
     CREATE FUNCTION f() RETURNS void;
 
 test_pass_function_ambiguous_bodies:
-  config:
-    lint:
-      fix: true
   sql_pass: |
     CREATE OR REPLACE FUNCTION public.func() RETURNS integer
     AS $$ BEGIN RETURN 1; END; $$ LANGUAGE plpgsql RETURN 1;
 
 test_pass_procedure_ambiguous_bodies:
-  config:
-    lint:
-      fix: true
   sql_pass: |
     CREATE PROCEDURE p() LANGUAGE plpgsql
     AS $$ BEGIN NULL; END; $$ BEGIN ATOMIC SELECT 1; END;
