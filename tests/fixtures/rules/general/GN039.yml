@@ -1,0 +1,45 @@
+---
+rule: GN039
+
+test_fail_function_string_and_return_bodies:
+  sql_fail: |
+    CREATE FUNCTION f() RETURNS integer
+    AS $$ BEGIN RETURN 1; END; $$ LANGUAGE plpgsql RETURN 1;
+
+test_fail_function_string_and_block_bodies:
+  sql_fail: |
+    CREATE FUNCTION f() RETURNS integer LANGUAGE sql
+    AS 'SELECT 1;' BEGIN ATOMIC SELECT 1; END;
+
+test_fail_procedure_string_and_block_bodies:
+  sql_fail: |
+    CREATE PROCEDURE p() LANGUAGE sql
+    AS 'SELECT 1;' BEGIN ATOMIC SELECT 1; END;
+
+test_fail_function_empty_string_and_return_bodies:
+  sql_fail: |
+    CREATE FUNCTION f() RETURNS integer LANGUAGE sql AS '' RETURN 1;
+
+test_pass_function_string_body:
+  sql_pass: |
+    CREATE FUNCTION f() RETURNS integer LANGUAGE sql AS 'SELECT 1;';
+
+test_pass_function_return_body:
+  sql_pass: |
+    CREATE FUNCTION f() RETURNS integer RETURN 1;
+
+test_pass_procedure_block_body:
+  sql_pass: |
+    CREATE PROCEDURE p() BEGIN ATOMIC END;
+
+test_pass_c_function_library_and_symbol:
+  sql_pass: |
+    CREATE FUNCTION f() RETURNS void LANGUAGE c AS 'MODULE_PATHNAME', 'func';
+
+test_fail_c_function_library_symbol_and_return_body:
+  sql_fail: |
+    CREATE FUNCTION f() RETURNS void LANGUAGE c AS 'MODULE_PATHNAME', 'func' RETURN 1;
+
+test_pass_function_without_body:
+  sql_pass: |
+    CREATE FUNCTION f() RETURNS void;

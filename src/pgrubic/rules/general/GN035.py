@@ -35,6 +35,13 @@ class InlineSqlFunctionBodyWrongLanguage(linter.BaseChecker):
     ) -> None:
         """Visit CreateFunctionStmt."""
         options = typing.cast(tuple[ast.DefElem, ...], node.options)
+        # Both body forms are present, so the intended body is ambiguous.
+        # Duplicate bodies are checked separately.
+        if node.sql_body is not None and any(
+            option.defname == "as" for option in options or ()
+        ):
+            return
+
         language: str | None = None
 
         for option in options or ():

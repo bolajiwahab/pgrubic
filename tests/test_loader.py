@@ -5,8 +5,8 @@ from pgrubic import core
 
 def test_load_rules(linter: core.Linter) -> None:
     """Test loading rules."""
-    expected_active_rules = 116
-    expected_total_rules = 117
+    expected_active_rules = 117
+    expected_total_rules = 118
 
     active_rules = core.load_rules(config=linter.config)
     all_rules = core.load_rules(config=linter.config, include_deprecated=True)
