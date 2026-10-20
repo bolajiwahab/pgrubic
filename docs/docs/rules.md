@@ -1,6 +1,6 @@
 # Rules
 
-There are **115** rules, all enabled by default except deprecated
+There are **116** rules, all enabled by default except deprecated
 ones, which are not part of the active rule set.
 
 Rules are divided into 8 categories:
@@ -65,6 +65,7 @@ Rules are divided into 8 categories:
 | GN034 | [typed-table](rules/general/typed-table.md) | :white_check_mark: Stable | :x: |
 | GN035 | [inline-sql-function-body-wrong-language](rules/general/inline-sql-function-body-wrong-language.md) | :white_check_mark: Stable | :white_check_mark: |
 | GN036 | [self-assigning-column](rules/general/self-assigning-column.md) | :white_check_mark: Stable | :x: |
+| GN037 | [missing-body](rules/general/missing-body.md) | :white_check_mark: Stable | :x: |
 
 ## query (QY)
 

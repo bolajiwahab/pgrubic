@@ -6,6 +6,7 @@ from collections import deque
 from pglast import ast, parser, visitors, parse_plpgsql
 
 from pgrubic.core import formatter
+from pgrubic.postgres import functions
 
 RawStreamFactory = typing.Callable[[], formatter.RawStream]
 
@@ -31,6 +32,9 @@ class InlineSQLVisitor(visitors.Visitor):
         if node.sql_body:
             return
 
+        if not functions.has_body(node=node):
+            return
+
         _sql_statements = self._extract_sql_statements_from_plpgsql(
             parse_plpgsql(self._render_raw(node)),
         )
@@ -38,6 +42,9 @@ class InlineSQLVisitor(visitors.Visitor):
 
     def visit_DoStmt(self, ancestors: visitors.Ancestor, node: ast.DoStmt) -> None:
         """Visit DoStmt."""
+        if not functions.has_body(node=node):
+            return
+
         _sql_statements = self._extract_sql_statements_from_plpgsql(
             parse_plpgsql(self._render_raw(node)),
         )
