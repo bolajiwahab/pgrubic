@@ -1,3 +1,22 @@
+## 4.0.0 (2026-10-21)
+
+### Feat
+
+- **linter**: add GN039 to flag duplicate function and procedure bodies (#316)
+- **linter**: feat: add rule to flag missing function and procedure languages (#315)
+- add GN037 to detect missing bodies in functions, procedures and do statements (#313)
+
+### Fix
+
+- **linter**: missing function options (#314)
+- **deps**: bump the python-packages group with 6 updates (#306)
+- **linter**: normalize spacing when rebuilding fixed SQL (#305)
+- **formatter**: report correct line numbers for errors (#303)
+
+### Refactor
+
+- **formatter**: centralize AST rendering (#301)
+
 ## 3.1.0 (2026-09-26)
 
 ### Feat
