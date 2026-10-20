@@ -2567,6 +2567,13 @@ BUILTIN_NON_VOLATILE_FUNCTIONS: typing.Final[frozenset[str]] = frozenset(
 )
 
 
+def has_language(node: ast.CreateFunctionStmt) -> bool:
+    """Return whether a function or procedure has an explicit or implicit language."""
+    return node.sql_body is not None or any(
+        option.defname == "language" for option in node.options or ()
+    )
+
+
 def has_body(node: ast.CreateFunctionStmt | ast.DoStmt) -> bool:
     """Return whether a function, procedure, or DO statement has a body."""
     if isinstance(node, ast.CreateFunctionStmt) and node.sql_body is not None:
