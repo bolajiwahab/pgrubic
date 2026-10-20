@@ -85,10 +85,11 @@
 | src/pgrubic/rules/general/GN032.py           |       19 |        0 |     100% |           |
 | src/pgrubic/rules/general/GN033.py           |        6 |        0 |     100% |           |
 | src/pgrubic/rules/general/GN034.py           |        6 |        0 |     100% |           |
-| src/pgrubic/rules/general/GN035.py           |       24 |        0 |     100% |           |
+| src/pgrubic/rules/general/GN035.py           |       26 |        0 |     100% |           |
 | src/pgrubic/rules/general/GN036.py           |       36 |        0 |     100% |           |
 | src/pgrubic/rules/general/GN037.py           |       12 |        0 |     100% |           |
 | src/pgrubic/rules/general/GN038.py           |        8 |        0 |     100% |           |
+| src/pgrubic/rules/general/GN039.py           |        7 |        0 |     100% |           |
 | src/pgrubic/rules/general/\_\_init\_\_.py    |       17 |        0 |     100% |           |
 | src/pgrubic/rules/naming/NM001.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/naming/NM002.py            |        7 |        0 |     100% |           |
@@ -169,7 +170,7 @@
 | src/pgrubic/rules/unsafe/US030.py            |        9 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US031.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-| **TOTAL**                                    | **3785** |    **0** | **100%** |           |
+| **TOTAL**                                    | **3794** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
