@@ -41,7 +41,7 @@ class SecurityDefinerFunctionNonTempSchema(linter.BaseChecker):
         has_explicit_search_path = False
         has_non_temp_schema = False
 
-        for option in typing.cast(tuple[ast.DefElem], node.options):
+        for option in typing.cast(tuple[ast.DefElem, ...], node.options or ()):
             name = option.defname
 
             if (

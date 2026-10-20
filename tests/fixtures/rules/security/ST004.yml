@@ -1,6 +1,10 @@
 ---
 rule: ST004
 
+test_pass_function_without_options:
+  sql_pass: |
+    CREATE FUNCTION f() RETURNS void;
+
 test_fail_security_definer_function_without_pg_temp_last_element_in_search_path:
   sql_fail: |
     CREATE OR REPLACE FUNCTION security_definer()
