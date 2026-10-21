@@ -59,8 +59,8 @@ pip install git+https://github.com/bolajiwahab/pgrubic.git
 ### via Docker
 
 ```bash
-docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:4.0.0 lint *.sql     # Lint SQL files
-docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:4.0.0 format *.sql   # Format SQL files
+docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:4.0.1 lint *.sql     # Lint SQL files
+docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:4.0.1 format *.sql   # Format SQL files
 ```
 
 ### via Github Actions
@@ -69,14 +69,14 @@ docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:4.0.0 format *.sql 
 - uses: azellarhq/pgrubic-action@v2
   with:
     src: "./src"
-    pgrubic-version: "4.0.0"
+    pgrubic-version: "4.0.1"
 ```
 
 ### via pre-commit
 
 ```yaml
 - repo: https://github.com/bolajiwahab/pgrubic
-  rev: 4.0.0
+  rev: 4.0.1
   hooks:
     - id: pgrubic-lint
     - id: pgrubic-format
