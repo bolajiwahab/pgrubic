@@ -79,7 +79,7 @@ class YodaCondition(linter.BaseChecker):
         lexpr = node.lexpr
         rexpr = node.rexpr
 
-        node.lexpr = rexpr
+        node.lexpr = rexpr  # type: ignore[assignment]
         node.rexpr = lexpr
 
         # Adjust the operator accordingly

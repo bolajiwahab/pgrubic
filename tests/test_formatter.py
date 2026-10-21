@@ -113,7 +113,7 @@ def test_check_constraint_rejects_raw_and_cooked_expressions(
 ) -> None:
     """Test a CHECK constraint cannot contain both expression forms."""
     statement = parser.parse_sql("CREATE TABLE tbl (value integer CHECK (value > 0))")
-    constraint = statement[0].stmt.tableElts[0].constraints[0]  # type: ignore[attr-defined]
+    constraint = statement[0].stmt.tableElts[0].constraints[0]  # type: ignore[union-attr]
     constraint.cooked_expr = "cooked expression"
 
     with pytest.raises(
