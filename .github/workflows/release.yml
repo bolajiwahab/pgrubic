@@ -103,11 +103,9 @@ jobs:
           python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
           version: 0.13.5
 
-      - name: Install tox
-        run: uv tool install tox==4.56.1 --with tox-uv-bare==1.36.0
 
       - name: Build source and wheel distribution
-        run: tox -e build-dist
+        run: uv run --locked --only-group tooling tox -e build-dist
 
       - name: Upload artifacts
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7

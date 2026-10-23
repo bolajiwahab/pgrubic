@@ -17,16 +17,38 @@ jobs:
   tests:
     permissions:
       contents: read
-    runs-on: ubuntu-latest
-    strategy: &python-matrix
+    runs-on: ${{ matrix.os }}
+    strategy:
       fail-fast: false
       matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
         python-version:
-          - 3.12
-          - 3.13
-          - 3.14
+          - "3.12"
+          - "3.13"
+          - "3.14"
+        include:
+          - os: ubuntu-latest
+            tox-env: tests-linux
+          - os: windows-latest
+            tox-env: tests-windows
+          - os: macos-latest
+            tox-env: tests-macos
+    name: ${{ matrix.tox-env }}-python-${{ matrix.python-version }}
     steps:
-      - run: echo "Using python version ${{ matrix.python-version }}"
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e  # v10.3.2
+        with:
+          python-version: ${{ matrix.python-version }}
+          version: 0.13.5
+
+      - name: Run tests
+        run: uv run --locked --only-group tooling tox -e ${{ matrix.tox-env }}
 
   checks:
     permissions:
@@ -58,73 +80,8 @@ jobs:
           python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
           version: 0.13.5
 
-      - name: Install tox
-        run: uv tool install tox==4.56.1 --with tox-uv-bare==1.36.0
-
       - name: Run ${{ matrix.job }}
-        run: tox -e ${{ matrix.job }}
-
-  tests-windows:
-    permissions:
-      contents: read
-    runs-on: windows-latest
-    strategy: *python-matrix
-    name: tests-windows-python-${{ matrix.python-version }}
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
-
-      - name: Set up uv and Python
-        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e  # v10.3.2
-        with:
-          python-version: ${{ matrix.python-version }}
-          version: 0.13.5
-
-      - name: Install tox
-        run: uv tool install tox==4.56.1 --with tox-uv-bare==1.36.0
-
-      - name: Run tests
-        run: tox -e tests-windows
-
-  tests-linux:
-    permissions:
-      contents: read
-    runs-on: ubuntu-latest
-    strategy: *python-matrix
-    name: tests-linux-python-${{ matrix.python-version }}
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
-
-      - name: Set up uv and Python
-        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e  # v10.3.2
-        with:
-          python-version: ${{ matrix.python-version }}
-          version: 0.13.5
-      - name: Install tox
-        run: uv tool install tox==4.56.1 --with tox-uv-bare==1.36.0
-      - name: Run tests
-        run: tox -e tests-linux
-
-  tests-macos:
-    permissions:
-      contents: read
-    runs-on: macos-latest
-    strategy: *python-matrix
-    name: tests-macos-python-${{ matrix.python-version }}
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
-
-      - name: Set up uv and Python
-        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e  # v10.3.2
-        with:
-          python-version: ${{ matrix.python-version }}
-          version: 0.13.5
-      - name: Install tox
-        run: uv tool install tox==4.56.1 --with tox-uv-bare==1.36.0
-      - name: Run tests
-        run: tox -e tests-macos
+        run: uv run --locked --only-group tooling tox -e ${{ matrix.job }}
 
   build-docker-image:
     name: Build multi-platform docker image [arch=amd64,arm64]
@@ -173,11 +130,8 @@ jobs:
           python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
           version: 0.13.5
 
-      - name: Install tox
-        run: uv tool install tox==4.56.1 --with tox-uv-bare==1.36.0
-
       - name: Run coverage
-        run: tox -e coverage
+        run: uv run --locked --only-group tooling tox -e coverage
 
       - name: Coverage comment
         id: coverage_comment

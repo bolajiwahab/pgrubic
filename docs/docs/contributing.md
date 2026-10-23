@@ -7,18 +7,17 @@ For significant changes, such as new rules, please consider creating an [issue](
 
 ## Development
 
-To set up a development environment, install [**uv 0.12.5**](https://docs.astral.sh/uv/getting-started/installation/).
+To set up a development environment, install [**uv**](https://docs.astral.sh/uv/getting-started/installation/).
 
-1. Install tox:
+1. Create a development environment:
 
     ```console
-    uv tool install "tox>=4.56.1,<5" --with "tox-uv-bare>=1,<2"
+    uv sync --locked --group tooling --extra dev --extra doc
     ```
 
-2. Create and activate the development environment:
+2. Activate the development environment:
 
     ```console
-    tox -e dev --devenv .venv
     source .venv/bin/activate
     ```
 
@@ -107,7 +106,7 @@ To add a new rule, you need to:
 10. Update the generated documentation for rules through:
 
 ```bash
-tox -e docbuild
+uv run --locked --only-group tooling tox -e docbuild
 ```
 
 ### Testing
@@ -120,13 +119,13 @@ To test a rule, you need to:
 3. To run the tests for all rules, use:
 
 ```bash
-tox -e tests -- tests/test_rules.py
+uv run --locked --only-group tooling tox -e tests -- tests/test_rules.py
 ```
 
 4. To run specific test, for example, use:
 
 ```bash
-tox -e tests -- "tests/test_rules.py::test_rules[US028-US028_test_pass_concurrent_materialized_view_refresh-test_case767]"
+uv run --locked --only-group tooling tox -e tests -- "tests/test_rules.py::test_rules[US028-US028_test_pass_concurrent_materialized_view_refresh-test_case767]"
 ```
 
 ## Formatter
@@ -156,13 +155,13 @@ To test a rule, you need to:
 3. To run the tests for all formatters, use:
 
 ```bash
-tox -e tests -- tests/test_formatters.py
+uv run --locked --only-group tooling tox -e tests -- tests/test_formatters.py
 ```
 
 4. To run specific test, for example, use:
 
 ```bash
-tox -e tests -- "tests/test_formatters.py::test_formatters[VIEW-VIEW_drop_view-test_case94]"
+uv run --locked --only-group tooling tox -e tests -- "tests/test_formatters.py::test_formatters[VIEW-VIEW_drop_view-test_case94]"
 ```
 
 ## Documentation
@@ -172,13 +171,13 @@ The documentation uses [Zensical](https://zensical.org).
 To update the documentation for production environment, use:
 
 ```bash
-tox -e docbuild
+uv run --locked --only-group tooling tox -e docbuild
 ```
 
 To ensure links resolve locally (not for production), use:
 
 ```bash
-PGRUBIC_BUILD_ENV=local tox -e docbuild
+PGRUBIC_BUILD_ENV=local uv run --locked --only-group tooling tox -e docbuild
 ```
 
 To preview changes to the documentation, from the parent directory, use:
@@ -197,7 +196,7 @@ The project uses [commitizen](https://commitizen-tools.github.io/commitizen/) to
     tools/prepare_release.sh
     ```
 
-    The above script automatically creates a branch named `Release`, runs `tox -e prepare-release` (which wraps around `cz bump`), and pushes the changes to the remote repository.
+    The above script automatically creates a branch named `Release`, runs `uv run --locked --only-group tooling tox -e prepare-release` (which wraps around `cz bump`), and pushes the changes to the remote repository.
 
 2. Create a pull request and get the changes merged
 
