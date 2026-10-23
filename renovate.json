@@ -39,6 +39,12 @@
       "groupName": "github actions updates",
       "groupSlug": "github-actions-updates",
       "pinDigests": true
+    },
+    {
+      "description": "Disable digest pinning for GitHub Actions uses-with dependencies",
+      "matchManagers": ["github-actions"],
+      "matchDepTypes": ["uses-with"],
+      "pinDigests": false
     }
   ]
 }
