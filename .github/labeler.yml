@@ -9,7 +9,7 @@ formatter:
   - "/(formatter|printer)/i"
 
 documentation:
-  - "/(documentation|doc)/i"
+  - /^(?!.*docker).*(documentation|doc)/i
 
 bug:
   - "/(bug|fix)/i"
