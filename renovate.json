@@ -4,6 +4,10 @@
     "config:recommended",
     ":disableDependencyDashboard"
   ],
+  // Remove PR creation limits
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
+  "branchConcurrentLimit": 0,
   "packageRules": [
     {
       "description": "Group docker dependencies",
