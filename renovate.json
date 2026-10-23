@@ -6,7 +6,7 @@
   ],
   "packageRules": [
     {
-      "description": "Group dependencies declared in Dockerfiles",
+      "description": "Group docker dependencies",
       "matchManagers": [
         "dockerfile"
       ],
@@ -17,7 +17,7 @@
       "groupSlug": "docker-updates"
     },
     {
-      "description": "Group dependencies declared in Python requirements files",
+      "description": "Group python dependencies",
       "matchManagers": [
         "uv"
       ],
