@@ -58,7 +58,7 @@ dependencies = [
   "toml==0.10.2",
   "click==8.5.0",
   "rich==15.0.0",
-  "pydantic==2.13.5",
+  "pydantic==2.14.1",
   "deepmerge==3.0.1",
   "gitpython==3.2.1",
   "msgspec==0.22.0",
@@ -66,18 +66,18 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "ruff==0.16.10",
+  "ruff==0.17.2",
   "mypy==2.4.0",
   "isort==9.0.2",
   "bandit==1.9.4",
   "add-trailing-comma==4.0.0",
   "interrogate==1.7.0",
-  "pre-commit==4.6.2",
+  "pre-commit==4.7.0",
   "pre-commit-hooks==6.0.0",
   "yamllint==1.38.0",
   "conventional-pre-commit==4.4.0",
   "pytest==9.1.1",
-  "coverage==7.16.2",
+  "coverage==7.17.0",
   "types-pyyaml==6.0.12.20260906",
   "types-toml==0.10.8.20260518",
   "types-colorama==0.4.15.20260508",
@@ -85,8 +85,8 @@ dev = [
 ]
 
 doc = [
-  "zensical==0.0.68",
-  "mkdocstrings[python]==1.0.6",
+  "zensical==0.0.72",
+  "mkdocstrings[python]==1.0.8",
 ]
 
 release = [
