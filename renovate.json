@@ -1,0 +1,37 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":disableDependencyDashboard"
+  ],
+  "packageRules": [
+    {
+      "description": "Group dependencies declared in Dockerfiles",
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "matchFileNames": [
+        "Dockerfile"
+      ],
+      "groupName": "docker updates",
+      "groupSlug": "docker-updates"
+    },
+    {
+      "description": "Group dependencies declared in Python requirements files",
+      "matchManagers": [
+        "uv"
+      ],
+      "groupName": "python updates",
+      "groupSlug": "python-updates"
+    },
+    {
+      "description": "Group dependencies declared in GitHub Actions workflows",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "github actions updates",
+      "groupSlug": "github-actions-updates",
+      "pinDigests": true
+    }
+  ]
+}
