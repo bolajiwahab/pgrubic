@@ -4,6 +4,9 @@
     "config:recommended",
     ":disableDependencyDashboard"
   ],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   // Remove PR creation limits
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
