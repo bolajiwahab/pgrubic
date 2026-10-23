@@ -96,8 +96,8 @@ release = [
 [dependency-groups]
 tooling = [
   "uv==0.13.5",
-  "tox==4.56.1",
-  "tox-uv-bare==1.36.0",
+  "tox==4.67.1",
+  "tox-uv-bare==1.37.0",
 ]
 
 [project.urls]
