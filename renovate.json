@@ -19,7 +19,7 @@
     {
       "description": "Group python dependencies",
       "matchManagers": [
-        "uv"
+        "pep621"
       ],
       "groupName": "python updates",
       "groupSlug": "python-updates"
