@@ -4,6 +4,8 @@
     "config:recommended",
     ":disableDependencyDashboard"
   ],
+  "prHourlyLimit": 5,
+  "prConcurrentLimit": 10,
   "packageRules": [
     {
       "description": "Group docker dependencies",
