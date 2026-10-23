@@ -23,8 +23,8 @@ pip install git+https://github.com/bolajiwahab/pgrubic.git
 ### via Docker
 
 ```console
-docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:4.0.1 lint *.sql     # Lint SQL files
-docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:4.0.1 format *.sql   # Format SQL files
+docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:4.0.2 lint *.sql     # Lint SQL files
+docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:4.0.2 format *.sql   # Format SQL files
 ```
 
 ### via Github Actions
@@ -33,14 +33,14 @@ docker run --rm -it -v $PWD:/sql ghcr.io/bolajiwahab/pgrubic:4.0.1 format *.sql 
 - uses: azellarhq/pgrubic-action@v2
   with:
     src: "./src"
-    pgrubic-version: "4.0.1"
+    pgrubic-version: "4.0.2"
 ```
 
 ### via pre-commit
 
 ```yaml
 - repo: https://github.com/bolajiwahab/pgrubic
-  rev: 4.0.1
+  rev: 4.0.2
   hooks:
     - id: pgrubic-lint
     - id: pgrubic-format
@@ -374,7 +374,7 @@ Create a file named `.pre-commit-config.yaml` at the root of your git project. T
 ```yaml
 - repo: https://github.com/bolajiwahab/pgrubic
   # The version of pgrubic to use.
-  rev: 4.0.1
+  rev: 4.0.2
   hooks:
     - id: pgrubic-lint
     - id: pgrubic-format

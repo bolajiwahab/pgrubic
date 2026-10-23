@@ -1,3 +1,10 @@
+## 4.0.2 (2026-10-23)
+
+### Fix
+
+- **deps**: update python updates (#331)
+- **deps**: update dependency gitpython to v3.2.1 (#324)
+
 ## 4.0.1 (2026-10-21)
 
 ### Fix
