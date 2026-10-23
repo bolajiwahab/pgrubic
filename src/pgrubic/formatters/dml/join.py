@@ -48,7 +48,7 @@ def join_expr(node: ast.JoinExpr, output: formatter.PrinterOutput) -> None:
 
             if isinstance(node.rarg, ast.JoinExpr):
                 output.indent(3, relative=False)
-                # TODO: This needs to be fixed to handle nested JOIN expressions properly  # noqa: TD002, FIX002, TD003, E501
+                # TODO: This needs to be fixed to handle nested JOIN expressions properly  # noqa: TD002, FIX002, TD003
                 with output.expression(not bool(node.rarg.alias)):
                     output.indent(4)
                     output.print_node(node.rarg)
