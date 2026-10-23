@@ -6,5 +6,5 @@ set -euo pipefail
 
 git checkout -B Release
 git pull --rebase origin main
-tox -e prepare-release
+uv run --locked --only-group tooling tox -e prepare-release
 git push origin Release --force

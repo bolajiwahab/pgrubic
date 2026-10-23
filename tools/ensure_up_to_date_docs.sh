@@ -9,6 +9,6 @@ if git diff --quiet -- README.md docs/ && [ -z "$(git ls-files --others --exclud
     exit 0
 else
     echo "Documentations are not up to date. Ensure docs are rebuilt."
-    echo "Run 'tox -e docbuild' and commit the changes."
+    echo "Run 'uv run --locked --only-group tooling tox -e docbuild' and commit the changes."
     exit 1
 fi
