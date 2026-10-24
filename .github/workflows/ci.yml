@@ -2,7 +2,7 @@
 # yamllint disable rule:line-length
 name: CI
 
-on:  # yamllint disable-line rule:truthy
+on:
   push:
     branches:
       - main

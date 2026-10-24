@@ -57,6 +57,12 @@ repos:
         language: python
         types: [yaml]
         args: [--strict]
+      - id: hadolint
+        name: Lint Dockerfiles
+        entry: ghcr.io/hadolint/hadolint:v2.15.1 hadolint
+        language: docker_image
+        stages: [pre-commit]
+        types: [dockerfile]
       - id: isort
         stages: [pre-commit]
         name: Ensure imports are grouped and sorted
