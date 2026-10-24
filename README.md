@@ -21,6 +21,8 @@
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 [![Socket Badge](https://socket.dev/api/badge/pypi/package/pgrubic?artifact_id=tar-gz)](https://socket.dev/pypi/package/pgrubic/overview/)
 [![Dependency Review](https://img.shields.io/badge/Dependency%20Review-enabled-deepgreen)](https://github.com/bolajiwahab/pgrubic/actions/workflows/dependency-review.yml)
+[![Trivy](https://img.shields.io/badge/Trivy-Container%20Security-1904DA?logo=trivy&logoColor=white)](https://trivy.dev/)
+[![Hadolint](https://img.shields.io/badge/Hadolint-Dockerfile%20Linting-0D597F?logo=docker&logoColor=white)](https://github.com/hadolint/hadolint)
 
 pgrubic is a PostgreSQL linter and formatter for schema migrations and design best practices.
 
