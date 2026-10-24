@@ -6,6 +6,10 @@ on:  # yamllint disable-line rule:truthy
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   dependency-review:
     permissions:
