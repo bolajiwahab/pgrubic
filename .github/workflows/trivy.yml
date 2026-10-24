@@ -2,7 +2,7 @@
 # yamllint disable rule:line-length
 name: Trivy Security Scan
 
-on:  # yamllint disable-line rule:truthy
+on:
   push:
     branches:
       - main
@@ -10,7 +10,8 @@ on:  # yamllint disable-line rule:truthy
     branches:
       - main
   schedule:
-    - cron: "23 6 * * 1"
+    # Run daily at 00:00 UTC
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 permissions:
@@ -26,12 +27,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
-      - name: Scan repository with Trivy
+      - name: Scan repository vulnerabilities and secrets with Trivy
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25  # v0.36.0
         with:
           scan-type: fs
           scan-ref: .
-          scanners: vuln
+          scanners: vuln,secret
           vuln-type: os,library
           skip-dirs: .git,.venv,.tox
           format: sarif
@@ -69,7 +70,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069  # v4
 
-      - name: Build production image for scanning
+      - name: Build image for scanning
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc  # v7
         with:
           context: .
@@ -84,11 +85,11 @@ jobs:
             type=gha
           cache-to: type=gha,scope=trivy-image,mode=max
 
-      - name: Scan production image with Trivy
+      - name: Scan image with Trivy
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25  # v0.36.0
         with:
           image-ref: pgrubic:scan
-          scanners: vuln
+          scanners: vuln,secret
           vuln-type: os,library
           format: sarif
           output: trivy-image-results.sarif
