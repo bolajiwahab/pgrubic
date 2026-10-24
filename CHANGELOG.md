@@ -1,3 +1,14 @@
+## 4.1.0 (2026-10-25)
+
+### Feat
+
+- add Python 3.15 support (#347)
+
+### Fix
+
+- **docker**: resolve base image vulnerabilities (#348)
+- **docker**: respect gitignore in mounted repositories (#341)
+
 ## 4.0.2 (2026-10-23)
 
 ### Fix
