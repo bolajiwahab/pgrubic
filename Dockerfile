@@ -1,4 +1,4 @@
-ARG PYTHON_IMAGE=python:3.15-slim@sha256:533b0b2f9b5d46fd097091cf826f27902f1d6c3bca714b6dc74551356aa97a51
+ARG PYTHON_IMAGE=python:3.15-alpine@sha256:d44b1254cb92329418d164b22b20d86bbd3869d48e80e09e476531a409a728bb
 
 FROM ${PYTHON_IMAGE} AS builder
 
@@ -21,11 +21,11 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 FROM ${PYTHON_IMAGE} AS runtime
 
-# GitPython uses the Git executable to respect .gitignore in mounted projects.
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends git \
+RUN python -m pip uninstall --yes pip \
+    # GitPython uses the Git executable to respect .gitignore in mounted projects.
+    && apk add --no-cache 'git~2.54' \
     && git config --system --add safe.directory /sql \
-    && rm -rf /var/lib/apt/lists/*
+    && git config --system --add safe.directory /sql
 
 COPY --from=builder /app/.venv /app/.venv
 
