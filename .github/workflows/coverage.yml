@@ -2,7 +2,7 @@
 # yamllint disable rule:line-length
 name: Post coverage comment
 
-on:  # yamllint disable-line rule:truthy
+on:
   workflow_run:
     workflows: ["CI"]
     types:

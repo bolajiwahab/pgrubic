@@ -4,7 +4,11 @@ extends: default
 rules:
   line-length:
     max: 90
-
+  truthy:
+    allowed-values:
+      - "true"
+      - "false"
+      - "on"
 ignore: |
   .venv
   .tox

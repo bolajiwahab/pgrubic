@@ -2,7 +2,7 @@
 # yamllint disable rule:line-length
 name: release
 
-on:  # yamllint disable-line rule:truthy
+on:
   push:
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"

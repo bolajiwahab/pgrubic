@@ -22,6 +22,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 FROM ${PYTHON_IMAGE} AS runtime
 
 # GitPython uses the Git executable to respect .gitignore in mounted projects.
+# Git intentionally follows the distribution's available package version.
+# hadolint ignore=DL3008
 RUN apt-get update \
     && apt-get install -y --no-install-recommends git \
     && git config --system --add safe.directory /sql \

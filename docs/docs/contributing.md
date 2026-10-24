@@ -27,6 +27,8 @@ To set up a development environment, install [**uv**](https://docs.astral.sh/uv/
     pre-commit install
     ```
 
+Docker must be available for the Hadolint hook, which checks Dockerfile best practices.
+
 ## Project Structure
 
 ```text
