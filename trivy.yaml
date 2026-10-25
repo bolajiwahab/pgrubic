@@ -7,7 +7,7 @@ severity:
 exit-code: 1
 ignorefile: .trivyignore
 pkg:
-  include-dev-deps: false
+  include-dev-deps: true
   types:
     - os
     - library

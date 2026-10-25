@@ -19,6 +19,10 @@ permissions:
   actions: read
   security-events: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 env:
   PACKAGE_NAME: "pgrubic"
   TRIVY_LIMIT_SEVERITIES_FOR_SARIF: true
