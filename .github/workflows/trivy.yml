@@ -23,7 +23,7 @@ env:
   PACKAGE_NAME: "pgrubic"
   TRIVY_LIMIT_SEVERITIES_FOR_SARIF: true
   TRIVY_VERSION: v0.76.1
-  TRIVY_CONFIG: trivy.yaml
+  TRIVY_CONFIG_FILE: trivy.yaml
   TRIVY_REPO_REPORT: trivy-repo-results
   TRIVY_IMAGE_REPORT: trivy-image-results
   TRIVY_REPORT_FORMAT: sarif
@@ -43,9 +43,10 @@ jobs:
           version: ${{ env.TRIVY_VERSION }}
           scan-type: fs
           scan-ref: .
+          format: ${{ env.TRIVY_REPORT_FORMAT }}
           output: ${{ env.TRIVY_REPO_REPORT }}.${{ env.TRIVY_REPORT_FORMAT }}
           limit-severities-for-sarif: ${{ env.TRIVY_LIMIT_SEVERITIES_FOR_SARIF }}
-          trivy-config: ${{ env.TRIVY_CONFIG }}
+          trivy-config: ${{ env.TRIVY_CONFIG_FILE }}
 
       - name: Upload repository findings to Code Scanning
         if: ${{ always() && hashFiles(format('{0}.{1}', env.TRIVY_REPO_REPORT, env.TRIVY_REPORT_FORMAT)) != '' }}
@@ -94,9 +95,10 @@ jobs:
         with:
           image-ref: ${{ env.PACKAGE_NAME }}:scan
           version: ${{ env.TRIVY_VERSION }}
+          format: ${{ env.TRIVY_REPORT_FORMAT }}
           output: ${{ env.TRIVY_IMAGE_REPORT }}.${{ env.TRIVY_REPORT_FORMAT }}
           limit-severities-for-sarif: ${{ env.TRIVY_LIMIT_SEVERITIES_FOR_SARIF }}
-          trivy-config: ${{ env.TRIVY_CONFIG }}
+          trivy-config: ${{ env.TRIVY_CONFIG_FILE }}
 
       - name: Upload image findings to Code Scanning
         if: ${{ always() && hashFiles(format('{0}.{1}', env.TRIVY_IMAGE_REPORT, env.TRIVY_REPORT_FORMAT)) != '' }}
