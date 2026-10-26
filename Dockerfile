@@ -21,7 +21,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 FROM ${PYTHON_IMAGE} AS runtime
 
-RUN python -m pip uninstall --yes pip \
+RUN apk del curl && python -m pip uninstall --yes pip \
     # GitPython uses the Git executable to respect .gitignore in mounted projects.
     && apk add --no-cache 'git~2.54' \
     && git config --system --add safe.directory /sql
