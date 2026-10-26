@@ -60,7 +60,7 @@ dependencies = [
   "click==8.5.0",
   "rich==15.0.0",
   "pydantic==2.14.1",
-  "deepmerge==3.0.1",
+  "deepmerge==4.0.0",
   "gitpython==3.2.1",
   "msgspec==0.22.0",
 ]
