@@ -1,3 +1,12 @@
+## 4.1.1 (2026-11-14)
+
+### Fix
+
+- **deps**: update python updates (#363)
+- **deps**: update dependency deepmerge to v4 (#350)
+- **deps**: update python updates (#353)
+- **docker**: resolve base image curl vulnerability (#354)
+
 ## 4.1.0 (2026-10-25)
 
 ### Feat
