@@ -50,7 +50,7 @@ jobs:
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2  # v10.3.3
         with:
           python-version: ${{ matrix.python-version }}
-          version: 0.13.7
+          version: 0.13.8
 
       - name: Run tests
         run: uv run --locked --only-group tooling tox -e ${{ matrix.tox-env }}
@@ -83,7 +83,7 @@ jobs:
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2  # v10.3.3
         with:
           python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
-          version: 0.13.7
+          version: 0.13.8
 
       - name: Run ${{ matrix.job }}
         run: uv run --locked --only-group tooling tox -e ${{ matrix.job }}
@@ -133,14 +133,14 @@ jobs:
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2  # v10.3.3
         with:
           python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
-          version: 0.13.7
+          version: 0.13.8
 
       - name: Run coverage
         run: uv run --locked --only-group tooling tox -e coverage
 
       - name: Coverage comment
         id: coverage_comment
-        uses: py-cov-action/python-coverage-comment-action@e5fb2218463c3377f3504b0c5b5646ed53da7a2f  # v4.5
+        uses: py-cov-action/python-coverage-comment-action@07249dd712cd2464873eb8a59a24f97fd281e76f  # v4.6
         with:
           GITHUB_TOKEN: ${{ github.token }}
           MAX_FILES_IN_COMMENT: 120
