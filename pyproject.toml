@@ -53,7 +53,7 @@ classifiers = [
 ]
 keywords = ["pgrubic", "sql", "postgres", "postgresql", "linter"]
 dependencies = [
-  "pglast==8.7",
+  "pglast==8.8",
   "case-converter==1.2.0",
   "colorama==0.4.6",
   "toml==0.10.2",
@@ -67,7 +67,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "ruff==0.17.4",
+  "ruff==0.17.5",
   "mypy==2.4.1",
   "isort==9.0.2",
   "bandit==1.9.4",
@@ -78,15 +78,15 @@ dev = [
   "yamllint==1.38.0",
   "conventional-pre-commit==4.5.0",
   "pytest==9.2.0",
-  "coverage==7.17.2",
-  "types-pyyaml==6.0.12.20261103",
+  "coverage==7.17.3",
+  "types-pyyaml==6.0.12.20261113",
   "types-toml==0.10.8.20260518",
   "types-colorama==0.4.15.20260508",
   "types-click==7.1.8",
 ]
 
 doc = [
-  "zensical==0.1.0",
+  "zensical==0.1.1",
   "mkdocstrings[python]==1.0.8",
 ]
 
@@ -96,7 +96,7 @@ release = [
 
 [dependency-groups]
 tooling = [
-  "uv==0.13.7",
+  "uv==0.13.8",
   "tox==4.67.13",
   "tox-uv-bare==1.37.7",
 ]
