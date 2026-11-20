@@ -5,6 +5,7 @@ import pathlib
 from unittest.mock import patch
 
 import git
+import pytest
 
 from pgrubic import core
 from pgrubic.core import noqa, config
@@ -128,17 +129,17 @@ def test_filter_formatting_sources(tmp_path: pathlib.Path) -> None:
 
 def test_respect_gitignore_filter_sources(tmp_path: pathlib.Path) -> None:
     """Test respect gitignore filter sources."""
-    # Disable global git config
-    os.environ["GIT_CONFIG_GLOBAL"] = "/dev/null"
-
     git.Repo.init(tmp_path)
 
     # Create a .gitignore file in the repository
     gitignore_file = tmp_path / ".gitignore"
-    gitignore_file.write_text(f"ignored_file.sql{noqa.NEW_LINE}")
+    gitignore_file.write_text(
+        f"ignored_file.sql{noqa.NEW_LINE}café.sql{noqa.NEW_LINE}ignored_directory/{noqa.NEW_LINE}",
+        encoding="utf-8",
+    )
 
     directory = tmp_path / "sub"
-    directory.mkdir()
+    (directory / "ignored_directory").mkdir(parents=True)
 
     sql_fail: str = "SELECT a = NULL;"
 
@@ -148,6 +149,8 @@ def test_respect_gitignore_filter_sources(tmp_path: pathlib.Path) -> None:
         pathlib.Path("test.py"),
         pathlib.Path("test.txt"),
         pathlib.Path("ignored_file.sql"),
+        pathlib.Path("café.sql"),
+        pathlib.Path("ignored_directory/tables.sql"),
         pathlib.Path("tables.sql"),
         pathlib.Path("views.sql"),
     )
@@ -173,7 +176,10 @@ def test_respect_gitignore_filter_sources(tmp_path: pathlib.Path) -> None:
 
     with patch.dict(
         "os.environ",
-        {config.CONFIG_PATH_ENVIRONMENT_VARIABLE: str(directory)},
+        {
+            config.CONFIG_PATH_ENVIRONMENT_VARIABLE: str(directory),
+            "GIT_CONFIG_GLOBAL": os.devnull,
+        },
     ):
         parsed_config = config.parse_config()
 
@@ -189,9 +195,6 @@ def test_respect_gitignore_filter_sources(tmp_path: pathlib.Path) -> None:
 
 def test_respect_gitignore_false_filter_sources(tmp_path: pathlib.Path) -> None:
     """Test respect gitignore false filter sources."""
-    # Disable global git config
-    os.environ["GIT_CONFIG_GLOBAL"] = "/dev/null"
-
     git.Repo.init(tmp_path)
 
     # Create a .gitignore file in the repository
@@ -235,7 +238,10 @@ def test_respect_gitignore_false_filter_sources(tmp_path: pathlib.Path) -> None:
 
     with patch.dict(
         "os.environ",
-        {config.CONFIG_PATH_ENVIRONMENT_VARIABLE: str(directory)},
+        {
+            config.CONFIG_PATH_ENVIRONMENT_VARIABLE: str(directory),
+            "GIT_CONFIG_GLOBAL": os.devnull,
+        },
     ):
         parsed_config = config.parse_config()
 
@@ -247,3 +253,48 @@ def test_respect_gitignore_false_filter_sources(tmp_path: pathlib.Path) -> None:
         )
 
         assert len(sources_filtered) == expected_sources_filtered_length
+
+
+def test_respect_gitignore_from_subdirectory(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test gitignore rules apply to relative sources when run from a subdirectory."""
+    (tmp_path / ".gitignore").write_text(f"sub/ignored.sql{noqa.NEW_LINE}")
+    directory = tmp_path / "sub"
+    directory.mkdir()
+    for name in ("ignored.sql", "kept.sql"):
+        (directory / name).write_text("SELECT 1;")
+
+    monkeypatch.chdir(directory)
+
+    with patch.dict("os.environ", {"GIT_CONFIG_GLOBAL": os.devnull}):
+        git.Repo.init(tmp_path)
+
+        sources_filtered = core.filter_sources(
+            sources=(pathlib.Path(),),
+            include=[],
+            exclude=[],
+            respect_gitignore=True,
+        )
+
+        assert sources_filtered == {pathlib.Path("kept.sql")}
+
+
+def test_respect_gitignore_keeps_named_sources(tmp_path: pathlib.Path) -> None:
+    """Test sources named explicitly are kept, even when git ignores them."""
+    (tmp_path / ".gitignore").write_text(f"ignored.sql{noqa.NEW_LINE}")
+    source = tmp_path / "ignored.sql"
+    source.write_text("SELECT 1;")
+
+    with patch.dict("os.environ", {"GIT_CONFIG_GLOBAL": os.devnull}):
+        git.Repo.init(tmp_path)
+
+        sources_filtered = core.filter_sources(
+            sources=(source,),
+            include=[],
+            exclude=[],
+            respect_gitignore=True,
+        )
+
+        assert sources_filtered == {source}
