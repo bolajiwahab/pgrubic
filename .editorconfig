@@ -9,13 +9,13 @@ end_of_line              = lf
 trim_trailing_whitespace = true
 insert_final_newline     = true
 
-[*.{sql,py}]
+[*.{sql,py,sh}]
 indent_size              = 4
 
 [*.{yml,yaml}]
 indent_size              = 2
 
-[*.{html,md,js,css,sh}]
+[*.{html,md,js,css}]
 indent_size              = 2
 
 [Makefile]

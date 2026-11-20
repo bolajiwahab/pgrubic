@@ -59,7 +59,9 @@ repos:
         args: [--strict]
       - id: hadolint
         name: Lint Dockerfiles
-        entry: ghcr.io/hadolint/hadolint:v2.15.1 hadolint
+        entry: >-
+          ghcr.io/hadolint/hadolint:v2.15.1@sha256:32dac94127fd60b7b7e3fbfc65e1383b9b5e25c9bfd7b8536de7a539fe68a12d
+          hadolint
         language: docker_image
         stages: [pre-commit]
         types: [dockerfile]
@@ -80,7 +82,6 @@ repos:
       - id: mypy
         stages: [pre-commit]
         name: Type checking with mypy
-        additional_dependencies: [types-PyYAML]
         entry: mypy
         language: python
         types: [python]
@@ -98,6 +99,27 @@ repos:
         language: python
         types: [python]
         args: [--recursive, --config=./pyproject.toml]
+      - id: shellcheck
+        stages: [pre-commit]
+        name: Lint shell scripts
+        entry: shellcheck
+        language: python
+        types: [shell]
+      - id: zizmor
+        stages: [pre-commit]
+        name: Lint GitHub Actions workflows
+        entry: zizmor
+        language: python
+        types: [yaml]
+        # The inputs zizmor supports.
+        files: |
+          (?x)(^|/)(
+            \.github/(workflows/[^/]+|dependabot)\.ya?ml
+            |action\.ya?ml
+            |\.pre-commit-(config|hooks)\.ya?ml
+          )$
+        require_serial: true
+        args: [--no-progress]
       # Formatters should be run late so that they can re-format
       # any prior changes
       - id: ruff
@@ -109,11 +131,10 @@ repos:
         types: [python]
 
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.11.0-1
+    rev: 5c04180ee080cf187369bcc7fd720c253687386c  # frozen: v3.11.0-1
     hooks:
-      - id: shfmt
+      - id: shfmt-docker
         name: Format shell scripts
-        entry: shfmt
-        args: [--indent=4]
+        args: [--write, --simplify, --indent=4]
         stages: [pre-commit]
         types: [shell]
