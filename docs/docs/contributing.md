@@ -199,3 +199,11 @@ tools/prepare_release.sh
 The script switches to the default branch and pulls it, then runs `uv run --locked --no-build --only-group tooling tox -e prepare-release` (which wraps around `cz bump`) to update the version and the changelog, commit them, and tag the commit. It then pushes the release commit and its tag together, which triggers the release workflow.
 
 The script refuses to run while tracked files have uncommitted changes. Pushing directly to the default branch requires permission to bypass its branch protection.
+
+To see the version, tag, and changelog entry the next release would create without changing anything, run
+
+```bash
+uv run --locked --no-build --only-group tooling tox -e release-preview
+```
+
+or run the **Release preview** workflow from the Actions tab, which previews the default branch.
