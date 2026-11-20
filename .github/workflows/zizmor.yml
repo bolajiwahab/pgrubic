@@ -1,0 +1,76 @@
+---
+# yamllint disable rule:line-length
+name: Scan GitHub Actions
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Each job should declare the permissions it needs.
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  DEFAULT_PYTHON_VERSION: 3.12
+  ZIZMOR_REPORT: zizmor-results
+  ZIZMOR_REPORT_FORMAT: sarif
+  RETENTION_DAYS: 14
+
+jobs:
+  zizmor:
+    name: Scan GitHub Actions
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      security-events: write  # Uploads the SARIF report to code scanning.
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2  # v10.3.3
+        with:
+          python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
+          version: 0.13.8
+
+      - name: Install dependencies
+        run: uv sync --locked --no-build --extra dev
+
+      - name: Write SARIF report
+        run: >-
+          uv run --locked --no-build --extra dev
+          zizmor --format="${ZIZMOR_REPORT_FORMAT}" . > "${ZIZMOR_REPORT}.${ZIZMOR_REPORT_FORMAT}"
+        env:
+          # Enables the audits that query GitHub, such as for impostor commits.
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Scan GitHub Actions with zizmor
+        run: uv run --locked --no-build --extra dev zizmor --format=github .
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Upload findings to Code Scanning
+        if: ${{ always() && hashFiles(format('{0}.{1}', env.ZIZMOR_REPORT, env.ZIZMOR_REPORT_FORMAT)) != '' }}
+        uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066  # v4.39.3
+        with:
+          sarif_file: ${{ env.ZIZMOR_REPORT }}.${{ env.ZIZMOR_REPORT_FORMAT }}
+          category: zizmor
+
+      - name: Retain SARIF report
+        if: ${{ always() && hashFiles(format('{0}.{1}', env.ZIZMOR_REPORT, env.ZIZMOR_REPORT_FORMAT)) != '' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        with:
+          name: ${{ env.ZIZMOR_REPORT }}
+          path: ${{ env.ZIZMOR_REPORT }}.${{ env.ZIZMOR_REPORT_FORMAT }}
+          retention-days: ${{ env.RETENTION_DAYS }}

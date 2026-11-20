@@ -6,6 +6,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # Wait for a release to settle before proposing it.
+    cooldown:
+      default-days: 7
     groups:
       github-actions:
         patterns:
@@ -15,6 +18,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # Wait for a release to settle before proposing it.
+    cooldown:
+      default-days: 7
     groups:
       python-packages:
         patterns:
@@ -24,6 +30,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # Wait for a release to settle before proposing it.
+    cooldown:
+      default-days: 7
     groups:
       docker:
         patterns:

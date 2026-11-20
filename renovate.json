@@ -3,7 +3,8 @@
   "extends": [
     "config:recommended",
     ":disableDependencyDashboard",
-    ":maintainLockFilesWeekly"
+    ":maintainLockFilesWeekly",
+    ":enablePreCommit"
   ],
   "description": "Schedule dependency updates weekly on Saturday",
   "schedule": ["on saturday"],
@@ -11,10 +12,27 @@
     "enabled": true,
     "schedule": ["on saturday"]
   },
+  // Wait a week after a release before proposing it. Updates without a release
+  // timestamp, such as images on some registries, are not held back.
+  "minimumReleaseAge": "7 days",
+  "minimumReleaseAgeBehaviour": "timestamp-optional",
   // Remove PR creation limits
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
   "branchConcurrentLimit": 0,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update images that pre-commit hooks run, pinned by digest, such as hadolint",
+      "managerFilePatterns": [
+        "/(^|/)\\.pre-commit-config\\.yaml$/"
+      ],
+      "matchStrings": [
+        "(?<depName>[a-z0-9][a-z0-9.-]*(?:/[a-z0-9._-]+)+):(?<currentValue>[A-Za-z0-9._-]+)@(?<currentDigest>sha256:[a-f0-9]{64})"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ],
   "packageRules": [
     {
       "description": "Group docker dependencies",
@@ -65,6 +83,14 @@
       "groupSlug": "runtime-dependencies",
       "semanticCommitType": "fix",
       "semanticCommitScope": "deps"
+    },
+    {
+      "description": "Group pre-commit hooks and the images they run",
+      "matchFileNames": [
+        ".pre-commit-config.yaml"
+      ],
+      "groupName": "pre-commit updates",
+      "groupSlug": "pre-commit-updates"
     },
     {
       "description": "Group dependencies declared in GitHub Actions workflows",
