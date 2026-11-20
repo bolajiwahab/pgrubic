@@ -14,10 +14,8 @@ on:
     - cron: "0 0 * * *"
   workflow_dispatch:
 
-permissions:
-  contents: read
-  actions: read
-  security-events: write
+# Each job should declare the permissions it needs.
+permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -37,6 +35,9 @@ jobs:
   trivy-repo-scan:
     name: Trivy Repository Scan
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write  # Uploads the SARIF report to code scanning.
     steps:
       - name: Checkout Repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
@@ -72,6 +73,9 @@ jobs:
   trivy-image-scan:
     name: Trivy Image Scan
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write  # Uploads the SARIF report to code scanning.
     steps:
       - name: Checkout Repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7

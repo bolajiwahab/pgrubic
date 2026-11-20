@@ -14,10 +14,8 @@ on:
 env:
   DEFAULT_PYTHON_VERSION: 3.12
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+# Each job should declare the permissions it needs.
+permissions: {}
 
 jobs:
   deploy:
@@ -25,6 +23,10 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write  # Deploys the documentation site.
+      id-token: write  # Verifies the deployment to GitHub Pages.
     steps:
       - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d  # v6
@@ -37,7 +39,7 @@ jobs:
           python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
           version: 0.13.8
       - name: Build site
-        run: uv run --locked --only-group tooling tox -e docsite
+        run: uv run --locked --no-build --only-group tooling tox -e docsite
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5
         with:

@@ -10,6 +10,9 @@ on:
     branches:
       - main
 
+# Each job should declare the permissions it needs.
+permissions: {}
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -53,7 +56,7 @@ jobs:
           version: 0.13.8
 
       - name: Run tests
-        run: uv run --locked --only-group tooling tox -e ${{ matrix.tox-env }}
+        run: uv run --locked --no-build --only-group tooling tox -e ${{ matrix.tox-env }}
 
   checks:
     permissions:
@@ -86,7 +89,7 @@ jobs:
           version: 0.13.8
 
       - name: Run ${{ matrix.job }}
-        run: uv run --locked --only-group tooling tox -e ${{ matrix.job }}
+        run: uv run --locked --no-build --only-group tooling tox -e ${{ matrix.job }}
 
   build-docker-image:
     name: Build multi-platform docker image [arch=amd64,arm64]
@@ -136,7 +139,7 @@ jobs:
           version: 0.13.8
 
       - name: Run coverage
-        run: uv run --locked --only-group tooling tox -e coverage
+        run: uv run --locked --no-build --only-group tooling tox -e coverage
 
       - name: Coverage comment
         id: coverage_comment

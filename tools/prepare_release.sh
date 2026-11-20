@@ -20,5 +20,5 @@ branch=${branch#origin/}
 
 git switch "${branch}"
 git pull --ff-only --tags origin "${branch}"
-uv run --locked --only-group tooling tox -e prepare-release
+uv run --locked --no-build --only-group tooling tox -e prepare-release
 git push --atomic --follow-tags origin "${branch}"

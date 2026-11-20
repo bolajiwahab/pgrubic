@@ -4,11 +4,11 @@ set -euo pipefail
 
 # tools/ensure_up_to_date_docs.sh
 
-if git diff --quiet -- README.md docs/ && [ -z "$(git ls-files --others --exclude-standard docs/)" ]; then
+if git diff --quiet -- README.md docs/ && [[ -z "$(git ls-files --others --exclude-standard docs/)" ]]; then
     echo "Documentation are up to date."
     exit 0
 else
     echo "Documentations are not up to date. Ensure docs are rebuilt."
-    echo "Run 'uv run --locked --only-group tooling tox -e docbuild' and commit the changes."
+    echo "Run 'uv run --locked --no-build --only-group tooling tox -e docbuild' and commit the changes."
     exit 1
 fi

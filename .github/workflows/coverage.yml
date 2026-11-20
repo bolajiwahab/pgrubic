@@ -8,6 +8,9 @@ on:
     types:
       - completed
 
+# Each job should declare the permissions it needs.
+permissions: {}
+
 jobs:
   test:
     name: Run tests & display coverage

@@ -10,6 +10,9 @@ on:
       - "[0-9]+.[0-9]+.[0-9]+b[0-9]+"
       - "[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
 
+# Each job should declare the permissions it needs.
+permissions: {}
+
 env:
   PACKAGE_NAME: "pgrubic"
   DEFAULT_PYTHON_VERSION: 3.12
@@ -33,7 +36,7 @@ jobs:
       - name: Extract tag and Details
         id: release
         run: |
-          if [ "${{ github.ref_type }}" = "tag" ]; then
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
             TAG_NAME=${GITHUB_REF#refs/tags/}
             NEW_VERSION=$(echo $TAG_NAME | awk -F'-' '{print $1}')
             SUFFIX=$(echo $TAG_NAME | grep -oP '[a-z]+[0-9]+' || echo "")
@@ -44,7 +47,7 @@ jobs:
             git config --add versionsort.suffix "b"
             git config --add versionsort.suffix "rc"
             PREVIOUS_TAG=$(git tag --sort=-v:refname | grep -F -x -A1 "$TAG_NAME" | tail -n 1)
-            if [ "$PREVIOUS_TAG" = "$TAG_NAME" ]; then
+            if [[ "$PREVIOUS_TAG" == "$TAG_NAME" ]]; then
               PREVIOUS_TAG=""
             fi
             echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
@@ -70,7 +73,7 @@ jobs:
         run: |
           response=$(curl -s https://pypi.org/pypi/${{ env.PACKAGE_NAME }}/json || echo "{}")
           latest_previous_version=$(echo $response | jq --raw-output "select(.releases != null) | .releases | keys_unsorted | last")
-          if [ -z "$latest_previous_version" ]; then
+          if [[ -z "$latest_previous_version" ]]; then
             echo "Package not found on PyPI."
             latest_previous_version="0.0.0"
           fi
@@ -81,7 +84,7 @@ jobs:
         run: |
           NEW_VERSION=${{ needs.details.outputs.new_version }}
           LATEST_VERSION=$latest_previous_version
-          if [ "$(printf '%s\n' "$LATEST_VERSION" "$NEW_VERSION" | sort -rV | head -n 1)" != "$NEW_VERSION" ] || [ "$NEW_VERSION" == "$LATEST_VERSION" ]; then
+          if [[ "$(printf '%s\n' "$LATEST_VERSION" "$NEW_VERSION" | sort -rV | head -n 1)" != "$NEW_VERSION" || "$NEW_VERSION" == "$LATEST_VERSION" ]]; then
             echo "The new version $NEW_VERSION is not greater than the latest version $LATEST_VERSION on PyPI."
             exit 1
           else
@@ -105,7 +108,7 @@ jobs:
 
 
       - name: Build source and wheel distribution
-        run: uv run --locked --only-group tooling tox -e build-dist
+        run: uv run --locked --no-build --only-group tooling tox -e build-dist
 
       - name: Upload artifacts
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
@@ -156,7 +159,7 @@ jobs:
           TAG_NAME: ${{ needs.details.outputs.tag_name }}
           PREVIOUS_TAG: ${{ needs.details.outputs.previous_tag }}
         run: |
-          if [ -n "$PREVIOUS_TAG" ]; then
+          if [[ -n "$PREVIOUS_TAG" ]]; then
             echo "Generating notes from $PREVIOUS_TAG to $TAG_NAME"
             gh release create "$TAG_NAME" dist/* --title "$TAG_NAME" --generate-notes --notes-start-tag "$PREVIOUS_TAG"
           else
