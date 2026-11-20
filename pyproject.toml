@@ -233,6 +233,10 @@ legacy_tox_ini = """
     extras = release
     commands = cz bump
 
+    [testenv:release-preview]
+    extras = release
+    commands = cz --no-raise 21 bump --dry-run --yes
+
     [testenv:tests]
     setenv = {[testenv:coverage]setenv}
     commands =
