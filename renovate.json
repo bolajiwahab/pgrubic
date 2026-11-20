@@ -28,12 +28,43 @@
       "groupSlug": "docker-updates"
     },
     {
-      "description": "Group python dependencies",
+      "description": "Group images that ship in the published image; their updates are fixes that trigger a release",
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "matchFileNames": [
+        "Dockerfile"
+      ],
+      "matchDepNames": [
+        "python"
+      ],
+      "groupName": "runtime images",
+      "groupSlug": "runtime-images",
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "docker"
+    },
+    {
+      "description": "Group python development, documentation, and tooling dependencies; their updates do not trigger a release",
       "matchManagers": [
         "pep621"
       ],
       "groupName": "python updates",
-      "groupSlug": "python-updates"
+      "groupSlug": "python-updates",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps"
+    },
+    {
+      "description": "Group the dependencies installed with pgrubic; their updates are fixes that trigger a release",
+      "matchManagers": [
+        "pep621"
+      ],
+      "matchDepTypes": [
+        "project.dependencies"
+      ],
+      "groupName": "runtime dependencies",
+      "groupSlug": "runtime-dependencies",
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps"
     },
     {
       "description": "Group dependencies declared in GitHub Actions workflows",
