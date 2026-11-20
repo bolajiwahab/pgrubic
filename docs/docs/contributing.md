@@ -12,7 +12,7 @@ To set up a development environment, install [**uv**](https://docs.astral.sh/uv/
 1. Create a development environment:
 
     ```console
-    uv sync --locked --group tooling --extra dev --extra doc
+    uv sync --locked --no-build --group tooling --extra dev --extra doc
     ```
 
 2. Activate the development environment:
@@ -108,7 +108,7 @@ To add a new rule, you need to:
 10. Update the generated documentation for rules through:
 
 ```bash
-uv run --locked --only-group tooling tox -e docbuild
+uv run --locked --no-build --only-group tooling tox -e docbuild
 ```
 
 ### Testing
@@ -121,13 +121,13 @@ To test a rule, you need to:
 3. To run the tests for all rules, use:
 
 ```bash
-uv run --locked --only-group tooling tox -e tests -- tests/test_rules.py
+uv run --locked --no-build --only-group tooling tox -e tests -- tests/test_rules.py
 ```
 
 4. To run specific test, for example, use:
 
 ```bash
-uv run --locked --only-group tooling tox -e tests -- "tests/test_rules.py::test_rules[US028-US028_test_pass_concurrent_materialized_view_refresh-test_case767]"
+uv run --locked --no-build --only-group tooling tox -e tests -- "tests/test_rules.py::test_rules[US028-US028_test_pass_concurrent_materialized_view_refresh-test_case767]"
 ```
 
 ## Formatter
@@ -157,13 +157,13 @@ To test a rule, you need to:
 3. To run the tests for all formatters, use:
 
 ```bash
-uv run --locked --only-group tooling tox -e tests -- tests/test_formatters.py
+uv run --locked --no-build --only-group tooling tox -e tests -- tests/test_formatters.py
 ```
 
 4. To run specific test, for example, use:
 
 ```bash
-uv run --locked --only-group tooling tox -e tests -- "tests/test_formatters.py::test_formatters[VIEW-VIEW_drop_view-test_case94]"
+uv run --locked --no-build --only-group tooling tox -e tests -- "tests/test_formatters.py::test_formatters[VIEW-VIEW_drop_view-test_case94]"
 ```
 
 ## Documentation
@@ -173,13 +173,13 @@ The documentation uses [Zensical](https://zensical.org).
 To update the documentation for production environment, use:
 
 ```bash
-uv run --locked --only-group tooling tox -e docbuild
+uv run --locked --no-build --only-group tooling tox -e docbuild
 ```
 
 To ensure links resolve locally (not for production), use:
 
 ```bash
-PGRUBIC_BUILD_ENV=local uv run --locked --only-group tooling tox -e docbuild
+PGRUBIC_BUILD_ENV=local uv run --locked --no-build --only-group tooling tox -e docbuild
 ```
 
 To preview changes to the documentation, from the parent directory, use:
@@ -196,6 +196,6 @@ The project uses [commitizen](https://commitizen-tools.github.io/commitizen/) to
 tools/prepare_release.sh
 ```
 
-The script switches to the default branch and pulls it, then runs `uv run --locked --only-group tooling tox -e prepare-release` (which wraps around `cz bump`) to update the version and the changelog, commit them, and tag the commit. It then pushes the release commit and its tag together, which triggers the release workflow.
+The script switches to the default branch and pulls it, then runs `uv run --locked --no-build --only-group tooling tox -e prepare-release` (which wraps around `cz bump`) to update the version and the changelog, commit them, and tag the commit. It then pushes the release commit and its tag together, which triggers the release workflow.
 
 The script refuses to run while tracked files have uncommitted changes. Pushing directly to the default branch requires permission to bypass its branch protection.

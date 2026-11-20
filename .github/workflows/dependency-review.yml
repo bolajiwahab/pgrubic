@@ -6,6 +6,9 @@ on:
     branches:
       - main
 
+# Each job should declare the permissions it needs.
+permissions: {}
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

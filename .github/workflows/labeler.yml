@@ -17,14 +17,16 @@ on:
       - edited
       - reopened
 
-permissions:
-  issues: write
-  pull-requests: write
-  contents: read
+# Each job should declare the permissions it needs.
+permissions: {}
 
 jobs:
   triage:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write  # Labels issues.
+      pull-requests: write  # Labels pull requests.
     steps:
       - uses: github/issue-labeler@ccca1e16fcb66762200e616fc29b57b940c1cb67  # v3.5
         with:

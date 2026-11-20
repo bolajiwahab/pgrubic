@@ -12,12 +12,12 @@ COPY pyproject.toml uv.lock README.md LICENSE ./
 
 # Cache runtime dependencies separately from application source changes.
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --locked --no-default-groups --no-install-project
+    uv sync --locked --no-build --no-default-groups --no-install-project
 
 COPY src ./src
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --locked --no-default-groups --no-editable --compile-bytecode
+    uv sync --locked --no-build --no-default-groups --no-editable --compile-bytecode
 
 FROM ${PYTHON_IMAGE} AS runtime
 
