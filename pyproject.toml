@@ -9,9 +9,11 @@ build-backend = "setuptools.build_meta"
 [tool.commitizen]
 name = "cz_conventional_commits"
 tag_format = "$version"
-version_scheme = "semver2"
+# Python package versions, matching the release workflow's tags such as 4.2.0rc1.
+version_scheme = "pep440"
 version_provider = "uv"
 update_changelog_on_bump = true
+annotated_tag = true
 bump_message = "chore(release): release $new_version"
 breaking_change_exclamation_in_title = true
 version_files = [
