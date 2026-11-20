@@ -14,7 +14,7 @@ def filter_sources(
 ) -> set[pathlib.Path]:
     """Filter sources base on include and exclude and either respect gitignore.
 
-    Paramaters:
+    Parameters:
     -----------
     sources: tuple[pathlib.Path, ...]
         List of sources to filter.
@@ -37,7 +37,12 @@ def filter_sources(
 
     for source in sources:
         if source.is_dir():
-            flattened_sources.update(source.glob(f"**/*.{extension}"))
+            paths = set(source.glob(f"**/*.{extension}"))
+
+            if respect_gitignore:
+                paths -= _git_ignored(source, paths)
+
+            flattened_sources.update(paths)
 
         elif source.suffix == f".{extension}":
             flattened_sources.add(source)
@@ -53,9 +58,6 @@ def filter_sources(
             )
             and source.stat().st_size > 0
         ):
-            if respect_gitignore and _is_git_ignored(str(source)):
-                continue
-
             included_sources.add(source)
 
     return included_sources
@@ -69,7 +71,7 @@ def _is_file_included(
 ) -> bool:
     """Check if a source should be included or excluded based on global config.
 
-    Paramaters:
+    Parameters:
     -----------
     source: str
         Path to the source file.
@@ -90,18 +92,20 @@ def _is_file_included(
     )
 
 
-def _is_git_ignored(source: str) -> bool:
-    """Check if a source is git ignored.
+def _git_ignored(directory: pathlib.Path, paths: set[pathlib.Path]) -> set[pathlib.Path]:
+    """Return the paths under a directory that git ignores.
 
     Parameters:
     -----------
-    source: str
-        Path to the source file.
+    directory: pathlib.Path
+        Directory the paths were found in.
+    paths: set[pathlib.Path]
+        Paths to check.
 
     Returns:
     -------
-    bool
-        True if the source is git ignored, False otherwise.
+    set[pathlib.Path]
+        Paths that git ignores.
 
     """
     try:
@@ -109,10 +113,28 @@ def _is_git_ignored(source: str) -> bool:
         import git  # noqa: PLC0415
         import git.exc  # noqa: PLC0415
 
-        repo = git.Repo(source, search_parent_directories=True)
-        return bool(repo.ignored(source))
+        # Lists the ignored files under the directory, and each wholly ignored
+        # directory once, such as "build/". With -z, git ends each path with NUL
+        # instead of quoting names such as "café.sql".
+        output = git.Git(directory).ls_files(
+            "--others",
+            "--ignored",
+            "--exclude-standard",
+            "--directory",
+            "-z",
+        )
     except ImportError:  # pragma: no cover
         # git is not installed
-        return False
-    except (git.exc.InvalidGitRepositoryError, git.exc.GitCommandError):
-        return False
+        return set()
+    except git.exc.GitCommandError:
+        # The directory is not in a git repository.
+        return set()
+
+    ignored = {directory / name for name in output.split("\0") if name}
+
+    # A path is ignored when it, or a directory containing it, is listed.
+    return {
+        path
+        for path in paths
+        if path in ignored or any(parent in ignored for parent in path.parents)
+    }
