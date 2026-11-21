@@ -141,8 +141,8 @@
 | src/pgrubic/rules/unsafe/US001.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US002.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US003.py            |        6 |        0 |     100% |           |
-| src/pgrubic/rules/unsafe/US004.py            |        9 |        0 |     100% |           |
-| src/pgrubic/rules/unsafe/US005.py            |        7 |        0 |     100% |           |
+| src/pgrubic/rules/unsafe/US004.py            |       12 |        0 |     100% |           |
+| src/pgrubic/rules/unsafe/US005.py            |        9 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US006.py            |        6 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US007.py            |        5 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US008.py            |        5 |        0 |     100% |           |
@@ -170,7 +170,7 @@
 | src/pgrubic/rules/unsafe/US030.py            |        9 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/US031.py            |        7 |        0 |     100% |           |
 | src/pgrubic/rules/unsafe/\_\_init\_\_.py     |        0 |        0 |     100% |           |
-| **TOTAL**                                    | **3796** |    **0** | **100%** |           |
+| **TOTAL**                                    | **3801** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
