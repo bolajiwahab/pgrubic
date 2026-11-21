@@ -1,6 +1,8 @@
 ---
+# Type labels match the conventional commit type at the start of a pull request
+# title, such as "feat:" or "fix(deps):". The release notes are grouped by them.
 chore:
-  - "/(chore)/i"
+  - '/^chore(\(.+\))?:/'
 
 rule:
   - "/(rule)/i"
@@ -9,22 +11,28 @@ formatter:
   - "/(formatter|printer)/i"
 
 documentation:
-  - /^(?!.*docker).*(documentation|doc)/i
+  - '/^docs?(\(.+\))?:/'
 
 bug:
-  - "/(bug|fix)/i"
+  - '/^(fix(\(.+\))?:|\[Bug\])/'
 
 config:
   - "/(config)/i"
 
 enhancement:
-  - "/(feat|feature)/i"
+  - '/^(feat(\(.+\))?!?:|\[Feature\])/'
 
 ci:
-  - "/(ci)/i"
+  - '/^(ci|build)(\(.+\))?:/'
 
+# The deps scope, such as "fix(deps):" or "chore(deps):", or "dependencies"
 dependencies:
+  - '/^\w+\(deps\):/'
   - "/(dependencies)/i"
+
+# A "!" after feat, such as "feat!:" or "feat(linter)!:"
+breaking-change:
+  - '/^feat(\(.+\))?!:/'
 
 question:
   - "/(question)/i"
