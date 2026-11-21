@@ -1,0 +1,26 @@
+---
+# Groups the release notes that `gh release create --generate-notes` writes, by
+# the labels on each pull request.
+changelog:
+  categories:
+    - title: Breaking changes
+      labels:
+        - breaking-change
+    - title: Features
+      labels:
+        - enhancement
+    - title: Bug fixes
+      labels:
+        - bug
+    - title: Maintenance
+      labels:
+        - chore
+    - title: Build process updates
+      labels:
+        - ci
+    - title: Documentation updates
+      labels:
+        - documentation
+    - title: Others
+      labels:
+        - "*"
