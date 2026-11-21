@@ -1,3 +1,13 @@
+## 4.2.0 (2026-11-21)
+
+### Feat
+
+- flag identity columns in US004 and deprecate US005 (#373)
+
+### Fix
+
+- apply .gitignore once per directory, not to files directly passed (#372)
+
 ## 4.1.1 (2026-11-14)
 
 ### Fix
