@@ -2,14 +2,14 @@
 
 import typing
 
-from pglast import ast, visitors
+from pglast import ast, enums, visitors
 
 from pgrubic.core import linter
 
 
 class AddingAutoIncrementColumn(linter.BaseChecker):
     """## **What it does**
-    Checks adding of auto increment column.
+    Checks adding of auto increment column, either serial or identity.
 
     ## **Why not?**
     Adding an auto increment column to an already populated table will
@@ -34,6 +34,15 @@ class AddingAutoIncrementColumn(linter.BaseChecker):
     7. Validate the constraint.
     8. Set the column as NOT NULL.
     9. Drop the constraint.
+
+    For an identity column, continue with:
+
+    10. Get the last value of the sequence, with enough offset.
+    11. In a single transaction:
+        - Drop the default on the new column.
+        - Drop the sequence created in step 2.
+        - Add GENERATED ALWAYS AS IDENTITY constraint instead,
+        specifying the start option as the value from step 10.
     """
 
     def visit_ColumnDef(
@@ -44,10 +53,16 @@ class AddingAutoIncrementColumn(linter.BaseChecker):
         """Visit ColumnDef."""
         type_name = typing.cast(ast.TypeName, node.typeName)
         type_names = typing.cast(tuple[ast.String, ...], type_name.names)
+        constraints = typing.cast(tuple[ast.Constraint, ...], node.constraints or ())
 
-        if ancestors.find_nearest(ast.AlterTableCmd) and (
-            type_names[-1].sval in ["smallserial", "serial", "bigserial"]
-        ):
+        is_serial = type_names[-1].sval in ["smallserial", "serial", "bigserial"]
+
+        is_identity = any(
+            constraint.contype == enums.ConstrType.CONSTR_IDENTITY
+            for constraint in constraints
+        )
+
+        if ancestors.find_nearest(ast.AlterTableCmd) and (is_serial or is_identity):
             self.violations.add(
                 linter.Violation(
                     rule_code=self.code,

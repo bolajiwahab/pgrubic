@@ -2,6 +2,7 @@
 
 from pglast import ast, enums, visitors
 
+from pgrubic import DOCUMENTATION_URL, RULE_DOCUMENTATION_BASE
 from pgrubic.core import linter
 
 
@@ -38,6 +39,12 @@ class AddingAutoIncrementIdentityColumn(linter.BaseChecker):
         - Add GENERATED ALWAYS AS IDENTITY constraint instead,
         specifying the start option as the value from step 10.
     """
+
+    deprecation = linter.Deprecation(
+        message=f"""This rule is deprecated and has been superseded by
+[US004]({DOCUMENTATION_URL}/{RULE_DOCUMENTATION_BASE}/unsafe/adding-auto-increment-column).
+It is no longer available for linting and will be removed in a future release.""",
+    )
 
     def visit_Constraint(
         self,
