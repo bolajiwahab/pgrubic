@@ -19,7 +19,6 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
-  DEFAULT_PYTHON_VERSION: 3.12
   ZIZMOR_REPORT: zizmor-results
   ZIZMOR_REPORT_FORMAT: sarif
   RETENTION_DAYS: 14
@@ -41,7 +40,6 @@ jobs:
       - name: Set up uv and Python
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2  # v10.3.3
         with:
-          python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
           version: 0.13.8
 
       - name: Install dependencies
