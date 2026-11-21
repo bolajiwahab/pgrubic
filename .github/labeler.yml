@@ -27,8 +27,7 @@ ci:
 
 # The deps scope, such as "fix(deps):" or "chore(deps):", or "dependencies"
 dependencies:
-  - '/^\w+\(deps\):/'
-  - "/(dependencies)/i"
+  - '/^\w+\(deps\):|dependencies/i'
 
 # A "!" after feat, such as "feat!:" or "feat(linter)!:"
 breaking-change:
