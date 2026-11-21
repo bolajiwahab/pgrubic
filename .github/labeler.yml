@@ -25,10 +25,9 @@ enhancement:
 ci:
   - '/^(ci|build)(\(.+\))?:/'
 
-# The deps scope, such as "fix(deps):" or "chore(deps):", or "dependencies"
+# The deps or dependencies scope, such as "fix(deps):" or "chore(dependencies):"
 dependencies:
-  - '/^\w+\(deps\):/'
-  - "/(dependencies)/i"
+  - '/^\w+\((deps|dependencies)\):/'
 
 # A "!" after feat, such as "feat!:" or "feat(linter)!:"
 breaking-change:
