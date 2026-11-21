@@ -33,8 +33,7 @@ jobs:
 
       - name: Preview the next release
         run: |
-          uv run --locked --no-build --only-group tooling \
-            tox -qq -e release-preview > preview.txt
+          tools/release_preview.sh > preview.txt
           cat preview.txt
           {
             echo '```'

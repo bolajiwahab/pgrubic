@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# tools/prepare_release.sh
+# tools/release.sh
 #
 # Bumps the version and changelog on the default branch, then pushes the release commit
 # and its tag, which starts the release workflow.
