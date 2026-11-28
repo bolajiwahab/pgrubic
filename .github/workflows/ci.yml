@@ -49,10 +49,10 @@ jobs:
           persist-credentials: false
 
       - name: Set up uv and Python
-        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2  # v10.3.3
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d  # v10.4.0
         with:
           python-version: ${{ matrix.python-version }}
-          version: 0.13.8
+          version: 0.13.9
 
       - name: Run tests
         run: uv run --locked --no-build --only-group tooling tox -e ${{ matrix.tox-env }}
@@ -84,9 +84,9 @@ jobs:
           persist-credentials: false
 
       - name: Set up uv and Python
-        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2  # v10.3.3
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d  # v10.4.0
         with:
-          version: 0.13.8
+          version: 0.13.9
 
       - name: Run ${{ matrix.job }}
         run: uv run --locked --no-build --only-group tooling tox -e ${{ matrix.job }}
@@ -137,16 +137,16 @@ jobs:
           persist-credentials: false
 
       - name: Set up uv and Python
-        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2  # v10.3.3
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d  # v10.4.0
         with:
-          version: 0.13.8
+          version: 0.13.9
 
       - name: Run coverage
         run: uv run --locked --no-build --only-group tooling tox -e coverage
 
       - name: Coverage comment
         id: coverage_comment
-        uses: py-cov-action/python-coverage-comment-action@07249dd712cd2464873eb8a59a24f97fd281e76f  # v4.6
+        uses: py-cov-action/python-coverage-comment-action@281cb0dcb5b15d4773037d51873558fddc5a7df8  # v4.7
         with:
           GITHUB_TOKEN: ${{ github.token }}
           MAX_FILES_IN_COMMENT: 120
